@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "245540512812",
+    "project_id": "scheda-dnd",
+    "storage_bucket": "scheda-dnd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:245540512812:android:db0e8d6ab544c919e21d89",
+        "android_client_info": {
+          "package_name": "it.dnd.scheda_dnd_5e"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "245540512812-vk2ous5pkam1ac1dionl1rifvpvtbkt3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "it.dnd.scheda_dnd_5e",
+            "certificate_hash": "dd2784d2e998f98b0bde9c59c50b25f88dc93b60"
+          }
+        },
+        {
+          "client_id": "245540512812-60v86s08l3u1sp5q45rhpstpliafbt9l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBzJTcnhg2nVvr2MX2vTUDS_kyInJBE1o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "245540512812-60v86s08l3u1sp5q45rhpstpliafbt9l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "245540512812-38m2d7ajbo8itr398rnld4gasqnbjb72.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "it.dnd.schedaDnd5e"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
