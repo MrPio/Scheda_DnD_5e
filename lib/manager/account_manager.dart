@@ -12,6 +12,7 @@ enum SignInStatus {
   const SignInStatus();
 }
 
+
 enum SignUpStatus {
   success,
   weakPassword,
