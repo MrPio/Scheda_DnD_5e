@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/database_manager.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
+import 'package:scheda_dnd_5e/view/dice_page.dart';
 
 import 'firebase_options.dart';
 
@@ -21,9 +22,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Scheda DnD 5e',
-      home: Placeholder(),
+      routes: <String, WidgetBuilder>{
+        '/': (context) => const DicePage(),
+      },
     );
   }
 }

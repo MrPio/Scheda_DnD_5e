@@ -2,7 +2,7 @@ import 'package:scheda_dnd_5e/interface/identifiable.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'character.g.dart';
+part 'part/character.g.dart';
 
 @JsonSerializable()
 class Character implements JSONSerializable, Identifiable {

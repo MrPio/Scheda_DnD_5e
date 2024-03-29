@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'npc.dart';
+part of '../npc.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
