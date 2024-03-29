@@ -2,26 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
 
 class GlassCard extends StatefulWidget {
-  final double width, height;
+  final double? width, height;
   final Widget? child;
   final bool clickable;
   final void Function()? onTap;
 
   const GlassCard(
       {super.key,
-      this.width=double.infinity,
-      this.height=double.infinity,
+      this.width,
+      this.height ,
       this.child,
-      this.clickable = true, this.onTap});
+      this.clickable = true,
+      this.onTap});
 
   @override
   State<GlassCard> createState() => _GlassCardState();
 }
 
 class _GlassCardState extends State<GlassCard> {
-  final double borderRadiusUp = 16, borderRadiusDown = 16;
-  final double marginUp = 0, marginDown = 3;
-  final double opacityUp = 1, opacityDown = 0.75;
+  final double borderRadiusUp = 16, borderRadiusDown = 10;
+  final double marginUp = 0, marginDown = 0;
+  final double opacityUp = 1, opacityDown = 0.55;
   bool _down = false;
 
   @override

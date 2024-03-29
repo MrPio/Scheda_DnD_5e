@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="40"
+   viewBox="0 -960 960 960"
+   width="40"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="close.svg"
+   inkscape:export-filename="close.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="19.95"
+     inkscape:cx="20"
+     inkscape:cy="20"
+     inkscape:window-width="1920"
+     inkscape:window-height="1002"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <path
+     d="M 481.91374,-423.25534 73.011416,-13.715749 Q 60.891723,-1.5960562 44.624963,-0.95686821 28.358204,-0.31959398 14.324774,-15.629485 0.92861937,-29.662915 1.8854876,-43.05907 2.8423558,-56.455225 16.238511,-71.765116 L 423.2271,-479.39097 14.324774,-890.84431 Q 2.8423558,-902.964 1.8854876,-917.31702 q -0.95686823,-14.35303 12.4392864,-29.66292 14.03343,-14.03343 29.343321,-14.35302 15.309891,-0.31959 29.343321,13.71384 l 408.902324,409.5415 405.07484,-409.5415 q 12.1197,-12.1197 28.38646,-12.75697 16.26676,-0.63728 30.30019,13.39615 13.39615,15.30989 12.43928,28.70605 -0.95687,13.39615 -13.07656,27.42958 l -406.98858,411.45334 406.98858,407.625854 q 10.20596,11.482419 12.11969,26.79231 1.91374,15.309891 -11.48241,29.343321 Q 931.6418,-0.31959398 916.33191,0 901.02201,0.31768025 886.98858,-13.715749 Z"
+     fill="#ffffff"
+     id="path1"
+     style="stroke-width:1.91374" />
+</svg>
