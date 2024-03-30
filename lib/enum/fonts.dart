@@ -26,5 +26,5 @@ class Fonts {
   static black({color,double size=28}) => GoogleFonts.lato(
       color: color ??Palette.onBackground,
       fontSize: size,
-      fontWeight: FontWeight.w900);
+      fontWeight: FontWeight.w900).copyWith(height: 1.25);
 }

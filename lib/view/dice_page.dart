@@ -284,7 +284,8 @@ class _DicePageState extends State<DicePage>
                     onPressed: roll,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Palette.primaryGreen,
-                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: Measures.vButtonPadding),
                       shadowColor: Palette.primaryGreen,
                       elevation: 12,
                     ),
