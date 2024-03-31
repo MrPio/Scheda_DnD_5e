@@ -1,7 +1,6 @@
 import 'package:scheda_dnd_5e/interface/identifiable.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
-
 import 'character.dart';
 
 part 'enchantment.g.dart';

@@ -5,19 +5,23 @@ import 'package:json_annotation/json_annotation.dart';
 part 'part/npc.g.dart';
 
 enum Relationship {
-  ally,
-  friend,
-  animal,
-  basic,
-  boss,
-  divinity,
-  family,
-  innkeeper,
-  master,
-  monster,
-  nemesis,
-  enemy,
-  patron;
+  ally('Alleato'),
+  friend('Amico'),
+  animal('Animale'),
+  basic('Base'),
+  boss('Boss'),
+  divinity('Divinità'),
+  family('Famiglia'),
+  innkeeper('Locandiere'),
+  master('Maestro'),
+  monster('Mostriciattolo'),
+  nemesis('Nemesi'),
+  enemy('Nemico'),
+  patron('Patrono');
+
+  final String title;
+
+  const Relationship(this.title);
 }
 
 @JsonSerializable()
