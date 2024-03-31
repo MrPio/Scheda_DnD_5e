@@ -12,11 +12,11 @@ class Session implements JSONSerializable, Identifiable {
   @JsonKey(includeFromJson: false, includeToJson: false)
   late final String? uid;
 
-  Session()
-      : regDateTimestamp = DateTime.now().millisecondsSinceEpoch;
+  Session() : regDateTimestamp = DateTime.now().millisecondsSinceEpoch;
 
   get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
 
+  @override
   factory Session.fromJson(Map<String, dynamic> json) =>
       _$SessionFromJson(json);
 

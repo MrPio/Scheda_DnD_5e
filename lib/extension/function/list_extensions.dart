@@ -1,4 +1,3 @@
-
 extension ListExtensions on List {
   List toggle(element) {
     if (contains(element))
@@ -7,4 +6,8 @@ extension ListExtensions on List {
       add(element);
     return this;
   }
+}
+
+extension ListNumExtensions<T extends num> on List<T> {
+  T sum() => reduce((value, element) => value + element as T);
 }

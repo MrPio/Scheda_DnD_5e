@@ -33,7 +33,7 @@ class AccountManager {
   late User user;
 
   Future<bool> cacheSignIn() async {
-    String? uid = await IOManager().getCacheData("uid");
+    String? uid = await IOManager().get("uid");
     if (uid == null) return false;
     user = await DataManager().loadUser(uid, force: true);
     return true;
@@ -43,7 +43,7 @@ class AccountManager {
     try {
       final credential = await _auth.signInWithEmailAndPassword(
           email: emailAddress, password: password);
-      await IOManager().setCacheData("uid", credential.user!.uid);
+      await IOManager().set("uid", credential.user!.uid);
       user = await DataManager().loadUser(credential.user?.uid, force: true);
     } catch (e) {
       if (e.toString().contains("type 'Null' is not a subtype")) {
@@ -61,7 +61,7 @@ class AccountManager {
         password: password,
       );
       newUser.uid = credential.user!.uid;
-      await IOManager().setCacheData("uid", credential.user!.uid);
+      await IOManager().set("uid", credential.user!.uid);
     } on fb.FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         return SignUpStatus.weakPassword;
@@ -77,7 +77,7 @@ class AccountManager {
   }
 
   Future<void> signOut() async {
-    await IOManager().removeCacheData("uid");
+    await IOManager().remove("uid");
     await _auth.signOut();
   }
 

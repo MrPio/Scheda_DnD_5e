@@ -7,4 +7,7 @@ extension IntExtensions on int {
   String toModifierString() => '${this < 0 ? ' ' : '+'}$this ';
 
   String toSignString() => this < 0 ? '-' : '+';
+
+  Duration elapsedTime() =>
+      DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(this));
 }

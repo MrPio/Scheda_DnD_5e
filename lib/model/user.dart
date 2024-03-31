@@ -38,6 +38,7 @@ class User implements JSONSerializable, Identifiable {
 
   get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
 
+  @override
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   @override

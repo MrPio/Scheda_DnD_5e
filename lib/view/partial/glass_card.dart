@@ -10,7 +10,7 @@ class GlassCard extends StatefulWidget {
   const GlassCard(
       {super.key,
       this.width,
-      this.height ,
+      this.height,
       this.child,
       this.clickable = true,
       this.onTap});
@@ -21,8 +21,11 @@ class GlassCard extends StatefulWidget {
 
 class _GlassCardState extends State<GlassCard> {
   final double borderRadiusUp = 16, borderRadiusDown = 10;
-  final double marginUp = 0, marginDown = 0;
-  final double opacityUp = 1, opacityDown = 0.55;
+
+  get _borderRadius => _down ? 10.0 : 16.0;
+  get _scale => _down ? 0.95 : 1.0;
+  get _opacity => _down ? 0.55 : 1.0;
+
   bool _down = false;
 
   @override
@@ -33,23 +36,27 @@ class _GlassCardState extends State<GlassCard> {
       onTapUp: (_) => widget.clickable ? setState(() => _down = false) : null,
       onTapCancel: () =>
           widget.clickable ? setState(() => _down = false) : null,
-      child: SizedBox(
-        width: widget.width,
-        height: widget.height,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 120),
-          margin: EdgeInsets.all(_down ? marginDown : marginUp),
-          decoration: BoxDecoration(
-              color: Palette.card.withOpacity(
-                  Palette.card.opacity * (_down ? opacityDown : opacityUp)),
-              borderRadius: BorderRadius.circular(
-                  _down ? borderRadiusDown : borderRadiusUp)),
-          child: Opacity(
-            opacity: _down ? opacityDown : opacityUp,
-            child: widget.child,
+      child: AnimatedScale(
+        scale: _scale,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOut,
+        child: Opacity(
+          opacity: _opacity,
+          child: SizedBox(
+            width: widget.width,
+            height: widget.height,
+            child: AnimatedContainer(
+              curve: Curves.easeOut,
+              duration: const Duration(milliseconds: 120),
+              decoration: BoxDecoration(
+                  color:
+                      Palette.card.withOpacity(Palette.card.opacity * _opacity),
+                  borderRadius: BorderRadius.circular(_borderRadius)),
+              child: widget.child,
+            ),
           ),
+                ),
         ),
-      ),
     );
   }
 }

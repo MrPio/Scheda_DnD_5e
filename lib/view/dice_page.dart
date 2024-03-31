@@ -8,7 +8,7 @@ import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
 import 'package:scheda_dnd_5e/extension/function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension/function/int_extensions.dart';
-import 'package:scheda_dnd_5e/extension/function/list_num_extensions.dart';
+import 'package:scheda_dnd_5e/extension/function/list_extensions.dart';
 import 'package:scheda_dnd_5e/view/partial/dice_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';

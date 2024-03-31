@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
+import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/manager/database_manager.dart';
+import 'package:scheda_dnd_5e/manager/dummy_manager.dart';
+import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
@@ -13,8 +16,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // AccountManager().signIn('valeriomorelli50@gmail.com', 'aaaaaa');
-  // DatabaseManager().post('users', User().toJSON());
+  await IOManager().init();
+  DataManager().fetchData();
   runApp(const MyApp());
 }
 

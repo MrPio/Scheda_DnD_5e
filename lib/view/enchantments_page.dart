@@ -5,6 +5,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/manager/data_manager.dart';
+import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
@@ -97,7 +99,12 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                                     text: EnchantmentFilter.values[i].title,
                                     color: EnchantmentFilter.values[i].color))),
                         // Found enchantments
-
+                        const SizedBox(height: Measures.vMarginMed),
+                        Column(
+                            children: List.generate(
+                                DataManager().enchantments.length,
+                                (i) => enchantmentCard(
+                                    DataManager().enchantments[i])))
                       ],
                     ),
                   ),
@@ -109,4 +116,38 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
       ),
     );
   }
+
+  enchantmentCard(Enchantment model) => Padding(
+        padding: const EdgeInsets.only(bottom: 10.0),
+        child: GlassCard(
+          onTap: () {},
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Title and type
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(model.name, style: Fonts.bold(size: 18)),
+                    Text(model.type.title, style: Fonts.light(size: 16)),
+                  ],
+                ),
+                // Level
+                Container(
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.fromBorderSide(BorderSide(
+                            color: Palette.primaryYellow, width: 1))),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Text(model.level.toString(),
+                          style: Fonts.regular(size: 16)),
+                    )),
+              ],
+            ),
+          ),
+        ),
+      );
 }

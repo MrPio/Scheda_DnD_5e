@@ -26,7 +26,7 @@ class GlassTextField extends StatelessWidget {
             const SizedBox(width: Measures.hMarginMed),
             Expanded(
               child: TextField(
-                  autofocus: true,
+                  autofocus: false,
                   style: Fonts.regular(),
                   decoration: InputDecoration(
                     contentPadding:

@@ -5,19 +5,19 @@ import 'package:json_annotation/json_annotation.dart';
 part 'part/npc.g.dart';
 
 enum Relationship {
-  ally('Alleato'),
-  friend('Amico'),
-  animal('Animale'),
-  basic('Base'),
+  alleato('Alleato'),
+  amico('Amico'),
+  animale('Animale'),
+  base('Base'),
   boss('Boss'),
-  divinity('Divinità'),
-  family('Famiglia'),
-  innkeeper('Locandiere'),
-  master('Maestro'),
-  monster('Mostriciattolo'),
-  nemesis('Nemesi'),
-  enemy('Nemico'),
-  patron('Patrono');
+  divinita('Divinità'),
+  famiglia('Famiglia'),
+  locandiere('Locandiere'),
+  maestro('Maestro'),
+  mostriciattolo('Mostriciattolo'),
+  nemesi('Nemesi'),
+  nemico('Nemico'),
+  patrono('Patrono');
 
   final String title;
 
@@ -40,7 +40,7 @@ class Npc implements JSONSerializable, Identifiable {
         description = description ?? '';
 
   get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
-
+  @override
   factory Npc.fromJson(Map<String, dynamic> json) => _$NpcFromJson(json);
 
   @override

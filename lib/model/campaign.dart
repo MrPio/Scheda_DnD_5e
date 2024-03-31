@@ -19,7 +19,7 @@ class Campaign implements JSONSerializable, Identifiable {
       : regDateTimestamp = DateTime.now().millisecondsSinceEpoch;
 
   get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
-
+  @override
   factory Campaign.fromJson(Map<String, dynamic> json) =>
       _$CampaignFromJson(json);
 
