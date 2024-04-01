@@ -1,9 +1,10 @@
 extension ListExtensions on List {
   List toggle(element) {
-    if (contains(element))
+    if (contains(element)) {
       remove(element);
-    else
+    } else {
       add(element);
+    }
     return this;
   }
 }

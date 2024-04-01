@@ -1,8 +1,28 @@
+import 'package:scheda_dnd_5e/interface/comparable.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'character.dart';
 
 part 'part/enchantment.g.dart';
+
+enum Level {
+  level0('Trucchetto'),
+  level1('Livello 1'),
+  level2('Livello 2'),
+  level3('Livello 3'),
+  level4('Livello 4'),
+  level5('Livello 5'),
+  level6('Livello 6'),
+  level7('Livello 7'),
+  level8('Livello 8'),
+  level9('Livello 9');
+
+  final String title;
+
+  int get num => int.parse(name.split('level')[1]);
+
+  const Level(this.title);
+}
 
 enum Type {
   evocazione('Evocazione'),
@@ -110,9 +130,9 @@ enum Component {
 }
 
 @JsonSerializable()
-class Enchantment implements JSONSerializable {
+class Enchantment with Comparable<Enchantment> implements JSONSerializable {
   final String name, description;
-  final int level;
+  final Level level;
   final Type type;
   final List<Class> classes;
 
@@ -133,23 +153,22 @@ class Enchantment implements JSONSerializable {
   final List<Component> components;
   final String componentsDescription;
 
-
   Enchantment(
-      this.name,
-      this.level,
-      this.type,
-      this.classes,
-      this.range,
-      this.rangeType,
-      this.isCharmer,
-      this.launchTime,
-      this.launchCondition,
-      this.duration,
-      this.concentration,
-      this.components,
-      this.componentsDescription,
-      this.description,
-      );
+    this.name,
+    level,
+    this.type,
+    this.classes,
+    this.range,
+    this.rangeType,
+    this.isCharmer,
+    this.launchTime,
+    this.launchCondition,
+    this.duration,
+    this.concentration,
+    this.components,
+    this.componentsDescription,
+    this.description,
+  ) : level = Level.values[level];
 
   @override
   factory Enchantment.fromJson(Map<String, dynamic> json) =>
@@ -157,4 +176,10 @@ class Enchantment implements JSONSerializable {
 
   @override
   Map<String, dynamic> toJSON() => _$EnchantmentToJson(this);
+
+  @override
+  // Compare first by level than by name
+  int compareTo(Enchantment other) => level.num.compareTo(other.level.num) == 0
+      ? name.compareTo(other.name)
+      : level.num.compareTo(other.level.num);
 }

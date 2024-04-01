@@ -5,23 +5,43 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/extension/function/context_extensions.dart';
+import 'package:scheda_dnd_5e/extension/function/list_extensions.dart';
+import 'package:scheda_dnd_5e/extension/function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
+import 'package:scheda_dnd_5e/model/character.dart';
 import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
+import 'dart:core' hide Type;
+import 'dart:core' as core show Type;
 
 import 'partial/gradient_background.dart';
 
-enum EnchantmentFilter {
-  charmer('Incantatore', Palette.primaryGreen),
-  level('Livello', Palette.primaryRed),
-  type('Tipo', Palette.primaryBlue);
-
+class EnchantmentFilter<T extends Enum> {
   final String title;
   final Color color;
+  final List<T> values;
+  final bool Function(Enchantment, List<T>) filterCondition;
 
-  const EnchantmentFilter(this.title, this.color);
+  final List<T> selectedValues = [];
+
+  core.Type get enumType => T;
+
+  EnchantmentFilter(this.title, this.color, this.values, this.filterCondition);
+
+  bool checkFilter(Enchantment enchantment) =>
+      selectedValues.isEmpty || filterCondition(enchantment, selectedValues);
+
+  String getName(value) => switch (T) {
+        const (Class) => (value as Class).title,
+        const (Level) => (value as Level).title,
+        const (Type) => (value as Type).title,
+        _ => '',
+      };
+
+  void reset() => selectedValues.clear();
 }
 
 class EnchantmentsPage extends StatefulWidget {
@@ -34,9 +54,33 @@ class EnchantmentsPage extends StatefulWidget {
 class _EnchantmentsPageState extends State<EnchantmentsPage> {
   late final TextEditingController _searchController;
 
+  late final List<EnchantmentFilter> _filters;
+
+  List<Enchantment> get _enchantments => DataManager()
+      .enchantments
+      .where((e) =>
+          _filters.every((filter) => filter.checkFilter(e)) &&
+          e.name.match(_searchController.text))
+      .toList()..sort();
+
   @override
   void initState() {
-    _searchController = TextEditingController();
+    _searchController = TextEditingController()
+      ..addListener(() {
+        setState(() {});
+      });
+    _filters = [
+      EnchantmentFilter<Class>(
+          'Classe',
+          Palette.primaryGreen,
+          Class.values.where((e) => e.isEnchanter).toList(),
+          (enchantment, values) =>
+              enchantment.classes.any((c) => values.contains(c))),
+      EnchantmentFilter<Level>('Livello', Palette.primaryRed, Level.values,
+          (enchantment, values) => values.contains(enchantment.level)),
+      EnchantmentFilter<Type>('Tipo', Palette.primaryBlue, Type.values,
+          (enchantment, values) => values.contains(enchantment.type)),
+    ];
     super.initState();
   }
 
@@ -48,12 +92,13 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final enchantments = _enchantments;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
           // Background
-          const GradientBackground(topColor: Palette.backgroundMagenta),
+          const GradientBackground(topColor: Palette.backgroundPurple),
           // Header + Body
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
@@ -74,40 +119,58 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                 ),
                 // Body
                 Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: Measures.vMarginMed),
-                        Text('Che incantesimo stai cercando?',
-                            style: Fonts.black()),
-                        const SizedBox(height: Measures.vMarginMed),
-                        // Search TextField
-                        GlassTextField(
-                          iconPath: 'search_alt',
-                          hintText: 'Cerca un incantesimo',
-                          textController: _searchController,
-                        ),
-                        // Filters
-                        GridView.count(
-                            crossAxisCount: 3,
-                            childAspectRatio: 2.5,
-                            shrinkWrap: true,
-                            crossAxisSpacing: 10,
-                            children: List.generate(
-                                EnchantmentFilter.values.length,
-                                (i) => RadioButton(
-                                    text: EnchantmentFilter.values[i].title,
-                                    color: EnchantmentFilter.values[i].color))),
-                        // Found enchantments
-                        const SizedBox(height: Measures.vMarginMed),
-                        Column(
-                            children: List.generate(
-                                DataManager().enchantments.length,
-                                (i) => enchantmentCard(
-                                    DataManager().enchantments[i])))
-                      ],
+                  child: Column(children: [
+                    const SizedBox(height: Measures.vMarginMed),
+                    Text('Che incantesimo stai cercando?',
+                        style: Fonts.black()),
+                    const SizedBox(height: Measures.vMarginMed),
+                    // Search TextField
+                    GlassTextField(
+                      iconPath: 'search_alt',
+                      hintText: 'Cerca un incantesimo',
+                      textController: _searchController,
                     ),
-                  ),
+                    // Filters
+                    GridView.count(
+                        crossAxisCount: 3,
+                        childAspectRatio: 2.5,
+                        shrinkWrap: true,
+                        crossAxisSpacing: 10,
+                        children: List.generate(
+                            _filters.length,
+                            (i) => RadioButton(
+                                selected: _filters[i].selectedValues.isNotEmpty,
+                                text: _filters[i].title,
+                                color: _filters[i].color,
+                                onPressed: () =>
+                                    _filters[i].selectedValues.isNotEmpty
+                                        ? setState(() => _filters[i].reset())
+                                        : context.checklist(
+                                            'Filtro su ${_filters[i].title.toLowerCase()}',
+                                            values: _filters[i].values,
+                                            color: _filters[i].color,
+                                            onChanged: (value) => setState(() =>
+                                                _filters[i]
+                                                    .selectedValues
+                                                    .toggle(value)),
+                                            text: (value) =>
+                                                _filters[i].getName(value),
+                                            value: (value) => _filters[i]
+                                                .selectedValues
+                                                .contains(value),
+                                          )))),
+                    // Found enchantments
+                    const SizedBox(height: Measures.vMarginSmall),
+                    // Nothing to show
+                    if(enchantments.isEmpty)
+                      Align(child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2))),
+                    Expanded(
+                      child: ListView.builder(
+                          itemCount: enchantments.length,
+                          itemBuilder: (_, i) =>
+                              enchantmentCard(enchantments[i])),
+                    ),
+                  ]),
                 ),
               ],
             ),
@@ -116,6 +179,8 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
       ),
     );
   }
+
+  var c = 0;
 
   enchantmentCard(Enchantment model) => Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
@@ -127,22 +192,28 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // Title and type
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(model.name, style: Fonts.bold(size: 18)),
-                    Text(model.type.title, style: Fonts.light(size: 16)),
-                  ],
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SingleChildScrollView(
+                          child: Text(model.name, style: Fonts.bold(size: 18))),
+                      Text(model.type.title, style: Fonts.light(size: 16)),
+                    ],
+                  ),
                 ),
+                const SizedBox(width: Measures.hMarginMed),
                 // Level
                 Container(
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.fromBorderSide(BorderSide(
-                            color: Palette.primaryYellow, width: 1))),
+                            color: Color.lerp(Palette.primaryYellow,
+                                Palette.primaryRed, model.level.num / 7.0)!,
+                            width: 2))),
                     child: Padding(
                       padding: const EdgeInsets.all(12),
-                      child: Text(model.level.toString(),
+                      child: Text(model.level.num.toString(),
                           style: Fonts.regular(size: 16)),
                     )),
               ],
