@@ -15,11 +15,11 @@ class DatabaseManager {
   final FirebaseFirestore _database = FirebaseFirestore.instance;
   var paginateKeys = HashMap<String, String?>();
 
-  /// Get an object from the given location
+  // Get an object from the given location
   Future<Map<String, dynamic>> get(String path) async =>
       jsonDecode(jsonEncode((await _database.doc(path).get()).data() as Map));
 
-  /// Get a list of object and paginate it
+  // Get a list of object and paginate it
   Future<List<T>?> getList<T extends JSONSerializable>(String collection,
       {pageSize = 30}) async {
     final lastKey = paginateKeys[collection];
@@ -45,11 +45,11 @@ class DatabaseManager {
     return dataList.map((e) => JSONSerializable.modelFactories[T]!(e)).toList().cast<T>() ;
   }
 
-  /// Put an object to a given location
+  // Put an object to a given location
   Future<void> put(String path, dynamic object) async =>
       _database.doc(path).set(object);
 
-  /// Push given object in a new child on the giving location. Returns the created key
+  // Push given object in a new child on the giving location. Returns the created key
   Future<String?> post(String collection, dynamic object) async {
     final node = _database.collection(collection).doc();
     await node.set(object);

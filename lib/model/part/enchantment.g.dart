@@ -8,7 +8,7 @@ part of '../enchantment.dart';
 
 Enchantment _$EnchantmentFromJson(Map<String, dynamic> json) => Enchantment(
       json['name'] as String,
-      json['level'] as int,
+      $enumDecode(_$LevelEnumMap, json['level']),
       $enumDecode(_$TypeEnumMap, json['type']),
       (json['classes'] as List<dynamic>)
           .map((e) => $enumDecode(_$ClassEnumMap, e))
@@ -31,7 +31,7 @@ Map<String, dynamic> _$EnchantmentToJson(Enchantment instance) =>
     <String, dynamic>{
       'name': instance.name,
       'description': instance.description,
-      'level': instance.level,
+      'level': _$LevelEnumMap[instance.level]!,
       'type': _$TypeEnumMap[instance.type]!,
       'classes': instance.classes.map((e) => _$ClassEnumMap[e]!).toList(),
       'range': _$RangeEnumMap[instance.range]!,
@@ -45,6 +45,19 @@ Map<String, dynamic> _$EnchantmentToJson(Enchantment instance) =>
           instance.components.map((e) => _$ComponentEnumMap[e]!).toList(),
       'componentsDescription': instance.componentsDescription,
     };
+
+const _$LevelEnumMap = {
+  Level.level0: 'level0',
+  Level.level1: 'level1',
+  Level.level2: 'level2',
+  Level.level3: 'level3',
+  Level.level4: 'level4',
+  Level.level5: 'level5',
+  Level.level6: 'level6',
+  Level.level7: 'level7',
+  Level.level8: 'level8',
+  Level.level9: 'level9',
+};
 
 const _$TypeEnumMap = {
   Type.evocazione: 'evocazione',

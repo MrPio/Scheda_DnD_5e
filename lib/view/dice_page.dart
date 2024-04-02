@@ -33,6 +33,7 @@ class _DicePageState extends State<DicePage>
   late final AnimationController _diceRotationController;
   int _modifier = 0;
 
+  /// The number of columns of the selected dice grid is calculated according to the number of the dice
   int get numberOfCols {
     switch (_selectedDice.length) {
       case > 6:
@@ -44,6 +45,8 @@ class _DicePageState extends State<DicePage>
     }
   }
 
+  /// The ratio of the selected dice is calculated according to their number.
+  /// A height cover policy is then used to resize the icons
   double get ratio {
     switch (_selectedDice.length) {
       case > 8:

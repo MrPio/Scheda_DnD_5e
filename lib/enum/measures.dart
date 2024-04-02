@@ -6,7 +6,7 @@ class Measures {
   static const hMarginMed = 12.0;
   static const hTextFieldPadding=18.0;
   static const vButtonPadding=13.0;
-  static const hPadding = 20.0;
+  static const hPadding = 24.0;
   static const diceCardHeight = 62.0;
   static const bottomButtonMargin = 30.0;
 }

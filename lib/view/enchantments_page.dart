@@ -61,7 +61,8 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
       .where((e) =>
           _filters.every((filter) => filter.checkFilter(e)) &&
           e.name.match(_searchController.text))
-      .toList()..sort();
+      .toList()
+    ..sort();
 
   @override
   void initState() {
@@ -162,8 +163,10 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                     // Found enchantments
                     const SizedBox(height: Measures.vMarginSmall),
                     // Nothing to show
-                    if(enchantments.isEmpty)
-                      Align(child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2))),
+                    if (enchantments.isEmpty)
+                      Align(
+                          child: Text('Niente da mostrare',
+                              style: Fonts.black(color: Palette.card2))),
                     Expanded(
                       child: ListView.builder(
                           itemCount: enchantments.length,
@@ -185,7 +188,8 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
   enchantmentCard(Enchantment model) => Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: GlassCard(
-          onTap: () {},
+          onTap: () =>
+              Navigator.of(context).pushNamed('/enchantment', arguments: model),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
             child: Row(

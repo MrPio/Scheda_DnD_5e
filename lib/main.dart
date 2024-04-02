@@ -7,6 +7,7 @@ import 'package:scheda_dnd_5e/manager/dummy_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
+import 'package:scheda_dnd_5e/view/enchantment_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
 
 import 'firebase_options.dart';
@@ -17,7 +18,9 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await IOManager().init();
-  DataManager().fetchData();
+  // await DummyManager().populateEnchantments();
+  // IOManager().remove('enchantments_timestamp');
+ await DataManager().fetchData();
   runApp(const MyApp());
 }
 
@@ -36,6 +39,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const EnchantmentsPage(),
         '/dice': (context) => const DicePage(),
         '/enchantments': (context) => const EnchantmentsPage(),
+        '/enchantment': (context) => const EnchantmentPage(),
       },
     );
   }

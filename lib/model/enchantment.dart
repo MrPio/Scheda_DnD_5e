@@ -65,12 +65,16 @@ enum Range {
 }
 
 enum RangeType {
-  punto,
-  raggio,
-  semisfera,
-  linea,
-  cono,
-  cubo;
+  punto(''),
+  raggio('raggio di'),
+  semisfera('semisfera del raggio di'),
+  linea('linea di'),
+  cono('cono di'),
+  cubo('cubo con spigolo di');
+
+  final String title;
+
+  const RangeType(this.title);
 }
 
 enum LaunchTime {
@@ -120,9 +124,9 @@ enum Duration {
 }
 
 enum Component {
-  v('verbale'),
-  s('somatica'),
-  m('materiale');
+  v('Verbale'),
+  s('Somatica'),
+  m('Materiale');
 
   final String title;
 
@@ -153,22 +157,20 @@ class Enchantment with Comparable<Enchantment> implements JSONSerializable {
   final List<Component> components;
   final String componentsDescription;
 
-  Enchantment(
-    this.name,
-    level,
-    this.type,
-    this.classes,
-    this.range,
-    this.rangeType,
-    this.isCharmer,
-    this.launchTime,
-    this.launchCondition,
-    this.duration,
-    this.concentration,
-    this.components,
-    this.componentsDescription,
-    this.description,
-  ) : level = Level.values[level];
+  Enchantment(this.name,
+      this.level,
+      this.type,
+      this.classes,
+      this.range,
+      this.rangeType,
+      this.isCharmer,
+      this.launchTime,
+      this.launchCondition,
+      this.duration,
+      this.concentration,
+      this.components,
+      this.componentsDescription,
+      this.description,);
 
   @override
   factory Enchantment.fromJson(Map<String, dynamic> json) =>
@@ -179,7 +181,22 @@ class Enchantment with Comparable<Enchantment> implements JSONSerializable {
 
   @override
   // Compare first by level than by name
-  int compareTo(Enchantment other) => level.num.compareTo(other.level.num) == 0
-      ? name.compareTo(other.name)
-      : level.num.compareTo(other.level.num);
+  int compareTo(Enchantment other) =>
+      level.num.compareTo(other.level.num) == 0
+          ? name.compareTo(other.name)
+          : level.num.compareTo(other.level.num);
+
+  String get launchTimeStr =>
+      launchTime.title +
+          (launchCondition.isNotEmpty ? '($launchCondition)' : '');
+
+  String get rangeStr =>
+      '${rangeType.title} ${range.title}${isCharmer ? ' (Incantatore)' : ''}';
+
+  String get componentsStr =>
+      components.map((e) => e.title).join(', ') +
+          (componentsDescription.isNotEmpty ? ' ($componentsDescription)' : '');
+
+  String get durationStr =>
+      (concentration ? 'concentrazione, ':'') + duration.title;
 }

@@ -24,7 +24,7 @@ class RadioButton extends StatefulWidget {
 
 class _RadioButtonState extends State<RadioButton> {
   TextStyle get textStyle =>
-      widget.selected ? Fonts.regular(size: 14) : Fonts.bold(size: 14);
+      widget.selected ? Fonts.bold(size: 14) : Fonts.regular(size: 14);
 
   double get buttonBorderWidth => widget.selected ? 0 : 1;
 
@@ -44,7 +44,7 @@ class _RadioButtonState extends State<RadioButton> {
           foregroundColor: Colors.transparent,
           padding: const EdgeInsets.symmetric(
               vertical: Measures.vButtonPadding,
-              horizontal: Measures.hTextFieldPadding),
+              horizontal: Measures.hPadding),
         ),
         child: Text(widget.text, style: textStyle));
   }
