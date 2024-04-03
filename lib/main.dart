@@ -18,8 +18,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await IOManager().init();
+  // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+  // DEBUG ZONE
   // await DummyManager().populateEnchantments();
-  // IOManager().remove('enchantments_timestamp');
+  // await IOManager().remove('enchantments_timestamp');
+  // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
  await DataManager().fetchData();
   runApp(const MyApp());
 }

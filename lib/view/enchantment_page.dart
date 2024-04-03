@@ -135,7 +135,7 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                             styleSheet: MarkdownStyleSheet(
                                 p: Fonts.light(), listBullet: Fonts.light())),
                       ),
-                      SizedBox(height: Measures.vMarginBig)
+                      const SizedBox(height: Measures.vMarginBig)
                     ],
                   ),
                 ),
