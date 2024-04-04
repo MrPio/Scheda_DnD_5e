@@ -17,13 +17,25 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   await IOManager().init();
-  // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-  // DEBUG ZONE
+  // ⚠️⚠️⚠️ DANGER ZONE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+
+  // 👤👤👤 FIREBASE AUTH 👤👤👤
+  final uid = 'VeaLO6032Qb5VgWj5ajnpvWqjDT2';
+  final email = 'valeriomorelli50@gmail.com';
+  final password = 'aaaaaa';
+  // await IOManager().set(IOManager.accountUID, uid);
+  // await AccountManager().cacheSignIn();
+  await AccountManager().signIn(email, password);
+
+  // 📘📘📘 FIREBASE FIRESTORE 📘📘📘
   // await DummyManager().populateEnchantments();
   // await IOManager().remove('enchantments_timestamp');
-  // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
- await DataManager().fetchData();
+  // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+
+  // TODO: loading screen here!!!
+  await DataManager().fetchData();
   runApp(const MyApp());
 }
 
@@ -33,9 +45,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Scheda DnD 5e',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white, primary: Colors.white),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.white, primary: Colors.white),
         useMaterial3: true,
       ),
       routes: <String, WidgetBuilder>{

@@ -48,6 +48,7 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      // TODO: the tap zone is too small
                       GestureDetector(
                         onTap: () {
                           Navigator.of(context).pop();
@@ -97,6 +98,7 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                       ),
                       const SizedBox(height: Measures.vMarginSmall),
                       // Classes
+                      // TODO: Class page opens onTap
                       Align(
                         alignment: Alignment.centerLeft,
                         child: SingleChildScrollView(

@@ -88,6 +88,7 @@ enum SubClass {
 }
 
 enum Class {
+  // TODO: numero di competenze che posso scegliere
   barbaro(
       'Barbaro',
       [
@@ -209,6 +210,9 @@ enum Class {
 }
 
 enum SubRace {
+  // TODO: add Skill + incremento della caratt
+  // TODO: SONO giusti le sottorazze "totale"?
+  // TODO: classa Dragonide manca di sottorazze
   elfoAlto('Elfo alto',
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Intelligenza aumenta di 1.\n\nADDESTRAMENTO NELLE ARMI ELFICHE\nAvete competenza con spada lunga, spada corta, arco corto e arco lungo.\n\nTRUCCHETTO\nConoscete un trucchetto a vostra scelta dalla lista degli incantesimi da mago.\nL\'Intelligenza è la caratteristica chiave per lanciare questo incantesimo.\n\nLINGUAGGI EXTRA\nPotete parlare, leggere e scrivere un linguaggio extra a vostra scelta.\n</string>    <string name="elfo_alto_totale">ELFO\n\nINCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Destrezza aumenta di 2.\n\nETÀ\nSebbene gli elfi raggiungano la maturità fisica circa alla stessa età degli umani, la cultura elfica dell\'età adulta va oltre la crescita fisica per racchiudere l\'esperienza terrena.\nUn elfo rivendica tipicamente l\'età adulta ed un nome da adulto attorno all\'età di 100 anni e può vivere fino a 750 anni.\n\nALLINEAMENTO\nGli elfi amano la libertà, la diversità e l\'espressione di se stessi, quindi tendono fortemente agli aspetti più moderati del caos.\nStimano e proteggono la libertà degli altri come la propria e sono di solito buoni.\nI drow sono un\'eccezione: il loro esilio nel Sottosuolo li ha resi maligni e pericolosi.\nI drow sono di solito malvagi.\n\nTAGLIA\nGli elfi sono alti tra meno di 150 e più di 180 cm ed hanno corporature snelle.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nSCUROVISIONE\nAbituati a foreste in penombra ed al cielo notturno, avete una vista superiore in condizioni di buio o luce debole.Abituati a foreste in penombra ed al cielo notturno, avete una vista superiore in condizioni di buio o luce debole.\nPossono vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\nNon possono discernere i colori nell\'oscurità, solo sfumature di grigio.\n\nSENSI ACUTI\nSi ottiene competenza nell\'abilità Percezione.\n\nSTIRPE FATATA\nSi ha vantaggio nei tiri salvezza contro l\'essere affascinati e la magia non può farvi addormentare.\n\nTRANCE\nGli elfi non hanno bisogno di dormire.\nInvece meditano profondamente, rimanendo semi-coscienti, per 4 ore al giorno.\nMentre meditano, possono in qualche modo sognare: tali sogni sono in realtà esercizi mentali che sono divenuti riflessivi attraverso anni di pratica.\nDopo aver riposato in questo modo, guadagnate lo stesso beneficio che un umano ottiene da 8 ore di sonno.\n\nLINGUAGGI\nPossono parlare, leggere e scrivere in Comune ed Elfico.\nL\'Elfico è fluido, con intonazioni delicate e una grammatica intricata.\nLa letteratura elfica è ricca e varia e le loro canzoni e i poemi sono famosi tra le altre razze.\nMolti bardi imparano il loro linguaggio così da poter aggiungere le ballate in Elfico ai loro repertori.\n\nELFO ALTO\n\nINCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Intelligenza aumenta di 1.\n\nADDESTRAMENTO NELLE ARMI ELFICHE\nAvete competenza con spada lunga, spada corta, arco corto e arco lungo.\n\nTRUCCHETTO\nConoscete un trucchetto a vostra scelta dalla lista degli incantesimi da mago.\nL\'Intelligenza è la caratteristica chiave per lanciare questo incantesimo.\n\nLINGUAGGI EXTRA\nPotete parlare, leggere e scrivere un linguaggio extra a vostra scelta.'),
   elfoDeiBoschi('Elfo dei boschi',
@@ -250,6 +254,8 @@ enum SubRace {
 }
 
 enum Race {
+  // TODO: add Skill + incremento della caratt
+  // TODO: Mezzelfo ha 1 linguaggio a scelta, 2 Skill a scelta a cui dare +1, 2 SubSkill
   umano('Umano', [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA.\nOgnuno dei punteggi di caratteristica aumenta di 1.\n\nETÀ\nGli umani raggiungono la maturità nel secondo decennio e vivono meno di un secolo.\n\nALLINEAMENTO.\nGli umani non tendono verso nessun allineamento particolare.\nTra loro si trova il meglio ed il peggio.\n\nTAGLIA.\nGli umani variano molto in peso e corporatura, da appena 150 cm a ben più di 180 cm.\nA prescindere dalla posizione in tale intervallo, la taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune ed un linguaggio extra a vostra scelta.\nGli umani imparano tipicamente i linguaggi degli altri popoli con cui fanno affari, inclusi oscuri dialetti.\nGli piace disseminare il loro discorso di parole prese in prestito da altre lingue: maledizioni Orchesche, espressioni musicali Elfiche, frasi militari Naniche e così via.\n'),
   nano(
@@ -318,11 +324,16 @@ enum Skill{
 
 }
 
+enum SubSkill{
+  none
+}
+
 @JsonSerializable()
 class Character implements JSONSerializable, Identifiable {
   final int regDateTimestamp;
+  String? campaignUID;
 
-  Character(this.regDateTimestamp);
+  Character(this.regDateTimestamp, this.campaignUID);
 
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)

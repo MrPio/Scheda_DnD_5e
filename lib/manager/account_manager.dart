@@ -33,7 +33,7 @@ class AccountManager {
   late User user;
 
   Future<bool> cacheSignIn() async {
-    String? uid = await IOManager().get("uid");
+    String? uid = await IOManager().get(IOManager.accountUID);
     if (uid == null) return false;
     user = await DataManager().loadUser(uid, force: true);
     return true;

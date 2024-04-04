@@ -11,6 +11,8 @@ class IOManager {
 
   IOManager._();
 
+  static const String accountUID='accountUID';
+
   late final SharedPreferences prefs;
   final Map<Type, Future<bool> Function(SharedPreferences, String, dynamic)>
       _setMethods = {

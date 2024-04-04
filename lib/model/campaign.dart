@@ -11,14 +11,26 @@ class Campaign implements JSONSerializable, Identifiable {
   final String? password;
   final int regDateTimestamp;
 
+// Note: It is not needed to distinguish between created and joined campaigns
+  final List<String> npcsUIDs, sessionsUIDs, charactersUIDs;
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   late final String? uid;
 
-  Campaign({this.name, this.authorUID, this.password})
-      : regDateTimestamp = DateTime.now().millisecondsSinceEpoch;
+  Campaign(
+      {this.name,
+      this.authorUID,
+      this.password,
+      npcsUIDs,
+      sessionsUIDs,
+      charactersUIDs})
+      : regDateTimestamp = DateTime.now().millisecondsSinceEpoch,
+        npcsUIDs = npcsUIDs ?? [],
+        sessionsUIDs = sessionsUIDs ?? [],
+        charactersUIDs = charactersUIDs ?? [];
 
   get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
+
   @override
   factory Campaign.fromJson(Map<String, dynamic> json) =>
       _$CampaignFromJson(json);
