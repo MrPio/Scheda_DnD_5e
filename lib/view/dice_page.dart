@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scheda_dnd_5e/enum/dice.dart';
 import 'package:scheda_dnd_5e/enum/fonts.dart';
@@ -31,7 +34,7 @@ class _DicePageState extends State<DicePage>
       minModifier = -20,
       maxModifier = 20;
   late final AnimationController _diceRotationController;
-  int _modifier = 0;
+  late final TextEditingController _modifierController;
 
   /// The number of columns of the selected dice grid is calculated according to the number of the dice
   int get numberOfCols {
@@ -63,6 +66,12 @@ class _DicePageState extends State<DicePage>
         return 1;
     }
   }
+
+  /// The integer value of the modifier
+  int get modifier => int.parse(_modifierController.text);
+
+  set modifier(int value) =>
+      setState(() => _modifierController.text = value.toString());
 
   @override
   Widget build(BuildContext context) {
@@ -97,11 +106,11 @@ class _DicePageState extends State<DicePage>
                               'assets/images/icons/chevron_left.svg',
                               height: 24),
                         ),
-                        if (_selectedDice.isNotEmpty || _modifier != 0)
+                        if (_selectedDice.isNotEmpty || modifier != 0)
                           GestureDetector(
                             onTap: () {
                               _selectedDice = [];
-                              _modifier = 0;
+                              modifier = 0;
                               setState(() {});
                             },
                             child: SvgPicture.asset(
@@ -201,16 +210,16 @@ class _DicePageState extends State<DicePage>
                                         width: 54,
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            if (_modifier > minModifier) {
+                                            if (modifier > minModifier) {
                                               setState(() {
-                                                _modifier--;
+                                                modifier--;
                                               });
                                             }
                                           },
                                           onLongPress: () {
-                                            if (_modifier > minModifier + 4) {
+                                            if (modifier > minModifier + 4) {
                                               setState(() {
-                                                _modifier -= 5;
+                                                modifier -= 5;
                                               });
                                             }
                                           },
@@ -225,25 +234,47 @@ class _DicePageState extends State<DicePage>
                                               size: 30),
                                         ),
                                       ),
-                                      const SizedBox(width: 30),
-                                      Text(_modifier.toModifierString(),
-                                          style: Fonts.black(size: 28)),
-                                      const SizedBox(width: 30),
+                                      const SizedBox(
+                                          width: Measures.hMarginMed),
+                                      SizedBox(
+                                        width: 70,
+                                        child: TextField(
+                                            keyboardAppearance: Brightness.dark,
+                                            keyboardType: TextInputType.number,
+                                            maxLength: 3,
+                                            textAlign: TextAlign.center,
+                                            decoration: InputDecoration(
+                                                contentPadding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        4, 8, 4, 8),
+                                                border: InputBorder.none,
+                                                hintStyle: Fonts.light(
+                                                    color: Palette.hint),
+                                                hoverColor:
+                                                    Palette.onBackground,
+                                                focusColor:
+                                                    Palette.onBackground,
+                                                counterText: ''),
+                                            controller: _modifierController,
+                                            style: Fonts.black(size: 28)),
+                                      ),
+                                      const SizedBox(
+                                          width: Measures.hMarginMed),
                                       SizedBox(
                                         height: 54,
                                         width: 54,
                                         child: ElevatedButton(
                                           onPressed: () {
-                                            if (_modifier < maxModifier) {
+                                            if (modifier < maxModifier) {
                                               setState(() {
-                                                _modifier++;
+                                                modifier++;
                                               });
                                             }
                                           },
                                           onLongPress: () {
-                                            if (_modifier < maxModifier - 4) {
+                                            if (modifier < maxModifier - 4) {
                                               setState(() {
-                                                _modifier += 5;
+                                                modifier += 5;
                                               });
                                             }
                                           },
@@ -364,9 +395,9 @@ class _DicePageState extends State<DicePage>
               child: Column(
                 children: [
                   Text(
-                      '(${_diceValues.where((e) => e > 0).join(' + ')})${_modifier != 0 ? ' ${_modifier.toSignString()} ${_modifier.abs()}' : ''} =',
+                      '(${_diceValues.where((e) => e > 0).join(' + ')})${modifier != 0 ? ' ${modifier.toSignString()} ${modifier.abs()}' : ''} =',
                       style: Fonts.regular(size: 24)),
-                  Text((_diceValues.sum() + _modifier).toString(),
+                  Text((_diceValues.sum() + modifier).toString(),
                       style: Fonts.black(size: 48))
                 ],
               ),
@@ -385,12 +416,31 @@ class _DicePageState extends State<DicePage>
   void initState() {
     _diceRotationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: rollDuration));
+    _modifierController = TextEditingController(text: '0');
+    _modifierController.addListener(() {
+      if (_modifierController.text.contains('--')) {
+        _modifierController.text =
+            _modifierController.text.replaceAll('--', '-');
+      }
+      if(_modifierController.text.contains('-') &&_modifierController.text.indexOf('-')!=0){
+        _modifierController.text ='-${_modifierController.text.replaceAll('-', '')}';
+      }
+      if(_modifierController.text.contains('.') || _modifierController.text.contains(',')){
+        _modifierController.text =_modifierController.text.replaceAll('.', '').replaceAll(',', '');
+      }
+      if (_modifierController.text.isEmpty) {
+        modifier = 0;
+      } else if (!_modifierController.text.contains('+') && modifier > 0) {
+        _modifierController.text = '+$modifier';
+      }
+    });
     super.initState();
   }
 
   @override
   void dispose() {
     _diceRotationController.dispose();
+    _modifierController.dispose();
     super.dispose();
   }
 }
