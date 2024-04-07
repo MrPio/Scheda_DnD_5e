@@ -8,8 +8,7 @@ part 'part/user.g.dart';
 
 @JsonSerializable()
 class User implements JSONSerializable, Identifiable {
-  final String name;
-  final String surname;
+  final String nickname, email;
   final int regDateTimestamp;
 
   // Note: It is not needed to distinguish between created and joined campaigns
@@ -26,8 +25,8 @@ class User implements JSONSerializable, Identifiable {
   List<Character> characters = [];
 
   User(
-      {this.name = "Anonimo",
-      this.surname = "Anonimo",
+      {this.nickname = 'Anonimo',
+      this.email = '',
       int? regDateTimestamp,
       List<String>? campaignsUIDs,
       List<String>? charactersUIDs})

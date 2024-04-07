@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 
 extension ContextExtensions on BuildContext {
   popup(String title,
@@ -14,7 +15,7 @@ extension ContextExtensions on BuildContext {
       Function()? positiveCallback,
       String? negativeText,
       Function()? negativeCallback,
-      bool noContentHPadding=false}) {
+      bool noContentHPadding = false}) {
     showDialog(
       context: this,
       builder: (_) {
@@ -30,31 +31,36 @@ extension ContextExtensions on BuildContext {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 16.0, sigmaY: 16.0),
               child: Container(
-                padding: EdgeInsets.symmetric(vertical: 26, horizontal: noContentHPadding?0:26),
+                padding: EdgeInsets.symmetric(
+                    vertical: 26, horizontal: noContentHPadding ? 0 : 26),
                 color: backgroundColor,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: noContentHPadding?26:0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: noContentHPadding ? 26 : 0),
                       child: Text(title, style: Fonts.bold()),
                     ),
                     const SizedBox(height: Measures.vMarginSmall),
-                    if (message != null) Padding(
-                      padding: EdgeInsets.symmetric(horizontal: noContentHPadding?26:0),
-                      child: Text(message, style: Fonts.regular()),
-                    ),
+                    if (message != null)
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: noContentHPadding ? 26 : 0).copyWith(bottom: Measures.vMarginSmall),
+                        child: Text(message, style: Fonts.light(size: 16)),
+                      ),
                     if (child != null)
                       ConstrainedBox(
                           constraints: const BoxConstraints(
-                            minHeight: 100,
+                            minHeight: 50,
                             maxHeight: 300,
                           ),
                           child: SingleChildScrollView(child: child)),
                     const SizedBox(height: Measures.vMarginThin),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: noContentHPadding?26:0),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: noContentHPadding ? 26 : 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -65,7 +71,7 @@ extension ContextExtensions on BuildContext {
                                 Navigator.pop(this);
                               },
                               child: Text(positiveText.toUpperCase(),
-                                  style: Fonts.bold(size: 16)),
+                                  style: Fonts.bold(size: 15)),
                             ),
                           if (negativeText != null)
                             TextButton(
@@ -74,7 +80,7 @@ extension ContextExtensions on BuildContext {
                                 Navigator.pop(this);
                               },
                               child: Text(negativeText.toUpperCase(),
-                                  style: Fonts.bold(size: 16)),
+                                  style: Fonts.bold(size: 15)),
                             ),
                         ],
                       ),
@@ -109,7 +115,7 @@ extension ContextExtensions on BuildContext {
               right: Measures.hPadding,
               bottom: bottomMargin),
           shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(99))),
+              borderRadius: BorderRadius.all(Radius.circular(25))),
           behavior: SnackBarBehavior.floating,
           backgroundColor: backgroundColor.withOpacity(0.65),
           elevation: 0,
@@ -122,7 +128,7 @@ extension ContextExtensions on BuildContext {
       Function(T)? onChanged,
       bool Function(T)? value,
       String Function(T)? text,
-      Color color=Palette.primaryBlue}) {
+      Color color = Palette.primaryBlue}) {
     popup(title,
         noContentHPadding: true,
         backgroundColor: Palette.popup,
@@ -139,23 +145,14 @@ extension ContextExtensions on BuildContext {
                           padding: const EdgeInsets.symmetric(horizontal: 26),
                           child: Row(
                             children: [
-                              Checkbox(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(3),
-                                  ),
-                                  side: MaterialStateBorderSide.resolveWith(
-                                    (states) => states
-                                            .contains(MaterialState.selected)
-                                        ? const BorderSide(
-                                            color: Colors.transparent)
-                                        : const BorderSide(color: Palette.card2),
-                                  ),
-                                  activeColor: color,
-                                  checkColor: Palette.onBackground,
-                                  value: value?.call(values[j]),
-                                  onChanged: (_) =>
-                                      setState(() => onChanged?.call(values[j]))),
-                              Text(text?.call(values[j])??'', style: Fonts.regular())
+                              GlassCheckbox(
+                                value: value?.call(values[j]),
+                                onChanged: () =>
+                                    setState(() => onChanged?.call(values[j])),
+                                color: color,
+                              ),
+                              Text(text?.call(values[j]) ?? '',
+                                  style: Fonts.regular())
                             ],
                           ),
                         ),

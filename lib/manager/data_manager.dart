@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/extension/function/int_extensions.dart';
 import 'package:scheda_dnd_5e/interface/identifiable.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
@@ -26,7 +27,8 @@ class DataManager {
 
   final anonymous = User();
   List<User> cachedUsers = [];
-  late final List<Enchantment> enchantments;
+  // List<Enchantment>? enchantments;
+  ValueNotifier<List<Enchantment>?> enchantments = ValueNotifier(null);
 
   fetchData() async {
     // Loading enchantments ============================================
@@ -35,20 +37,20 @@ class DataManager {
         await IOManager().get<int>('enchantments_timestamp') ?? 0;
     if (enchantmentsTimestamp.elapsedTime().inDays >= 7) {
       print('Scarico gli enchantments');
-      enchantments = await DatabaseManager()
+      enchantments.value = await DatabaseManager()
               .getList<Enchantment>('enchantments', pageSize: 9999) ??
           [];
-      IOManager().serializeObjects('enchantments', enchantments);
+      IOManager().serializeObjects('enchantments', enchantments.value!);
     } else {
       print('Leggo localmente gli enchantments');
-      enchantments =
+      enchantments.value =
           await IOManager().deserializeObjects<Enchantment>('enchantments');
     }
   }
 
   // Load a single User object from a given uid
-  Future<User> loadUser(String? uid, {bool force = false}) async {
-    if (!force) {
+  Future<User> loadUser(String? uid, {bool useCache = true}) async {
+    if (useCache) {
       // Is anonymous?
       if (uid == null) {
         return anonymous;

@@ -1,25 +1,31 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
-import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
 import 'data_manager.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 enum SignInStatus {
   success,
   wrongCredentials,
-  userNotInDatabase;
-
-  const SignInStatus();
+  userNotInDatabase,
+  googleProviderError,
+  canceled,
+  successNewAccount;
 }
-
 
 enum SignUpStatus {
   success,
   weakPassword,
   emailInUse,
-  genericError;
+  genericError,
+  googleProviderError,
+  canceled;
+}
 
-  const SignUpStatus();
+enum ResetPasswordStatus {
+  success,
+  error;
 }
 
 class AccountManager {
@@ -30,21 +36,23 @@ class AccountManager {
   AccountManager._();
 
   final fb.FirebaseAuth _auth = fb.FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
   late User user;
 
-  Future<bool> cacheSignIn() async {
-    String? uid = await IOManager().get(IOManager.accountUID);
-    if (uid == null) return false;
-    user = await DataManager().loadUser(uid, force: true);
-    return true;
+  Future<bool> cachedSignIn() async {
+    if (_auth.currentUser != null) {
+      user =
+          await DataManager().loadUser(_auth.currentUser?.uid, useCache: false);
+    }
+    return _auth.currentUser != null;
   }
 
-  Future<SignInStatus> signIn(emailAddress, password) async {
+  Future<SignInStatus> signIn(String emailAddress, String password) async {
     try {
-      final credential = await _auth.signInWithEmailAndPassword(
+      final userCredential = await _auth.signInWithEmailAndPassword(
           email: emailAddress, password: password);
-      await IOManager().set("uid", credential.user!.uid);
-      user = await DataManager().loadUser(credential.user?.uid, force: true);
+      user = await DataManager()
+          .loadUser(userCredential.user?.uid, useCache: false);
     } catch (e) {
       if (e.toString().contains("type 'Null' is not a subtype")) {
         return SignInStatus.userNotInDatabase;
@@ -61,7 +69,6 @@ class AccountManager {
         password: password,
       );
       newUser.uid = credential.user!.uid;
-      await IOManager().set("uid", credential.user!.uid);
     } on fb.FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         return SignUpStatus.weakPassword;
@@ -77,10 +84,65 @@ class AccountManager {
   }
 
   Future<void> signOut() async {
-    await IOManager().remove("uid");
     await _auth.signOut();
   }
 
-  bool isEmailValid(String email) =>
-      RegExp(r'^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$').hasMatch(email);
+  Future<fb.UserCredential?> _askGoogleAccount() async {
+    if (await GoogleSignIn().isSignedIn()) {
+      await GoogleSignIn().disconnect();
+    }
+    final GoogleSignInAccount? googleSignInAccount =
+        await googleSignIn.signIn();
+
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleSignInAccount.authentication;
+      final fb.AuthCredential credential = fb.GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+      return await _auth.signInWithCredential(credential);
+    }
+    return null;
+  }
+
+  Future<SignInStatus> signInWithGoogle() async {
+    try {
+      final userCredential = await _askGoogleAccount();
+      if (userCredential != null) {
+        if (userCredential.additionalUserInfo!.isNewUser) {
+          print('👤 SignUp with Google');
+          user = User(
+              email: userCredential.user!.email!,
+              nickname: userCredential.user!.displayName!);
+          user.uid = userCredential.user!.uid;
+          DataManager().save(user);
+          return SignInStatus.successNewAccount;
+        } else {
+          print('👤 SignIn with Google');
+          print('📘${userCredential.additionalUserInfo!.profile}');
+          user = await DataManager()
+              .loadUser(userCredential.user?.uid, useCache: false);
+          return SignInStatus.success;
+        }
+      } else {
+        return SignInStatus.canceled;
+      }
+    } catch (e) {
+      print(e);
+      if (e.toString().contains("type 'Null' is not a subtype")) {
+        return SignInStatus.userNotInDatabase;
+      }
+      return SignInStatus.googleProviderError;
+    }
+  }
+
+  Future<ResetPasswordStatus> resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      return ResetPasswordStatus.success;
+    } catch (e) {
+      return ResetPasswordStatus.error;
+    }
+  }
 }

@@ -13,6 +13,7 @@ import 'package:scheda_dnd_5e/model/character.dart';
 import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
+import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
 import 'dart:core' hide Type;
 import 'dart:core' as core show Type;
@@ -56,14 +57,13 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
 
   late final List<EnchantmentFilter> _filters;
 
-  List<Enchantment> get _enchantments => DataManager()
-      .enchantments
+  List<Enchantment> get _enchantments => (DataManager().enchantments.value ?? [])
       .where((e) =>
           _filters.every((filter) => filter.checkFilter(e)) &&
           e.name.match(_searchController.text))
       .toList()
     ..sort();
-
+bool get isDataReady=>DataManager().enchantments.value != null;
   @override
   void initState() {
     _searchController = TextEditingController()
@@ -82,6 +82,9 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
       EnchantmentFilter<Type>('Tipo', Palette.primaryBlue, Type.values,
           (enchantment, values) => values.contains(enchantment.type)),
     ];
+    DataManager().enchantments.addListener(() {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -163,21 +166,21 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                     // Found enchantments
                     const SizedBox(height: Measures.vMarginSmall),
                     // Nothing to show
-                    if (enchantments.isEmpty)
+                    if (isDataReady && enchantments.isEmpty)
                       Align(
                           child: Text('Niente da mostrare',
                               style: Fonts.black(color: Palette.card2))),
                     Expanded(
                       child: ListView.builder(
-                          itemCount: enchantments.length,
+                          itemCount: isDataReady?enchantments.length:10,
                           itemBuilder: (_, i) =>
-                              enchantmentCard(enchantments[i])),
+                          isDataReady?enchantmentCard(enchantments[i]):const GlassCard(isShimmer: true, shimmerHeight: 75)),
                     ),
                   ]),
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

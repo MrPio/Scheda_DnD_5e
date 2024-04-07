@@ -13,6 +13,7 @@ import 'package:scheda_dnd_5e/extension/function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension/function/int_extensions.dart';
 import 'package:scheda_dnd_5e/extension/function/list_extensions.dart';
 import 'package:scheda_dnd_5e/view/partial/dice_card.dart';
+import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';
 
@@ -309,22 +310,13 @@ class _DicePageState extends State<DicePage>
             padding: const EdgeInsets.only(bottom: Measures.bottomButtonMargin),
             child: Align(
               alignment: Alignment.bottomCenter,
-              child: SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-                  child: ElevatedButton(
-                    onPressed: roll,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.primaryGreen,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: Measures.vButtonPadding),
-                      shadowColor: Palette.primaryGreen,
-                      elevation: 12,
-                    ),
-                    child: Text('LANCIA', style: Fonts.button()),
-                  ),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                child: GlassButton(
+                  'LANCIA',
+                  color: Palette.primaryGreen,
+                  onTap: roll,
                 ),
               ),
             ),
@@ -422,11 +414,15 @@ class _DicePageState extends State<DicePage>
         _modifierController.text =
             _modifierController.text.replaceAll('--', '-');
       }
-      if(_modifierController.text.contains('-') &&_modifierController.text.indexOf('-')!=0){
-        _modifierController.text ='-${_modifierController.text.replaceAll('-', '')}';
+      if (_modifierController.text.contains('-') &&
+          _modifierController.text.indexOf('-') != 0) {
+        _modifierController.text =
+            '-${_modifierController.text.replaceAll('-', '')}';
       }
-      if(_modifierController.text.contains('.') || _modifierController.text.contains(',')){
-        _modifierController.text =_modifierController.text.replaceAll('.', '').replaceAll(',', '');
+      if (_modifierController.text.contains('.') ||
+          _modifierController.text.contains(',')) {
+        _modifierController.text =
+            _modifierController.text.replaceAll('.', '').replaceAll(',', '');
       }
       if (_modifierController.text.isEmpty) {
         modifier = 0;
