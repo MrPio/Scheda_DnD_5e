@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       routes: <String, WidgetBuilder>{
-        '/': (context) => const SignInPage(),
+        '/': (context) => const EnchantmentsPage(),
         '/signin': (context) => const SignInPage(),
         '/signup': (context) => const SignUpPage(),
         '/dice': (context) => const DicePage(),
