@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/extension/function/string_extensions.dart';
 
 class GlassTextField extends StatelessWidget {
   TextEditingController? textController;
@@ -34,8 +35,9 @@ class GlassTextField extends StatelessWidget {
             right: secondaryIconPath != null ? 6 : Measures.hTextFieldPadding),
         child: Row(
           children: [
-            SvgPicture.asset('assets/images/icons/$iconPath.svg', height: 22),
-            const SizedBox(width: Measures.hMarginMed),
+            if (iconPath != null)
+              iconPath!.toIcon(),
+            if (iconPath != null) const SizedBox(width: Measures.hMarginMed),
             Expanded(
               child: TextField(
                   cursorColor: Palette.onBackground,
@@ -58,8 +60,7 @@ class GlassTextField extends StatelessWidget {
                   const SizedBox(width: Measures.hMarginMed),
                   GestureDetector(
                     onTap: () => textController!.text = '',
-                    child: SvgPicture.asset('assets/images/icons/close.svg',
-                        height: 16),
+                    child: 'close'.toIcon( height: 16),
                   ),
                 ],
               ),
@@ -72,9 +73,7 @@ class GlassTextField extends StatelessWidget {
                   onTap: onSecondaryIconTap,
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: SvgPicture.asset(
-                        'assets/images/icons/$secondaryIconPath.svg',
-                        height: 22),
+                    child: secondaryIconPath!.toIcon(),
                   ),
                 ),
               ),

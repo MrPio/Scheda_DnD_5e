@@ -4,6 +4,7 @@ import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
 import 'package:scheda_dnd_5e/extension/function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension/function/string_extensions.dart';
+import 'package:scheda_dnd_5e/extension/mixin/loadable.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
@@ -11,6 +12,7 @@ import 'package:scheda_dnd_5e/model/user.dart';
 import 'partial/glass_button.dart';
 import 'partial/glass_text_field.dart';
 import 'partial/gradient_background.dart';
+import 'partial/loading_view.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -19,7 +21,7 @@ class SignUpPage extends StatefulWidget {
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
+class _SignUpPageState extends State<SignUpPage> with Loadable {
   late final TextEditingController _usernameController,
       _emailController,
       _passwordController;
@@ -55,13 +57,13 @@ class _SignUpPageState extends State<SignUpPage> {
                   // Title
                   SizedBox(
                       width: double.infinity,
-                      child: Text('Bentornato!', style: Fonts.black())),
+                      child: Text('Benvenuto!', style: Fonts.black())),
                   const SizedBox(
                     height: Measures.vMarginThin,
                   ),
                   // Subtitle
                   Text(
-                      'Per favore accedi al tuo account per poter utilizzare l’app',
+                      'Crea un account per creare i tuoi personaggi, partecipare a campagne e molto altro!',
                       style: Fonts.light()),
                   const SizedBox(
                     height: Measures.vMarginMed,
@@ -151,61 +153,66 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ),
           ),
+          // LoadingView
+          LoadingView(visible: isLoading)
         ],
       ),
     );
   }
 
-  signUp() async {
-    if (!await IOManager().hasInternetConnection(context)) {
-      return;
-    }
-    if (!_usernameController.text.isUsername) {
-      context.snackbar('Per favore inserisci un nome utente valido',
-          backgroundColor: Palette.primaryBlue);
-    }
-    else if (!_emailController.text.isEmail) {
-      context.snackbar('Per favore inserisci una email valida',
-          backgroundColor: Palette.primaryBlue);
-    } else {
-      SignUpStatus status = await AccountManager()
-          .signUp(_emailController.text, _passwordController.text, User(nickname: _usernameController.text, email: _emailController.text));
-      if (status == SignUpStatus.weakPassword) {
-        context.snackbar('La password è troppo corta!',
-            backgroundColor: Palette.primaryRed);
-      } else if (status == SignUpStatus.emailInUse) {
-        context.snackbar('L\'email è già in uso!',
-            backgroundColor: Palette.primaryRed);
-      } else if (status == SignUpStatus.genericError) {
-        context.snackbar('Errore generico!',
-            backgroundColor: Palette.primaryRed);
-      } else if (status == SignUpStatus.success) {
-        context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
-            backgroundColor: Palette.primaryBlue);
-        Navigator.of(context).pushNamed('/enchantments');
-      }
-    }
-  }
+  signUp() => withLoading(() async{
+        if (!await IOManager().hasInternetConnection(context)) {
+          return;
+        }
+        if (!_usernameController.text.isUsername) {
+          context.snackbar('Per favore inserisci un nome utente valido',
+              backgroundColor: Palette.primaryBlue);
+        } else if (!_emailController.text.isEmail) {
+          context.snackbar('Per favore inserisci una email valida',
+              backgroundColor: Palette.primaryBlue);
+        } else {
+          SignUpStatus status = await AccountManager().signUp(
+              _emailController.text,
+              _passwordController.text,
+              User(
+                  nickname: _usernameController.text,
+                  email: _emailController.text));
+          if (status == SignUpStatus.weakPassword) {
+            context.snackbar('La password è troppo corta!',
+                backgroundColor: Palette.primaryRed);
+          } else if (status == SignUpStatus.emailInUse) {
+            context.snackbar('L\'email è già in uso!',
+                backgroundColor: Palette.primaryRed);
+          } else if (status == SignUpStatus.genericError) {
+            context.snackbar('Errore generico!',
+                backgroundColor: Palette.primaryRed);
+          } else if (status == SignUpStatus.success) {
+            context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
+                backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
+            Navigator.of(context).pushNamed('/home');
+          }
+        }
+      });
 
-  signInWithGoogle() async {
-    if (!await IOManager().hasInternetConnection(context)) {
-      return;
-    }
-    SignInStatus status = await AccountManager().signInWithGoogle();
-    if (status == SignInStatus.googleProviderError) {
-      context.snackbar('Errore nell\'accesso a Google',
-          backgroundColor: Palette.primaryRed);
-    } else if (status == SignInStatus.userNotInDatabase) {
-      context.snackbar('L\'account non è più esistente!',
-          backgroundColor: Palette.primaryRed);
-    } else if (status == SignInStatus.success) {
-      context.snackbar('Bentornato ${AccountManager().user.nickname}!',
-          backgroundColor: Palette.primaryBlue);
-      Navigator.of(context).pushNamed('/enchantments');
-    } else if (status == SignInStatus.successNewAccount) {
-      context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
-          backgroundColor: Palette.primaryGreen);
-      Navigator.of(context).pushNamed('/enchantments');
-    }
-  }
+  signInWithGoogle() => withLoading(() async {
+        if (!await IOManager().hasInternetConnection(context)) {
+          return;
+        }
+        SignInStatus status = await AccountManager().signInWithGoogle();
+        if (status == SignInStatus.googleProviderError) {
+          context.snackbar('Errore nell\'accesso a Google',
+              backgroundColor: Palette.primaryRed);
+        } else if (status == SignInStatus.userNotInDatabase) {
+          context.snackbar('L\'account non è più esistente!',
+              backgroundColor: Palette.primaryRed);
+        } else if (status == SignInStatus.success) {
+          context.snackbar('Bentornato ${AccountManager().user.nickname}!',
+              backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
+          Navigator.of(context).pushNamed('/home');
+        } else if (status == SignInStatus.successNewAccount) {
+          context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
+              backgroundColor: Palette.primaryGreen, bottomMargin: Measures.bottomBarHeight);
+          Navigator.of(context).pushNamed('/home');
+        }
+      });
 }

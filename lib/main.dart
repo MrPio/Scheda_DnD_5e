@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantment_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
+import 'package:scheda_dnd_5e/view/home_page.dart';
 import 'package:scheda_dnd_5e/view/signin_page.dart';
 import 'package:scheda_dnd_5e/view/signup_page.dart';
 import 'package:tuple/tuple.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const SignInPage(),
         // '/signin': (context) => const SignInPage(),
         // '/signup': (context) => const SignUpPage(),
+        '/home': (context) => const HomePage(),
         '/dice': (context) => const DicePage(),
         '/enchantments': (context) => const EnchantmentsPage(),
         '/enchantment': (context) => const EnchantmentPage(),

@@ -4,6 +4,7 @@ import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/extension/function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension/function/string_extensions.dart';
+import 'package:scheda_dnd_5e/extension/mixin/loadable.dart';
 import 'package:scheda_dnd_5e/firebase_options.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
@@ -12,6 +13,7 @@ import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';
+import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
 
 import '../enum/palette.dart';
 
@@ -22,11 +24,10 @@ class SignInPage extends StatefulWidget {
   State<SignInPage> createState() => _SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _SignInPageState extends State<SignInPage> with Loadable {
   static bool _isInitialized = false;
   late final TextEditingController _emailController, _passwordController;
-  bool _passwordVisible = false;
-  bool _rememberMe = true;
+  bool _passwordVisible = false, _rememberMe = true;
 
   @override
   void initState() {
@@ -42,11 +43,11 @@ class _SignInPageState extends State<SignInPage> {
           return;
         }
         // 👤👤👤 FIREBASE AUTH 👤👤👤
-/*      if (await AccountManager().cacheSignIn()) {
-        Navigator.of(context).pushNamed('/enchantments');
+      if (await AccountManager().cacheSignIn()) {
+        Navigator.of(context).pushNamed('/home');
         context.snackbar('Bentornato ${AccountManager().user.nickname}!',
-            backgroundColor: Palette.primaryBlue);
-      }*/
+            backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
+      }
 
         // 📘📘📘 FIREBASE FIRESTORE 📘📘📘
         // ⚠️⚠️⚠️ DANGER ZONE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
@@ -100,7 +101,7 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   // Subtitle
                   Text(
-                      'Per favore accedi al tuo account per poter utilizzare l’app',
+                      'Per favore accedi al tuo account per poter utilizzare l’app.',
                       style: Fonts.light()),
                   const SizedBox(
                     height: Measures.vMarginMed,
@@ -201,56 +202,58 @@ class _SignInPageState extends State<SignInPage> {
               ),
             ),
           ),
+          // LoadingView
+          LoadingView(visible: isLoading)
         ],
       ),
     );
   }
 
-  signIn() async {
-    if (!await IOManager().hasInternetConnection(context)) {
-      return;
-    }
-    if (!_emailController.text.isEmail) {
-      context.snackbar('Per favore inserisci una email valida',
-          backgroundColor: Palette.primaryBlue);
-    } else {
-      SignInStatus status = await AccountManager()
-          .signIn(_emailController.text, _passwordController.text);
-      if (status == SignInStatus.wrongCredentials) {
-        context.snackbar('Le credenziali sono errate!',
-            backgroundColor: Palette.primaryRed);
-      } else if (status == SignInStatus.userNotInDatabase) {
-        context.snackbar('L\'account non è più esistente!',
-            backgroundColor: Palette.primaryRed);
-      } else if (status == SignInStatus.success) {
-        context.snackbar('Bentornato ${AccountManager().user.nickname}!',
-            backgroundColor: Palette.primaryBlue);
-        Navigator.of(context).pushNamed('/enchantments');
-      }
-    }
-  }
+  signIn() => withLoading(() async {
+        if (!await IOManager().hasInternetConnection(context)) {
+          return;
+        }
+        if (!_emailController.text.isEmail) {
+          context.snackbar('Per favore inserisci una email valida',
+              backgroundColor: Palette.primaryBlue);
+        } else {
+          SignInStatus status = await AccountManager()
+              .signIn(_emailController.text, _passwordController.text);
+          if (status == SignInStatus.wrongCredentials) {
+            context.snackbar('Le credenziali sono errate!',
+                backgroundColor: Palette.primaryRed);
+          } else if (status == SignInStatus.userNotInDatabase) {
+            context.snackbar('L\'account non è più esistente!',
+                backgroundColor: Palette.primaryRed);
+          } else if (status == SignInStatus.success) {
+            context.snackbar('Bentornato ${AccountManager().user.nickname}!',
+                backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
+            Navigator.of(context).pushNamed('/home');
+          }
+        }
+      });
 
-  signInWithGoogle() async {
-    if (!await IOManager().hasInternetConnection(context)) {
-      return;
-    }
-    SignInStatus status = await AccountManager().signInWithGoogle();
-    if (status == SignInStatus.googleProviderError) {
-      context.snackbar('Errore nell\'accesso a Google',
-          backgroundColor: Palette.primaryRed);
-    } else if (status == SignInStatus.userNotInDatabase) {
-      context.snackbar('L\'account non è più esistente!',
-          backgroundColor: Palette.primaryRed);
-    } else if (status == SignInStatus.success) {
-      context.snackbar('Bentornato ${AccountManager().user.nickname}!',
-          backgroundColor: Palette.primaryBlue);
-      Navigator.of(context).pushNamed('/enchantments');
-    } else if (status == SignInStatus.successNewAccount) {
-      context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
-          backgroundColor: Palette.primaryGreen);
-      Navigator.of(context).pushNamed('/enchantments');
-    }
-  }
+  signInWithGoogle() => withLoading(() async {
+        if (!await IOManager().hasInternetConnection(context)) {
+          return;
+        }
+        SignInStatus status = await AccountManager().signInWithGoogle();
+        if (status == SignInStatus.googleProviderError) {
+          context.snackbar('Errore nell\'accesso a Google',
+              backgroundColor: Palette.primaryRed);
+        } else if (status == SignInStatus.userNotInDatabase) {
+          context.snackbar('L\'account non è più esistente!',
+              backgroundColor: Palette.primaryRed);
+        } else if (status == SignInStatus.success) {
+          context.snackbar('Bentornato ${AccountManager().user.nickname}!',
+              backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
+          Navigator.of(context).pushNamed('/home');
+        } else if (status == SignInStatus.successNewAccount) {
+          context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
+              backgroundColor: Palette.primaryGreen, bottomMargin: Measures.bottomBarHeight);
+          Navigator.of(context).pushNamed('/home');
+        }
+      });
 
   forgotPassword() async {
     final emailController = TextEditingController();

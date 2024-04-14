@@ -27,7 +27,6 @@ class DataManager {
 
   final anonymous = User();
   List<User> cachedUsers = [];
-  // List<Enchantment>? enchantments;
   ValueNotifier<List<Enchantment>?> enchantments = ValueNotifier(null);
 
   // This should be called after obtaining the auth

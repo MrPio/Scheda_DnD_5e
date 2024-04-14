@@ -7,7 +7,8 @@ class GradientBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
       decoration: BoxDecoration(
         gradient: RadialGradient(
           center: const Alignment(-0.75, -1.0),
