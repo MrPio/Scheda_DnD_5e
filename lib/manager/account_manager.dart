@@ -39,7 +39,8 @@ class AccountManager {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   late User user;
 
-  Future<bool> cachedSignIn() async {
+  // Check if a user auth exists, and if so, load the object from the db
+  Future<bool> cacheSignIn() async {
     if (_auth.currentUser != null) {
       user =
           await DataManager().loadUser(_auth.currentUser?.uid, useCache: false);

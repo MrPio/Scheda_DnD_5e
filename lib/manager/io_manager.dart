@@ -1,5 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
+import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/extension/function/context_extensions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../interface/json_serializable.dart';
@@ -11,7 +15,7 @@ class IOManager {
 
   IOManager._();
 
-  static const String accountUID='accountUID';
+  static const String accountUID = 'accountUID';
 
   late final SharedPreferences prefs;
   final Map<Type, Future<bool> Function(SharedPreferences, String, dynamic)>
@@ -47,5 +51,19 @@ class IOManager {
           String key) async =>
       jsonDecode(await get(key) ?? '')
           .map((e) => JSONSerializable.modelFactories[T]!(e) as T)
-          .toList().cast<T>();
+          .toList()
+          .cast<T>();
+
+  // Check whenever the device has an available internet connection
+  Future<bool> hasInternetConnection(BuildContext context) async {
+    try {
+      final result = await InternetAddress.lookup('www.google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      }
+    } on SocketException catch (_) {}
+    context.snackbar('Connessione internet assente!',
+        backgroundColor: Palette.primaryRed);
+    return false;
+  }
 }

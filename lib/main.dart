@@ -1,51 +1,17 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/manager/account_manager.dart';
-import 'package:scheda_dnd_5e/manager/data_manager.dart';
-import 'package:scheda_dnd_5e/manager/database_manager.dart';
-import 'package:scheda_dnd_5e/manager/dummy_manager.dart';
-import 'package:scheda_dnd_5e/manager/io_manager.dart';
-import 'package:scheda_dnd_5e/model/user.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantment_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
 import 'package:scheda_dnd_5e/view/signin_page.dart';
 import 'package:scheda_dnd_5e/view/signup_page.dart';
-
-import 'firebase_options.dart';
+import 'package:tuple/tuple.dart';
 
 void main() async {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key}) {
-    Future.delayed(Duration.zero, () async {
-      WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-
-      await IOManager().init();
-      // ⚠️⚠️⚠️ DANGER ZONE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-
-      // 👤👤👤 FIREBASE AUTH 👤👤👤
-      const uid = 'VeaLO6032Qb5VgWj5ajnpvWqjDT2';
-      const email = 'valeriomorelli50@gmail.com';
-      const password = 'aaaaaa';
-      // await IOManager().set(IOManager.accountUID, uid);
-      // await AccountManager().cacheSignIn();
-      await AccountManager().signIn(email, password);
-
-      // 📘📘📘 FIREBASE FIRESTORE 📘📘📘
-      // await DummyManager().populateEnchantments();
-      // await IOManager().remove('enchantments_timestamp');
-      // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-
-      // TODO: loading screen here!!!
-      await DataManager().fetchData();
-    });
-  }
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +23,34 @@ class MyApp extends StatelessWidget {
             seedColor: Colors.white, primary: Colors.white),
         useMaterial3: true,
       ),
+      onGenerateRoute: (settings) {
+        final Map<String, Tuple2<Offset, Widget>> transitions = {
+          '/signup': const Tuple2(Offset(1.0, 0.0), SignUpPage()),
+          '/signin': const Tuple2(Offset(-1.0, 0.0), SignInPage()),
+        };
+        if (transitions.containsKey(settings.name)) {
+          return PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) =>
+                transitions[settings.name]!.item2,
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              var tween = Tween(
+                      begin: transitions[settings.name]!.item1,
+                      end: Offset.zero)
+                  .chain(CurveTween(curve: Curves.ease));
+              return SlideTransition(
+                position: animation.drive(tween),
+                child: child,
+              );
+            },
+          );
+        }
+        return null;
+      },
       routes: <String, WidgetBuilder>{
-        '/': (context) => const EnchantmentsPage(),
-        '/signin': (context) => const SignInPage(),
-        '/signup': (context) => const SignUpPage(),
+        '/': (context) => const SignInPage(),
+        // '/signin': (context) => const SignInPage(),
+        // '/signup': (context) => const SignUpPage(),
         '/dice': (context) => const DicePage(),
         '/enchantments': (context) => const EnchantmentsPage(),
         '/enchantment': (context) => const EnchantmentPage(),

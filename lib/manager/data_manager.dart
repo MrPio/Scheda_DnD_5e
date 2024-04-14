@@ -30,6 +30,7 @@ class DataManager {
   // List<Enchantment>? enchantments;
   ValueNotifier<List<Enchantment>?> enchantments = ValueNotifier(null);
 
+  // This should be called after obtaining the auth
   fetchData() async {
     // Loading enchantments ============================================
     // Check if I have already downloaded the enchantments before 7 days ago

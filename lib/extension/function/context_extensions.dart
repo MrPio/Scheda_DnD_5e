@@ -117,7 +117,7 @@ extension ContextExtensions on BuildContext {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(25))),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: backgroundColor.withOpacity(0.65),
+          backgroundColor: backgroundColor.withOpacity(1),
           elevation: 0,
           content: Text(message, style: Fonts.regular()),
         ),

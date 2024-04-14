@@ -1,9 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/extension/function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension/function/string_extensions.dart';
+import 'package:scheda_dnd_5e/firebase_options.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
+import 'package:scheda_dnd_5e/manager/data_manager.dart';
+import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
@@ -19,12 +23,43 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
+  static bool _isInitialized = false;
   late final TextEditingController _emailController, _passwordController;
   bool _passwordVisible = false;
   bool _rememberMe = true;
 
   @override
   void initState() {
+    if (!_isInitialized) {
+      _isInitialized = true;
+      Future.delayed(Duration.zero, () async {
+        WidgetsFlutterBinding.ensureInitialized();
+        await Firebase.initializeApp(
+          options: DefaultFirebaseOptions.currentPlatform,
+        );
+        IOManager().init();
+        if (!await IOManager().hasInternetConnection(context)) {
+          return;
+        }
+        // 👤👤👤 FIREBASE AUTH 👤👤👤
+/*      if (await AccountManager().cacheSignIn()) {
+        Navigator.of(context).pushNamed('/enchantments');
+        context.snackbar('Bentornato ${AccountManager().user.nickname}!',
+            backgroundColor: Palette.primaryBlue);
+      }*/
+
+        // 📘📘📘 FIREBASE FIRESTORE 📘📘📘
+        // ⚠️⚠️⚠️ DANGER ZONE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+        // ENCHANTMENTS =========================================
+        // await DummyManager().populateEnchantments();
+        // await IOManager().remove('enchantments_timestamp');
+        // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+
+        // TODO: loading screen here!!!
+        await DataManager().fetchData();
+      });
+    }
+
     _emailController = TextEditingController(text: 'valeriomorelli50@gmail.com')
       ..addListener(() {
         setState(() {});
@@ -156,7 +191,7 @@ class _SignInPageState extends State<SignInPage> {
                       const SizedBox(width: 6),
                       GestureDetector(
                           onTap: () =>
-                              Navigator.of(context).pushNamed('signup'),
+                              Navigator.of(context).pushNamed('/signup'),
                           child: Text('Crea un account',
                               style: Fonts.regular(
                                   size: 14, color: Palette.primaryBlue))),
@@ -172,6 +207,9 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   signIn() async {
+    if (!await IOManager().hasInternetConnection(context)) {
+      return;
+    }
     if (!_emailController.text.isEmail) {
       context.snackbar('Per favore inserisci una email valida',
           backgroundColor: Palette.primaryBlue);
@@ -187,11 +225,15 @@ class _SignInPageState extends State<SignInPage> {
       } else if (status == SignInStatus.success) {
         context.snackbar('Bentornato ${AccountManager().user.nickname}!',
             backgroundColor: Palette.primaryBlue);
+        Navigator.of(context).pushNamed('/enchantments');
       }
     }
   }
 
   signInWithGoogle() async {
+    if (!await IOManager().hasInternetConnection(context)) {
+      return;
+    }
     SignInStatus status = await AccountManager().signInWithGoogle();
     if (status == SignInStatus.googleProviderError) {
       context.snackbar('Errore nell\'accesso a Google',
@@ -202,9 +244,11 @@ class _SignInPageState extends State<SignInPage> {
     } else if (status == SignInStatus.success) {
       context.snackbar('Bentornato ${AccountManager().user.nickname}!',
           backgroundColor: Palette.primaryBlue);
+      Navigator.of(context).pushNamed('/enchantments');
     } else if (status == SignInStatus.successNewAccount) {
       context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
           backgroundColor: Palette.primaryGreen);
+      Navigator.of(context).pushNamed('/enchantments');
     }
   }
 
@@ -236,11 +280,12 @@ class _SignInPageState extends State<SignInPage> {
       child: Padding(
         padding: const EdgeInsets.only(bottom: Measures.vMarginMed),
         child: GlassTextField(
-            iconPath: 'email',
-            hintText: 'Inserisci la tua email',
-            textController: emailController,
-            clearable: false,
-        keyboardType: TextInputType.emailAddress,),
+          iconPath: 'email',
+          hintText: 'Inserisci la tua email',
+          textController: emailController,
+          clearable: false,
+          keyboardType: TextInputType.emailAddress,
+        ),
       ),
     );
   }
