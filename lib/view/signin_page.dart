@@ -56,8 +56,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
         // await IOManager().remove('enchantments_timestamp');
         // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
-        // TODO: loading screen here!!!
-        await DataManager().fetchData();
+        withLoading(() => DataManager().fetchData());
       });
     }
 

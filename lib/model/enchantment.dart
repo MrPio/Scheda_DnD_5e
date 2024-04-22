@@ -133,6 +133,10 @@ enum Component {
   const Component(this.title);
 }
 
+enum Damage{
+  attacco, tiroSalvezza, descrittivo
+}
+
 @JsonSerializable()
 class Enchantment with Comparable<Enchantment> implements JSONSerializable {
   final String name, description;
@@ -157,6 +161,8 @@ class Enchantment with Comparable<Enchantment> implements JSONSerializable {
   final List<Component> components;
   final String componentsDescription;
 
+  final Damage damage;
+
   Enchantment(this.name,
       this.level,
       this.type,
@@ -170,6 +176,7 @@ class Enchantment with Comparable<Enchantment> implements JSONSerializable {
       this.concentration,
       this.components,
       this.componentsDescription,
+      this.damage,
       this.description,);
 
   @override

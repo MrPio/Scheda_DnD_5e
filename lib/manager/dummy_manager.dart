@@ -573,11 +573,7 @@ class DummyManager {
           false,
           [Component.v, Component.m],
           "una piccola piuma",
-          "" +
-              "" +
-              "L'incantatore sceglie fino a cinque creature in caduta entro gittata.\n\n" +
-              "La velocità di discesa di una creatura in caduta rallenta fino a 18 metri per round finché l'incantesimo non termina.\n\n" +
-              "**Se** la creatura **atterra** prima che **l'incantesimo termini**, essa **non subisce alcun danno da caduta** e può **atterrare in piedi**, e **l'incantesimo termina** per quella creatura."),
+              "L'incantatore sceglie fino a cinque creature in caduta entro gittata.\n\nLa velocità di discesa di una creatura in caduta rallenta fino a 18 metri per round finché l'incantesimo non termina.\n\n**Se** la creatura **atterra** prima che **l'incantesimo termini**, essa **non subisce alcun danno da caduta** e può **atterrare in piedi**, e **l'incantesimo termina** per quella creatura."),
       Enchantment(
           "Camuffare se stesso",
           Level.level1,

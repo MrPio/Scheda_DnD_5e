@@ -622,7 +622,7 @@ enum Class {
       [Skill.saggezza, Skill.carisma],
       [
         {
-          Weapon.giavellotto: 1,
+          Weapon.giavellotto: 4,
           Weapon.ascia: 1,
           Weapon.bastoneFerrato: 1,
           Weapon.falcetto: 1,
