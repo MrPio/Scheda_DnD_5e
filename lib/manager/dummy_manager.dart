@@ -513,7 +513,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "una goccia di sangue",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "**L'incantatore** sceglie **fino a tre creature entro gittata** e che egli sia in grado di **vedere**, che dovranno effettuare **un tiro salvezza su Carisma**.\n\nSe una **creatura fallisce** il suo tiro salvezza, ogni volta che **effettua un tiro per colpire o un tiro salvezza** prima che l'incantesimo termini, deve tirare **un d4** e sottrarre il numero ottenuto dal **tiro per colpire o dal tiro salvezza**.\n\n**AI LIVELLI SUPERIORI**: Quando l'incantatore lancia questo incantesimo usando **uno slot incantesimo di 2° livello** o superiore, può **bersagliare una creatura aggiuntiva** per ogni **slot di livello superiore al 1°**."),
       Enchantment(
           "Armatura di Agathys",
@@ -647,7 +647,7 @@ class DummyManager {
           false,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "**L'incantatore tenta di affascinare un umanoide entro gittata e che egli sia in grado di vedere.**\n\nL'umanoide deve effettuare un tiro salvezza su Saggezza e **dispone di vantaggio se l'incantatore o i suoi compagni stanno combattendo contro di lui.**\n\nSe lo fallisce, è **affascinato dall'incantatore finché l'incantesimo non termina o finché l'incantatore o i suoi compagni non lo danneggiano in qualche modo.**\n\nLa creatura affascinata **considera l'incantatore una figura conosciuta e amichevole.**\n\nQuando l'incantesimo termina, **la creatura capirà di essere stata affascinata dall'incantatore.**\n\n***AI LIVELLI SUPERIORI:*** *Quando l'incantatore lancia questo incantesimo usando uno slot incantesimo di 2° livello o superiore,* **può bersagliare una creatura aggiuntiva per ogni slot di livello superiore al 1°.**\n\n*Le creature devono trovarsi a non più di 9 metri l'una dall'altra quando l'incantatore le bersaglia.*"),
       Enchantment(
           "Colpo intrappolante",
@@ -679,7 +679,7 @@ class DummyManager {
           false,
           [Component.v],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** rivolge un **comando** di una parola a una **creatura** entro gittata e che egli sia in grado di vedere.\n\nIl **bersaglio** deve superare un tiro salvezza su Saggezza altrimenti **obbedirà** al comando nel proprio turno successivo.\n\nL'**incantesimo** non ha effetto se il **bersaglio** è un non morto, se non capisce il **linguaggio** dell'incantatore o se il comando di quest'ultimo si rivela dannoso in modo diretto.\n\nDi seguito sono descritti alcuni **tipici comandi** assieme ai loro effetti.\n\nL'**incantatore** può impartire un **comando** **diverso** da quelli descritti di seguito. In quel caso è il DM a determinare come si comporta il **bersaglio**.\n\nSe il **bersaglio** non può eseguire il comando, l'incantesimo termina.\n\n- **Avvicinati**: Il **bersaglio** si muove verso l'incantatore seguendo il percorso più breve e diretto, terminando il suo turno se giunge entro 1,5 metri da lui.\n\n- **Fermo**: Il **bersaglio** non si muove e non effettua azioni. Una creatura volante rimane in aria, se è in grado di farlo. Se deve muoversi per rimanere in aria, vola della distanza minima richiesta per rimanere in aria.\n\n- **Fuggi**: Il **bersaglio** usa il suo turno per allontanarsi dall'incantatore nel modo più rapido possibile.\n\n- **Lascia**: Il **bersaglio** lascia cadere ciò che stava impugnando, poi termina il suo turno.\n\n- **Supplica**: Il **bersaglio** cade a terra prono e termina il suo turno.\n\nAi **Livelli Superiori.** Quando l'incantatore lancia questo incantesimo usando uno slot incantesimo di 2° livello o superiore, può influenzare una **creatura** aggiuntiva per ogni slot di livello superiore al 1°.\n\nLe **creature** devono trovarsi a non più di 9 metri l'una dall'altra quando l'incantatore le bersaglia."),
       Enchantment(
           "Comprensione dei linguaggi",
@@ -749,7 +749,7 @@ class DummyManager {
           false,
           [Component.v, Component.s],
           "",
-          Damage.attacco,
+          Damage.descrittivo,
           "**L'incantatore crea** _tre_ **dardi lucenti di forza magica.**\n\n_Ogni dardo colpisce_ **una creatura scelta dall'incantatore**, situata entro gittata e che egli sia in grado di vedere.\n\nUn dardo infligge **1d4+1 danni da forza** al suo bersaglio.\n\n_Tutti i dardi colpiscono simultaneamente_ e l'incantatore può dirigerli per colpire _una sola creatura_ o più creature.\n\n_**AI LIVELLI SUPERIORI**: Quando l'incantatore lancia questo incantesimo usando uno slot incantesimo di 2° livello o superiore_, l'incantesimo crea _un dardo aggiuntivo per ogni slot di livello superiore al 1°._"),
       Enchantment(
           "Dardo stregato",
@@ -813,7 +813,7 @@ class DummyManager {
           true,
           [Component.v],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "**L'incantatore** tenta di obbligare una creatura a partecipare a un duello.\n\nUna creatura entro gittata e che egli sia in grado di vedere deve effettuare un tiro salvezza su **Saggezza**.\n\nSe lo fallisce, è **obbligata** dall'imposizione divina dell'incantatore ad avvicinarsi a lui.\n\nPer la durata dell'incantesimo, la creatura subisce **svantaggio** ai tiri per colpire contro le creature diverse dall'incantatore e deve effettuare un tiro salvezza ogni volta che tenta di muoversi fino a uno spazio più lontano di 9 metri da lui.\n\nSe supera il tiro salvezza, questo incantesimo non limita i movimenti della creatura per quel turno.\n\nL'incantesimo termina se l'incantatore **attacca** una qualsiasi altra creatura, se lancia un incantesimo che bersaglia una creatura ostile diversa dal bersaglio, se una creatura a lui amichevole infligge danni al bersaglio o lancia un incantesimo dannoso su di esso, o se l'incantatore termina il proprio turno a più di 9 metri dal bersaglio."),
       Enchantment(
           "Eroismo",
@@ -1146,7 +1146,7 @@ class DummyManager {
           Damage.descrittivo,
           "Finché l'incantesimo non termina, una **creatura consenziente** toccata dall'\*\*incantatore\*\* è protetta da certi tipi di creature: aberrazioni, celestiali, elementali, folletti, immondi e non morti.\n\nLa **protezione** conferisce vari **benefici**:\n\n* Le **creature di quei tipi** subiscono **svantaggio ai tiri per colpire** contro il **bersaglio**.\n* Inoltre il **bersaglio** non può essere affascinato, posseduto o spaventato da una di quelle **creature.**\n* Se il **bersaglio** è già affascinato, posseduto o spaventato, dispone **vantaggio al nuovo tiro salvezza** contro l'effetto rilevante."),
       Enchantment(
-          "Punizione collerica", //non fa danno diretto, ma viene usata in combattimento
+          "Punizione collerica",
           Level.level1,
           Type.invocazione,
           [Class.paladino],
@@ -1255,7 +1255,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "una manciata di briciole e una piuma da agitare in aria",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "Una **_creatura a scelta dell'incantatore_**, situata entro gittata e che egli sia in grado di vedere, percepisce ogni cosa come esilarante ed è scossa da una spasmodica risata se questo incantesimo la influenza.\n\nIl **_bersaglio_** deve superare un tiro salvezza su Saggezza, altrimenti cade a terra prono, diventa incapacitato e non è in grado di rialzarsi per la durata dell'incantesimo.\n\nUn **_creatura con un punteggio di intelligenza pari o inferiore a 4_** non è influenzata dall'incantesimo.\n\nAlla fine di ogni suo turno e **ogni volta che subisce danni**, il **_bersaglio_** può effettuare un altro tiro salvezza su Saggezza.\n\nIl **_bersaglio_** dispone di vantaggio al tiro salvezza se esso è innescato dai danni.\n\nIn caso di successo, l'incantesimo **termina**."),
       Enchantment(
           "Ritirata rapida",
@@ -1463,7 +1463,7 @@ class DummyManager {
           false,
           [Component.v, Component.s, Component.m],
           "un frammento di grasso di maiale o di burro",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "Una **patina viscida** di **unto** ricopre un **quadrato** di terreno con lato di 3 metri, centrato in un punto entro gittata, trasformandolo in **terreno difficile** per la durata dell'incantesimo.\n\nQuando l'\*\*unto\*\* compare, ogni creatura che si trova \*\*entro l'area\*\* deve superare un tiro salvezza su **Destrezza** altrimenti cade a terra **prona.**\n\nAnche **una creatura** che entra **nell'area** o vi termina il proprio turno deve superare un tiro salvezza su **Destrezza** o cade a terra **prona.**"),
       Enchantment(
           "Vita falsata",
@@ -1511,7 +1511,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "un ciuffo di lana",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'\[incantatore\] **crea** un'**illusione** che **mette radici nella mente** di una creatura entro gittata e che egli sia in grado di vedere.\n\nIl **bersaglio** deve effettuare un tiro salvezza su **Intelligenza.**\n\nSe lo **fallisce**, l'\[incantatore\] **crea** un oggetto, una creatura o un fenomeno fittizio di altra natura visibile a sua scelta, che non sia più grande di un cubo con spigolo di 3 metri e sia percepibile soltanto dal bersaglio per la durata dell'incantesimo.\n\nQuesto incantesimo non ha effetto sui **costrutti** o sui **non morti.**\n\nL'\[allucinazione\] include **suoni**, temperature e altri stimoli analoghi, anch'essi evidenti soltanto alla creatura.\n\nIl **bersaglio** può usare la sua azione per esaminare l'\[allucinazione\] con una prova di **Intelligenza** (\[Indagare\]) contro la CD del tiro salvezza dell'incantesimo.\n\nSe la prova ha successo, il **bersaglio** capisce che l'\[allucinazione\] è un'**illusione** e l'incantesimo termina.\n\nFinché un **bersaglio** è **influenzato** dall'incantesimo, considera l'\[allucinazione\] come se fosse reale.\n\nIl **bersaglio** razionalizza qualsiasi esito illogico prodotto dalle sue interazioni con l'\[allucinazione.\]\n\nPer esempio, un **bersaglio** che tenta di camminare su un ponte fittizio che attraversa un baratro cadrà non appena mette piede sul ponte.\n\nSe il **bersaglio** sopravvive alla caduta, crederà comunque che il ponte esista e penserà a un'altra spiegazione per la sua caduta (è stato spinto, è scivolato, o un vento forte lo ha buttato di sotto).\n\nUn **bersaglio** influenzato è talmente convinto che l'\[allucinazione\] sia reale che può perfino subire **danni** da essa.\n\nUn'\[allucinazione\] creata per apparire come una creatura può **attaccare** il **bersaglio.**\n\nAnalogamente un'\[allucinazione\] creata per apparire come un fuoco, una pozza d'acido o un flusso di lava può **bruciare** il **bersaglio.**\n\nA ogni round, nel turno dell'\[incantatore\], l'\[allucinazione\] può infliggere 1d6 **danni psichici** al **bersaglio** se esso si trova nell'area dell'\[allucinazione\] o entro 1,5 metri da essa purché l'\[allucinazione\] riproduca una creatura o un pericolo in grado di infliggere danni logicamente, per esempio attaccando.\n\nIl **bersaglio** percepisce i **danni** come se fossero del tipo appropriato per l'\[illusione.\]"),
       Enchantment(
           "Alterare se stesso",
@@ -1630,7 +1630,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "una piccola sbarra di ferro",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "*L'incantatore sceglie un* ***umanoide*** *entro gittata e che egli sia in grado di vedere.*\n\nIl bersaglio deve superare un tiro salvezza su ***Saggezza***, altrimenti sarà ***paralizzato*** per la durata dell'incantesimo.\n\nAlla fine di ogni suo turno, il bersaglio può effettuare un altro tiro salvezza su ***Saggezza***.\n\nSe lo supera, l'incantesimo su di esso termina.\n\n***AI LIVELLI SUPERIORI:*** Quando l'incantatore lancia questo incantesimo usando uno slot incantesimo di 3° livello o superiore, può bersagliare un umanoide aggiuntivo per ogni slot di livello superiore al 2°.\n\n*Gli umanoidi* devono trovarsi a non più di 9 metri l'uno dall'altro quando l'incantatore li bersaglia."),
       Enchantment(
           "Bocca magica",
@@ -1662,7 +1662,7 @@ class DummyManager {
           true,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** tenta di **sopprimere** le **emozioni** più **intense** in un **gruppo** di persone.\n\nOgni **umanoide** entro una sfera del **raggio** di 6 metri centrata su un punto scelto dall'incantatore entro **gittata** deve effettuare un tiro salvezza su **Carisma**; una creatura può scegliere di **fallire** questo tiro salvezza, se lo desidera.\n\nSe una creatura **fallisce** il suo tiro salvezza, l'incantatore sceglie uno dei due effetti seguenti.\n\nL'incantatore può **sopprimere** qualsiasi effetto che rende un bersaglio **affascinato** o **spaventato**.\n\nQuando questo **incantesimo** termina, ogni effetto **soppresso** torna a essere applicato, purché la sua **durata** non si sia esaurita nel frattempo.\n\nIn **alternativa**, l'incantatore può rendere un bersaglio **indifferente** ad alcune **creature** da lui scelte nei cui confronti il bersaglio risulterebbe **ostile**.\n\nQuesta **indifferenza** termina se il bersaglio viene **attaccato** o **danneggiato** da un incantesimo, o se vede uno dei suoi amici subire danni.\n\nQuando l'**incantesimo** termina, la creatura torna a essere **ostile**, a meno che il DM non decida altrimenti."),
       Enchantment(
           "Caratteristica potenziata",
@@ -1694,7 +1694,7 @@ class DummyManager {
           false,
           [Component.v],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** può accecare o **assordare** un nemico, scegliendo una **creatura** entro gittata e che egli sia in grado di vedere.\n\nQuella **creatura** deve effettuare un tiro salvezza su **Costituzione**.\n\nSe lo fallisce, è **accecata** o **assordata** (a scelta dell'incantatore) per la durata dell'incantesimo.\n\nAlla fine di ogni suo turno può effettuare un nuovo tiro salvezza su **Costituzione**.\n\nSe lo supera, l'incantesimo termina.\n\nAI **LIVELLI SUPERIORI**: Quando l'incantatore lancia questo incantesimo usando uno **slot incantesimo** di 3° livello o superiore, può bersagliare una **creatura aggiuntiva** per ogni slot superiore al 2°."),
       Enchantment(
           "Cordone di frecce", //questa varia nel tempo
@@ -1726,7 +1726,7 @@ class DummyManager {
           true,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "Un **umanoide a scelta dell'incantatore**, situato entro gittata e che l'incantatore sia in grado di vedere, deve superare un tiro salvezza su **Saggezza**, altrimenti diventa **affascinato** dall'incantatore per la durata dell'incantesimo.\n\nFinché il **bersaglio** è affascinato in questo modo, una **corona di ferro deforme e tagliente** compare sulla sua testa e nei suoi occhi risplende un bagliore di **follia.**\n\nIl **bersaglio affascinato** deve usare la sua azione prima di muoversi in ognuno dei suoi turni per effettuare un **attacco**."),
       Enchantment(
           "Crescita di spine", //richiede il tiro salvezza, ma modifica il terreno e fa danno nel tempo
@@ -1758,7 +1758,7 @@ class DummyManager {
           false,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'incantatore pronuncia una **frastornante sequenza di parole** e costringe le creature a sua scelta entro gittata e che egli sia in grado di vedere a effettuare un tiro salvezza su Saggezza.\n\nOgni creatura che **non può essere affascinata** supera questo tiro salvezza automaticamente, e se l'incantatore o i suoi compagni stanno combattendo contro una creatura, quella creatura dispone di **vantaggio al tiro salvezza.**\n\nSe la creatura bersaglio fallisce il tiro salvezza, subisce **svantaggio alle prove di Saggezza (Percezione)** effecttate per percepire una qualsiasi creatura diversa dall'incantatore finché l'incantesimo non termina o finché il bersaglio non è più in grado di sentirlo.\n\nL'incantesimo termina se l'incantatore è **incapacitato** o non è più in grado di parlare."),
       Enchantment(
           "Fiamma perenne",
@@ -1870,7 +1870,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "un pizzico di polvere di ferro",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** ingrandisce o **riduce** una **creatura** o un **oggetto** situato entro gittata e che egli sia in grado di vedere per la **durata dell'incantesimo.**\n\nL'incantatore deve scegliere una creatura o un oggetto che non sia indossato o trasportato.\n\nSe il **bersaglio non è consenziente**, può effettuare un tiro salvezza su **Costituzione.**\n\nSe lo **supera**, l'incantesimo non ha **effetto.**\n\nSe il bersaglio è una creatura, tutto ciò che essa indossa e trasporta cambia **taglia** assieme a lei.\n\nOgni **oggetto** lasciato cadere da una creatura influenzata torna immediatamente alla sua **taglia normale.**\n\n\- **Ingrandire**: La **taglia** del bersaglio raddoppia in tutte le sue dimensioni e il suo peso aumenta di **otto** volte.\n\nQuesta crescita aumenta la **taglia** della creatura di una **categoria** (da Media a Grande, per esempio).\n\nSe non c'è abbastanza spazio per consentire al bersaglio di raddoppiare la sua **taglia**, la creatura o l'oggetto in questione sviluppa la massima **taglia** possibile nello spazio disponibile.\n\nFinché l'incantesimo non termina, il bersaglio dispone anche di **vantaggio** alle prove di **Forza** e ai tiri salvezza su **Forza.**\n\nAnche le **armi** del bersaglio crescono fino ad adattarsi alla nuova **taglia.**\n\nFinché queste armi sono ingrandite, gli **attacchi** effettuati dal bersaglio con queste armi infliggono 1d4 danni **extra.**\n\n\- **Ridurre**: La **taglia** del bersaglio si **dimezza** in tutte le dimensioni e il suo peso diventa un **ottavo** del peso normale.\n\nQuesta riduzione diminuisce la **taglia** della creatura di una **categoria** (da Media a Piccola, per esempio).\n\nFinché l'incantesimo non termina, il bersaglio subisce **svantaggio** alle prove di **Forza** e ai tiri salvezza su **Forza.**\n\nAnche le **armi** del bersaglio si riducono fino ad adattarsi alla nuova **taglia.**\n\nFinché queste armi sono ridotte, gli **attacchi** effettuati dal bersaglio con queste armi infliggono 1d4 danni **in meno** (i danni non possono scendere a meno di 1)."),
       Enchantment(
           "Invisibilità",
@@ -2363,7 +2363,7 @@ class DummyManager {
           true,
           [Component.v, Component.m],
           "una lingua di serpente e un frammento di un alveare o una goccia di olio dolce",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'incantatore suggerisce un corso d'azione da intraprendere (limitandosi a una o due frasi) e influenza magicamente una creatura entro gittata e che egli sia in grado di vedere.\nLa creatura deve essere in grado di sentire l'incantatore e di capirlo.\nLe creature che non possono essere affascinate sono immuni a questo effetto.\nLa suggestione deve essere formulata in modo che il corso d'azione appaia ragionevole.\nChiedere a una creatura di pugnalarsi, gettarsi su una lancia, immolarsi o compiere altri atti palesemente autolesionistici pone termine all'incantesimo.\nIl bersaglio deve effettuare un tiro salvezza su Saggezza.\nSe lo fallisce, deve perseguire il corso d'azione descritto dall'incantatore al meglio delle sue capacità.\nTale corso d'azione può proseguire per l'intera durata dell'incantesimo.\nSe l'attività suggerita può essere completata in un periodo di tempo più breve, l'incantesimo termina quando il soggetto completa ciò che gli è stato chiesto di fare.\nL'incantatore può anche specificare quali condizioni innescheranno un'attività speciale nel corso della durata.\nPer esempio, potrebbe suggerire che un cavaliere ceda il suo cavallo da guerra al primo mendicante che incontra.\nSe questa condizione non viene soddisfatta prima che l'incantesimo termini, quell'attività non viene effettuata.\nSe l'incantatore o uno dei suoi compagni infliggono danni al bersaglio, l'incantesimo termina."),
       Enchantment(
           "Trova cavalcatura",
@@ -2443,7 +2443,7 @@ class DummyManager {
           false,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'incantatore crea una **zona magica protetta dagli inganni** entro una sfera di raggio di 4.5 metri centrata su un punto a sua scelta situato entro gittata.\n\nFinché l'incantesimo non termina, una **creatura che entra nell'area dell'incantesimo per la prima volta in un turno o vi inizia il proprio turno** deve effettuare un tiro di salvezza su Carisma.\n\nSe lo **fallisce la creatura non può mentire deliberatamente finché si trova entro l'area.**\n\nL'incantatore sa se **ogni creatura ha superato o fallito il suo tiro salvezza.**\n\nUna **creatura influenzata è consapevole dell'incantesimo** e può quindi evitare di rispondere alle domande a cui normalmente risponderebbe mentendo.\n\nUna tale creatura può fornire **risposte sfuggenti**, purché rimanga entro i confini della verità."),
       Enchantment(
           "Animare morti",
@@ -2574,7 +2574,7 @@ class DummyManager {
           Damage.descrittivo,
           "L'**Incantatore** crea un **sensore invisibile** entro gittata in un luogo a lui **familiare** (vale a dire un luogo che abbia visitato o visto in precedenza), oppure in un luogo **ovvio** che non gli sia familiare (per esempio dietro una porta, oltre un angolo o in mezzo a un boschetto).\n\nIl **sensoremane al suo posto** per la durata dell'incantesimo e non è possibile **attaccarlo o interagire con esso in altri modi.**\n\nQuando l'incantatore lancia l'incantesimo sceglie tra **vista** e **udito**.\n\nPuò usare il senso scelto **tramite il sensore**, **come se si trovasse nel suo spazio.**\n\nUsando la sua azione, l'incantatore può passare da **vista a udito** o viceversa.\n\nUna **creatura in grado di vedere il sensore** (per esempio una creatura che beneficia di **vedere invisibilità** o **vista pura**) **vede un globo luminoso e intangibile grande all'incirca quanto il pugno dell'incantatore**."),
       Enchantment(
-          "Controincantesimo", //particolare essendo una reazione
+          "Controincantesimo",
           Level.level3,
           Type.abiurazione,
           [Class.mago, Class.stregone, Class.warlock],
@@ -2587,13 +2587,8 @@ class DummyManager {
           false,
           [Component.s],
           "",
-          Damage.descrittivo,
-          "L'incantatore tenta di interrompere una creatura nell'atto di lanciare un incantesimo.\n\n" +
-              "Se la creatura sta lanciando un incantesimo di 3° livello o inferiore, l'incantesimo della creatura fallisce e non ha effetto.\n\n" +
-              "Se la creatura sta lanciando un incantesimo di 4° livello o superiore, l'incantatore effettua una prova di caratteristica usando la sua caratteristica da incantatore.\n\n" +
-              "La CD è pari a 10 + il livello dell'incantesimo della creatura.\n\n" +
-              "In caso di successo, l'incantesimo della creatura fallisce e non ha effetto.\n\n" +
-              "**AI LIVELLI SUPERIORI**: Quando l'**incantatore** lancia questo **incantesimo** usando uno **slot incantesimo di 4° livello** o **superiore**, l'**incantesimointerrotto** non ha **effetto** se il suo **livello** è **pari o inferiore** al **livello dello slot incantesimo usato dall'incantatore**."),
+          Damage.tiroSalvezza,
+          "L'incantatore tenta di interrompere una creatura nell'atto di lanciare un incantesimo.\n\nSe la creatura sta lanciando un incantesimo di 3° livello o inferiore, l'incantesimo della creatura fallisce e non ha effetto.\n\nSe la creatura sta lanciando un incantesimo di 4° livello o superiore, l'incantatore effettua una prova di caratteristica usando la sua caratteristica da incantatore.\n\nLa CD è pari a 10 + il livello dell'incantesimo della creatura.\n\nIn caso di successo, l'incantesimo della creatura fallisce e non ha effetto.\n\n**AI LIVELLI SUPERIORI**: Quando l'**incantatore** lancia questo **incantesimo** usando uno **slot incantesimo di 4° livello** o **superiore**, l'**incantesimointerrotto** non ha **effetto** se il suo **livello** è **pari o inferiore** al **livello dello slot incantesimo usato dall'incantatore**."),
       Enchantment(
           "Creare cibo e acqua",
           Level.level3,
@@ -2664,7 +2659,7 @@ class DummyManager {
           false,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "*L'*incantatore sceglie una _creatura,_ oggetto o effetto magico situato entro gittata.\n\n*Ogni* Incantesimo di 3° livello o inferiore _termina._\n\nPer ogni incantesimo di 4° livello o superiore presente sul bersaglio, l'incantatore effettua una _prova di caratteristica_ usando la propria caratteristica da incantatore.\n\nLa _CD_ è pari a 10 + il livello dell'incantesimo.\n\nSe supera la _prova,_ l'incantesimo _termina._\n\n*AI LIVELLI SUPERIORI:* Quando l'incantatore lancia questo incantesimo usando uno slot incantesimo di 4° livello o superiore, termina automaticamente gli effetti di un incantesimo sul bersaglio se il livello di quell'incantesimo è pari o inferiore al livello dello slot incantesimo usato dall'incantatore."),
       Enchantment(
           "Evoca animali",
@@ -2904,7 +2899,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "una goccia di melassa",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "**L'incantatore** altera il **tempo** attorno a un massimo di **sei creature** a sua scelta all'interno di un **cubo con spigolo di 12 metri** situato entro gittata.\n\nOgni **bersaglio** deve superare un tiro salvezza su **Saggezza**, altrimenti è **influenza**to da questo incantesimo per la sua durata.\n\nUn **bersaglio influenzato** subisce una **penalità di -2 alla CA** e ai tiri salvezza su **Destrezza**, non può usare **reazioni** e la sua **velocità** è dimezzata.\n\nNel **proprio turno**, il **bersaglio** deve scegliere se usare un'azione o un'azione bonus, ma non entrambe.\n\nA prescindere dalle **sue capacità** e oggetti magici, non può effettuare più di un attacco in mischia o a distanza durante il suo turno.\n\nSe la **creatura tenta** di lanciare un incantesimo con un tempo di lancio di 1 azione, deve tirare un d20.\n\nCon un **risultato pari o superiore a 11**, l'incantesimo non ha **effetto** prima del turno successivo della creatura e quest'ultima deve usare la propria azione di quel turno per completare l'incantesimo.\n\nSe non può farlo, l'incantesimo **va sprecato.**\n\nUna **creatura influenzata** da questo incantesimo effettua un altro tiro salvezza alla fine di ogni proprio turno.\n\nSe **lo supera**, l'effetto per lei **termina.**"),
       Enchantment(
           "Linguaggi",
@@ -3012,7 +3007,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "un uovo marcio o alcune foglie di cavolfiore",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore crea una sfera** del raggio di **6 metri** composta di **gas nauseante giallastro**, centrata su un punto situato entro **gittata.**\n\nLa **nube si diffonde oltre gli angoli** e la sua area è **pesantemente oscurata.**\n\nLa **nube permane nell'area per la durata dell'incantesimo.**\n\nOgni **creatura situata completamente all'interno della nube all'inizio del suo turno** deve effettuare un tiro salvezza su **Costituzione contro veleno.**\n\nSe lo **fallisce**, spende la sua **azionedi quel turno** a vomitare in preda al dolore.\n\nLe **creature che non hanno bisogno di respirare o sono immuni al veleno** superano automaticamente questo tiro salvezza.\n\nUn **vento moderato (almeno 15 km all'ora)** disperse la nube dopo **4 round.**\n\nUn **vento forte (almeno 30 km all'ora)** la disperde dopo **un round.**"),
       Enchantment(
           "Palla di fuoco",
@@ -3092,7 +3087,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "una piuma bianca o un cuore di pollo",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** **proietta** un'immagine **illusoria** delle **peggiori paure** della **creatura.**\n\nOgni **creatura** entro **un cono di 9 metri** deve superare un tiro salvezza su **Saggezza**, altrimenti **lascià cadere** ciò che tiene in mano e diventa **spaventata** per la **durata dell'incantesimo.**\n\n<mark>Finché è spaventata da questo incantesimo, una creatura deve effettuare l'azione di Scatto e muoversi per allontanarsi dall'incantatore lungo il percorso più sicuro possibile ad ogni suo turno, </mark><u>a meno che non ci sia alcun posto dove andare.</u> Se la creatura termina il suo turno in un luogo dove non possiede la linea di vista fino all'incantatore, può effettuare un tiro salvezza su Saggezza.\n\n<u>Se lo supera, l'incantesimo termina per lei.</u>"),
       Enchantment(
           "Protezione dall'energia",
@@ -3130,7 +3125,7 @@ class DummyManager {
           true,
           [Component.v],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "La prossima volta che **l'incantatore** colpisce una creatura con un attacco con un'arma da mischia entro la durata di questo incantesimo, l'arma in **questione** emette un **lampo di luce intensa** e l'attacco infligge **3d8 danni radiosi extra** al bersaglio.\n\nInoltre, il bersaglio deve superare un **tiro salvezza su Costituzione**, altrimenti rimarrà **accecato** finché l'incantesimo non termina.\n\nUna creatura **accecata** da questo incantesimo effettua un altro tiro salvezza su Costituzione alla fine di ogni suo turno.\n\nSe lo supera, non è più accecata."),
       Enchantment(
           "Respirare sott'acqua",
@@ -3194,7 +3189,7 @@ class DummyManager {
           true,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "**L'incantatore** tocca una **creatura** che deve superare un **tiro salvezza** su **Saggezza** per non essere **maledetta** per la **durata dell'incantesimo**.\n\nQuando l'incantatore lancia questo **incantesimo**, sceglie la **natura della maledizione** tra le opzioni seguenti:\n\n* L'incantatore sceglie un **punteggio di caratteristica**. Finché è **maledetto**, il bersaglio subisce **svantaggio alle prove di caratteristica** e ai **tiri salvezza effettuati con quel punteggio di caratteristica**.\n* Finché è **maledetto**, il bersaglio subisce **svantaggio ai tiri per colpire contro l'incantatore**.\n* Finché è **maledetto**, il bersaglio deve effettuare un **tiro salvezza su Saggezza all'inizio di ogni suo turno**. Se lo **fallisce**, spreca la sua **azione di quel turno** e non fa niente.\n* Finché il bersaglio è **maledetto**, gli **attacchi e gli incantesimi dell'incantatore infliggono 1d8 danni necrotici extra al bersaglio**.\n\nUn **incantesimo rimuovi maledizione** pone fine a questo **effetto**. A discrezione del DM, l'incantatore può scegliere un **effetto alternativo per la maledizione**, che però non dovrebbe risultare più potente di quelli descritti sopra. Il DM ha l'**ultima parola su tali effetti della maledizione**.\n\n**AI LIVELLI SUPERIORI**: Se l'incantatore lancia questo **incantesimo** usando uno **slot incantesimo** di 4° livello o superiore, la **durata diventa concentrazione**, fino a 10 minuti. Se usa uno **slot incantesimo** di 5° livello o superiore, la **durata diventa 8 ore**. Se usa uno **slot incantesimo** di 7° livello o superiore, la **durata è 24 ore**. Se usa uno **slot incantesimo** di 9° livello o superiore, l'**incantesimo dura finché non viene dissolto**. L'uso di uno **slot incantesimo** di 5° livello o superiore conferisce una **durata che non richiede concentrazione**."),
       Enchantment(
           "Tempesta di nevischio",
@@ -3242,7 +3237,7 @@ class DummyManager {
           true,
           [Component.s, Component.m],
           "un bastoncino d'incenso acceso o una fiala di cristallo riempita di materiale fosforescente",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'\_incantatore crea un **complicato intreccio di colori** che si **snoda nell'aria** all'interno di un **cubo con spigolo di 9 metri entro gittata**.\n\n\_La trama appare soltanto per un **istante**, poi svanisce.\n\n\_Ogni **creatura entro l'area che la veda** deve effettuare un tiro salvezza su Saggezza.\n\n\_Se lo **fallisce**, diventa **affascinata da questo incantesimo**. Finché è **affascinata**, la creatura è **incapacitata** e la sua velocità è pari a 0.\n\n\_L'**incantesimo su una creatura influenzata termina** se la creatura **subisce danni** o se qualcun altro usa un'azione per **scuotere la creatura**, destandola dal suo stato confusionale."),
       Enchantment(
           "Velocità",
@@ -3290,7 +3285,7 @@ class DummyManager {
           true,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "**L'incantatore** attinge agli **incubi** di una **creatura** entro gittata e che egli sia in grado di vedere, per creare una **manifestazione illusoria** delle sue **paure più recondite**, visibile soltanto a quella creatura.\n\nIl **bersaglio** deve effettuare un tiro salvezza su **Saggezza.**\n\nSe lo **fallisce**, diventa **spaventato** per la **durata dell'incantesimo.**\n\nAlla fine di ogni turno del bersaglio prima che l'incantesimo termini, il bersaglio deve superare un tiro salvezza su **Saggezza**, altrimenti subirà **4d10 danni psichici.**\n\nSe lo **supera**, l'incantesimo termina.\n\n**AI LIVELLI SUPERIORI**: Quando l'incantatore lancia questo incantesimo usando uno slot incantesimo di **5° livello** o superiore, i **danni** aumentano di **1d10** per ogni slot di livello superiore al **4°.**"),
       Enchantment(
           "Aura di purezza",
@@ -3338,7 +3333,7 @@ class DummyManager {
           true,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "Le **creature a scelta dell'incantatore** entro **gittata**, che **siano in grado di sentirlo** e che **egli sia in grado di vedere**, devono effettuare un **tiro salvezza su Saggezza**.\n\nUn **bersaglio supera automaticamente questo tiro salvezza** se **non può essere affascinato.**\n\nIn **caso di tiro salvezza fallito**, un **bersaglio è influenzato da questo incantesimo.**\n\nFinché l'**incantesimo** non termina, l'**incantatore** può usare un'**azione bonus a ogni suo turno** per designare una **direzione orizzontale rispetto a lui.**\n\nOgni **bersaglio influenzato** deve usare la **maggior parte possibile del suo movimento** per muoversi in **quella direzione** nel suo **turno successivo.**\n\nPuò **effettuare la sua azione prima di muoversi.**\n\nDopo essersi **mosso in questo modo**, un **bersaglio può effettuare un altro tiro salvezza su Saggezza** per cercare di terminare l'**effetto.**\n\nUn **bersaglio non è obbligato a muoversi verso un terreno palesemente pericoloso**, come un **incendio o una fossa**, ma **provocherà attacchi di opportunità** nel muoversi verso la **direzione designata.**"),
       Enchantment(
           "Confusione",
@@ -3354,7 +3349,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "tre gusci di noce",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "Questo **incantesimo assale e sconvolge le menti delle creature**, inducendole al **delirio** e provocando **azioni incontrollate.**\n\nOgni **creatura** entro una **sfera del raggio di 3 metri** incentrata su un punto a scelta dell'**incantatore** entro **gittata** deve superare un **tiro salvezza su Saggezza** nel momento in cui l'**incantesimo viene lanciato**, altrimenti ne sarà **influenza.**\n\nUn **bersaglio influenzato** non può effettuare **reazioni** e deve tirare un **d10 all'inizio di ogni suo turno** per determinare il suo **comportamento per quel turno.**\n\n**1:** La creatura usa tutto il suo **movimento** per muoversi in una **direzione casuale.**\n\nPer determinare la **direzione** si tira un **d8** e si assegna una **direzione** a ogni **faccia** del dado.\n\nLa creatura **non effettua un'azione** in questo turno.\n\n**2-6:** La creatura **non si muove e non effettua azioni** in questo turno.\n\n**7-8:** La creatura usa la sua **azione per effettuare un attacco in mischia** contro una creatura determinata **casualmente** e situata entro la sua **portata.**\n\nSe non c'è alcuna creatura entro portata, la creatura **non fa nulla.**\n\n**9-10:** La creatura può agire e muoversi **normalmente.**\n\nAlla fine di **ogni suo turno**, un **bersaglio influenzato** può effettuare un **tiro salvezza su Saggezza.**\n\nSe lo **supera**, questo **effetto per lui termina.**\n\n**AI LIVELLI SUPERIORI:** Quando l'**incantatore lancia questo incantesimo** usando uno **slot incantesimo di 5° livello** o **superiore**, il **raggio della sfera aumenta** di **1,5 metri** per ogni **slot di livello superiore al 4°.**"),
       Enchantment(
           "Controllare acqua",
@@ -3402,7 +3397,7 @@ class DummyManager {
           true,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'incantatore tenta di soggiogare una bestia entro gittata e che egli sia in grado di vedere.\n\nQuella bestia deve superare un tiro salvezza su Saggezza, altrimenti sarà affascinata dall'incantatore per la durata dell'incantesimo.\n\nSe l'incantatore o le creature a lui amichevoli stanno combattendo contro la bestia, quest'ultima dispone di vantaggio al tiro salvezza.\n\nMentre la bestia è affascinata, l'incantatore dispone di un legame telepatico con essa finché entrambi si trovano sullo stesso piano di esistenza.\n\nL'incantatore può usare questo legame telepatico per impartire comandi alla creatura finché è cosciente (nessuna azione richiesta), ed essa farà del suo meglio per obbedire.\n\nL'incantatore può specificare un corso d'azione semplice e generico come (attacca quella creatura), (corri fin laggiù) o (portami quell'oggetto).\n\nSe la creatura porta a termine l'ordine e non riceve ulteriori indicazioni da parte dell'incantatore, essa si difende e si protegge al meglio delle sue capacità.\n\nL'incantatore può usare la sua azione per assumere il controllo totale e preciso del bersaglio.\n\nFino alla fine del turno successivo dell'incantatore, la creatura effettua soltanto le azioni scelte dall'incantatore e non fa niente che l'incantatore non le consenta di fare. Durante questo periodo, l'incantatore può anche fare in modo che la creatura usi una reazione, ma per farlo dovrà usare la sua stessa reazione.\n\nOgni volta che il bersaglio subisce danni, effettua un nuovo tiro salvezza su Saggezza contro l'incantesimo.\n\nSe lo supera, l'incantesimo **termina**.\n\nAi Livelli Superiori: Quando l'incantatore lancia questo incantesimo con uno slot incantesimo di **5° livello**, la durata diventa concentrazione, fino a 10 minuti.\n\nQuando **usa uno slot di 6° livello**, la **durata diventa concentrazione**, fino a **1 ora**.\n\nQuando usa uno slot incantesimo di **7° livello o superiore**, la durata diventa concentrazione, **fino a 8 ore**.),"),
       Enchantment(
           "Esilio",
@@ -3424,7 +3419,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "un oggetto sgradito al bersaglio",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** tenta di inviare su un **altro piano di esistenza** una creatura che egli sia in grado di vedere e che si trovi entro gittata.\n\nIl **bersaglio** deve superare un tiro salvezza su Carisma o sarà **esiliato**.\n\nSe il bersaglio è **originario del piano di esistenza** in cui si trova, l'incantatore lo esilia su un **semipiano innocuo.**\n\nMentre si trova laggiù, il bersaglio è **incapacitato** e rimane in quel luogo finché l'incantesimo non termina, nel qual caso ricompare nello spazio che aveva lasciato o nello spazio libero più vicino se quello spazio è occupato.\n\nSe il bersaglio è **originario di un piano di esistenza** diverso da quello in cui si trova l'incantatore, esso viene esiliato con una piccola implosione a malapena udibile e fa ritorno al suo **piano natio.**\n\nSe l'incantesimo termina prima che sia trascorso 1 minuto, il bersaglio ricompare nello spazio che aveva lasciato o nello spazio libero più vicino, se quello spazio è occupato.\n\nAltrimenti non fà ritorno.\n\n***AI LIVELLI SUPERIORI:*** Quando l'incantatore lancia questo incantesimo usando uno slot incantesimo di 5° livello o superiore, può bersagliare una creatura aggiuntiva per ogni slot di livello superiore al 4°."),
       Enchantment(
           "Evoca creature boschive",
@@ -3607,7 +3602,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "il bozzolo di un bruco",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "Questo **incantesimo impartisce una nuova forma a una creatura entro gittata e che l'incantatore sia in grado di vedere**.\n\nUna **creatura non consenziente deve effettuare un tiro salvezza su Saggezza per evitare l'effetto**.\n\nL'**incantesimo non ha effetto su un mutaforma o su una creatura con 0 punti ferita**.\n\nLa **trasformazione permane per la durata dell'incantesimo o finché il bersaglio non scende a 0 punti ferita o non muoia**.\n\nLa **nuova forma può essere quella di qualsiasi bestia il cui grado di sfida sia pari o inferiore a quello del bersaglio** (o al livello del bersaglio, se esso non possiede un grado di sfida).\n\nLe **statistiche di gioco del bersaglio, inclusi i punteggi di caratteristica mentali, vengono sostituite dalle statistiche della bestia scelta**.\n\nIl **bersaglio mantiene il suo allineamento e la sua personalità**.\n\nIl **bersaglio assume i punti ferita della sua nuova forma**.\n\nQuando torna alla sua forma normale, torna al numero di punti ferita che possedeva prima della **trasformazione**.\n\nSe riassume la sua forma normale per essere sceso a 0 punti ferita, ogni eventuale danno in eccesso si **trasferisce alla sua forma normale**.\n\nFintanto che i danni in eccesso non portano la forma normale della creatura a 0 punti ferita, essa non cade priva di sensi.\n\nLe **azioni della creatura sono limitate a quelle che la natura della sua nuova forma le consente di effettuare**: non può parlare, lanciare incantesimi o effettuare qualsiasi altra azione che richieda l'uso delle mani o della parola.\n\nL'**equipaggiamento del bersaglio si fonde nella nuova forma**.\n\nLa **creatura non può attivare, usare o impugnare gli oggetti del suo equipaggiamento, né trarne benefici in altri modi**."),
       Enchantment(
           "Muro di fuoco",
@@ -3703,7 +3698,7 @@ class DummyManager {
           true,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** evoca un **rampicante** che **spunta dal terreno** in uno **spazio libero** entro **gittata** e che egli sia in grado di **vedere**.\n\nQuando lancia questo **incantesimo**, l'incantatore può ordinare al **rampicante** di **avvinghiarsi** a una **creatura** situata entro 9 metri da esso e che l'incantatore sia in grado di **vedere**.\n\nQuella **creatura** deve superare un **tiro salvezza** su **Destrezza**, altrimenti viene **tirata di 6 metri direttamente verso il rampicante**.\n\nFinché l'**incantesimo** non termina, l'incantatore può ordinare al **rampicante** di **avvinghiare** la stessa **creatura** o un'altra **creatura** come **azione bonus** a ogni suo **turno**."),
       Enchantment(
           "Santuario privato",
@@ -3799,7 +3794,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "una semisfera di cristallo trasparente e una semisfera corrispondente di resina",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "Una **sfera di forza scintillante** racchiude una **creatura o un oggetto di taglia Grande o inferiore** entro **gittata.**\n\nUna **creatura non consenziente** deve effettuare un tiro salvezza su **Destrezza.**\n\nSe lo **fallisce**, è **rinchiusa nella sfera per la durata dell'incantesimo.**\n\nNulla può attraversare la barriera in **entrata e in uscita** (oggetti fisici, energia o altri effetti magici), ma una creatura all'interno della sfera può respirare liberamente.\n\nLa sfera è **immune a tutti i danni** e una creatura o un oggetto all'interno non può essere **danneggiato dagli attacchi o dagli effetti che hanno origine all'esterno;** analogamente, una creatura all'interno della sfera non può danneggiare nulla all'esterno.\n\nLa sfera non ha **peso** ed è grande quanto basta da contenere la creatura o l'oggetto al suo interno.\n\nUna **creatura rinchiusa** può usare la sua azione per spingere la sfera dall'interno e farla rotolare a metà della propria velocità.\n\nAnalogamente, la sfera può essere **sollevata e mossa dalle altre creature.**\n\nUn incantesimo **disintegrazione** che bersaglia la sfera la distrugge **senza danneggiare ciò che essa contiene.**"),
       Enchantment(
           "Tempesta di ghiaccio",
@@ -3879,7 +3874,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "una piccola sbarra di ferro",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'<u>incantatore</u> sceglie una creatura entro **gittata** e che egli sia in grado di vedere.\\n\\nIl bersaglio deve superare un tiro salvezza su **Saggezza**, altrimenti sarà **paralizzato** per la durata dell'incantesimo.\\n\\nQuesto incantesimo non ha effetto sui **non morti**. \\n\\n**Alla fine di ogni suo turno**, il bersaglio può effettuare un altro tiro salvezza su **Saggezza**.\\n\\nSe lo supera, l'incantesimo su di esso termina.\\n\\n***AI LIVELLI SUPERIORI:***\\nWhen the caster casts this spell using a spell slot of 6th level or higher, it can target one additional creature for each slot above 5th level.*\\nThe creatures must be within *9 meters* of each other when the caster targets them.*"),
       Enchantment(
           "Cerchio di potere",
@@ -4007,7 +4002,7 @@ class DummyManager {
           false,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.attacco,
           "Il tocco dell'**incantatore** trasmette una malattia.\n\nL'**incantatore** effettua un attacco con incantesimo in mischia* contro una creatura entro la sua portata.\n\nSe colpisce, contamina la creatura con una malattia a sua scelta tra quelle descritte di seguito.\n\nAlla fine di ogni suo turno, il bersaglio deve effettuare un tiro salvezza su Costituzione.\n\nDopo avere falito tre di questi tiri salvezza, gli effetti della malattia permangono per la durata dell'incantesimo e la creatura smette di effettuare questi tiri salvezza.\n\nDopo avere superato tre di questi tiri salvezza, la creatura si riprende dalla malattia e l'incantesimo termina.\n\nDal momento che questo incantesimo induce una malattia naturale nel suo bersaglio, ogni effetto che rimuove una malattia o migliora gli effetti di una malattia è applicabile al bersaglio.\n\n- **Carne Putrefatta**: La carne della creatura si decompone.\n\nLa creatura subisce svantaggio alle prove di Carisma e vulnerabilità a tutti i danni.\n\n- Devastazione Vischiosa: La creatura inizia a perdere sangue inesorabilmente e subisce svantaggio alle prove di Costituzione e a i tiri salvezza su Costituzione.\n\nInoltre, ogni volta che la creatura subisce danni, è stordita fino alla fine del suo turno succesivo.\n\n- **Febbre Lurida**:Il corpo della creatura brucia di febbre.\n\nLa creatura subisce svantaggio alle prove di Forza, ai tiri salvezza su Forza e ai tiri per colpire che utilizzano Forza.\n\n- **Fuoco Mentale**: La mente della creatura è febbricitante.\n\nLa creatura subisce svantaggio alle prove di Intelligenza e ai tiri salvezza su Intelligenza, e si comporta come se fosse sotto gli effetti dell'incantesimo confusione durante il combattimento.\n\n- **Infermità Accecante**: La mente della creatura è scossa dal dolore e i suoi occhi diventano lattiginosi.\n\nLa creatura subisce svantaggio alle prove di Saggeza, ai tiri salvezza su Saggezza ed è accecata.\n\n- **Tremarella**: La creatura è colta da violenti brividi, subisce svantaggio alle prove di Destrezza, ai tiri salvezza su Destrezza e ai tiri per colpire che utilizzano la Destrezza."),
       Enchantment(
           "Contattare altri piani",
@@ -4045,7 +4040,7 @@ class DummyManager {
           false,
           [Component.v],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** impartisce un **comando magico** a una **creatura** entro gittata e che egli sia in grado di vedere, obbligandola a compiere per lui un **servizio** di qualche tipo o ad astenersi da un corso d'azione o un'**attività**, come da lui stabilito.\n\nSe la **creatura** è in grado di comprendere l'incantatore, deve superare un tiro salvezza su **Saggezza**, altrimenti è **affascinata** dall'incantatore per la durata dell'incantesimo.\n\nFinché la creatura è **affascinata** dall'incantatore, subisce 5d10 danni psichici ogni volta che agisce in maniera dichiaratamente contraria alle sue istruzioni, ma non più di una volta al giorno.\n\nSe la creatura non è in grado di comprendere l'incantatore, non subisce l'effetto di questo incantesimo.\n\nL'**incantatore** può impartire un **qualsiasi comando** a sua scelta, ad eccezione di quelle attività che condurrebbero a morte certa.\n\nSe l'incantatore impartisce un **comando suicida**, l'incantesimo termina.\n\nL'incantatore può terminare l'incantesimo prematuramente usando un'azione.\n\nAnche un **incantesimo desiderio**, **rimuovi maledizione** o **ristorare superiore** è in grado di porre termine all'incantesimo.\n\n**AI LIVELLI SUPERIORI:** Quando l'incantatore lancia questo incantesimo usando uno **slot incantesimo di 7° o 8° livello**, la durata è pari a 1 anno.\n\nQuando l'incantatore lancia questo incantesimo usando uno **slot incantesimo di 9° livello**, l'incantesimo dura finché uno degli incantesimi menzionati più sopra non vi pone termine."),
       Enchantment(
           "Creazione",
@@ -4093,7 +4088,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "acqua santa o polvere d'argento e di ferro",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'incantatore è **circondato da un alone di energia scintillante che lo protegge** da **folletti, non morti e creature originarie di un piano diverso dal Piano Materiale**.\n\nPer la durata dell'incantesimo, **celestiali, elementali, folletti, immondi e non morti subiscono svantaggio ai tiri per colpire contro di lui.**\n\nL'incantatore può porre fine all'incantesimo usando una delle funzioni speciali seguenti.\n\n\- **Congedo**: Con la sua azione, l'incantatore effettua un attacco in mischia con questo incantesimo contro un **celestiale, un elementale, un folletto, un immondo o un non morto** entro la sua portata.\n\nSe lo colpisce, tenta di respingerlo sul suo piano di origine. La creatura deve superare un tiro salvezza su Carisma, altrimenti sarà ricacciata sul suo piano natio (se già non si trova laggiù).\n\nSe non si trovano sul loro piano di origine, i non morti sono inviati nella Coltre Oscura e i folletti nella Selva Fatata.\n\n\- Spezzare Ammaliamento: Con la sua azione, l'incantatore tocca una **creatura situata entro la sua portata che sia affascinata, spaventata o posseduta da un celestiale, un elementale, un folletto, un immondo o un non morto.**\n\nLa creatura toccata non è più affascinata, spaventata o posseduta da quella creatura."),
       Enchantment(
           "Dominare persone",
@@ -4109,7 +4104,7 @@ class DummyManager {
           true,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** tenta di soggiogare un umanoide entro gittata e che egli sia in grado di vedere.\n\nQuell'umanoide deve superare un **tiro salvezza** su Saggezza, altrimenti sarà **affascinato dall'incantatore** per la durata dell'incantesimo.\n\nSe l'**incantatore** o le creature a lui amichevoli stanno **combattendo contro** l'umanoide, quest'ultimo dispone di **vantaggio al tiro salvezza**.\n\nMentre il bersaglio è **affascinato**, l'incantatore dispone di un **legame telepatico** con lui finché entrambi si trovano sullo stesso piano di esistenza.\n\nL'incantatore può usare questo **legame telepatico** per **impartire comandi** alla creatura finché è cosciente (nessuna azione richiesta), ed essa farà del suo meglio per obbedire.\n\nL'incantatore può specificare un **corso d'azione semplice e generico** come *attacca quella creatura*, *corri fin laggiù* o *portami quell'oggetto*.\n\nSe la creatura porta a termine l'ordine e non riceve ulteriori indicazioni da parte dell'incantatore, essa si **difende e si protegge al meglio delle sue capacità**.\n\nL'incantatore può usare la sua **azione** per assumere il **controllo totale e preciso** del bersaglio. Fino alla fine del turno successivo dell'incantatore, la creatura effettua soltanto le azioni scelte dall'incantatore e non fa niente che l'incantatore non le consenta di fare.\n\nDurante questo periodo, l'incantatore può anche fare in modo che la creatura **usi una reazione**, ma per farlo dovrà usare la sua stessa reazione.\n\nOgni volta che il bersaglio subisce danni, effettua un nuovo **tiro salvezza** su Saggezza contro l'incantesimo.\n\nSe lo **supera**, l'incantesimo termina.\n\n**AI LIVELLI SUPERIORI**: Quando l'incantatore lancia questo incantesimo con uno slot incantesimo di 6° livello, la durata diventa **concentrazione**, fino a 10 minuti.\n\nQuando usa uno slot incantesimo di 7° livello, la durata diventa **concentrazione**, fino a 1 ora.\n\nQuando usa uno slot incantesimo di 8° livello o superiore, la durata diventa **concentrazione**, fino a 8 ore."),
       Enchantment(
           "Evoca elementale",
@@ -4253,7 +4248,7 @@ class DummyManager {
           true,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "**L'incantatore** tenta di alterare i ricordi di un'altra creatura che egli sia in grado di vedere, che dovrà effettuare un tiro salvezza su Saggezza.\n\nSe l'incantatore sta **combattendo contro** la creatura, essa dispone di vantaggio al tiro salvezza.\n\nSe il bersaglio fallisce il tiro salvezza, diventa **affascinato** dall'incantatore per la durata dell'incantesimo.\n\nIl bersaglio **affascinato** è incapacitato e inconsapevole di ciò che accade attorno a himan, ma può ancora udire l'incantatore.\n\nSe subisce danni o se è bersagliato da un altro incantesimo, questo incantesimo termina e nessun ricordo del bersaglio viene modificato.\n\nFinché questo **ammaliamento** permane, l'incantatore può alterare il ricordo che il bersaglio ha di un evento avvenuto nelle ultime 24 ore e della durata massima di 10 minuti.\n\nL'incantatore può eliminare permanentemente tutti i ricordi dell'evento, consentire al bersaglio di ricordare l'evento con perfetta lucidità e in ogni dettaglio, alterare il ricordo di alcuni dettagli dell'evento o creare il ricordo di un evento diverso.\n\nL'incantatore deve parlare con il bersaglio per descrivere in che modo i suoi ricordi vengono alterati e il bersaglio deve essere in grado di capire il linguaggio usato dall'incantatore affinché i ricordi modificati si radichino nella sua mente.\n\nLa mente del bersaglio riempie le eventuali lacune presenti nella descrizione dell'incantatore.\n\nSe l'incantesimo termina prima che l'incantatore abbia finito di descrivere i ricordi modificati, i ricordi della creatura non subiscono alcuna alterazione.\n\nAltrimenti, i ricordi modificati si radicano nella mente del bersaglio quando l'incantesimo termina.\n\nUn ricordo modificato non influenza necessariamente il comportamento di una creatura, specialmente se il ricordo contraddice le inclinazioni naturali, l'allineamento o le convinzioni della creatura.\n\nUn ricordo modificato **illogicamente**, come per esempio il ricordo di quanto la creatura ami immergersi nell'acido, viene ignorato e probabilmente bollato come un brutto sogno.\n\nIl DM potrebbe ritenere che un ricordo modificato sia troppo insensato per influenzare la creatura in modo significativo.\n\nUn incantesimo **rimuovi maledizione** o **ristorare superiore** lanciato sul bersaglio ripristina i veri ricordi della creatura.\n\n**AI LIVELLI SUPERIORI**: Se l'incantatore lancia questo incantesimo usando uno slot incantesimo di 6° livello o superiore, può alterare i ricordi del bersaglio relativi a un evento risalente fino a 7 giorni fa (**6° livello**), 30 giorni fa (**7° livello**), 1 anno fa (**8° livello**) o a un qualunque momento del suo passato (**9° livello**)."),
       Enchantment(
           "Muro di forza",
@@ -4285,7 +4280,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "un piccolo pezzo di granito",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "Un **muro non magico** di solida pietra si materializza partendo da un punto a scelta dell'incantatore situato entro gittata.\n\nIl muro è spesso **15 cm** e composto da dieci pannelli quadrati con lato di 3 metri l'uno.\n\nOgni pannello deve essere contiguo ad **almeno un altro pannello.**\n\nIn alternativa, l'incantatore può creare dei pannelli di 3 metri per 6 metri dello spessore di soli **7,5 cm.**\n\nSe il muro **attraversa lo spazio** di una creatura nel momento in cui compare, quella creatura viene spinta da un lato del muro (a scelta dell'incantatore).\n\nSe una creatura sarebbe circondata su tutti i lati dal muro (o dal muro e da un'altra superficie solida), può effettuare un tiro salvezza su Destrezza.\n\nSe lo **supera, può usare la sua reazione per muoversi fino alla sua velocità nel tentativo di non rimanere intrappolata dal muro.**\n\nIl muro può avere la forma desiderata dall'incantatore, ma non può occupare lo stesso spazio di una creatura o di un oggetto.\n\nNon è necessario che il muro sia verticale o poggi su fondamenta solide.\n\nDeve però fondersi ed essere solidamente sorretto da una massa di pietra già esistente.\n\nQuindi è possibile usare questo incantesimo per creare una rampa o un ponte che attraversi un baratro.\n\nSe l'incantatore crea un'arcata di lunghezza superiore a 6 metri, deve dimezzare le dimensioni di ogni pannello per creare dei sostegni.\n\nPuò rozzamente modellare il muro per creare feritoie, spalti e così via.\n\nIl muro è un oggetto **fatto di pietra** che può essere danneggiato e quindi sfondato.\n\nOgni pannello ha CA 15 e 30 punti ferita per ogni 2,5 cm di spessore.\n\nQuando un pannello scende a 0 punti ferita è distrutto e potrebbe provocare anche il crollo di altri pannelli, a discrezione del DM.\n\nSe l'incantatore **mantiene la concentrazione su questo incantesimo per l'intera durata**, il muro diventa permanente e non può essere dissolto.\n\nAltrimenti, il muro scompare quando l'incantesimo termina."),
       Enchantment(
           "Nube mortale",
@@ -4467,7 +4462,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "un focus del valore di almeno 1.000 mo come una sfera di cristallo uno specchio d'argento o un bacile pieno di acqua santa",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** può **vedere** e **udire** una particolare creatura a sua **scelta** situata sul suo stesso piano di esistenza.\n\nIl **bersaglio** deve effettuare un tiro salvezza su **Saggezza**, modificato dalla conoscenza e dal tipo di legame che l'incantatore ha nei suoi confronti.\n\nSe il **bersaglio** sa che l'incantatore sta lanciando questo incantesimo, può **fallire** il tiro salvezza **volontariamente** se desidera essere **osservato**.\n\nIn **caso** di tiro salvezza **superato**, il bersaglio non è **influenza**to e l'incantatore non può più usare questo incantesimo contro di lui per 24 ore.\n\nIn **caso** di tiro salvezza **fallito**, l'incantesimo crea un **sensore** invisibile entro 3 metri dal bersaglio.\n\nL'incantatore può **vedere** e **sentire** attraverso il sensore **come se si trovasse sul posto.**\n\nIl sensore si **muove** assieme al bersaglio, **rimanendo entro 3 metri** da esso per la durata dell'incantesimo.\n\nUna creatura in grado di vedere gli **oggetti invisibili vede** il sensore come un **globo luminoso** delle dimensioni approssimative di un **pugno umano.**\n\nAnziché bersagliare una creatura, l'incantatore può scegliere un **luogo** che abbia già visto in precedenza come bersaglio di questo incantesimo. Quando lo fa, il sensore **appare in quel luogo** e non si **muove**."),
       Enchantment(
           "Sembrare",
@@ -4483,7 +4478,7 @@ class DummyManager {
           false,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "Questo **incantesimo** consente all'**incantatore** di **alterare** l'aspetto di un **qualsiasi** numero di **creature** entro gittata e che egli sia in grado di **vedere**, impartendo a ognuna di esse un nuovo aspetto **illusorio**.\n\nUn **bersaglio** non **consenziente** può effettuare un tiro salvezza su **Carisma**.\n\nSe lo **supera**, non è **influenza**to da questo incantesimo.\n\nQuesto incantesimo **camuffa** l'aspetto **fisico** oltre agli **abiti**, l'armeria, le **armi** e l'equipaggiamento.\n\nOgni **creatura** può apparire 30 cm più alta o più bassa e apparire magra, grassa o di corporatura **normale**.\n\nNon è possibile **cambiare** il **tipo** di corpo, quindi ogni creatura deve adottare una forma che usi la stessa disposizione basilare degli **arti**.\n\nEntro questi **limiti**, la natura dell'illusione **dipende** dall'incantatore.\n\nI **cambiamenti** apportati da questo incantesimo non **passano** il vaglio di un'ispezione **fisica**.\n\nAd esempio, se l'incantatore usa questo incantesimo per **aggiungere** un cappello sulla testa di una creatura, gli **oggetti** passerebbero attraverso il cappello e chiunque tocchi la creatura non **sentirebbe** nulla o toccherebbe la sua testa e i capelli.\n\nSe l'incantatore usa questo incantesimo per fare apparire la creatura più **magra** rispetto alla realtà, quando qualcuno **protende** la mano per toccarla, urta la creatura quando la sua mano è apparentemente ancora a mezz'aria.\n\nUna **creatura** può usare la sua azione per **ispezionare** un bersaglio ed effettuare una prova di **Intelligenza (Indagare)** contro la CD del tiro salvezza dell'incantesimo.\n\nSe ha **successo**, capisce che il bersaglio è **camuffato**."),
       Enchantment(
           "Sogno",
@@ -4627,7 +4622,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "un pizzico di pietra calcarea acqua e terra",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** tenta di **pietrificare** una **creatura** entro gittata e che egli sia in grado di vedere.\n\nSe il **corpo del bersaglio è fatto di carne**, la creatura deve effettuare un tiro salvezza su **Costituzione**.\n\nSe lo **fallisce**, è **trattenuta** e la sua carne inizia a **indurirsi**, mentre se lo **supera**, non subisce alcun effetto.\n\nUna **creatura trattenuta da questo incantesimo** deve effettuare un altro tiro salvezza su **Costituzione** alla fine di ogni suo turno.\n\nSe supera il tiro salvezza contro questo incantesimo per **tre volte**, l'incantesimo termina.\n\nSe la **creatura fallisce il tiro salvezza per tre volte**, si **trasforma in pietra** ed è soggetta alla condizione di **pietrificato** per la durata dell'incantesimo.\n\nNon è necessario che i **successi e i fallimenti siano consecutivi**; basta tenere il conto di entrambi finché il bersaglio non accumula tre risultati di un determinato tipo.\n\nSe la **creatura subisce una rottura fisica di qualche tipo mentre è pietrificata**, subirà una **deformità analoga** quando torna al suo stato originale.\n\nSe l'**incantatore mantiene la concentrazione su questo incantesimo per l'intera durata possibile**, la creatura è **pietrificata finché l'effetto non viene rimosso**."),
       Enchantment(
           "Catena di fulmini",
@@ -4979,7 +4974,7 @@ class DummyManager {
           true,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "Per la durata dell'**incantesimo**, gli occhi dell'*incantatore* diventano neri, vacui e pervasi da una sinistra energia.\n\nUna creatura a *sua scelta* entro 18 metri da lui e che egli sia in grado di vedere deve superare un tiro salvezza su Saggezza, altrimenti è influenzata da uno degli effetti seguenti a scelta dell'incantatore per la durata dell'incantesimo.\n\nIn ogni suo turno, finché l'incantesimo non termina, l'*incantatore* può usare la sua azione per bersagliare un'altra creatura, ma non può bersagliare di nuovo una creatura che abbia superato un tiro salvezza contro questo lancio di *sguardo penetrante*.\n\n*- **Addormentato**: Il bersaglio cade privo di sensi.*\n\nSi sveglia se subisce danni o se un'altra creatura usa la sua azione per risvegliarlo scuotendolo.\n\n*- **In Preda al Panico**: Il bersaglio è spaventato dall'incantatore.*\n\nIn ogni suo turno, la creatura spaventata deve effettuare l'azione di *Scatto* e muoversi per allontanarsi dall'incantatore lungo il percorso più breve e più sicuro possibile, a meno che non ci sia alcun luogo dove andare.\n\nSe il bersaglio si muove fino a un luogo lontano almeno 18 metri dall'incantatore in cui non è più in grado di vederlo, questo effetto termina.\n\n*- **Nauseato**: Il bersaglio subisce svantaggio ai tiri per colpire e alle prove di caratteristica.*\n\nAlla fine di ogni suo turno, può effettuare un altro tiro salvezza su Saggezza.\n\nSe lo supera, l'effetto termina."),
       Enchantment(
           "Suggestione di massa",
@@ -4995,7 +4990,7 @@ class DummyManager {
           false,
           [Component.v, Component.m],
           "una lingua di serpente e un frammento di un alveare o una goccia di olio dolce",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'*incantatore* **sugggerisce** un corso d'azione da intraprendere (limitandosi a una o due frasi) e **influenza magicamente** fino a dodici creature a sua scelta entro gittata e che egli sia in grado di vedere.\n\nLe creature devono essere in grado di *sentire l'incantatore* e di *capirlo*.\n\nLe creature che non possono essere **affascinate** sono immuni a questo effetto.\n\nLa *suggestione* deve essere formulata in modo che il corso d'azione appaia **ragionevole**.\n\nChiedere a una creatura di pugnalarsi, gettarsi su una lancia, immolarsi o compiere altri atti **palesemente autolesionistici** nega automaticamente l'effetto dell'incantesimo.\n\nOgni bersaglio deve effettuare un tiro salvezza su Saggezza.\n\nSe lo fallisce, deve perseguire il corso d'azione descritto dall'incantatore al meglio delle sue capacità.\n\nTale corso d'azione può proseguire per l'intera durata dell'incantesimo.\n\nSe l'attività suggerita può essere completata in un periodo di tempo più breve, l'incantesimo termina quando il soggetto completa ciò che gli è stato chiesto di fare.\n\nL'*incantatore* può alsopecificare quali condizioni innescheranno un'attività speciale nel corso della durata.\n\nPer esempio, potrebbe suggerire che un gruppo di soldati ceda tutto il suo denaro al primo mendicante che incontra.\n\nSe questa condizione non viene soddisfatta prima che l'incantesimo termini, quell'attività non viene effettuata.\n\nSe l'*incantatore* o uno dei suoi compagni infligge danni a una creatura influenzata da questo incantesimo, l'incantesimo termina per quella creatura.\n\n**AI LIVELLI SUPERIORI**: Quando l'incantatore lancia questo incantesimo usando uno slot incantesimo di 7° livello, la durata è pari a 10 giorni.\n\nQuando usa uno slot incantesimo di 8° livello, la durata è pari a 30 giorni.\n\nQuando usa uno slot incantesimo di 9° livello, la durata è pari a un anno e un giorno."),
       Enchantment(
           "Trasporto vegetale",
@@ -5215,7 +5210,7 @@ class DummyManager {
           false,
           [Component.v],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "**L'incantatore** pronuncia una parola **divina**, pervasa dal potere che plasmò il mondo all'alba della creazione, scegliendo un qualsiasi numero di **creature** entro gittata e che egli sia in grado di vedere.\n\nOgni creatura che è in grado di sentire l'**incantatore** deve effettuare un tiro salvezza su **Carisma.**\n\nSe lo fallisce, subisce un effetto basato sui suoi punti ferita attuali:\n\n\- 50 punti ferita o meno: **assordata** per 1 minuto\n\n\- 40 punti ferita o meno: **assordata** e **accecata** per 10 minuti\n\n\- 30 punti ferita o meno: **accecata**, **assordata** e **stordita** per 1 ora\n\n\- 20 punti ferita o meno: **uccisa** **istantaneamente**\n\nA prescindere dai suoi punti ferita attuali, un **celestiale**, un **elementale**, un **folletto** o un **immondo** che fallisce il suo tiro salvezza viene **respinto sul suo piano di origine** (se non si trova già laggiù) e non può fare ritorno al piano attuale dell'incantatore per 24 ore in alcun modo ad eccezione di un incantesimo **desiderio**."),
       Enchantment(
           "Reggia meravigliosa",
@@ -5477,7 +5472,7 @@ class DummyManager {
           true,
           [Component.v, Component.s],
           "",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "_L'incantatore_ tenta di soggiogare una creatura entro gittata e che egli sia in grado di vedere.\n\nQuella creatura deve superare un tiro salvezza su _Saggezza_, altrimenti sarà _affascinata_ dall'incantatore per la durata dell'incantesimo.\n\nSe l'_incantatore_ o le creature a lui amichevoli stanno combattendo contro la creatura, quest'ultima dispone di _vantaggio_ al tiro salvezza.\n\nMentre la creatura è _affascinata_, l'incantatore dispone di un legame telepatico con essa finché entrambi si trovano sullo stesso piano di esistenza.\n\nL'incantatore può usare questo legame telepatico per _impartire comandi_ alla creatura finché è cosciente (_nessuna azione richiesta_), ed essa farà del suo meglio per obbedire.\n\nL'incantatore può specificare un corso d'azione semplice e generico come **attaca quella creatura**, **corri fin laggiù** o **portami quell'oggetto**.\n\nSe la creatura porta a termine l'ordine enon riceve ulteriori indicazioni da parte dell'incantatore, essa si difende e si protegge al meglio delle sue capacità.\n\nL'incantatore può usare la sua azione per _assumere ilcontrollo totale e preciso del bersaglio_.\n\nFino alla fine del turno successivo dell'incantatore, la creatura effettua soltanto le azioni scelte dall'incantatore e non fa niente che l'incantatore non le consenta di fare. Durante questo periodo, l'incantatore può anche fare in modo che la creatura usi una reazione,ma per farlo dovrà usare la sua stessa reazione.\n\nOgni volta che ilbersaglio subisce danni, effettua unnuovo tiro salvezza su _Saggezza_ contro l'incantesimo.\n\nSe lo supera, l'incantesimo termina.\n\n_AI LIVELLI SUPERIORI:_ Quando l'incantatore lancia questo incantesimo con uno slot incantesimo di 9° livello, la durata diventa _concentrazione_, fino a 8 ore."),
       Enchantment(
           "Esplosione solare",
@@ -5589,7 +5584,7 @@ class DummyManager {
           false,
           [Component.v, Component.s, Component.m],
           "una manciata di sfere di argilla cristallo vetro o minerali",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** assale la **mente di una creatura** entro gittata che egli sia in grado di vedere, nel tentativo di **infrangere il suo intelletto e la sua personalità**.\n\nIl **bersaglio** subisce 4d6 danni psichici e deve effettuare un tiro salvezza su **Intelligenza**.\n\nSe lo **fallisce**, i suoi punteggi di **Intelligenza** e di **Carisma** diventano 1.\n\nIl **bersaglio** non può **lanciare incantesimi, attivare oggetti magici, capire linguaggi o comunicare in alcun modo intelligibile**.\n\nLa creatura è in grado tuttavia di **identificare i suoi amici, seguirli, e perfino proteggerli**.\n\nAlla fine di ogni **30 giorni**, la creatura può ripetere il tiro salvezza contro questo **incantesimo**.\n\nSe lo **supera**, l'incantesimo termina.\n\nAnche **gli incantesimi desiderio, guarigione o ristorare superiorepossono terminare questo incantesimo**."),
       Enchantment(
           "Semipiano",
@@ -5749,7 +5744,7 @@ class DummyManager {
           false,
           [Component.v, Component.s, Component.m],
           "un ritratto su pergamena o una statuetta che riproduce le fattezze del bersaglio e una componente speciale che varia in base alla versione dell'incantesimo che si desidera lanciare del valore di almeno 500 mo per ogni Dado Vita del bersaglio",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** crea una **costrizione magica** per **trattenere** una **creatura** entro **gittata** e che egli sia in grado di **vedere.**\n\nIl **bersaglio** deve effettuare un **tiro salvezza** sulla **Saggezza.**\n\nSe lo **fallisce**, sarà **vincolato** dall'incantesimo; se invece lo **supera**, sarà immune a questo incantesimo qualora l'incantatore dovesse lanciarlo di nuovo.\n\nFinché è **influenzata** da questo incantesimo, la **creatura** non ha bisogno di **respirare**, mangiare o bere e non invecchia. Gli **incantesimi di divinazione** non possono **localizzare** o **percepire** il bersaglio.\n\nQuando l'incantatore lancia l'incantesimo, sceglie una delle seguenti forme di **prigionia:**\n\n\- **Ceppi:** Il bersaglio è bloccato sul posto da una serie di pesanti catene saldamente ancorate al terreno.\nIl bersaglio è trattenuto finché l'incantesimo non termina e non può muoversi o essere mosso in alcun modo fino ad allora. La **componente speciale** per questa versione dell'incantesimo è una catenella di metallo prezioso.\n\n\- **Prigione Delimitata:** L'incantesimo trasporta il bersaglio su un minuscolo semipiano protetto da un'interdizione contro il teletrasporto e i viaggi planari.\nIl semipiano può essere un labirinto, una gabbia, una torre o un'analoga struttura confinata a scelta dell'incantatore. La componentente speciale per questa versione dell'incantesimo è una riproduzione in miniatura della prigione desiderata fatta di giada.\n\n\- **Prigionia Ridotta:** Il bersaglio è rimpicciolito fino a un'altezza di 2,5 cm ed è rinchiuso in una gemma o in un oggetto simile.\nLa gemma lascia passare la luce normalmente (consentendo al bersaglio di vedere all'esterno e alle altre creature di vedere all'interno), ma nient'altro può attraversarla, nemmeno tramite teletrasporto o viaggi planari.\nLa gemma non può essere intagliata o infranta finché l'incantesimo ha effetto. La componente speciale per questa versione dell'incantesimo è una grossa gemma trasparente, come un corindone, un diamante o un rubino.\n\n\- **Sepoltura:** Il bersaglio è sepolto nelle viscere della terra, in una sfera di forza magica sufficientemente grande da contenerlo. Nulla può attraversare la sfera e nessuna creatura può teletrasportarsi o usare un viaggio planare per entrare o uscire dalla sfera.\nLa componente speciale per questa versione dell'incantesimo è un piccolo globo di mithral.\n\n\- **Sonno:** Il bersaglio si addormenta e non può essere svegliato.\nLa componente speciale per questa versione dell'incantesimo è una raccolta di rare erbe soporifere.\n\n\- **Terminare l'Incantesimo:** Durante il lancio dell'incantesimo, in qualsiasi sua versione, l'incantatore può specificare una condizione che porrà fine all'incantesimo e libererà il bersaglio.\nLa condizione può essere specifica e complessa quanto l'incantatore desidera, ma il DM deve considerarla ragionevole e ritenere che abbia una certa probabilità di verificarsi. Le condizioni possono basarsi sul nome, l'identità o la divinità di una creatura, ma devono basarsi su azioni o qualità osservabili e non su concetti intangibili come il livello, la classe o i punti ferita.\n\nUn incantesimo **dissolvi magie** può terminare questo incantesimo solo se viene lanciato come incantesimo di 9° livello bersagliando la prigione o la componente speciale usata per crearla.\n\nL'incantatore può usare una determinata componente speciale soltanto per creare una prigione alla volta. Se lancia di nuovo l'incantesimo usando la stessa componente, il bersaglio del primo lancio viene immediatamente liberato dalla sua prigionia."),
       Enchantment(
           "Metamorfosi pura",
@@ -5765,7 +5760,7 @@ class DummyManager {
           true,
           [Component.v, Component.s, Component.m],
           "una goccia di mercurio una sfera di resina e uno sbuffo di fumo",
-          Damage.descrittivo,
+          Damage.tiroSalvezza,
           "L'**incantatore** sceglie una **creatura** o un **oggetto non magico** situato entro gittata e che egli sia in grado di vedere e **trasforma** la creatura in una creatura diversa o in un oggetto non magico, oppure **trasforma** l'oggetto in una creatura (l'oggetto non deve essere indossato o trasportato da un'altra creatura).\n\nLa **trasformazione** permane per la durata dell'incantesimo, o finché il bersaglio non scende a 0 punti ferita o non muore.\n\nSe l'incantatore si **concentra** su questo incantesimo per l'intera durata, la **trasformazione** permane finché non viene dissolta.\n\nQuesto incantesimo non ha effetto su un mutaforma o su una creatura con 0 punti ferita.\n\n**Una creatura non consenziente** può effettuare un tiro salvezza su Saggezza.\n\nSe lo supera, non è influenzata da questo incantesimo.\n\n*   **Creatura in Creatura**: Se l'incantatore **trasforma** una creatura in un altro tipo di creatura, la nuova forma può essere di qualsiasi tipo a scelta dell'incantatore, purché il suo grado di sfida sia pari o inferiore a quello del bersaglio (o del suo livello, se il bersaglio non possiede un grado di sfida).\n\nLe statistiche di gioco del bersaglio, inclusi i punteggi di caratteristica mentali, vengono **sostituite** dalle statistiche della nuova forma.\n\nIl bersaglio mantiene il suo allineamento e la sua personalità.\n\nIl bersaglio assume i punti ferita della sua nuova forma.\n\nQuando torna alla sua forma normale, torna al numero di punti ferita che possedeva prima della **trasformazione**.\n\nSe riassume la sua forma normale per essere sceso a 0 punti ferita, ogni eventuale danno in eccesso si **trasferisce** alla sua forma normale.\n\nFintanto che i danni in eccesso non portano la forma normale della creatura a 0 punti ferita, essa non cade priva di sensi.\n\nLe azioni della creatura sono limitate a quelle che la natura della sua nuova forma le consente di effettuare: non può parlare, lanciare incantesimi o effettuare qualsiasi altra azione che richieda l'uso delle mani o della parola, a meno che la sua nuova forma non sia in grado di compiere tali azioni.\n\nL'equipaggiamento del bersaglio si **fonda** nella nuova forma.\n\nLa creatura non può attivare, usare o impugnare gli oggetti del suo equipaggiamento, né trarne benefici in altri modi.\n\n*   ***Oggetto In Creatura***: L'incantatore può **trasformare** un oggetto in una qualsiasi creatura, fintanto che la taglia della creatura non è superiore alla taglia dell'oggetto e il grado di sfida della creatura è pari o inferiore a 9.\n\nLa creatura è amichevole nei confronti dell'incantatore e dei suoi compagni e agisce a ogni turno dell'incantatore, che decide quale azione effettua e come si muove.\n\nÈ il **DM** a possedere le sue statistiche e a risolvere le sue azioni e il suo movimento.\n\nSe l'incantesimo diventa **permanente**, l'incantatore non controlla più la creatura, che potrebbe rimanere amichevole o meno nei suoi confronti, in base a come è stata trattata.\n\n*   ***Creatura In Oggetto***: Se l'incantatore **trasforma** una creatura in oggetto, tutto ciò che la creatura trasporta e indossa si **fonde** in quella forma fintanto che la taglia dell’oggetto non è superiore alla taglia della creatura.\n\nLe statistiche della creatura diventano quelle dell'oggetto e la creatura non ricorderà nulla del tempo trascorso in questa forma quando l'incantesimo sarà terminato ed essa tornerà alla sua forma normale."),
       Enchantment(
           "Muro prismatico",
