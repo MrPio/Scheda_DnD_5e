@@ -1,8 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:scheda_dnd_5e/interface/inventory_item.dart';
+import 'package:scheda_dnd_5e/interface/with_title.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 
 part 'part/loot.g.dart';
+
+abstract class InventoryItem extends EnumWithTitle{}
 
 enum Weapon implements InventoryItem {
   // Armi da Mischia Semplici
@@ -157,7 +159,7 @@ enum Item implements InventoryItem {
   const Item(this.title);
 }
 
-enum Coin implements InventoryItem {
+enum Coin implements EnumWithTitle {
   rame('mr', 1),
   argento('ma', 10),
   electrum('me', 50),
@@ -287,7 +289,7 @@ enum Equipment implements InventoryItem {
 
   @override
   final String title;
-  final Map<InventoryItem, int> content;
+  final Map<EnumWithTitle, int> content;
 
   const Equipment(this.title, this.content);
 
@@ -302,6 +304,7 @@ class Loot implements JSONSerializable {
   final Map<Object, int> _content;
 
   Loot.jsonConstructor(this._name, this._content);
+
   Loot(this._content, [this._name]) {
     for (var qta in content.values) {
       assert(qta < 1);
@@ -309,8 +312,9 @@ class Loot implements JSONSerializable {
   }
 
   String get name => _name ?? content.keys.toList()[0].title;
+
   @JsonKey(includeFromJson: false, includeToJson: false)
-  Map<InventoryItem, int> get content => _content as Map<InventoryItem, int>;
+  Map<EnumWithTitle, int> get content => _content as Map<EnumWithTitle, int>;
 
   @override
   factory Loot.fromJson(Map<String, dynamic> json) => _$LootFromJson(json);

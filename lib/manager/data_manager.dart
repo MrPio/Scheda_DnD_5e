@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/extension/function/int_extensions.dart';
-import 'package:scheda_dnd_5e/interface/identifiable.dart';
+import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/database_manager.dart';
@@ -81,7 +81,7 @@ class DataManager {
     String path = DatabaseManager.collections[model.runtimeType] ??
         '';
     if (mode == SaveMode.put) {
-      if (model is Identifiable) {
+      if (model is WithUID) {
         path += model.uid ?? '';
       } else if (model is Enchantment) {
         path += model.name.replaceAll('/', ' ');

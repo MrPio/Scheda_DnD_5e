@@ -2,7 +2,7 @@ import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:scheda_dnd_5e/interface/identifiable.dart';
+import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:scheda_dnd_5e/model/campaign.dart';
 import 'package:scheda_dnd_5e/model/character.dart';
@@ -47,7 +47,7 @@ class DatabaseManager {
     List<Map<String, dynamic>> dataList = [];
     for (var doc in dataSnapshot.docs) {
       var data = doc.data();
-      if (T is Identifiable) {
+      if (T is WithUID) {
         data['uid'] = doc.id;
       }
       dataList.add(data);

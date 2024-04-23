@@ -1,4 +1,4 @@
-import 'package:scheda_dnd_5e/interface/identifiable.dart';
+import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:scheda_dnd_5e/model/campaign.dart';
@@ -7,7 +7,7 @@ import 'package:scheda_dnd_5e/model/character.dart';
 part 'part/user.g.dart';
 
 @JsonSerializable()
-class User implements JSONSerializable, Identifiable {
+class User implements JSONSerializable, WithUID {
   final String nickname, email;
   final int regDateTimestamp;
 

@@ -1,11 +1,11 @@
-import 'package:scheda_dnd_5e/interface/identifiable.dart';
+import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'part/campaign.g.dart';
 
 @JsonSerializable()
-class Campaign implements JSONSerializable, Identifiable {
+class Campaign implements JSONSerializable, WithUID {
   final String? name;
   final String? authorUID;
   final String? password;

@@ -1,11 +1,11 @@
-import 'package:scheda_dnd_5e/interface/identifiable.dart';
+import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'part/session.g.dart';
 
 @JsonSerializable()
-class Session implements JSONSerializable, Identifiable {
+class Session implements JSONSerializable, WithUID {
   final int regDateTimestamp;
 
   @override

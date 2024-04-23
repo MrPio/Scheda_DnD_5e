@@ -8,9 +8,11 @@ import 'package:scheda_dnd_5e/enum/palette.dart';
 import 'package:scheda_dnd_5e/extension/function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension/function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension/function/string_extensions.dart';
+import 'package:scheda_dnd_5e/interface/with_title.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart';
 import 'package:scheda_dnd_5e/model/enchantment.dart';
+import 'package:scheda_dnd_5e/model/filter.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
@@ -19,31 +21,6 @@ import 'dart:core' hide Type;
 import 'dart:core' as core show Type;
 
 import 'partial/gradient_background.dart';
-
-class EnchantmentFilter<T extends Enum> {
-  final String title;
-  final Color color;
-  final List<T> values;
-  final bool Function(Enchantment, List<T>) filterCondition;
-
-  final List<T> selectedValues = [];
-
-  core.Type get enumType => T;
-
-  EnchantmentFilter(this.title, this.color, this.values, this.filterCondition);
-
-  bool checkFilter(Enchantment enchantment) =>
-      selectedValues.isEmpty || filterCondition(enchantment, selectedValues);
-
-  String getName(value) => switch (T) {
-        const (Class) => (value as Class).title,
-        const (Level) => (value as Level).title,
-        const (Type) => (value as Type).title,
-        _ => '',
-      };
-
-  void reset() => selectedValues.clear();
-}
 
 class EnchantmentsPage extends StatefulWidget {
   const EnchantmentsPage({super.key});
@@ -54,8 +31,7 @@ class EnchantmentsPage extends StatefulWidget {
 
 class _EnchantmentsPageState extends State<EnchantmentsPage> {
   late final TextEditingController _searchController;
-
-  late final List<EnchantmentFilter> _filters;
+  late final List<Filter> _filters;
 
   List<Enchantment> get _enchantments =>
       (DataManager().enchantments.value ?? [])
@@ -74,24 +50,25 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
         setState(() {});
       });
     _filters = [
-      EnchantmentFilter<Class>(
+      Filter<Enchantment,Class>(
           'Classe',
           Palette.primaryGreen,
           Class.values.where((e) => e.isEnchanter).toList(),
           (enchantment, values) =>
               enchantment.classes.any((c) => values.contains(c))),
-      EnchantmentFilter<Level>('Livello', Palette.primaryRed, Level.values,
+      Filter<Enchantment,Level>('Livello', Palette.primaryRed, Level.values,
           (enchantment, values) => values.contains(enchantment.level)),
-      EnchantmentFilter<Type>('Tipo', Palette.primaryBlue, Type.values,
+      Filter<Enchantment,Type>('Tipo', Palette.primaryBlue, Type.values,
           (enchantment, values) => values.contains(enchantment.type)),
     ];
     DataManager().enchantments.addListener(() {
       setState(() {});
     });
     // Forcing shimmer effect
-    final tmpEnchantments=DataManager().enchantments.value;
-    DataManager().enchantments.value=null;
-    Future.delayed(Durations.long3,()=>DataManager().enchantments.value=tmpEnchantments);
+    final tmpEnchantments = DataManager().enchantments.value;
+    DataManager().enchantments.value = null;
+    Future.delayed(Durations.long3,
+        () => DataManager().enchantments.value = tmpEnchantments);
     super.initState();
   }
 
@@ -146,14 +123,14 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                           text: _filters[i].title,
                           color: _filters[i].color,
                           onPressed: () => _filters[i].selectedValues.isNotEmpty
-                              ? setState(() => _filters[i].reset())
+                              ? setState(() => _filters[i].selectedValues.clear())
                               : context.checklist(
                                   'Filtro su ${_filters[i].title.toLowerCase()}',
                                   values: _filters[i].values,
                                   color: _filters[i].color,
                                   onChanged: (value) => setState(() =>
                                       _filters[i].selectedValues.toggle(value)),
-                                  text: (value) => _filters[i].getName(value),
+                                  text: (value) => _filters[i].title,
                                   value: (value) => _filters[i]
                                       .selectedValues
                                       .contains(value),

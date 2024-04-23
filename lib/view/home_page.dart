@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/view/characters_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
 
@@ -16,7 +17,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _screens = [
-    const Placeholder(),
+    const CharactersPage(),
     const Placeholder(),
     const DicePage(),
     const EnchantmentsPage(),
@@ -44,7 +45,25 @@ class _HomePageState extends State<HomePage> {
     Palette.backgroundBlue
   ];
 
+  late final PageController _pageController;
   var _index = 0;
+
+  @override
+  void initState() {
+    _pageController = PageController()
+      ..addListener(() {
+        setState(() {
+          _index = _pageController.page?.toInt() ?? 0;
+        });
+      });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +78,10 @@ class _HomePageState extends State<HomePage> {
             children: [
               Expanded(
                 child: Stack(children: [
-                  _screens[_index],
+                  PageView(
+                    controller: _pageController,
+                    children: _screens,
+                  ),
                   // Fade to black
                   Transform.translate(
                     offset: const Offset(0, 2),
@@ -67,8 +89,9 @@ class _HomePageState extends State<HomePage> {
                       alignment: Alignment.bottomCenter,
                       child: Image.asset('assets/images/linear_vignette.png',
                           color: Palette.background,
-                          fit:BoxFit.fill,
-                          height: 44, width: double.infinity),
+                          fit: BoxFit.fill,
+                          height: 44,
+                          width: double.infinity),
                       /*Container(
                           height: 50,
                           width: double.infinity,
@@ -86,7 +109,8 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: Measures.hPadding).copyWith(top:Measures.vMarginThin)
+                      const EdgeInsets.symmetric(horizontal: Measures.hPadding)
+                          .copyWith(top: Measures.vMarginThin)
                           .copyWith(bottom: Measures.vMarginThin),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -97,7 +121,8 @@ class _HomePageState extends State<HomePage> {
                         iconPathOn: '${_screenIconPaths[i]}_on',
                         iconPathOff: '${_screenIconPaths[i]}_off',
                         active: _index == i,
-                        onTap: () => setState(() => _index = i),
+                        onTap: () =>
+                            setState(() => _pageController.jumpToPage(i)),
                       );
                     }).toList(),
                   ),

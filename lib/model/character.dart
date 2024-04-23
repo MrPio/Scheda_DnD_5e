@@ -1,5 +1,5 @@
-import 'package:scheda_dnd_5e/interface/inventory_item.dart';
-import 'package:scheda_dnd_5e/interface/identifiable.dart';
+import 'package:scheda_dnd_5e/interface/with_title.dart';
+import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -95,7 +95,7 @@ enum SubClass {
   const SubClass(this.title, this.description);
 }
 
-enum Class {
+enum Class implements EnumWithTitle {
   barbaro(
       'Barbaro',
       [
@@ -880,29 +880,28 @@ enum Class {
   final String title, description;
   final List<SubClass> subClasses;
   final bool isEnchanter;
-  final List<SubSkill> choiceableSkills;
+  final List<SubSkill> choiceableSubSkills;
   final int numChoiceableSkills, numChoiceableMasteries;
   final List<Mastery> defaultMasteries;
   final List<MasteryType> choiceableMasteryTypes;
-  final List<Skill> tSSkills;
-  final List<Map<InventoryItem, int>> choiceableItems;
+  final List<Skill> savingThrowSkills;
+  final List<Map<EnumWithTitle, int>> choiceableItems;
 
   const Class(
       this.title,
       this.subClasses,
       this.isEnchanter,
-      this.choiceableSkills,
+      this.choiceableSubSkills,
       this.numChoiceableSkills,
       this.defaultMasteries,
       this.numChoiceableMasteries,
       this.choiceableMasteryTypes,
-      this.tSSkills,
+      this.savingThrowSkills,
       this.choiceableItems,
       this.description);
 }
 
 enum SubRace {
-  // TODO: classe Dragonide manca di sottorazze ci vanno con  defaultSkill vuota.!!!!!!!
   elfoAlto(
       'Elfo alto',
       1,
@@ -925,33 +924,23 @@ enum SubRace {
         Mastery.archiLunghi
       ],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di saggezza di un elfo dei boschi aumenta di 1.\n\nADDESTRAMENTO NELLE ARMI ELFICHE\nUn elfo dei boschi ha competenza nelle spade corte, nelle spade lunghe, negli archi corti e negli archi lunghi.\n\nPIEDE LESTO\nLa velocità base sul terreno di un elfo dei boschi aumenta a 10,5 metri.\n\nMASCHERA DELLA SELVA\nUn elfo dei boschi può tentare di nascondersi alla vista altrui anche quando è leggermente oscurato da fogliamo, pioggia fitta, neve, foschia e altri fenomeni naturali'),
-  elfoOscuro('Elfo oscuro', 0, {
-    Skill.carisma:1
-  }, [],
+  elfoOscuro('Elfo oscuro', 0, {Skill.carisma: 1}, [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di carisma di un elfo oscuro aumenta di 1.\n\nSCUROVISIONE SUPERIORE\nLa scurovisione di un elfo oscuro arriva fino a 36 metri.\n\nSENSIBILITà ALL LUCE DEL SOLE\nUn elfo oscuro dispone di svantaggio ai tiri per colpire e alle prove di saggezza(Percezione) basate sulla vista quando l\'elfo in questione, il bersaglio del suo attacco o l\'oggetto da percepire si trovano in piena luce del sole.\n\nMAGIA DROW\nUn elfo oscuro conosce il trucchetto "luci danzanti".\nQuando raggiunge il 3° livello, può lanciare l\'incantesimo "luminescenza" una volta con questo tratto e recuperare la capacità di farlo quando completa un riposo lungo.\nQuando raggiunge il 5° livello, può lanciare l\'incantesimo "oscurità" una volta con questo tratto e recuperà la capacità di farlo quando completa un riposo lungo.\nLa caratteristica da incantatore per questi incantesimi è carisma.'),
-  gnomoDelleForeste('Gnomo delle foreste', 0, {
-    Skill.destrezza:1
-  }, [],
+  gnomoDelleForeste('Gnomo delle foreste', 0, {Skill.destrezza: 1}, [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Destrezza di uno gnomo delle foreste aumenta di 1.\n\nILLUSIONISTA NATO\nUno gnomo delle foreste conosce il trucchetto illusione minore.\nLa caratteristica da incantatore usata per questo trucchetto è Intelligenza.\n\nPARLARE CON LE PICCOLE BESTIE\nUno gnomo delle foreste può usare suoni e gesti per comunicare i concetti più semplici alle bestie di taglia Piccola o inferiore.\nGli gnomi delle foreste amano gli animali e spesso tengono presso di loro scoiattoli, tassi, conigli, talpe, picchi e altre creature simili come animali da compagnia.'),
-  gnomoDelleRocce('Gnomo delle rocce', 0, {
-    Skill.costituzione:2
-  }, [],
+  gnomoDelleRocce('Gnomo delle rocce', 0, {Skill.costituzione: 2}, [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Costituzione aumenta di 2.\n\nSAPERE DA ARTEFICE\nOgni volta che fate una prova di Intelligenza (Storia) relativa ad oggetti magici, oggetti alchemici o dispositivi tecnologici, potete aggiungere il doppio del bonus di competenza, invece di qualsiasi bonus di competenza applichiate normalmente.\n\nINVENTORE\nAvete competenza con strumenti da artigiano (strumenti da inventore).\nUsando questi strumenti, potete spendere 1 ora e materiali del valore di 10 mo per costruire un congegno ad orologeria Minuscolo (CA 5, 1 pf).\nIl congegno cessa di funzionare dopo 24 ore (a meno che spendiate 1 ora a ripararlo per mantenerlo in funzione) o quando usate un\'azione per smantellarlo; in quel caso potete recuperare i materiali usati per crearlo.\nPotete avere fino a tre di tali congegni attivi nello stesso momento.\nQuando create un congegno, scegliete una delle seguenti opzioni:\n-Giocattolo ad orologeria: Questo giocattolo è un animale, mostro o persona ad orologeria, come una rana, un topo, un uccello, un drago o un soldato.\nUna volta posizionato sul terreno, il giocattolo si muove di 1,5 m sul terreno in ognuno dei vostri turni in una direzione casuale.\nFa rumore come appropriato per la creatura che rappresenta.\n-Accendino: Il dispositivo produce una fiamma in miniatura, che potete usare per accendere una candela, una torcia o un fuoco da campo.\nUsare il congegno richiede un\'azione.\n-Scatola Musicale: Una volta aperta, questa scatola musicale suona una singola canzone ad un volume moderato.\nLa scatola finisce di suonare quando raggiunge la fine della canzone o quando viene chiusa.'),
-  halflingPiedelesto('Halfling piedelesto', 0, {
-    Skill.carisma:1
-  }, [],
+  halflingPiedelesto('Halfling piedelesto', 0, {Skill.carisma: 1}, [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Carisma di un halfling piedelesto aumenta di 1.\n\nFURTIVITÀ INNATA\nUn halfling piedelesto può tentare di nascondersi anche se è oscurato solo da una singola creatura, purché questa sia più grande di lui di almeno una taglia.'),
-  halflingTozzo('Halfling tozzo', 0, {
-    Skill.costituzione:1
-  }, [],
+  halflingTozzo('Halfling tozzo', 0, {Skill.costituzione: 1}, [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Costituzione di un halfling tozzo aumenta di 1.\n\nRESILIENZA DEI TOZZI\nUn halfling tozzo dispone di vantaggio ai tiri salvezza contro il veleno e di resistenza ai danni da veleno.'),
-  nanoDelleColline('Nano delle colline', 0, {
-    Skill.saggezza:1
-  }, [],
+  nanoDelleColline('Nano delle colline', 0, {Skill.saggezza: 1}, [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Saggezza aumenta di 1.\n\nROBUSTEZZA NANICA\nIl massimo dei punti ferita aumenta di 1 ed aumenta di 1 ogni volta che guadagnate un livello.'),
-  nanoDelleMontagne('Nano delle montagne', 0, {
-    Skill.forza:2
-  }, [Mastery.armatureLeggere, Mastery.armatureMedie],
+  nanoDelleMontagne(
+      'Nano delle montagne',
+      0,
+      {Skill.forza: 2},
+      [Mastery.armatureLeggere, Mastery.armatureMedie],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di forza di un nano delle montagne aumenta di 2.\n\nADDESTRAMENTO NELLE ARMATURE NANICHE\nUn nano delle montagne ha competenza nelle armature leggere e medie.'),
   dragoDArgento("Drago d\'argento", 0, {}, [], null),
   dragoBianco("Drago bianco", 0, {}, [], null),
@@ -975,9 +964,7 @@ enum SubRace {
       this.defaultMasteries, this.description);
 }
 
-enum Race {
-  // TODO: add Skill + incremento della caratt
-  // TODO: Mezzelfo ha 1 linguaggio a scelta, 2 Skill a scelta a cui dare +1, 2 SubSkill
+enum Race implements EnumWithTitle {
   umano(
       'Umano',
       [],
@@ -1397,7 +1384,7 @@ enum Status {
   const Status(this.title);
 }
 
-enum Alignment {
+enum Alignment implements EnumWithTitle {
   legaleBuono('Legale buono'),
   neutraleBuono('Neutrale buono'),
   caoticoBuono('Caotico buono'),
@@ -1414,22 +1401,63 @@ enum Alignment {
 }
 
 @JsonSerializable()
-class Character implements JSONSerializable, Identifiable {
+class Character implements JSONSerializable, WithUID {
   final int regDateTimestamp;
-  String? campaignUID;
+  final String? campaignUID;
+  final String name;
+  final Class class_;
+  final SubClass subClass;
+  final Race race;
+  final SubRace? subRace;
+  final Map<Skill, int> skills;
+  final Map<SubSkill, int> subSkills;
+  final List<Mastery> masteries;
+  final List<Language> languages;
+  final Status? status;
+  Alignment alignment;
+  int level;
+  @JsonKey(includeFromJson: true, includeToJson: true)
+  final Map<Object, int> _inventory;
 
-  // final Map<InventoryItem, int> inventory;
-
-  Character(this.regDateTimestamp, this.campaignUID);
+  Character(
+      this.regDateTimestamp,
+      this.campaignUID,
+      this.name,
+      this._inventory,
+      this.class_,
+      this.subClass,
+      this.race,
+      this.subRace,
+      skills,
+      subSkills,
+      masteries,
+      languages,
+      this.status,
+      this.alignment,
+      this.level)
+      : skills = skills ?? {},
+        subSkills = subSkills ?? {},
+        masteries = masteries ?? [],
+        languages = languages ?? [] {
+    for (var qta in inventory.values) {
+      assert(qta < 1);
+    }
+  }
 
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   late final String? uid;
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  Map<InventoryItem, int> get inventory =>
+      _inventory as Map<InventoryItem, int>;
+
   get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
 
   addLoot(Loot loot) {
-    // TODO: add Item to inventory
+    loot.content.forEach((item, qta) {
+      _inventory[item] = _inventory[item] ?? 0 + qta;
+    });
   }
 
   @override

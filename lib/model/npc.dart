@@ -1,4 +1,4 @@
-import 'package:scheda_dnd_5e/interface/identifiable.dart';
+import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -25,7 +25,7 @@ enum Relationship {
 }
 
 @JsonSerializable()
-class Npc implements JSONSerializable, Identifiable {
+class Npc implements JSONSerializable, WithUID {
   final int regDateTimestamp;
   final String name, description;
   final Relationship? relationship;
