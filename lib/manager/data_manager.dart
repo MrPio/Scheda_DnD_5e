@@ -25,6 +25,7 @@ class DataManager {
 
   static const pageSize = 100;
 
+
   final anonymous = User();
   List<User> cachedUsers = [];
   ValueNotifier<List<Enchantment>?> enchantments = ValueNotifier(null);
@@ -35,16 +36,18 @@ class DataManager {
     // Check if I have already downloaded the enchantments before 7 days ago
     final enchantmentsTimestamp =
         await IOManager().get<int>('enchantments_timestamp') ?? 0;
-    if (enchantmentsTimestamp.elapsedTime().inDays >= 7) {
+    if (enchantmentsTimestamp
+        .elapsedTime()
+        .inDays >= 7) {
       print('Scarico gli enchantments');
       enchantments.value = await DatabaseManager()
-              .getList<Enchantment>('enchantments', pageSize: 9999) ??
+          .getList<Enchantment>(DatabaseManager.collections[Enchantment]!, pageSize: 9999) ??
           [];
-      IOManager().serializeObjects('enchantments', enchantments.value!);
+      IOManager().serializeObjects(DatabaseManager.collections[Enchantment]!, enchantments.value!);
     } else {
       print('Leggo localmente gli enchantments');
       enchantments.value =
-          await IOManager().deserializeObjects<Enchantment>('enchantments');
+      await IOManager().deserializeObjects<Enchantment>(DatabaseManager.collections[Enchantment]!);
     }
   }
 
@@ -58,7 +61,7 @@ class DataManager {
 
       // Already cached?
       User? cachedUser =
-          cachedUsers.firstWhereOrNull((user) => user.uid == uid);
+      cachedUsers.firstWhereOrNull((user) => user.uid == uid);
       if (cachedUser != null) return cachedUser;
 
       // Is current User?
@@ -66,7 +69,7 @@ class DataManager {
     }
 
     // Ask the database for the user and caching it
-    User? user = User.fromJson(await DatabaseManager().get("users/$uid"));
+    User? user = User.fromJson(await DatabaseManager().get("${DatabaseManager.collections[User]!}$uid"));
     user.uid = uid;
     // loadUserPosts(user);
     cachedUsers.add(user);
@@ -75,12 +78,7 @@ class DataManager {
 
   // Save Model objects
   save(Object model, [SaveMode mode = SaveMode.put]) async {
-    String path = {
-          User: 'users/',
-          Campaign: 'campaigns/',
-          Character: 'characters/',
-          Enchantment: 'enchantments/',
-        }[model.runtimeType] ??
+    String path = DatabaseManager.collections[model.runtimeType] ??
         '';
     if (mode == SaveMode.put) {
       if (model is Identifiable) {

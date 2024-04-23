@@ -8,6 +8,7 @@ import 'package:scheda_dnd_5e/extension/mixin/loadable.dart';
 import 'package:scheda_dnd_5e/firebase_options.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
+import 'package:scheda_dnd_5e/manager/dummy_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
@@ -52,8 +53,8 @@ class _SignInPageState extends State<SignInPage> with Loadable {
         // 📘📘📘 FIREBASE FIRESTORE 📘📘📘
         // ⚠️⚠️⚠️ DANGER ZONE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
         // ENCHANTMENTS =========================================
-        // await DummyManager().populateEnchantments();
-        // await IOManager().remove('enchantments_timestamp');
+        await DummyManager().populateEnchantments();
+        await IOManager().remove('enchantments_timestamp');
         // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
         withLoading(() => DataManager().fetchData());
