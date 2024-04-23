@@ -124,44 +124,44 @@ enum Class {
       [Skill.forza, Skill.costituzione],
       [
         {
-          Weapon.alabarda:1,
-          Weapon.asciaBipenne:1,
-          Weapon.asciaDaBattaglia:1,
-          Weapon.falcione:1,
-          Weapon.frusta:1,
-          Weapon.lanciaDaCavaliere:1,
-          Weapon.maglio:1,
-          Weapon.martelloDaGuerra:1,
-          Weapon.mazzafrusto:1,
-          Weapon.morningStar:1,
-          Weapon.picca:1,
-          Weapon.picconeDaGuerra:1,
-          Weapon.scimitarra:1,
-          Weapon.spadaCorta:1,
-          Weapon.spadaLunga:1,
-          Weapon.spadone:1,
-          Weapon.stocco:1,
-          Weapon.tridente:1,
+          Weapon.alabarda: 1,
+          Weapon.asciaBipenne: 1,
+          Weapon.asciaDaBattaglia: 1,
+          Weapon.falcione: 1,
+          Weapon.frusta: 1,
+          Weapon.lanciaDaCavaliere: 1,
+          Weapon.maglio: 1,
+          Weapon.martelloDaGuerra: 1,
+          Weapon.mazzafrusto: 1,
+          Weapon.morningStar: 1,
+          Weapon.picca: 1,
+          Weapon.picconeDaGuerra: 1,
+          Weapon.scimitarra: 1,
+          Weapon.spadaCorta: 1,
+          Weapon.spadaLunga: 1,
+          Weapon.spadone: 1,
+          Weapon.stocco: 1,
+          Weapon.tridente: 1,
         },
         {
-          Weapon.ascia:2,
+          Weapon.ascia: 2,
           // Weapon.ascia:1,
-          Weapon.bastoneFerrato:1,
-          Weapon.falcetto:1,
-          Weapon.giavellotto:1,
-          Weapon.lancia:1,
-          Weapon.martelloLeggero:1,
-          Weapon.mazza:1,
-          Weapon.pugnale:1,
-          Weapon.randello:1,
-          Weapon.randelloPesante:1,
-          Weapon.arcoCorto:1,
-          Weapon.balestraAMano:1,
-          Weapon.dardo:1,
-          Weapon.fionda:1,
+          Weapon.bastoneFerrato: 1,
+          Weapon.falcetto: 1,
+          Weapon.giavellotto: 1,
+          Weapon.lancia: 1,
+          Weapon.martelloLeggero: 1,
+          Weapon.mazza: 1,
+          Weapon.pugnale: 1,
+          Weapon.randello: 1,
+          Weapon.randelloPesante: 1,
+          Weapon.arcoCorto: 1,
+          Weapon.balestraAMano: 1,
+          Weapon.dardo: 1,
+          Weapon.fionda: 1,
         },
-        {Weapon.giavellotto:4},
-        {Equipment.dotazioneDaEsploratore:1},
+        {Weapon.giavellotto: 4},
+        {Equipment.dotazioneDaEsploratore: 1},
       ],
       'Un barbaro ottiene i seguenti privilegi di classe.\n\nPUNTI FERITA\nDadi Vita: 1d12 per livello da barbaro\nPunti Ferita al 1° Livello: 12 + il modificatore di Costituzione del barbaro\nPunti Ferita ai Livelli Successivi: 1d12 (o 7) + il modificatore di Costituzione del barbaro per ogni livello da barbaro oltre il 1°\n\nCOMPETENZE\nArmature: Armature leggere, armature medie, scudi\nArmi: Armi semplici, armi da guerra\nStrumenti: Nessuno\nTiri Salvezza: Forza, Costituzione\nAbilità: Due a scelta tra Addestrare Animali, Atletica, Intimidire, Natura, Percezione e Sopravvivenza.\n\nEQUIPAGGIAMENTO\nUn barbaro inizia con l\'equipaggiamento seguente,in aggiunta all\'equipaggiamento conferito dal suo background:\n(a) un\'ascia bipenne o (b) qualsiasi arma da guerra da mischia\n(a) due asce o (b) una qualsiasi arma semplice\nUna dotazione da esploratore e quattro giavellotti\n\nIRA\nIn battaglia, un barbaro combatte animato da ferocia primordiale.\nNel suo turno, può entrare in ira con un’azione bonus.\nFinché è in ira, ottiene i seguenti benefici, se non indossa un\'armatura pesante:\n-Dispone di vantaggio alle prove di Forza e ai Tiri Salvezza su Forza.\n-Quando effettua un attacco con arma da mischia usando Forza, ottiene un bonus al tiro per i danni che aumenta man mano che egli ottiene nuovi livelli da barbaro, come indicato nella colonna \'Danni dell\'Ira" nella tabella "Barbaro".\n-Un barbaro dispone di resistenza ai danni contundenti, perforanti e taglienti.\n-Se un barbaro è in grado di lanciare incantesimi, non può lanciarli o concentrarsi su di essi quando è in ira.\nL\'Ira del barbaro dura 1 minuto.\nTermina anticipatamente se cade Privo di Sensi o se il suo turno termina e non ha attaccato alcuna creatura ostile dal suo ultimo turno o non ha subito danni da allora.\nUn barbaro può anche porre fine alla sua ira nel proprio turno, come un’azione bonus.\nUna volta entrato in ira per il numero di volte indicato dal suo livello di barbaro nella colonna "Ira" nella tabella "Barbaro", un barbaro deve completare un riposo lungo prima di poter entrare di nuovo in ira.\n\nDIFESA SENZA ARMATURA\nFinché un barbaro non indossa alcuna armatura, la sua Classe Armatura è pari a 10 + il suo modificatore di Destrezza + il suo modificatore di Costituzione.\nUn barbaro può usare uno scudo e ottenere comunque questo beneficio.\n\nATTACCO IRRUENTO\nA partire dal 2° livello, un barbaro può ignorare ogni preoccupazione per la sua difesa e attaccare in preda a una feroce disperazione.\nQuando effettua il suo primo attacco nel suo turno, può decidere di sferrare un attacco irruento.\nCosì facondo dispone di vantaggio ai tiri per colpire in mischia che usano Forza durante questo turno, ma i tiri per colpire contro di lui dispongono di vantaggio fino a suo turno successivo.\n\nPERCEZIONE DEL PERICOLO\nDal 2° livello, un barbaro ottiene un percezione prodigiosa di tutto ciò che nei paraggi non è come dovrebbe essere cosa che agevola quando deve schivare i pericoli.\nUn barbaro dispone di vantaggio ai Tiri Salvezza su Destrezza contro effetti che può vedere, come trappole e incantesimi.\nPer ottenere questo beneficio, non deve essere accecato, assordato o Incapacitato.\n\nCAMMINO PRIMORDIALE\nAl 3° livello, un barbaro sceglie un Cammino Primordiale che definisce la natura della sua furia.\nQuesta scelta ti conferisce alcuni privilegi al 3° livello, e poi di nuovo al 6°, 10° e 14° livello.\n\nINCREMENTO DEI PUNTEGGI CARATTERISTICA\nQuando arriva al 4° livello, e poi ancora all’8°, 12°, 16° e 19° livello, un barbaro può aumentare di 2 un punteggio di caratteristica a sua scelta, oppure può aumentare di 1 due punteggi di caratteristica a sua scelta.\nCome di consueto, non è consentito aumentare un punteggio di caratteristica a più di 20 utilizzando questo privilegio.\n\nATTACCO EXTRA\nA partire dal 5° livello, un barbaro può attaccare due volte anziché una, ogni volta che effettua l\'azione di Attacco nel proprio turno.\n\nMOVIMENTO VELOCE\nA partire dal 5° livello, la velocità del barbaro aumenta di 3 metri purché il barbaro non indossi un\'armatura pesante.\n\nISTINTO FERINO\nAl 7° livello, gli istinti del barbaro sono talmente affinati da fornirgli vantaggio ai tiri per l\'iniziativa.\nInoltre, se il barbaro è sorpreso all\'inizio del combattimento e non è incapacitato, può agire normalmente nel suo primo turno, ma solo se entra in ira prima di fare qualsiasi altra cosa in quel turno.\n\nCRITICO BRUTALE\nA partire dal 9° livello, un barbaro può tirare un dado dell\'arma aggiuntivo quando determina i danni extra di un colpo critico con un attacco in mischia.\nQuesto effetto aumenta a due dadi aggiuntivi al 13° livello e a tre dadi aggiuntivi al 17° livello.\n\nIRA IMPLACABILE\nA partire dall\'11° livello, grazie alla sua ira il barbaro può continuare a combattere nonostante le ferite più gravi.\nSe scende a 0 punti ferita mentre è in ira e non è ucciso sul colpo, può effettuare un Tiro Salvezza su Costituzione con CD 10.\nSe lo supera, rimane invece a 1 punto ferita.\nOgni volta che utilizza questo privilegio dopo la prima, la CD aumenta di 5.\nQuando completa un riposo breve o lungo la CD è ripristinata a 10.\n\nIRA PERSISTENTE\nA partire dal 15° livello, l\'ira del barbaro è talmente feroce che termina prematuramente solo se il barbaro cade privo di sensi o se decide di porvi termine.\n\nPOTENZA INDOMABILE\nA partire dal 18° livello, se il totale di una prova di Forza del barbaro è inferiore al suo punteggio di Forza, il barbaro può usare il suo punteggio di Forza al posto del totale.\n\nCAMPIONE PRIMORDIALE\nAl 20° livello, il barbaro diventa un\'incarnazione del potere delle terre selvagge.\nI suoi punteggi di Forza e Costituzione aumentano di 4.\nIl suo massimo per quei punteggi diventa 24.'),
   bardo(
@@ -205,39 +205,39 @@ enum Class {
       [Skill.destrezza, Skill.carisma],
       [
         {
-          Weapon.stocco:1,
-          Weapon.spadaLunga:1,
-          Weapon.ascia:1,
-          Weapon.bastoneFerrato:1,
-          Weapon.falcetto:1,
-          Weapon.giavellotto:1,
-          Weapon.lancia:1,
-          Weapon.martelloLeggero:1,
-          Weapon.mazza:1,
-          Weapon.pugnale:1,
-          Weapon.randello:1,
-          Weapon.randelloPesante:1,
-          Weapon.arcoCorto:1,
-          Weapon.balestraAMano:1,
-          Weapon.dardo:1,
-          Weapon.fionda:1,
+          Weapon.stocco: 1,
+          Weapon.spadaLunga: 1,
+          Weapon.ascia: 1,
+          Weapon.bastoneFerrato: 1,
+          Weapon.falcetto: 1,
+          Weapon.giavellotto: 1,
+          Weapon.lancia: 1,
+          Weapon.martelloLeggero: 1,
+          Weapon.mazza: 1,
+          Weapon.pugnale: 1,
+          Weapon.randello: 1,
+          Weapon.randelloPesante: 1,
+          Weapon.arcoCorto: 1,
+          Weapon.balestraAMano: 1,
+          Weapon.dardo: 1,
+          Weapon.fionda: 1,
         },
         {
-          Item.ciaramella:1,
-          Item.cornamusa:1,
-          Item.corno:1,
-          Item.dulcimer:1,
-          Item.flauto:1,
-          Item.flautoDiPan:1,
-          Item.lira:1,
-          Item.liuto:1,
-          Item.tamburo:1,
-          Item.viola:1,
+          Item.ciaramella: 1,
+          Item.cornamusa: 1,
+          Item.corno: 1,
+          Item.dulcimer: 1,
+          Item.flauto: 1,
+          Item.flautoDiPan: 1,
+          Item.lira: 1,
+          Item.liuto: 1,
+          Item.tamburo: 1,
+          Item.viola: 1,
         },
-        {Equipment.unArmaturaDiCuoioEUnPugnale:1},
+        {Equipment.unArmaturaDiCuoioEUnPugnale: 1},
         {
-          Equipment.dotazioneDaDiplomatico:1,
-          Equipment.dotazioneDaIntrattenitore:1
+          Equipment.dotazioneDaDiplomatico: 1,
+          Equipment.dotazioneDaIntrattenitore: 1
         },
       ],
       'Un bardo ottiene i seguenti privilegi di classe.\n\nPUNTI FERITA\nDadi Vita: 1d8 per ogni livello da bardo\nPunti Ferita al 1° Livello: 8 + il modificatore di Costituzione del bardo\nPunti Ferita ai Livelli Successivi: 1d8 (o 5) + il modificatore di Costituzione del bardo per ogni livello da bardo dopo il 1°\n\nCOMPETENZE\nArmature: Armature leggere\nArmi: Armi semplici, balestre a mano, spade corte, spade lunghe, stocchi\nStrumenti: Tre strumenti musicali a scelta del bardo\nTiri Salvezza: Destrezza, Carisma\nAbilità: Tre a scelta\n\nEQUIPAGGIAMENTO\nUn bardo inizia con l\'equipaggiamento seguente, in aggiunta all\'equipaggiamento conferito dal suo background:\n(a) uno stocco, (b) una spada lunga o (c) una qualsiasi arma semplice\n(a) una dotazione da diplomatico o (b) una dotazione da intrattenitore\n(a) un liuto o (b) un qualsiasi altro strumento musicale\nUn\'armatura di cuoio e un pugnale\n\nINCANTESIMI\nUn bardo ha imparato a districare e rimodellare la trama della realtà in armonia con i suoi desideri tramite la musica.\nI suoi incantesimi fanno parte del suo vasto repertorio come magie che il bardo può mettere in sintonia con le situazioni più disparate.\n\nTRUCCHETTI\nUn bardo conosce due trucchetti a sua scelta tratti dalla lista degli incantesimi da bardo.\nApprende ulteriori trucchetti da bardo a sua scelta ai livelli successivi, come indicato dalla colonna \'Trucchetti Conosciuti" nella tabella.\n\nSLOT INCANTESIMO\nLa tabella indica quanti slot incantesimo possiede un bardo per lanciare i suoi incantesimi di 1° livello e di livello superiore.\nPer lanciare uno di questi incantesimi, il bardo deve spendere uno slot incantesimo di livello pari o superiore al livello dell\'incantesimo.\nIl bardo recupera tutti gli slot incantesimo spesi quando completa un riposo lungo.\nPer esempio, se un bardo conosce l\'incantesimo di 1° livello Cura Ferite e possiede uno slot incantesimo di 1° livello e uno slot incantesimo di 2° livello, può lanciare Cura Ferite usando uno qualsiasi dei due slot.\n\nINCANTESIMI CONOSCIUTI DI 1° LIVELLO E DI LIVELLO SUPERIORE\nUn bardo conosce quattro incantesimi di 1° livello a sua scelta dalla lista degli incantesimi da bardo.\nLa colonna "Incantesimi Conosciuti" nella tabella indica quando un bardo impara altri incantesimi da bardo a sua scelta.\nOgnuno di questi incantesimi deve appartenere a un livello di cui il bardo possiede degli slot incantesimo, come indicato nella tabella.\nPer esempio, quando un bardo arriva al 3° livello, può imparare un nuovo incantesimo di 1° o di 2° livello.\nInoltre, quando un bardo acquisisce un livello, può scegliere un incantesimo da bardo che conosce e sostituirlo con un altro incantesimo della lista degli incantesimi da bardo;\nanche il nuovo incantesimo deve essere di un livello di cui il bardo possiede degli slot incantesimo.\n\nCARATTERISTICA DA INCANTATORE\nCarisma è la caratteristica da incantatore per gli incantesimi da bardo.\nLa magia di un bardo fluisce dal cuore e dall\'anima che egli riversa in ogni esibizione della sua musica o della sua oratoria.\nUn bardo usa Carisma ogni volta che un incantesimo fa riferimento alla sua caratteristica da incantatore.\nUsa inoltre il suo modificatore di Carisma per definire la CD del tiro salvezza di un incantesimo da bardo da lui lanciato e quando effettua un tiro per colpire con un incantesimo.\n\nCD del tiro salvezza dell\'incantesimo = 8 + il bonus di competenza del bardo + il modificatore di Carisma del bardo.\nModificatore di attacco dell\'incantesimo = il bonus di competenza del bardo + il modificatore di Carisma del bardo.\n\nCELEBRARE RITUALI\nUn bardo può lanciare qualsiasi incantesimo da bardo da lui conosciuto come rituale se quell\'incantesimo possiede il descrittore Rituale.\n\nFOCUS DA INCANTATORE\nUn bardo può usare uno strumento musicale come focus da incantatore per i suoi incantesimi da bardo.\n\nISPIRAZIONE BARDICA\nUn bardo può ispirare gli altri tramite il lirismo delle sue parole o della sua musica.\nPer farlo usa un\'azione bonus nel suo turno per scegliere una creatura diversa da sé stesso, situata entro 18 metri da lui e in grado di sentirlo.\nQuella creatura ottiene un dado di Ispirazione Bardica, un d6.\nPer una volta entro i 10 minuti successivi, quella creatura può tirare il dado e aggiungere il risultato ottenuto a una prova di caratteristica, un tiro per colpire o un tiro salvezza da essa effettuato.\nLa creatura può aspettare di avere tirato il d20 prima di decidere se utilizzare il dado di Ispirazione Bardica, ma deve decidere se utilizzarlo o meno prima che il DM dichiari se il tiro abbia avuto successo o meno.\nUna volta tirato il dado di Ispirazione Bardica, quel dado è perduto.\nUna creatura può possedere un solo dado di Ispirazione Bardica alla volta.\nIl bardo può utilizzare questo privilegio un numero di volte pari al suo modificatore di Carisma (fino a un minimo di una volta).\nRecupera tutti gli utilizzi spesi quando completa un riposo lungo.\nIl dado di Ispirazione Bardica cambia quando il bardo raggiunge livelli superiori.\nIl dado diventa un d8 al 5° livello, un d10 al 10° livello e un d12 al 15° livello.\n\nFACTOTUM\nA partire dal 2° livello, un bardo può aggiungere metà del suo bonus di competenza, arrotondato per difetto, a ogni prova di caratteristica da lui effettuata che non includa già il suo bonus di competenza.\n\nCANTO DI RIPOSO\nDal 2° livello, un bardo può usare una musica o un\'orazione lenitiva per infondere nuova vita nei suoi alleati durante un riposo breve.\nSe il bardo o le eventuali creature amiche in grado di udire la sua esibizione recuperano punti ferita alla fine di un riposo breve spendendo uno o più Dadi Vita, ognuna di quelle creature recupera 1d6 punti ferita extra.\nI punti ferita extra aumentano quando il bardo raggiunge livelli superiori: 1d8 al 9° livello, 1d10 al 13° livello e 1d12 al 17° livello.\n\nCOLLEGIO BARDICO\nAl 3° livello, un bardo apprende le tecniche più avanzate di un collegio bardico a sua scelta come ad esempio il Collegio della Sapienza.\nIl collegio a sua scelta gli conferisce alcuni privilegi al 3° livello e poi di nuovo al 6° e al 14° livello.\n\nMAESTRIA\nAl 3° livello, un bardo sceglie due tra le sue competenze nelle abilità.\nIl suo bonus di competenza raddoppia in ogni prova di caratteristica effettuata usando una delle competenza scelte.\nAl 10° livello, un bardo può scegliere altre due competenze nelle abilità per ottenere questo beneficio.\n\nINCREMENTO DEI PUNTEGGI CARATTERISTICA\nQuando arriva al 4° livello e poi di nuovo all\'8°, 12°, 16° e 19° livello.\nun bardo può aumentare di 2 un punteggio di caratteristica a sua scelta, oppure può aumentare di 1 due punteggi di caratteristica a sua scelta.\nCome di consueto, non è consentito aumentare un punteggio di caratteristica a più di 20 utilizzando questo privilegio.\n\nFONTE DI ISPIRAZIONE\nA partire dal 5° livello, un bardo recupera tutti i suoi utilizzi spesi di Ispirazione Bardica quando completa un riposo breve o lungo.\n\nCONTROFASCINO\nAl 6° livello, un bardo ottiene la capacità di usare note musicali o parole del potere per interferire negli effetti di influenza mentale.\nCon un\'azione può iniziare un\'esibizione che dura fino alla fine del suo turno successivo.\nDurante quel periodo, il bardo e ogni creatura amica entro 9 metri da lui dispongono di vantaggio ai tiri salvezza per non essere affascinati o spaventati.\nUna creatura deve essere in grado di sentire il bardo per ottenere questo beneficio.\nL\'esibizione termina prematuramente se il bardo diventa incapacitato o è ridotto al silenzio, o se vi pone fine volontariamente (non è richiesta un\'azione per farlo).\n\nSEGRETI MAGICI\nGiunto al 10° livello, un bardo ha attinto alle conoscenze magiche provenienti da una vasta gamma di discipline.\nIl bardo sceglie due incantesimi di qualsiasi classe, inclusa questa stessa classe.\nOgni incantesimo scelto deve essere di un livello che il bardo sia in grado di lanciare,come indicato nella tabella, oppure deve essere un trucchetto.\nGli incantesimi scelti contano come incantesimi da bardo e vanno inclusi nel numero specificato dalla colonna "Incantesimi Conosciuti" nella tabella.\nUn bardo apprende due incantesimi aggiuntivi di qualsiasi classe al 14° livello e poi di nuovo al 18° livello.\n\nISPIRAZIONE SUPERIORE\nAl 20° livello, quando il bardo tira per l\'iniziativa e non gli rimane alcun utilizzo di Ispirazione Bardica, ne recupera un utilizzo.'),
@@ -271,30 +271,33 @@ enum Class {
       [],
       [Skill.saggezza, Skill.carisma],
       [
-        {Weapon.mazza:1, Weapon.martelloDaGuerra:1},
+        {Weapon.mazza: 1, Weapon.martelloDaGuerra: 1},
         {
-          Armor.corazzaDiScaglie:1,
-          Armor.armaturaDiCuoio:1,
-          Armor.cottaDiMaglia:1,
+          Armor.corazzaDiScaglie: 1,
+          Armor.armaturaDiCuoio: 1,
+          Armor.cottaDiMaglia: 1,
         },
         {
-          Equipment.unaBalestraLeggeraE20Quadrelli:1,
-          Weapon.ascia:1,
-          Weapon.bastoneFerrato:1,
-          Weapon.falcetto:1,
-          Weapon.giavellotto:1,
-          Weapon.lancia:1,
-          Weapon.martelloLeggero:1,
-          Weapon.mazza:1,
-          Weapon.pugnale:1,
-          Weapon.randello:1,
-          Weapon.randelloPesante:1,
-          Weapon.arcoCorto:1,
-          Weapon.balestraAMano:1,
-          Weapon.dardo:1,
-          Weapon.fionda:1,
+          Equipment.unaBalestraLeggeraE20Quadrelli: 1,
+          Weapon.ascia: 1,
+          Weapon.bastoneFerrato: 1,
+          Weapon.falcetto: 1,
+          Weapon.giavellotto: 1,
+          Weapon.lancia: 1,
+          Weapon.martelloLeggero: 1,
+          Weapon.mazza: 1,
+          Weapon.pugnale: 1,
+          Weapon.randello: 1,
+          Weapon.randelloPesante: 1,
+          Weapon.arcoCorto: 1,
+          Weapon.balestraAMano: 1,
+          Weapon.dardo: 1,
+          Weapon.fionda: 1,
         },
-        {Equipment.dotazioneDaSacerdote:1, Equipment.dotazioneDaEsploratore:1},
+        {
+          Equipment.dotazioneDaSacerdote: 1,
+          Equipment.dotazioneDaEsploratore: 1
+        },
       ],
       'Un Chierico ottiene i seguenti privilegi di classe:\n\nPUNTI FERITA\nDadi Vita: 1d8 per ogni livello da chierico.\nPunti ferita al 1° livello: 8 + il modificatore di Costituzione del chierico.\nPunti ferita ai livelli successivi: 1d8 (o 5) + il modificatore di Costituzione del chierico per ogni livello da chierico dopo il 1°.\n\nCOMPETENZE\nArmatura: armatura leggera, armatura media, scudi\nArmi: armi semplici\nStrumenti: Nessuno\nTiri salvezza: Saggezza, Carisma\nAbilità: Due a scelta tra Medicina, Persuasione, Intuizione, Religione e Storia\n\nEQUIPAGGIAMENTO\nUn Chierico inizia con l\'equipaggiamento seguente, in aggiunta all\'equipaggiamento conferito dal suo background:\n(a) una mazza o (b) un martello da guerra (se ha competenza)\n(a) una corazza di scaglie, (b) un\'armatura di cuoio o (c) una cotta di maglia (Se ha competenza)\n(a) una balestra leggera e 20 quadrelli o (b) una qualsiasi arma semplice\n(a) una dotazione da sacerdote o (b) una dotazione da esploratore\nUno scudo e un simbolo sacro\n\nINCANTESIMI\nUn chierico è un tramite del potere divino, e come tale è in grado di lanciare incantesimi da chierico.\n\nTRUCCHETTI\nAl 1° livello, un chierico conosce tre trucchetti a sua scelta tratti dalla lista degli incantesimi da chierico.\nApprende ulteriori trucchetti da chierico a sua scelta ai livelli successivi, come indicato nella colonna "Trucchetti Conosciuti" nella tabella "Chierico".\n\nPREPARARE E LANCIARE INCANTESIMI\nLa tabella "Chierico" indica quanti slot incantesimo possiede un chierico per lanciare i suoi incantesimi di 1 ° livello e di livello superiore.\nPer Lanciare uno di questi incantesimi, è necessario spendere uno slot incantesimo di livello pari o superiore al livello dell\'incantesimo.\nIl chierico recupera tutti gli slot incantesimo spesi quando completa un riposo lungo.\nIl chierico prepara la lista degli incantesimi da chierico disponibili da lanciare scegliendoli dalla lista degli incantesimi da chierico.\nQuando lo fa, deve scegliere un numero di incantesimi da chierico pari al suo modificatore di Saggezza + il suo livello da chierico (fino a un minimo di un incantesimo).\nGli incantesimi devono essere di un livello di cui il chierico possiede degli slot incantesimo.\nAd esempio, un chierico di 3 ° livello, possiede quattro slot incantesimo di 1 ° livello e due slot incantesimo di 2 ° livello.\nCon Saggezza pari a 16, la lista dei suoi incantesimi preparati può includere sei incantesimi di 1° o 2° livello, in qualsiasi combinazione.\nSe prepara l\'incantesimo di 1° livello cura ferite , potrà lanciarlo usando uno slot incantesimo di 1° livello o di 2° livello.\nIl lancio di quell\'incantesimo non rimuove quell\'incantesimo dalla lista di incantesimi preparati.\nIl chierico può cambiare la tua lista dei suoi incantesimi preparati quando completa un lungo riposo.\nPer preparare una nuova lista di incantesimi da chierico è necessario un certo ammontare di tempo da trascorrere in preghiera e meditazione: almeno 1 minuto per livello di incantesimo per ogni incantesimo nella sua lista.\n\nCARATTERISTICA DA INCANTATORE\nSaggezza è la caratteristica da incantatore usata per gli incantesimi da chierico.\nIl potere degli incantesimi di un chierico deriva dalla sua devozione nei confronti della divinità.\nUn chierico usa saggezza ogni volta che un incantesimo fa riferimento alla sua caratteristica da incantatore.\nUsa inoltre il suo modificatore di Saggezza per definire la CD del tiro salvezza di un incantesimo da chierico da lui lanciato e quando effettua un tiro per colpire con un incantesimo.\n\nCD del tiro salvezza dell\'incantesimo = 8 + il bonus di competenza del chierico + il modificatore di saggezza del chierico.\nModificatore di attacco dell\'incantesimo = il bonus di competenza del chierico + il tuo modificatore di saggezza del chierico.\n\nCELEBRARE RITUALI\nUn chierico può lanciare un incantesimo da chierico come rituale se quell\'incantesimo possiede il descrittore rituale e se il chierico ha preparato l\'incantesimo.\n\nFOCUS DA INCANTATORE\nUn chierico può usare un simbolo sacro (vedi "Equipaggiamento") come focus da incantatore per i suoi incantesimi da chierico.\n\nDOMINIO DIVINO\nIl chierico sceglie un dominio correlato alla sua divinità: Conoscenza, Guerra, Inganno, Luce, Natura, Tempesta o Vita.\nOgni dominio è descritto in dettagliato alla fine della sezione di questa classe e fornisce esempi di varie divinità a esso associate.\nQuesta scelta conferisce al chierico alcuni incantesimi di dominio e altri privilegi al 1° livello.\nConferisce inoltre ulteriori modi di utilizzare incanalare Divinità quando il chierico ottiene quel privilegio al 2° livello e ulteriori benefici al 6°, 8° e 17° livello.\n\nINCANTESIMI DI DOMINIO\nA ogni dominio corrisponde una lista di incantesimi (gli incantesimi di dominio) che il chierico ottiene ai livelli da chierico indicati nella descrizione del dominio.\nQuando il chierico ottiene un incantesimo di dominio, quell\'incantesimo è sempre considerato preparato e non conta al fine di determinare il numero di incantesimi che il chierico può preparare ogni giorno.\nSe il chierico possiede un incantesimo di dominio che non compare sulla lista degli incantesimi da chierico, quell\'incantesimo è comunque considerato un incantesimo da chierico per lui.\n\nINCANALARE DIVINITÀ\nAl 2° livello, un chierico ottiene la capacità di incanalare energia divina direttamente dalla sua divinità e usa quell\'energia per alimentare gli effetti magici.\nUn chierico parte con due effetti di questo tipo: Scacciare Non Morti e un effetto determinato dal suo dominio.\nAlcuni domini conferiscono al chierico degli effetti aggiuntivi man mano che avanza di livello, come indicato nella descrizione del dominio.\nQuando un chierico utilizza Incanalare Divinità, può scegliere quale effetto creare.\nDeve poi completare un breve o lungo riposo per utilizzare di nuovo Incanalare Divinità.\nAlcuni effetti di Incanalare Divinità richiedono dei tiri salvezza.\nQuando un chierico utilizza un tale effetto, la CD è pari alla CD del tiro salvezza dei suoi incantesimi da chierico.\nA partire dal 6° livello, un chierico può utilizzare Incanalare Divinità due volte tra un riposo e l\'altro, e a partire dal 18° livello, può utilizzarlo tre volte tra un riposo e l\'altro.\nQuando completa un breve o lungo riposo, recupera gli utilizzi spesi.\n\nINCANALARE DIVINITÀ: SCACCIARE NON MORTOCon un\'azione, il chierico brandisce il suo simbolo sacro e pronuncia una preghiera di condanna nei confronti dei non morti.\nOgni non morto che è in grado di vedere o sentire il chierico e si trova entro 9 metri da lui deve effettuare un tiro salvezza su Saggezza.\nSe lo fallisce, la creatura è scacciata per 1 minuto o finché non subisce danni.\nUna creatura scacciata deve spendere i suoi turni tentando di allontanarsi il più lontano possibile dal chierico e non può volontariamente muoversi in uno spazio entro 9 metri dal chierico.\nInoltre, non può effettuare reazioni.\nCome sua azione, può usare solo l\'azione di scatto o tentare di fuggire da un effetto che gli impedisce di muoversi.\nSe non può muoversi in alcun luogo, la creatura può usare l\'azione di Schivata.\n\nINCREMENTO DEI PUNTEGGI CARATTERISTICA\nQuando arriva al 4° livello, e poi di nuovo all\'8°, 12°, 16° e 19° livello, un chierico può aumentare di 2 un punteggio di caratteristica a sua scelta, oppure può aumentare di 1 due punteggi di caratteristica a sua scelta.\nCome di consueto, non è consentito aumentare un punteggio di caratteristica superiore a 20 utilizzando questo privilegio.\n\nDISTRUGGERE NON MORTI\nA partire dal 5° livello, quando un non morto fallisce il suo tiro salvezza contro il privilegio Scacciare Non Morti del chierico, quella creatura viene immediatamente distrutta se il suo grado di sfida è pari o inferiore a una certa soglia.\n\nLIVELLO DA CHIERICO       DISTRUGGERE I NON MORTI DI GS...\n         5°                        1/2 o inferiore\n         8°                        1 o inferiore\n         11°                       2 o inferiore\n         14°                       3 o inferiore\n         17°                       4 o inferiore\n\nINTERVENTO DIVINO\nA partire dal 10° livello, un chierico può appellarsi alla propria divinità affinché intervenga a suo beneficio nel momento del bisogno.\nPer implorare l\'aiuto della sua divinità, il chierico deve usare un\'azione.\nDeve descrivere l\'assistenza che desidera ottenere e tirare un dado percentuale.\nSe ottiene con il tiro un numero pari o inferiore al suo livello da chierico, la divinità interviene.\nÈ Il DM a scegliere la natura dell\'intervento; l\'effetto di qualsiasi incantesimo da chierico o incantesimo da dominio clericale è appropriato.\nSe la divinità interviene, il chierico non può più utilizzare questo privilegio per 7 giorni.\nAltrimenti può utilizzarlo di nuovo dopo aver completato un lungo riposo.\nAl 20° livello, la richiesta di intervento del chierico ha successo automaticamente, senza che sia richiesto alcun tiro.'),
   druido(
@@ -899,40 +902,100 @@ enum Class {
 }
 
 enum SubRace {
-  // TODO: add Skill + incremento della caratt
   // TODO: classe Dragonide manca di sottorazze ci vanno con  defaultSkill vuota.!!!!!!!
-  elfoAlto('Elfo alto', [], {}, [],
+  elfoAlto(
+      'Elfo alto',
+      1,
+      {Skill.intelligenza: 1},
+      [
+        Mastery.spadeCorte,
+        Mastery.spadeLunghe,
+        Mastery.archiCorti,
+        Mastery.archiLunghi
+      ],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Intelligenza aumenta di 1.\n\nADDESTRAMENTO NELLE ARMI ELFICHE\nAvete competenza con spada lunga, spada corta, arco corto e arco lungo.\n\nTRUCCHETTO\nConoscete un trucchetto a vostra scelta dalla lista degli incantesimi da mago.\nL\'Intelligenza è la caratteristica chiave per lanciare questo incantesimo.\n\nLINGUAGGI EXTRA\nPotete parlare, leggere e scrivere un linguaggio extra a vostra scelta.\n'),
-  elfoDeiBoschi('Elfo dei boschi', [], {}, [],
+  elfoDeiBoschi(
+      'Elfo dei boschi',
+      0,
+      {Skill.saggezza: 1},
+      [
+        Mastery.spadeCorte,
+        Mastery.spadeLunghe,
+        Mastery.archiCorti,
+        Mastery.archiLunghi
+      ],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di saggezza di un elfo dei boschi aumenta di 1.\n\nADDESTRAMENTO NELLE ARMI ELFICHE\nUn elfo dei boschi ha competenza nelle spade corte, nelle spade lunghe, negli archi corti e negli archi lunghi.\n\nPIEDE LESTO\nLa velocità base sul terreno di un elfo dei boschi aumenta a 10,5 metri.\n\nMASCHERA DELLA SELVA\nUn elfo dei boschi può tentare di nascondersi alla vista altrui anche quando è leggermente oscurato da fogliamo, pioggia fitta, neve, foschia e altri fenomeni naturali'),
-  elfoOscuro('Elfo oscuro', [], {}, [],
+  elfoOscuro('Elfo oscuro', 0, {
+    Skill.carisma:1
+  }, [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di carisma di un elfo oscuro aumenta di 1.\n\nSCUROVISIONE SUPERIORE\nLa scurovisione di un elfo oscuro arriva fino a 36 metri.\n\nSENSIBILITà ALL LUCE DEL SOLE\nUn elfo oscuro dispone di svantaggio ai tiri per colpire e alle prove di saggezza(Percezione) basate sulla vista quando l\'elfo in questione, il bersaglio del suo attacco o l\'oggetto da percepire si trovano in piena luce del sole.\n\nMAGIA DROW\nUn elfo oscuro conosce il trucchetto "luci danzanti".\nQuando raggiunge il 3° livello, può lanciare l\'incantesimo "luminescenza" una volta con questo tratto e recuperare la capacità di farlo quando completa un riposo lungo.\nQuando raggiunge il 5° livello, può lanciare l\'incantesimo "oscurità" una volta con questo tratto e recuperà la capacità di farlo quando completa un riposo lungo.\nLa caratteristica da incantatore per questi incantesimi è carisma.'),
-  gnomoDelleForeste('Gnomo delle foreste', [], {}, [],
+  gnomoDelleForeste('Gnomo delle foreste', 0, {
+    Skill.destrezza:1
+  }, [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Destrezza di uno gnomo delle foreste aumenta di 1.\n\nILLUSIONISTA NATO\nUno gnomo delle foreste conosce il trucchetto illusione minore.\nLa caratteristica da incantatore usata per questo trucchetto è Intelligenza.\n\nPARLARE CON LE PICCOLE BESTIE\nUno gnomo delle foreste può usare suoni e gesti per comunicare i concetti più semplici alle bestie di taglia Piccola o inferiore.\nGli gnomi delle foreste amano gli animali e spesso tengono presso di loro scoiattoli, tassi, conigli, talpe, picchi e altre creature simili come animali da compagnia.'),
-  gnomoDelleRocce('Gnomo delle rocce', [], {}, [],
+  gnomoDelleRocce('Gnomo delle rocce', 0, {
+    Skill.costituzione:2
+  }, [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Costituzione aumenta di 2.\n\nSAPERE DA ARTEFICE\nOgni volta che fate una prova di Intelligenza (Storia) relativa ad oggetti magici, oggetti alchemici o dispositivi tecnologici, potete aggiungere il doppio del bonus di competenza, invece di qualsiasi bonus di competenza applichiate normalmente.\n\nINVENTORE\nAvete competenza con strumenti da artigiano (strumenti da inventore).\nUsando questi strumenti, potete spendere 1 ora e materiali del valore di 10 mo per costruire un congegno ad orologeria Minuscolo (CA 5, 1 pf).\nIl congegno cessa di funzionare dopo 24 ore (a meno che spendiate 1 ora a ripararlo per mantenerlo in funzione) o quando usate un\'azione per smantellarlo; in quel caso potete recuperare i materiali usati per crearlo.\nPotete avere fino a tre di tali congegni attivi nello stesso momento.\nQuando create un congegno, scegliete una delle seguenti opzioni:\n-Giocattolo ad orologeria: Questo giocattolo è un animale, mostro o persona ad orologeria, come una rana, un topo, un uccello, un drago o un soldato.\nUna volta posizionato sul terreno, il giocattolo si muove di 1,5 m sul terreno in ognuno dei vostri turni in una direzione casuale.\nFa rumore come appropriato per la creatura che rappresenta.\n-Accendino: Il dispositivo produce una fiamma in miniatura, che potete usare per accendere una candela, una torcia o un fuoco da campo.\nUsare il congegno richiede un\'azione.\n-Scatola Musicale: Una volta aperta, questa scatola musicale suona una singola canzone ad un volume moderato.\nLa scatola finisce di suonare quando raggiunge la fine della canzone o quando viene chiusa.'),
-  halflingPiedelesto('Halfling piedelesto', [], {}, [],
+  halflingPiedelesto('Halfling piedelesto', 0, {
+    Skill.carisma:1
+  }, [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Carisma di un halfling piedelesto aumenta di 1.\n\nFURTIVITÀ INNATA\nUn halfling piedelesto può tentare di nascondersi anche se è oscurato solo da una singola creatura, purché questa sia più grande di lui di almeno una taglia.'),
-  halflingTozzo('Halfling tozzo', [], {}, [],
+  halflingTozzo('Halfling tozzo', 0, {
+    Skill.costituzione:1
+  }, [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Costituzione di un halfling tozzo aumenta di 1.\n\nRESILIENZA DEI TOZZI\nUn halfling tozzo dispone di vantaggio ai tiri salvezza contro il veleno e di resistenza ai danni da veleno.'),
-  nanoDelleColline('Nano delle colline', [], {}, [],
+  nanoDelleColline('Nano delle colline', 0, {
+    Skill.saggezza:1
+  }, [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Saggezza aumenta di 1.\n\nROBUSTEZZA NANICA\nIl massimo dei punti ferita aumenta di 1 ed aumenta di 1 ogni volta che guadagnate un livello.'),
-  nanoDelleMontagne('Nano delle montagne', [], {}, [],
-      'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di forza di un nano delle montagne aumenta di 2.\n\nADDESTRAMENTO NELLE ARMATURE NANICHE\nUn nano delle montagne ha competenza nelle armature leggere e medie.');
+  nanoDelleMontagne('Nano delle montagne', 0, {
+    Skill.forza:2
+  }, [Mastery.armatureLeggere, Mastery.armatureMedie],
+      'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di forza di un nano delle montagne aumenta di 2.\n\nADDESTRAMENTO NELLE ARMATURE NANICHE\nUn nano delle montagne ha competenza nelle armature leggere e medie.'),
+  dragoDArgento("Drago d\'argento", 0, {}, [], null),
+  dragoBianco("Drago bianco", 0, {}, [], null),
+  dragoBlu("Drago blu", 0, {}, [], null),
+  dragoDiBronzo("Drago di bronzo", 0, {}, [], null),
+  dragoNero("Drago nero", 0, {}, [], null),
+  dragoDOro("Drago d\'oro", 0, {}, [], null),
+  dragoDOttone("Drago d\'ottone", 0, {}, [], null),
+  dragoDiRame("Drago di rame", 0, {}, [], null),
+  dragoRosso("Drago rosso", 0, {}, [], null),
+  dragoVerde("Drago verde", 0, {}, [], null),
+  ;
 
-  final String title, description;
-  final List<Language> defaultLanguages;
+  final String title;
+  final String? description;
+  final int numChoiceableLanguages;
   final Map<Skill, int> defaultSkill;
   final List<Mastery> defaultMasteries;
 
-  const SubRace(this.title, this.defaultLanguages, this.defaultSkill,
+  const SubRace(this.title, this.numChoiceableLanguages, this.defaultSkill,
       this.defaultMasteries, this.description);
 }
 
 enum Race {
   // TODO: add Skill + incremento della caratt
   // TODO: Mezzelfo ha 1 linguaggio a scelta, 2 Skill a scelta a cui dare +1, 2 SubSkill
-  umano('Umano', [], [], [], {}, [],
+  umano(
+      'Umano',
+      [],
+      [
+        Language.comune,
+      ],
+      true,
+      {
+        Skill.forza: 1,
+        Skill.destrezza: 1,
+        Skill.costituzione: 1,
+        Skill.intelligenza: 1,
+        Skill.saggezza: 1,
+        Skill.carisma: 1,
+      },
+      0,
+      0,
+      [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA.\nOgnuno dei punteggi di caratteristica aumenta di 1.\n\nETÀ\nGli umani raggiungono la maturità nel secondo decennio e vivono meno di un secolo.\n\nALLINEAMENTO.\nGli umani non tendono verso nessun allineamento particolare.\nTra loro si trova il meglio ed il peggio.\n\nTAGLIA.\nGli umani variano molto in peso e corporatura, da appena 150 cm a ben più di 180 cm.\nA prescindere dalla posizione in tale intervallo, la taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune ed un linguaggio extra a vostra scelta.\nGli umani imparano tipicamente i linguaggi degli altri popoli con cui fanno affari, inclusi oscuri dialetti.\nGli piace disseminare il loro discorso di parole prese in prestito da altre lingue: maledizioni Orchesche, espressioni musicali Elfiche, frasi militari Naniche e così via.\n'),
   nano(
       'Nano',
@@ -940,9 +1003,16 @@ enum Race {
         SubRace.nanoDelleColline,
         SubRace.nanoDelleMontagne,
       ],
-      [],
-      [],
-      {},
+      [
+        Language.comune,
+        Language.nanico,
+      ],
+      false,
+      {
+        Skill.costituzione: 2,
+      },
+      0,
+      0,
       [
         Mastery.scorteDaMescitore,
         Mastery.strumentiDaCostruttore,
@@ -956,22 +1026,61 @@ enum Race {
         SubRace.elfoDeiBoschi,
         SubRace.elfoOscuro,
       ],
-      [],
-      [],
-      {},
+      [
+        Language.comune,
+        Language.elfico,
+      ],
+      false,
+      {
+        Skill.destrezza: 2,
+      },
+      0,
+      0,
       [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Destrezza aumenta di 2.\n\nETÀ\nSebbene gli elfi raggiungano la maturità fisica circa alla stessa età degli umani, la cultura elfica dell\'età adulta va oltre la crescita fisica per racchiudere l\'esperienza terrena.\nUn elfo rivendica tipicamente l\'età adulta ed un nome da adulto attorno all\'età di 100 anni e può vivere fino a 750 anni.\n\nALLINEAMENTO\nGli elfi amano la libertà, la diversità e l\'espressione di se stessi, quindi tendono fortemente agli aspetti più moderati del caos.\nStimano e proteggono la libertà degli altri come la propria e sono di solito buoni.\nI drow sono un\'eccezione: il loro esilio nel Sottosuolo li ha resi maligni e pericolosi.\nI drow sono di solito malvagi.\n\nTAGLIA\nGli elfi sono alti tra meno di 150 e più di 180 cm ed hanno corporature snelle.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nSCUROVISIONE\nAbituati a foreste in penombra ed al cielo notturno, avete una vista superiore in condizioni di buio o luce debole.Abituati a foreste in penombra ed al cielo notturno, avete una vista superiore in condizioni di buio o luce debole.\nPossono vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\nNon possono discernere i colori nell\'oscurità, solo sfumature di grigio.\n\nSENSI ACUTI\nSi ottiene competenza nell\'abilità Percezione.\n\nSTIRPE FATATA\nSi ha vantaggio nei tiri salvezza contro l\'essere affascinati e la magia non può farvi addormentare.\n\nTRANCE\nGli elfi non hanno bisogno di dormire.\nInvece meditano profondamente, rimanendo semi-coscienti, per 4 ore al giorno.\nMentre meditano, possono in qualche modo sognare: tali sogni sono in realtà esercizi mentali che sono divenuti riflessivi attraverso anni di pratica.\nDopo aver riposato in questo modo, guadagnate lo stesso beneficio che un umano ottiene da 8 ore di sonno.\n\nLINGUAGGI\nPossono parlare, leggere e scrivere in Comune ed Elfico.\nL\'Elfico è fluido, con intonazioni delicate e una grammatica intricata.\nLa letteratura elfica è ricca e varia e le loro canzoni e i poemi sono famosi tra le altre razze.\nMolti bardi imparano il loro linguaggio così da poter aggiungere le ballate in Elfico ai loro repertori.\n'),
-  dragonide('Dragonide', [], [], [], {}, [],
-      'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Forza aumenta di 2 e il punteggio di Carisma aumenta di 1.\n\nETÀ\nI dragonidi giovani crescono velocemente.\nCamminano ore dopo la schiusa, raggiungono la taglia e lo sviluppo di un bambino umano di 10 anni all\'età di 3 anni e raggiungono la maturità a 15.\nVivono circa fino a 80 anni.\n\nALLINEAMENTO\nI dragonidi tendono agli estremi, facendo una scelta cosciente per un lato o l\'altro nella guerra cosmica tra bene e male (rappresentati rispettivamente da Bahamut e Tiamat).\nMolti dragonidi sono buoni, ma quelli che si schierano con Tiamat possono essere nemici terribili.\n\nTAGLIA\nI dragonidi sono più alti e più pesanti degli umani, essendo alti ben più di 180 cm e pesando circa 115kg.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nDISCENDENZA DRACONICA\nDrago Tipo di Danno Arma a Soffio\nArgento Freddo cono di 4,5 m (TS su Costituzione)\nBianco Freddo cono di 4,5 m (TS su Costituzione)\nBlu Elettricità lineare da 1,5 a 9 m (TS su Destrezza)\nBronzo Elettricità lineare da 1,5 a 9 m (TS su Destrezza)\nNero Acido lineare da 1,5 a 9 m (TS su Destrezza)\nOro Fuoco cono di 4,5 m (TS su Destrezza)\nOttone Fuoco lineare da 1,5 a 9 m (TS su Destrezza)\nRame Acido lineare da 1,5 a 9 m (TS su Destrezza)\nRosso Fuoco cono di 4,5 m (TS su Destrezza)\nVerde Veleno cono di 4,5 m (TS su Costituzione)\n\nAvete una discendenza draconica.\nScegliete un tipo di drago dalla tabella Discendenza Draconica.\nL\'arma a soffio e la resistenza al danno sono determinate dal tipo di drago, come mostrato nella tabella.\n\nARMA A SOFFIO\nPotete usare la vostra azione per esalare energia distruttiva.\nLa discendenza draconica determina dimensione, forma e tipo di danno dell\'esalazione.\nQuando usate l\'arma a soffio, ogni creatura nell\'area dell\'esalazione deve effettuare un tiro salvezza, il cui tipo è determinato dalla vostra discendenza draconica.\nLa CD per questo tiro salvezza è pari a 8 + modificatore di Costituzione + bonus di competenza.\nUna creatura subisce 2d6 danni con un tiro fallito e metà danni con un successo.\nIl danno aumenta a 3d6 al 6° livello, 4d6 all\'11° livello e 5d6 al 16° livello.\nDopo aver usato la vostra arma a soffio, non potete usarla di nuovo finché non completate un riposo breve o lungo.\n\nRESISTENZE AL DANNO\nAvete resistenza al tipo di danno associato con la vostra discendenza draconica.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune e Draconico.n\Il Draconico si pensa sia uno dei linguaggi più vecchi ed è spesso usato nello studio della magia.\nIl linguaggio suona duro alla maggior parte delle altre creature e include numerose consonanti dure e sibilanti.\n'),
+  dragonide(
+      'Dragonide',
+      [
+        SubRace.dragoDArgento,
+        SubRace.dragoBianco,
+        SubRace.dragoBlu,
+        SubRace.dragoDiBronzo,
+        SubRace.dragoNero,
+        SubRace.dragoDOro,
+        SubRace.dragoDOttone,
+        SubRace.dragoDiRame,
+        SubRace.dragoRosso,
+        SubRace.dragoVerde,
+      ],
+      [
+        Language.comune,
+        Language.draconico,
+      ],
+      false,
+      {
+        Skill.forza: 2,
+        Skill.carisma: 1,
+      },
+      0,
+      0,
+      [],
+      'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Forza aumenta di 2 e il punteggio di Carisma aumenta di 1.\n\nETÀ\nI dragonidi giovani crescono velocemente.\nCamminano ore dopo la schiusa, raggiungono la taglia e lo sviluppo di un bambino umano di 10 anni all\'età di 3 anni e raggiungono la maturità a 15.\nVivono circa fino a 80 anni.\n\nALLINEAMENTO\nI dragonidi tendono agli estremi, facendo una scelta cosciente per un lato o l\'altro nella guerra cosmica tra bene e male (rappresentati rispettivamente da Bahamut e Tiamat).\nMolti dragonidi sono buoni, ma quelli che si schierano con Tiamat possono essere nemici terribili.\n\nTAGLIA\nI dragonidi sono più alti e più pesanti degli umani, essendo alti ben più di 180 cm e pesando circa 115kg.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\n| Sotto razza | Tipo di danno |    Arma a soffio     | Tiro salvezza |\n|:----------:|:-------------:|:--------------------:|:-------------:|\n|   Bianco   |    Freddo     |    Cono di 4,5 m     | Costituzione  |\n|    Blu     |  Elettricità  | Lineare da 1,5 a 9 m |   Destrezza   |\n|   Bronzo   |  Elettricità  | Lineare da 1,5 a 9 m |   Destrezza   |\n|    Nero    |     Acido     | Lineare da 1,5 a 9 m |   Destrezza   |\n|    Oro     |     Fuoco     |    Cono di 4,5 m     |   Destrezza   |\n|   Ottone   |     Fuoco     | Lineare da 1,5 a 9 m |   Destrezza   |\n|    Rame    |     Acido     | Lineare da 1,5 a 9 m |   Destrezza   |\n|   Rosso    |     Fuoco     |    Cono di 4,5 m     |   Destrezza   |\n|   Verde    |    Veleno     |    Cono di 4,5 m     | Costituzione  |\n\nAvete una discendenza draconica.\nScegliete un tipo di drago dalla tabella Discendenza Draconica.\nL\'arma a soffio e la resistenza al danno sono determinate dal tipo di drago, come mostrato nella tabella.\n\nARMA A SOFFIO\nPotete usare la vostra azione per esalare energia distruttiva.\nLa discendenza draconica determina dimensione, forma e tipo di danno dell\'esalazione.\nQuando usate l\'arma a soffio, ogni creatura nell\'area dell\'esalazione deve effettuare un tiro salvezza, il cui tipo è determinato dalla vostra discendenza draconica.\nLa CD per questo tiro salvezza è pari a 8 + modificatore di Costituzione + bonus di competenza.\nUna creatura subisce 2d6 danni con un tiro fallito e metà danni con un successo.\nIl danno aumenta a 3d6 al 6° livello, 4d6 all\'11° livello e 5d6 al 16° livello.\nDopo aver usato la vostra arma a soffio, non potete usarla di nuovo finché non completate un riposo breve o lungo.\n\nRESISTENZE AL DANNO\nAvete resistenza al tipo di danno associato con la vostra discendenza draconica.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune e Draconico.n\Il Draconico si pensa sia uno dei linguaggi più vecchi ed è spesso usato nello studio della magia.\nIl linguaggio suona duro alla maggior parte delle altre creature e include numerose consonanti dure e sibilanti.\n'),
   gnomo(
       'Gnomo',
       [
         SubRace.gnomoDelleForeste,
         SubRace.gnomoDelleRocce,
       ],
-      [],
-      [],
-      {},
+      [
+        Language.comune,
+        Language.gnomesco,
+      ],
+      false,
+      {
+        Skill.intelligenza: 2,
+      },
+      0,
+      0,
       [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Intelligenza aumenta di 2.\n\nETÀ\nGli gnomi maturano alla stessa velocità degli umani e ci si aspetta che molti si accingano alla vita adulta attorno ai 40 anni.\nPossono vivere da 350 a quasi 500 anni.\n\nALLINEAMENTO\nGli gnomi sono più spesso buoni.\nQuelli che tendono verso la legge sono saggi, ingegneri, ricercatori, studiosi, investigatori o inventori.\nQuelli che tendono verso il caos sono menestrelli, imbroglioni, vagabondi o fantasiosi gioiellieri.\nGli gnomi sono di buon cuore e persino gli imbroglioni tra loro sono più scherzosi che maligni.\n\nTAGLIA\nGli gnomi sono alti tra 90 e 120 cm e pesano in media 18 kg.\nLa taglia è Piccola.\n\nVELOCITÀ\nLa velocità base sul terreno è 7,5 metri.\n\nSCUROVISIONE\nAbituati alla vita sotterranea, avete una vista superiore in condizioni di buio o luce debole.\nPotete vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\nNon potete discernere i colori nell\'oscurità, solo sfumature di grigio.\n\nASTUZIA GNOMESCA\nAvete vantaggio in tutti i tiri salvezza su Intelligenza, Saggezza e Carisma contro la magia.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune e Gnomesco.\nIl linguaggio Gnomesco, che usa l\'alfabeto Nanico, è rinomato per i suoi trattati tecnici e i suoi cataloghi di conoscenza sul mondo naturale.\n\nSOTTORAZZA\nSi trovano due sottorazze di gnomi tra i mondi di D&amp;D: gnomi delle foreste e gnomi delle rocce.\nScegliete una di queste sottorazze.\n'),
   halfling(
@@ -980,22 +1089,67 @@ enum Race {
         SubRace.halflingPiedelesto,
         SubRace.halflingTozzo,
       ],
-      [],
-      [],
-      {},
+      [
+        Language.comune,
+        Language.halfling,
+      ],
+      false,
+      {
+        Skill.destrezza: 2,
+      },
+      0,
+      0,
       [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Destrezza aumenta di 2.\n\nETÀ\nUn halfling raggiunge la maturità all\'età di 20 anni e generalmente vive fino a metà del suo secondo secolo.\n\nALLINEAMENTO\nMolti halfling sono legali buoni.\nCome regola, sono di buon cuore e gentili, odiano vedere gli altri in pena e non tollerano l\'oppressione.\nSono anche molto ordinati e tradizionali e si appoggiano pesantemente al supporto delle loro comunità e al conforto delle loro tradizioni.\n\nTAGLIA\nGli halfling raggiungono circa 90 cm e pesano circa 18 kg.\nLa taglia è Piccola.\n\nVELOCITÀ\nLa velocità base sul terreno è 7,5 metri.\n\nFORTUNATO\nQuando ottenete un 1 ad un tiro per colpire, prova caratteristica o tiro salvezza, potete ritirare il dado e dovete usare il nuovo risultato.\n\nCORAGGIOSO\nAvete vantaggio nei tiri salvezza contro l\'essere spaventato.\n\nVERSATILITÀ HALFLING\nPotete muovervi attraverso lo spazio di qualunque creatura che è di una taglia più grande di voi.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune e Halfling.\nIl linguaggio Halfling non è segreto, ma gli halfling sono restii a condividerlo con altri.\nScrivono molto poco, per cui non hanno una ricca letteratura. Comunque la loro tradizione orale è molto forte.\nPraticamente tutti gli halfling parlano il Comune per conversare con la gente delle terre in cui abitano o attraverso cui stanno viaggiando.\n\nSOTTORAZZA\nI due tipi principali di halfling, piedelesto e tozzo, sono più come famiglie strettamente imparentate che vere sottorazze.\nScegliete una di queste sottorazze.\n'),
-  mezzelfo('Mezzelfo', [], [], [], {}, [],
+  mezzelfo(
+      'Mezzelfo',
+      [],
+      [
+        Language.comune,
+        Language.elfico,
+      ],
+      true,
+      {},
+      2,
+      2,
+      [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Carisma aumenta di 2 ed altri due punteggi di caratteristica a vostra scelta aumentano di 1.\n\nETÀ\nI mezzelfi maturano allo stesso ritmo degli umani e raggiungono la maturità attorno all\'età di 20 anni.\nVivono però molto più a lungo degli umani, spesso sforando i 180 anni.\n\nALLINEAMENTO\nI mezzelfi condividono l\'inclinazione caotica della loro eredità elfica.\nValorizzano sia la libertà personale che l\'espressione creativa, non dimostrando né amore per i capi né desiderio di seguaci.\nSi irritano per le regole, se la prendono per le richieste altrui ed a volte si dimostrano inaffidabili o almeno imprevedibili.\n\nTAGLIA\nI mezzelfi hanno la stessa taglia degli umani, spaziando da 150 a 180 cm.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nSCUROVISIONE\nGrazie al sangue elfico, avete una vista superiore in condizioni di buio o luce debole.\nPotete vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\nNon potete discernere i colori nell\'oscurità, solo sfumature di grigio.\n\nSTIRPE FATATA\nAvete vantaggio nei tiri salvezza contro l\'essere affascinati e la magia non può farvi addormentare.\n\nVERSATILITÀ\nGuadagnate competenza in due abilità a vostra scelta.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune, Elfico ed un linguaggio extra a vostra scelta.\n'),
-  mezzorco('Mezzorco', [], [], [], {}, [],
+  mezzorco(
+      'Mezzorco',
+      [],
+      [Language.comune, Language.orchesco],
+      false,
+      {
+        Skill.forza: 2,
+        Skill.costituzione: 1,
+      },
+      0,
+      0,
+      [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Forza aumenta di 2 ed il punteggio di Costituzione aumenta di 1.\n\nETÀ\nI mezzorchi maturano poco più velocemente degli umani, raggiungendo la maturità a circa 14 anni.\nInvecchiano visibilmente prima e raramente vivono oltre i 75.\n\nALLINEAMENTO\nI mezzorchi ereditano una tendenza verso il caos dai loro genitori orchi e non sono molto inclini al bene.\nI mezzorchi cresciuti tra gli orchi e che vogliono vivere tra loro sono di solito malvagi.\n\nTAGLIA\nI mezzorchi sono un po\' più grandi e massicci degli umani e sono alti tra 150 e ben più di 180 cm.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nSCUROVISIONE\nGrazie al sangue orchesco, avete una vista superiore in condizioni di buio o luce debole.\nPotete vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\nNon potete discernere i colori nell\'oscurità, solo sfumature di grigio.\n\nMINACCIOSO\nGuadagnate competenza nell\'abilità Intimidire.\n\nRESISTENZA INESORABILE\nQuando siete ridotti a 0 punti ferita ma non uccisi sul colpo, potete invece tornare ad 1 punto ferita.\nNon potete usare questo privilegio nuovamente finché non completate un riposo lungo.\n\nATTACCHI SELVAGGI\nQuando ottenete un colpo critico con un attacco con arma da mischia, potete tirare uno dei dadi del danno da arma una volta in più e aggiungerlo al danno extra del colpo critico.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune ed Orchesco.\nL\'Orchesco è un linguaggio duro e stridente con consonanti dure.\nNon ha un suo alfabeto ma viene scritto con l\'alfabeto Nanico.\n'),
-  tiefling('Tiefling', [], [], [], {}, [],
+  tiefling(
+      'Tiefling',
+      [],
+      [
+        Language.comune,
+        Language.infernale,
+      ],
+      false,
+      {
+        Skill.intelligenza: 1,
+        Skill.carisma: 2,
+      },
+      0,
+      0,
+      [],
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Intelligenza aumenta di 1 e il punteggio di Carisma aumenta di 2.\n\nETÀ\nI tiefling maturano allo stesso ritmo degli umani ma vivono qualche anno più a lungo.\n\nALLINEAMENTO\nI tiefling possono non avere una tendenza innata verso il male, ma molti di loro finiscono lì.\nMalvagi o no, una natura indipendente fa propendere molti tiefling verso un allineamento caotico.\n\nTAGLIA\nI tiefling hanno circa la stessa taglia e corporatura degli umani.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nSCUROVISIONE\nGrazie all\'eredità infernale, avete una vista superiore in condizioni di buio o luce debole.\nPotete vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\nNon potete discernere i colori nell\'oscurità, solo sfumature di grigio.\n\nRESISTENZA DIABOLICA\nAvete resistenza al danno da fuoco.\n\nRETAGGIO INFERNALE\nConoscete il trucco taumaturgia.\nUna volta raggiunto il 3° livello, potete lanciare l\'incantesimo rimprovero diabolico una volta al giorno come incantesimo di 2° livello.\nUna volta raggiunto il 5° livello, potete anche lanciare l\'incantesimo oscurità una volta al giorno.\nIl Carisma è la caratteristica chiave per questi incantesimi.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune ed Infernale.');
 
   final String title, description;
   final List<SubRace> subRaces;
-  final List<Language> defaultLanguages, choiceableLanguages;
+  final List<Language> defaultLanguages;
+  final bool canChoiceLanguage;
   final Map<Skill, int> defaultSkill;
+  final int numChoiceableSkill, numChoiceableSubSkill; // solo mezzelfo
 
   // final List<Mastery> defaultMasteries QUI NO! (VERIFICATO)
   final List<Mastery> choiceableMasteries; // ce l'ha il nano
@@ -1004,8 +1158,10 @@ enum Race {
       this.title,
       this.subRaces,
       this.defaultLanguages,
-      this.choiceableLanguages,
+      this.canChoiceLanguage,
       this.defaultSkill,
+      this.numChoiceableSkill,
+      this.numChoiceableSubSkill,
       this.choiceableMasteries,
       this.description);
 }
@@ -1212,6 +1368,7 @@ enum Language {
   primordiale('Primordiale'),
   silvano('Silvano'),
   sottocomune('Sottocomune'),
+  elfico('Elfico'),
   comune('Comune');
 
   final String title;
@@ -1261,6 +1418,8 @@ class Character implements JSONSerializable, Identifiable {
   final int regDateTimestamp;
   String? campaignUID;
 
+  // final Map<InventoryItem, int> inventory;
+
   Character(this.regDateTimestamp, this.campaignUID);
 
   @override
@@ -1268,6 +1427,10 @@ class Character implements JSONSerializable, Identifiable {
   late final String? uid;
 
   get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
+
+  addLoot(Loot loot) {
+    // TODO: add Item to inventory
+  }
 
   @override
   factory Character.fromJson(Map<String, dynamic> json) =>

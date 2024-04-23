@@ -24,6 +24,7 @@ Enchantment _$EnchantmentFromJson(Map<String, dynamic> json) => Enchantment(
           .map((e) => $enumDecode(_$ComponentEnumMap, e))
           .toList(),
       json['componentsDescription'] as String,
+      $enumDecode(_$DamageEnumMap, json['damage']),
       json['description'] as String,
     );
 
@@ -44,6 +45,7 @@ Map<String, dynamic> _$EnchantmentToJson(Enchantment instance) =>
       'components':
           instance.components.map((e) => _$ComponentEnumMap[e]!).toList(),
       'componentsDescription': instance.componentsDescription,
+      'damage': _$DamageEnumMap[instance.damage]!,
     };
 
 const _$LevelEnumMap = {
@@ -157,4 +159,10 @@ const _$ComponentEnumMap = {
   Component.v: 'v',
   Component.s: 's',
   Component.m: 'm',
+};
+
+const _$DamageEnumMap = {
+  Damage.attacco: 'attacco',
+  Damage.tiroSalvezza: 'tiroSalvezza',
+  Damage.descrittivo: 'descrittivo',
 };
