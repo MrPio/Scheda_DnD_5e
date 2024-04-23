@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
@@ -64,10 +62,14 @@ class _HomePageState extends State<HomePage> {
                   _screens[_index],
                   // Fade to black
                   Transform.translate(
-                    offset: const Offset(0,2),
+                    offset: const Offset(0, 2),
                     child: Align(
-                      alignment:Alignment.bottomCenter,
-                      child: Container(
+                      alignment: Alignment.bottomCenter,
+                      child: Image.asset('assets/images/linear_vignette.png',
+                          color: Palette.background,
+                          fit:BoxFit.fill,
+                          height: 44, width: double.infinity),
+                      /*Container(
                           height: 50,
                           width: double.infinity,
                           decoration: const BoxDecoration(
@@ -75,14 +77,17 @@ class _HomePageState extends State<HomePage> {
                               Colors.transparent,
                               Palette.background
                             ], begin: Alignment(0, -1), end: Alignment(0, 0.5)),
-                          )),
+                          )),*/
                     ),
-                  ),]),
+                  ),
+                ]),
               ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding).copyWith(bottom: Measures.vMarginThin),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: Measures.hPadding).copyWith(top:Measures.vMarginThin)
+                          .copyWith(bottom: Measures.vMarginThin),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: _screens.map((e) {
