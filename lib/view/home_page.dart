@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
@@ -122,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                         iconPathOff: '${_screenIconPaths[i]}_off',
                         active: _index == i,
                         onTap: () =>
-                            setState(() => _pageController.jumpToPage(i)),
+                            setState(() => _pageController.animateToPage(i, duration: Durations.medium3*pow((_index-i).abs(),0.7), curve: Curves.easeOutCubic)),
                       );
                     }).toList(),
                   ),

@@ -45,6 +45,10 @@ class _SignInPageState extends State<SignInPage> with Loadable {
         }
         // 👤👤👤 FIREBASE AUTH 👤👤👤
       if (await AccountManager().cacheSignIn()) {
+        setState(() {
+          isLoading=true;
+        });
+        await Future.delayed(const Duration(milliseconds: 300));
         Navigator.of(context).pushNamed('/home');
         context.snackbar('Bentornato ${AccountManager().user.nickname}!',
             backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
@@ -53,8 +57,8 @@ class _SignInPageState extends State<SignInPage> with Loadable {
         // 📘📘📘 FIREBASE FIRESTORE 📘📘📘
         // ⚠️⚠️⚠️ DANGER ZONE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
         // ENCHANTMENTS =========================================
-        await DummyManager().populateEnchantments();
-        await IOManager().remove('enchantments_timestamp');
+        // await DummyManager().populateEnchantments();
+        // await IOManager().remove('enchantments_timestamp');
         // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
         withLoading(() => DataManager().fetchData());

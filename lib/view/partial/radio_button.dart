@@ -44,7 +44,7 @@ class _RadioButtonState extends State<RadioButton> {
           foregroundColor: Colors.transparent,
           padding: const EdgeInsets.symmetric(
               vertical: Measures.vButtonPadding,
-              horizontal: Measures.hPadding),
+              horizontal: Measures.hPadding/2),
         ),
         child: Text(widget.text, style: textStyle));
   }

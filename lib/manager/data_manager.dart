@@ -39,13 +39,13 @@ class DataManager {
     if (enchantmentsTimestamp
         .elapsedTime()
         .inDays >= 7) {
-      print('Scarico gli enchantments');
+      print('⬇️ Scarico gli enchantments');
       enchantments.value = await DatabaseManager()
           .getList<Enchantment>(DatabaseManager.collections[Enchantment]!, pageSize: 9999) ??
           [];
       IOManager().serializeObjects(DatabaseManager.collections[Enchantment]!, enchantments.value!);
     } else {
-      print('Leggo localmente gli enchantments');
+      print('⚡ Leggo localmente gli enchantments');
       enchantments.value =
       await IOManager().deserializeObjects<Enchantment>(DatabaseManager.collections[Enchantment]!);
     }

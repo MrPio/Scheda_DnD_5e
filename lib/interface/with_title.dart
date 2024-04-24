@@ -1,3 +1,3 @@
-abstract class EnumWithTitle extends Enum {
+abstract class EnumWithTitle implements Enum {
   final String title='';
 }

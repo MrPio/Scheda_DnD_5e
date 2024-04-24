@@ -1,26 +1,20 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:core' as core show Type;
+import 'dart:core' hide Type;
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
 import 'package:scheda_dnd_5e/extension/function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension/function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension/function/string_extensions.dart';
-import 'package:scheda_dnd_5e/interface/with_title.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
-import 'package:scheda_dnd_5e/model/character.dart';
+import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
 import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/filter.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
-import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
-import 'dart:core' hide Type;
-import 'dart:core' as core show Type;
-
-import 'partial/gradient_background.dart';
 
 class EnchantmentsPage extends StatefulWidget {
   const EnchantmentsPage({super.key});
@@ -62,7 +56,9 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
           (enchantment, values) => values.contains(enchantment.type)),
     ];
     DataManager().enchantments.addListener(() {
-      setState(() {});
+      if(mounted) {
+        setState(() {});
+      }
     });
     // Forcing shimmer effect
     final tmpEnchantments = DataManager().enchantments.value;
@@ -102,7 +98,8 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
           Expanded(
             child: Column(children: [
               const SizedBox(height: Measures.vMarginMed),
-              Text('Che incantesimo stai cercando?', style: Fonts.black()),
+              // Page Title
+              Align(alignment:Alignment.centerLeft,child: Text('Che incantesimo stai cercando?', style: Fonts.black())),
               const SizedBox(height: Measures.vMarginMed),
               // Search TextField
               GlassTextField(
@@ -112,6 +109,7 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
               ),
               // Filters
               GridView.count(
+                  physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: 3,
                   childAspectRatio: 2.5,
                   shrinkWrap: true,
@@ -130,7 +128,6 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                                   color: _filters[i].color,
                                   onChanged: (value) => setState(() =>
                                       _filters[i].selectedValues.toggle(value)),
-                                  text: (value) => _filters[i].title,
                                   value: (value) => _filters[i]
                                       .selectedValues
                                       .contains(value),

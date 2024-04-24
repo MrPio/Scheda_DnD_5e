@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/interface/with_title.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 
 extension ContextExtensions on BuildContext {
@@ -47,14 +48,15 @@ extension ContextExtensions on BuildContext {
                     if (message != null)
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: noContentHPadding ? 26 : 0).copyWith(bottom: Measures.vMarginSmall),
+                                horizontal: noContentHPadding ? 26 : 0)
+                            .copyWith(bottom: Measures.vMarginSmall),
                         child: Text(message, style: Fonts.light(size: 16)),
                       ),
                     if (child != null)
                       ConstrainedBox(
                           constraints: const BoxConstraints(
                             minHeight: 50,
-                            maxHeight: 300,
+                            maxHeight: 316,
                           ),
                           child: SingleChildScrollView(child: child)),
                     const SizedBox(height: Measures.vMarginThin),
@@ -123,11 +125,10 @@ extension ContextExtensions on BuildContext {
         ),
       );
 
-  checklist<T extends Enum>(String title,
+  checklist<T extends EnumWithTitle>(String title,
       {required List<T> values,
       Function(T)? onChanged,
       bool Function(T)? value,
-      String Function(T)? text,
       Color color = Palette.primaryBlue}) {
     popup(title,
         noContentHPadding: true,
@@ -151,8 +152,7 @@ extension ContextExtensions on BuildContext {
                                     setState(() => onChanged?.call(values[j])),
                                 color: color,
                               ),
-                              Text(text?.call(values[j]) ?? '',
-                                  style: Fonts.regular())
+                              Text(values[j].title, style: Fonts.regular())
                             ],
                           ),
                         ),

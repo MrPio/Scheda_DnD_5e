@@ -43,6 +43,7 @@ class IOManager {
   remove(String key) async => prefs.remove(key);
 
   serializeObjects(String key, List<JSONSerializable> objects) async {
+    key=key.replaceAll('/', '');
     await set(key, jsonEncode(objects.map((e) => e.toJSON()).toList()));
     await set('${key}_timestamp', DateTime.now().millisecondsSinceEpoch);
   }
