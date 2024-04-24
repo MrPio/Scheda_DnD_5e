@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart';
 import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
-import 'package:scheda_dnd_5e/extension/function/string_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 
 class GlassTextField extends StatelessWidget {
   TextEditingController? textController;
   final String? iconPath, secondaryIconPath, hintText;
-  final bool obscureText, clearable;
+  final bool obscureText, clearable, autofocus;
   final Function()? onSecondaryIconTap;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final Function(String)? onSubmitted;
 
   GlassTextField(
       {super.key,
@@ -21,7 +23,10 @@ class GlassTextField extends StatelessWidget {
       this.textController,
       this.keyboardType,
       this.obscureText = false,
-      this.clearable = true});
+      this.clearable = true,
+      this.autofocus = false,
+      this.textInputAction,
+      this.onSubmitted});
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +40,21 @@ class GlassTextField extends StatelessWidget {
             right: secondaryIconPath != null ? 6 : Measures.hTextFieldPadding),
         child: Row(
           children: [
-            if (iconPath != null)
-              iconPath!.toIcon(),
+            if (iconPath != null) iconPath!.toIcon(),
             if (iconPath != null) const SizedBox(width: Measures.hMarginMed),
             Expanded(
               child: TextField(
+                  maxLength: 50,
+                  maxLines: 1,
+                  textInputAction: textInputAction,
+                  onSubmitted: onSubmitted,
                   cursorColor: Palette.onBackground,
-                  autofocus: false,
+                  autofocus: autofocus,
                   style: Fonts.regular(size: 17),
                   obscureText: obscureText,
                   keyboardType: keyboardType,
                   decoration: InputDecoration(
+                      counterText: '',
                       contentPadding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
                       border: InputBorder.none,
                       hintStyle: Fonts.light(color: Palette.hint, size: 17),
@@ -60,7 +69,7 @@ class GlassTextField extends StatelessWidget {
                   const SizedBox(width: Measures.hMarginMed),
                   GestureDetector(
                     onTap: () => textController!.text = '',
-                    child: 'close'.toIcon( height: 16),
+                    child: 'close'.toIcon(height: 16),
                   ),
                 ],
               ),

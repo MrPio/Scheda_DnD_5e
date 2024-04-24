@@ -5,7 +5,7 @@ mixin Loadable<T extends StatefulWidget> on State<T> {
 
   withLoading( Future<void> Function() task) async {
     setState(() => isLoading = true);
-    await task.call();
+    await task();
     setState(() => isLoading = false);
   }
 }

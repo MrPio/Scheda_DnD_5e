@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
-import 'package:scheda_dnd_5e/extension/function/string_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 
 class GlassBottomBarIcon extends StatelessWidget {
   final String title, iconPathOn, iconPathOff;

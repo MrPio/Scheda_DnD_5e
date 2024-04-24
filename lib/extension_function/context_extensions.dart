@@ -106,6 +106,43 @@ extension ContextExtensions on BuildContext {
     );
   }
 
+  checklist<T extends EnumWithTitle>(String title,
+      {required List<T> values,
+        Function(T)? onChanged,
+        bool Function(T)? value,
+        Color color = Palette.primaryBlue}) {
+    popup(title,
+        noContentHPadding: true,
+        backgroundColor: Palette.popup,
+        positiveText: 'Ok',
+        child: StatefulBuilder(
+          builder: (context, setState) => Column(
+            children: List.generate(
+                values.length,
+                    (j) => Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => setState(() => onChanged?.call(values[j])),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 26),
+                      child: Row(
+                        children: [
+                          GlassCheckbox(
+                            value: value?.call(values[j]),
+                            onChanged: () =>
+                                setState(() => onChanged?.call(values[j])),
+                            color: color,
+                          ),
+                          Text(values[j].title, style: Fonts.regular())
+                        ],
+                      ),
+                    ),
+                  ),
+                )),
+          ),
+        ));
+  }
+
   snackbar(String message,
           {Color backgroundColor = Palette.background,
           double bottomMargin = Measures.hPadding}) =>
@@ -119,46 +156,11 @@ extension ContextExtensions on BuildContext {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(25))),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: backgroundColor.withOpacity(1),
+          backgroundColor: backgroundColor.withOpacity(0.925),
           elevation: 0,
           content: Text(message, style: Fonts.regular()),
         ),
       );
 
-  checklist<T extends EnumWithTitle>(String title,
-      {required List<T> values,
-      Function(T)? onChanged,
-      bool Function(T)? value,
-      Color color = Palette.primaryBlue}) {
-    popup(title,
-        noContentHPadding: true,
-        backgroundColor: Palette.popup,
-        positiveText: 'Ok',
-        child: StatefulBuilder(
-          builder: (context, setState) => Column(
-            children: List.generate(
-                values.length,
-                (j) => Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () => setState(() => onChanged?.call(values[j])),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 26),
-                          child: Row(
-                            children: [
-                              GlassCheckbox(
-                                value: value?.call(values[j]),
-                                onChanged: () =>
-                                    setState(() => onChanged?.call(values[j])),
-                                color: color,
-                              ),
-                              Text(values[j].title, style: Fonts.regular())
-                            ],
-                          ),
-                        ),
-                      ),
-                    )),
-          ),
-        ));
-  }
+
 }

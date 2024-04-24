@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
-import 'package:scheda_dnd_5e/extension/function/context_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../interface/json_serializable.dart';

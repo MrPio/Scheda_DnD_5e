@@ -898,7 +898,6 @@ enum Class implements EnumWithTitle {
       this.choiceableMasteryTypes,
       this.savingThrowSkills,
       this.choiceableItems,
-
       this.description);
 }
 
@@ -927,12 +926,11 @@ enum SubRace {
       ],
       10.5,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di saggezza di un elfo dei boschi aumenta di 1.\n\nADDESTRAMENTO NELLE ARMI ELFICHE\nUn elfo dei boschi ha competenza nelle spade corte, nelle spade lunghe, negli archi corti e negli archi lunghi.\n\nPIEDE LESTO\nLa velocità base sul terreno di un elfo dei boschi aumenta a 10,5 metri.\n\nMASCHERA DELLA SELVA\nUn elfo dei boschi può tentare di nascondersi alla vista altrui anche quando è leggermente oscurato da fogliamo, pioggia fitta, neve, foschia e altri fenomeni naturali'),
-  elfoOscuro('Elfo oscuro', 0, {Skill.carisma: 1},
-      [
-        Mastery.spadeCorte,
-        Mastery.stocchi,
-        Mastery.balestreAMano
-      ],
+  elfoOscuro(
+      'Elfo oscuro',
+      0,
+      {Skill.carisma: 1},
+      [Mastery.spadeCorte, Mastery.stocchi, Mastery.balestreAMano],
       9,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di carisma di un elfo oscuro aumenta di 1.\n\nSCUROVISIONE SUPERIORE\nLa scurovisione di un elfo oscuro arriva fino a 36 metri.\n\nSENSIBILITà ALL LUCE DEL SOLE\nUn elfo oscuro dispone di svantaggio ai tiri per colpire e alle prove di saggezza(Percezione) basate sulla vista quando l\'elfo in questione, il bersaglio del suo attacco o l\'oggetto da percepire si trovano in piena luce del sole.\n\nMAGIA DROW\nUn elfo oscuro conosce il trucchetto "luci danzanti".\nQuando raggiunge il 3° livello, può lanciare l\'incantesimo "luminescenza" una volta con questo tratto e recuperare la capacità di farlo quando completa un riposo lungo.\nQuando raggiunge il 5° livello, può lanciare l\'incantesimo "oscurità" una volta con questo tratto e recuperà la capacità di farlo quando completa un riposo lungo.\nLa caratteristica da incantatore per questi incantesimi è carisma.'),
   gnomoDelleForeste('Gnomo delle foreste', 0, {Skill.destrezza: 1}, [], 7.5,
@@ -1422,31 +1420,39 @@ enum Alignment implements EnumWithTitle {
   const Alignment(this.title);
 }
 
-@JsonSerializable()
+@JsonSerializable(constructor: 'jsonConstructor')
 class Character implements JSONSerializable, WithUID {
-  final int regDateTimestamp;
-  final String? campaignUID;
-  final String name;
-  final Class class_;
-  final SubClass subClass;
-  final Race race;
-  final SubRace? subRace;
-  final Map<Skill, int> skills;
-  final Map<SubSkill, int> subSkills;
-  final List<Mastery> masteries;
-  final List<Language> languages;
-  final Race velocityRace;
-  final SubRace? velocitySubRace;
-  final Status? status;
+  int regDateTimestamp;
+  String? campaignUID;
+  @JsonKey(includeFromJson: true, includeToJson: true)
+  String _name;
+  Class class_;
+  SubClass subClass;
+  Race race;
+  SubRace? subRace;
+  Map<Skill, int> skills = {};
+  Map<SubSkill, int> subSkills = {};
+  List<Mastery> masteries = [];
+  List<Language> languages = [];
+  Status? status;
   Alignment alignment;
   int level;
   @JsonKey(includeFromJson: true, includeToJson: true)
-  final Map<Object, int> _inventory;
+  Map<Object, int> _inventory = {};
 
-  Character(
+  String get name => _name;
+
+  set name(String value) {
+    if (value.length < 3) {
+      throw const FormatException('Il nome deve avere almeno 3 caratteri');
+    }
+    _name = value;
+  }
+
+  Character.jsonConstructor(
       this.regDateTimestamp,
       this.campaignUID,
-      this.name,
+      this._name,
       this._inventory,
       this.class_,
       this.subClass,
@@ -1458,8 +1464,6 @@ class Character implements JSONSerializable, WithUID {
       languages,
       this.status,
       this.alignment,
-      this.velocityRace,
-      this.velocitySubRace,
       this.level)
       : skills = skills ?? {},
         subSkills = subSkills ?? {},
@@ -1469,6 +1473,15 @@ class Character implements JSONSerializable, WithUID {
       assert(qta < 1);
     }
   }
+
+  Character()
+      : _name = '',
+        level = 0,
+        subClass = Class.barbaro.subClasses[0],
+        regDateTimestamp = DateTime.now().millisecondsSinceEpoch,
+        class_ = Class.barbaro,
+        race = Race.umano,
+        alignment = Alignment.caoticoBuono;
 
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)

@@ -6,10 +6,11 @@ part of '../character.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Character _$CharacterFromJson(Map<String, dynamic> json) => Character(
+Character _$CharacterFromJson(Map<String, dynamic> json) =>
+    Character.jsonConstructor(
       json['regDateTimestamp'] as int,
       json['campaignUID'] as String?,
-      json['name'] as String,
+      json['_name'] as String,
       Map<String, int>.from(json['_inventory'] as Map),
       $enumDecode(_$ClassEnumMap, json['class_']),
       $enumDecode(_$SubClassEnumMap, json['subClass']),
@@ -27,7 +28,7 @@ Character _$CharacterFromJson(Map<String, dynamic> json) => Character(
 Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'regDateTimestamp': instance.regDateTimestamp,
       'campaignUID': instance.campaignUID,
-      'name': instance.name,
+      '_name': instance._name,
       'class_': _$ClassEnumMap[instance.class_]!,
       'subClass': _$SubClassEnumMap[instance.subClass]!,
       'race': _$RaceEnumMap[instance.race]!,

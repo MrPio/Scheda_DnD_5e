@@ -10,5 +10,5 @@ class Measures {
   static const hPadding = 24.0;
   static const diceCardHeight = 62.0;
   static const bottomButtonMargin = 30.0;
-  static const bottomBarHeight = 76.0;
+  static const bottomBarHeight = 80.0;
 }

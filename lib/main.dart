@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scheda_dnd_5e/view/create_character_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantment_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
@@ -56,6 +57,7 @@ class MyApp extends StatelessWidget {
         '/dice': (context) => const DicePage(),
         '/enchantments': (context) => const EnchantmentsPage(),
         '/enchantment': (context) => const EnchantmentPage(),
+        '/create_character':(context) => const CreateCharacterPage(),
       },
     );
   }

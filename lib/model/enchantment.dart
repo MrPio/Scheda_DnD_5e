@@ -1,4 +1,4 @@
-import 'package:scheda_dnd_5e/extension/mixin/comparable.dart';
+import 'package:scheda_dnd_5e/mixin/comparable.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import '../interface/with_title.dart';

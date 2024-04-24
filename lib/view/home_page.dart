@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                       child: Image.asset('assets/images/linear_vignette.png',
                           color: Palette.background,
                           fit: BoxFit.fill,
-                          height: 44,
+                          height: 40,
                           width: double.infinity),
                       /*Container(
                           height: 50,

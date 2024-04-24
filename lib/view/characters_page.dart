@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
-import 'package:scheda_dnd_5e/extension/function/context_extensions.dart';
-import 'package:scheda_dnd_5e/extension/function/list_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
@@ -61,75 +62,102 @@ class _CharactersPageState extends State<CharactersPage> {
     final characters = _characters;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
         children: [
-          const SizedBox(height: Measures.vMarginBig),
-          // Body
-          Expanded(
-            child: Column(children: [
-              const SizedBox(height: Measures.vMarginMed),
-              // Page Title
-              Align(alignment: Alignment.centerLeft,child: Text('I tuoi personaggi', style: Fonts.black())),
-              const SizedBox(height: Measures.vMarginMed),
-              // Search TextField
-              GlassTextField(
-                iconPath: 'search_alt',
-                hintText: 'Cerca un personaggio',
-                textController: _searchController,
-              ),
-              // Filters
-              GridView.count(
-                physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 3,
-                  childAspectRatio: 2.5,
-                  shrinkWrap: true,
-                  crossAxisSpacing: 10,
-                  children: List.generate(
-                      _filters.length,
-                      (i) => RadioButton(
-                          selected: _filters[i].selectedValues.isNotEmpty,
-                          text: _filters[i].title,
-                          color: _filters[i].color,
-                          onPressed: () => _filters[i].selectedValues.isNotEmpty
-                              ? setState(
-                                  () => _filters[i].selectedValues.clear())
-                              : context.checklist(
-                                  'Filtro su ${_filters[i].title.toLowerCase()}',
-                                  values: _filters[i].values,
-                                  color: _filters[i].color,
-                                  onChanged: (value) => setState(() =>
-                                      _filters[i].selectedValues.toggle(value)),
-                                  value: (value) => _filters[i]
-                                      .selectedValues
-                                      .contains(value),
-                                )))),
-              // Found enchantments
-              const SizedBox(height: Measures.vMarginSmall),
-              // Nothing to show
-              if (isDataReady && characters.isEmpty)
-                Align(
-                    child: Text('Niente da mostrare',
-                        style: Fonts.black(color: Palette.card2))),
+          // Page content
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: Measures.vMarginBig),
+              // Body
               Expanded(
-                child: ListView.builder(
-                    itemCount: isDataReady ? characters.length : 10,
-                    itemBuilder: (_, i) => isDataReady
-                        ? characterCard(characters[i])
-                        : const GlassCard(isShimmer: true, shimmerHeight: 75)),
+                child: Column(children: [
+                  const SizedBox(height: Measures.vMarginMed),
+                  // Page Title
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('I tuoi personaggi', style: Fonts.black())),
+                  const SizedBox(height: Measures.vMarginMed),
+                  // Search TextField
+                  GlassTextField(
+                    iconPath: 'search_alt',
+                    hintText: 'Cerca un personaggio',
+                    textController: _searchController,
+                  ),
+                  // Filters
+                  GridView.count(
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: 3,
+                      childAspectRatio: 2.5,
+                      shrinkWrap: true,
+                      crossAxisSpacing: 10,
+                      children: List.generate(
+                          _filters.length,
+                          (i) => RadioButton(
+                              selected: _filters[i].selectedValues.isNotEmpty,
+                              text: _filters[i].title,
+                              color: _filters[i].color,
+                              onPressed: () => _filters[i]
+                                      .selectedValues
+                                      .isNotEmpty
+                                  ? setState(
+                                      () => _filters[i].selectedValues.clear())
+                                  : context.checklist(
+                                      'Filtro su ${_filters[i].title.toLowerCase()}',
+                                      values: _filters[i].values,
+                                      color: _filters[i].color,
+                                      onChanged: (value) => setState(() =>
+                                          _filters[i]
+                                              .selectedValues
+                                              .toggle(value)),
+                                      value: (value) => _filters[i]
+                                          .selectedValues
+                                          .contains(value),
+                                    )))),
+                  // Found enchantments
+                  const SizedBox(height: Measures.vMarginSmall),
+                  // Nothing to show
+                  if (isDataReady && characters.isEmpty)
+                    Align(
+                        child: Text('Niente da mostrare',
+                            style: Fonts.black(color: Palette.card2))),
+                  Expanded(
+                    child: ListView.builder(
+                        itemCount: isDataReady ? characters.length : 10,
+                        itemBuilder: (_, i) => isDataReady
+                            ? characterCard(characters[i])
+                            : const GlassCard(
+                                isShimmer: true, shimmerHeight: 75)),
+                  ),
+                ]),
               ),
-            ]),
+            ],
           ),
+          // FAB
+          Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: Measures.vMarginMed),
+                child: FloatingActionButton(
+                  onPressed: () =>Navigator.of(context).pushNamed('/create_character'),
+                  elevation: 0,
+                  foregroundColor: Palette.primaryBlue,
+                  backgroundColor: Palette.primaryBlue,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(999)),
+                  child: 'add'.toIcon(height:  20),
+                ),
+              )),
         ],
       ),
     );
   }
 
-  characterCard(Character model) => Padding(
+  characterCard(Character character) => Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: GlassCard(
           onTap: () =>
-              Navigator.of(context).pushNamed('/character', arguments: model),
+              Navigator.of(context).pushNamed('/character', arguments: character),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
             child: Row(
@@ -141,8 +169,8 @@ class _CharactersPageState extends State<CharactersPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SingleChildScrollView(
-                          child: Text(model.name, style: Fonts.bold(size: 18))),
-                      Text(model.subRace?.title ?? model.race.title,
+                          child: Text(character.name, style: Fonts.bold(size: 18))),
+                      Text(character.subRace?.title ?? character.race.title,
                           style: Fonts.light(size: 16)),
                     ],
                   ),
@@ -154,11 +182,11 @@ class _CharactersPageState extends State<CharactersPage> {
                         shape: BoxShape.circle,
                         border: Border.fromBorderSide(BorderSide(
                             color: Color.lerp(Palette.primaryYellow,
-                                Palette.primaryRed, model.level / 10.0)!,
+                                Palette.primaryRed, character.level / 10.0)!,
                             width: 2))),
                     child: Padding(
                       padding: const EdgeInsets.all(12),
-                      child: Text(model.level.toString(),
+                      child: Text(character.level.toString(),
                           style: Fonts.regular(size: 16)),
                     )),
               ],
