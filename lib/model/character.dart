@@ -898,6 +898,7 @@ enum Class implements EnumWithTitle {
       this.choiceableMasteryTypes,
       this.savingThrowSkills,
       this.choiceableItems,
+
       this.description);
 }
 
@@ -912,6 +913,7 @@ enum SubRace {
         Mastery.archiCorti,
         Mastery.archiLunghi
       ],
+      9,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Intelligenza aumenta di 1.\n\nADDESTRAMENTO NELLE ARMI ELFICHE\nAvete competenza con spada lunga, spada corta, arco corto e arco lungo.\n\nTRUCCHETTO\nConoscete un trucchetto a vostra scelta dalla lista degli incantesimi da mago.\nL\'Intelligenza è la caratteristica chiave per lanciare questo incantesimo.\n\nLINGUAGGI EXTRA\nPotete parlare, leggere e scrivere un linguaggio extra a vostra scelta.\n'),
   elfoDeiBoschi(
       'Elfo dei boschi',
@@ -923,45 +925,54 @@ enum SubRace {
         Mastery.archiCorti,
         Mastery.archiLunghi
       ],
+      10.5,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di saggezza di un elfo dei boschi aumenta di 1.\n\nADDESTRAMENTO NELLE ARMI ELFICHE\nUn elfo dei boschi ha competenza nelle spade corte, nelle spade lunghe, negli archi corti e negli archi lunghi.\n\nPIEDE LESTO\nLa velocità base sul terreno di un elfo dei boschi aumenta a 10,5 metri.\n\nMASCHERA DELLA SELVA\nUn elfo dei boschi può tentare di nascondersi alla vista altrui anche quando è leggermente oscurato da fogliamo, pioggia fitta, neve, foschia e altri fenomeni naturali'),
-  elfoOscuro('Elfo oscuro', 0, {Skill.carisma: 1}, [],
+  elfoOscuro('Elfo oscuro', 0, {Skill.carisma: 1},
+      [
+        Mastery.spadeCorte,
+        Mastery.stocchi,
+        Mastery.balestreAMano
+      ],
+      9,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di carisma di un elfo oscuro aumenta di 1.\n\nSCUROVISIONE SUPERIORE\nLa scurovisione di un elfo oscuro arriva fino a 36 metri.\n\nSENSIBILITà ALL LUCE DEL SOLE\nUn elfo oscuro dispone di svantaggio ai tiri per colpire e alle prove di saggezza(Percezione) basate sulla vista quando l\'elfo in questione, il bersaglio del suo attacco o l\'oggetto da percepire si trovano in piena luce del sole.\n\nMAGIA DROW\nUn elfo oscuro conosce il trucchetto "luci danzanti".\nQuando raggiunge il 3° livello, può lanciare l\'incantesimo "luminescenza" una volta con questo tratto e recuperare la capacità di farlo quando completa un riposo lungo.\nQuando raggiunge il 5° livello, può lanciare l\'incantesimo "oscurità" una volta con questo tratto e recuperà la capacità di farlo quando completa un riposo lungo.\nLa caratteristica da incantatore per questi incantesimi è carisma.'),
-  gnomoDelleForeste('Gnomo delle foreste', 0, {Skill.destrezza: 1}, [],
+  gnomoDelleForeste('Gnomo delle foreste', 0, {Skill.destrezza: 1}, [], 7.5,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Destrezza di uno gnomo delle foreste aumenta di 1.\n\nILLUSIONISTA NATO\nUno gnomo delle foreste conosce il trucchetto illusione minore.\nLa caratteristica da incantatore usata per questo trucchetto è Intelligenza.\n\nPARLARE CON LE PICCOLE BESTIE\nUno gnomo delle foreste può usare suoni e gesti per comunicare i concetti più semplici alle bestie di taglia Piccola o inferiore.\nGli gnomi delle foreste amano gli animali e spesso tengono presso di loro scoiattoli, tassi, conigli, talpe, picchi e altre creature simili come animali da compagnia.'),
-  gnomoDelleRocce('Gnomo delle rocce', 0, {Skill.costituzione: 2}, [],
+  gnomoDelleRocce('Gnomo delle rocce', 0, {Skill.costituzione: 2}, [], 7.5,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Costituzione aumenta di 2.\n\nSAPERE DA ARTEFICE\nOgni volta che fate una prova di Intelligenza (Storia) relativa ad oggetti magici, oggetti alchemici o dispositivi tecnologici, potete aggiungere il doppio del bonus di competenza, invece di qualsiasi bonus di competenza applichiate normalmente.\n\nINVENTORE\nAvete competenza con strumenti da artigiano (strumenti da inventore).\nUsando questi strumenti, potete spendere 1 ora e materiali del valore di 10 mo per costruire un congegno ad orologeria Minuscolo (CA 5, 1 pf).\nIl congegno cessa di funzionare dopo 24 ore (a meno che spendiate 1 ora a ripararlo per mantenerlo in funzione) o quando usate un\'azione per smantellarlo; in quel caso potete recuperare i materiali usati per crearlo.\nPotete avere fino a tre di tali congegni attivi nello stesso momento.\nQuando create un congegno, scegliete una delle seguenti opzioni:\n-Giocattolo ad orologeria: Questo giocattolo è un animale, mostro o persona ad orologeria, come una rana, un topo, un uccello, un drago o un soldato.\nUna volta posizionato sul terreno, il giocattolo si muove di 1,5 m sul terreno in ognuno dei vostri turni in una direzione casuale.\nFa rumore come appropriato per la creatura che rappresenta.\n-Accendino: Il dispositivo produce una fiamma in miniatura, che potete usare per accendere una candela, una torcia o un fuoco da campo.\nUsare il congegno richiede un\'azione.\n-Scatola Musicale: Una volta aperta, questa scatola musicale suona una singola canzone ad un volume moderato.\nLa scatola finisce di suonare quando raggiunge la fine della canzone o quando viene chiusa.'),
-  halflingPiedelesto('Halfling piedelesto', 0, {Skill.carisma: 1}, [],
+  halflingPiedelesto('Halfling piedelesto', 0, {Skill.carisma: 1}, [], 7.5,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Carisma di un halfling piedelesto aumenta di 1.\n\nFURTIVITÀ INNATA\nUn halfling piedelesto può tentare di nascondersi anche se è oscurato solo da una singola creatura, purché questa sia più grande di lui di almeno una taglia.'),
-  halflingTozzo('Halfling tozzo', 0, {Skill.costituzione: 1}, [],
+  halflingTozzo('Halfling tozzo', 0, {Skill.costituzione: 1}, [], 7.5,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Costituzione di un halfling tozzo aumenta di 1.\n\nRESILIENZA DEI TOZZI\nUn halfling tozzo dispone di vantaggio ai tiri salvezza contro il veleno e di resistenza ai danni da veleno.'),
-  nanoDelleColline('Nano delle colline', 0, {Skill.saggezza: 1}, [],
+  nanoDelleColline('Nano delle colline', 0, {Skill.saggezza: 1}, [], 7.5,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Saggezza aumenta di 1.\n\nROBUSTEZZA NANICA\nIl massimo dei punti ferita aumenta di 1 ed aumenta di 1 ogni volta che guadagnate un livello.'),
   nanoDelleMontagne(
       'Nano delle montagne',
       0,
       {Skill.forza: 2},
       [Mastery.armatureLeggere, Mastery.armatureMedie],
+      7.5,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di forza di un nano delle montagne aumenta di 2.\n\nADDESTRAMENTO NELLE ARMATURE NANICHE\nUn nano delle montagne ha competenza nelle armature leggere e medie.'),
-  dragoDArgento("Drago d\'argento", 0, {}, [], null),
-  dragoBianco("Drago bianco", 0, {}, [], null),
-  dragoBlu("Drago blu", 0, {}, [], null),
-  dragoDiBronzo("Drago di bronzo", 0, {}, [], null),
-  dragoNero("Drago nero", 0, {}, [], null),
-  dragoDOro("Drago d\'oro", 0, {}, [], null),
-  dragoDOttone("Drago d\'ottone", 0, {}, [], null),
-  dragoDiRame("Drago di rame", 0, {}, [], null),
-  dragoRosso("Drago rosso", 0, {}, [], null),
-  dragoVerde("Drago verde", 0, {}, [], null),
+  dragoDArgento("Drago d\'argento", 0, {}, [], 9, null),
+  dragoBianco("Drago bianco", 0, {}, [], 9, null),
+  dragoBlu("Drago blu", 0, {}, [], 9, null),
+  dragoDiBronzo("Drago di bronzo", 0, {}, [], 9, null),
+  dragoNero("Drago nero", 0, {}, [], 9, null),
+  dragoDOro("Drago d\'oro", 0, {}, [], 9, null),
+  dragoDOttone("Drago d\'ottone", 0, {}, [], 9, null),
+  dragoDiRame("Drago di rame", 0, {}, [], 9, null),
+  dragoRosso("Drago rosso", 0, {}, [], 9, null),
+  dragoVerde("Drago verde", 0, {}, [], 9, null),
   ;
 
   final String title;
   final String? description;
   final int numChoiceableLanguages;
   final Map<Skill, int> defaultSkill;
+  final num defaultVelocity;
   final List<Mastery> defaultMasteries;
 
   const SubRace(this.title, this.numChoiceableLanguages, this.defaultSkill,
-      this.defaultMasteries, this.description);
+      this.defaultMasteries, this.defaultVelocity, this.description);
 }
 
 enum Race implements EnumWithTitle {
@@ -983,6 +994,7 @@ enum Race implements EnumWithTitle {
       0,
       0,
       [],
+      9,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA.\nOgnuno dei punteggi di caratteristica aumenta di 1.\n\nETÀ\nGli umani raggiungono la maturità nel secondo decennio e vivono meno di un secolo.\n\nALLINEAMENTO.\nGli umani non tendono verso nessun allineamento particolare.\nTra loro si trova il meglio ed il peggio.\n\nTAGLIA.\nGli umani variano molto in peso e corporatura, da appena 150 cm a ben più di 180 cm.\nA prescindere dalla posizione in tale intervallo, la taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune ed un linguaggio extra a vostra scelta.\nGli umani imparano tipicamente i linguaggi degli altri popoli con cui fanno affari, inclusi oscuri dialetti.\nGli piace disseminare il loro discorso di parole prese in prestito da altre lingue: maledizioni Orchesche, espressioni musicali Elfiche, frasi militari Naniche e così via.\n'),
   nano(
       'Nano',
@@ -1005,6 +1017,7 @@ enum Race implements EnumWithTitle {
         Mastery.strumentiDaCostruttore,
         Mastery.strumentiDaFabbro
       ],
+      7.5,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Costituzione aumenta di 2.\n\nETÀ\nI nani maturano allo stessa velocità degli umani, ma sono considerati giovani finché raggiungono l\'età di 50 anni.\nIn media, vivono circa 350 anni.\n\nALLINEAMENTO\nLa maggior parte dei nani sono legali, credendo fermamente nei benefici di una società ben organizzata.\nTendono anche al bene, con un forte senso di correttezza e una convinzione che ognuno meriti di partecipare ai benefici di un ordine retto.\n\nTAGLIA\nI nani sono alti tra 120 e 150 cm e pesano circa 70 kg.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 7,5 metri.\nLa velocità non viene ridotta indossando armature pesanti.\n\nSCUROVISIONE\nAbituati alla vita sotterranea, avete una vista superiore in condizioni di buio o luce debole.\nPotete vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\nNon potete discernere i colori nell\'oscurità, solo sfumature di grigio.\n\nRESILIENZA NANICA\nAvete vantaggio nei tiri salvezza contro il veleno ed avete resistenza contro i danni da veleno (spiegato nel capitolo 9).\n\nADDESTRAMENTO NEL COMBATTIMENTO NANICO\nAvete competenza con l\'ascia da battaglia, l\'ascia da lancio, il martello da lancio e il martello da guerra.\n\nCOMPETENZA NEGLI STRUMENTI\nGuadagnate competenza con strumenti da artigiano a vostra scelta: strumenti da fabbro, forniture da birraio o strumenti da muratore.\n\nESPERTO MINATORE\nOgni volta che effettuate una prova di Intelligenza (Storia) relativa all\'origine di opere in muratura, venite considerati competenti nell\'abilità Storia ed aggiungete il doppio del bonus di competenza alla prova, invece del normale bonus di competenza.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune e Nanico.\nIl Nanico è pieno di consonanti dure e suoni gutturali e tali caratteristiche si riversano in qualunque altro linguaggio un nano possa parlare.\n'),
   elfo(
       'Elfo',
@@ -1024,6 +1037,7 @@ enum Race implements EnumWithTitle {
       0,
       0,
       [],
+      9,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Destrezza aumenta di 2.\n\nETÀ\nSebbene gli elfi raggiungano la maturità fisica circa alla stessa età degli umani, la cultura elfica dell\'età adulta va oltre la crescita fisica per racchiudere l\'esperienza terrena.\nUn elfo rivendica tipicamente l\'età adulta ed un nome da adulto attorno all\'età di 100 anni e può vivere fino a 750 anni.\n\nALLINEAMENTO\nGli elfi amano la libertà, la diversità e l\'espressione di se stessi, quindi tendono fortemente agli aspetti più moderati del caos.\nStimano e proteggono la libertà degli altri come la propria e sono di solito buoni.\nI drow sono un\'eccezione: il loro esilio nel Sottosuolo li ha resi maligni e pericolosi.\nI drow sono di solito malvagi.\n\nTAGLIA\nGli elfi sono alti tra meno di 150 e più di 180 cm ed hanno corporature snelle.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nSCUROVISIONE\nAbituati a foreste in penombra ed al cielo notturno, avete una vista superiore in condizioni di buio o luce debole.Abituati a foreste in penombra ed al cielo notturno, avete una vista superiore in condizioni di buio o luce debole.\nPossono vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\nNon possono discernere i colori nell\'oscurità, solo sfumature di grigio.\n\nSENSI ACUTI\nSi ottiene competenza nell\'abilità Percezione.\n\nSTIRPE FATATA\nSi ha vantaggio nei tiri salvezza contro l\'essere affascinati e la magia non può farvi addormentare.\n\nTRANCE\nGli elfi non hanno bisogno di dormire.\nInvece meditano profondamente, rimanendo semi-coscienti, per 4 ore al giorno.\nMentre meditano, possono in qualche modo sognare: tali sogni sono in realtà esercizi mentali che sono divenuti riflessivi attraverso anni di pratica.\nDopo aver riposato in questo modo, guadagnate lo stesso beneficio che un umano ottiene da 8 ore di sonno.\n\nLINGUAGGI\nPossono parlare, leggere e scrivere in Comune ed Elfico.\nL\'Elfico è fluido, con intonazioni delicate e una grammatica intricata.\nLa letteratura elfica è ricca e varia e le loro canzoni e i poemi sono famosi tra le altre razze.\nMolti bardi imparano il loro linguaggio così da poter aggiungere le ballate in Elfico ai loro repertori.\n'),
   dragonide(
       'Dragonide',
@@ -1051,6 +1065,7 @@ enum Race implements EnumWithTitle {
       0,
       0,
       [],
+      9,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Forza aumenta di 2 e il punteggio di Carisma aumenta di 1.\n\nETÀ\nI dragonidi giovani crescono velocemente.\nCamminano ore dopo la schiusa, raggiungono la taglia e lo sviluppo di un bambino umano di 10 anni all\'età di 3 anni e raggiungono la maturità a 15.\nVivono circa fino a 80 anni.\n\nALLINEAMENTO\nI dragonidi tendono agli estremi, facendo una scelta cosciente per un lato o l\'altro nella guerra cosmica tra bene e male (rappresentati rispettivamente da Bahamut e Tiamat).\nMolti dragonidi sono buoni, ma quelli che si schierano con Tiamat possono essere nemici terribili.\n\nTAGLIA\nI dragonidi sono più alti e più pesanti degli umani, essendo alti ben più di 180 cm e pesando circa 115kg.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\n| Sotto razza | Tipo di danno |    Arma a soffio     | Tiro salvezza |\n|:----------:|:-------------:|:--------------------:|:-------------:|\n|   Bianco   |    Freddo     |    Cono di 4,5 m     | Costituzione  |\n|    Blu     |  Elettricità  | Lineare da 1,5 a 9 m |   Destrezza   |\n|   Bronzo   |  Elettricità  | Lineare da 1,5 a 9 m |   Destrezza   |\n|    Nero    |     Acido     | Lineare da 1,5 a 9 m |   Destrezza   |\n|    Oro     |     Fuoco     |    Cono di 4,5 m     |   Destrezza   |\n|   Ottone   |     Fuoco     | Lineare da 1,5 a 9 m |   Destrezza   |\n|    Rame    |     Acido     | Lineare da 1,5 a 9 m |   Destrezza   |\n|   Rosso    |     Fuoco     |    Cono di 4,5 m     |   Destrezza   |\n|   Verde    |    Veleno     |    Cono di 4,5 m     | Costituzione  |\n\nAvete una discendenza draconica.\nScegliete un tipo di drago dalla tabella Discendenza Draconica.\nL\'arma a soffio e la resistenza al danno sono determinate dal tipo di drago, come mostrato nella tabella.\n\nARMA A SOFFIO\nPotete usare la vostra azione per esalare energia distruttiva.\nLa discendenza draconica determina dimensione, forma e tipo di danno dell\'esalazione.\nQuando usate l\'arma a soffio, ogni creatura nell\'area dell\'esalazione deve effettuare un tiro salvezza, il cui tipo è determinato dalla vostra discendenza draconica.\nLa CD per questo tiro salvezza è pari a 8 + modificatore di Costituzione + bonus di competenza.\nUna creatura subisce 2d6 danni con un tiro fallito e metà danni con un successo.\nIl danno aumenta a 3d6 al 6° livello, 4d6 all\'11° livello e 5d6 al 16° livello.\nDopo aver usato la vostra arma a soffio, non potete usarla di nuovo finché non completate un riposo breve o lungo.\n\nRESISTENZE AL DANNO\nAvete resistenza al tipo di danno associato con la vostra discendenza draconica.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune e Draconico.n\Il Draconico si pensa sia uno dei linguaggi più vecchi ed è spesso usato nello studio della magia.\nIl linguaggio suona duro alla maggior parte delle altre creature e include numerose consonanti dure e sibilanti.\n'),
   gnomo(
       'Gnomo',
@@ -1069,6 +1084,7 @@ enum Race implements EnumWithTitle {
       0,
       0,
       [],
+      7.5,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Intelligenza aumenta di 2.\n\nETÀ\nGli gnomi maturano alla stessa velocità degli umani e ci si aspetta che molti si accingano alla vita adulta attorno ai 40 anni.\nPossono vivere da 350 a quasi 500 anni.\n\nALLINEAMENTO\nGli gnomi sono più spesso buoni.\nQuelli che tendono verso la legge sono saggi, ingegneri, ricercatori, studiosi, investigatori o inventori.\nQuelli che tendono verso il caos sono menestrelli, imbroglioni, vagabondi o fantasiosi gioiellieri.\nGli gnomi sono di buon cuore e persino gli imbroglioni tra loro sono più scherzosi che maligni.\n\nTAGLIA\nGli gnomi sono alti tra 90 e 120 cm e pesano in media 18 kg.\nLa taglia è Piccola.\n\nVELOCITÀ\nLa velocità base sul terreno è 7,5 metri.\n\nSCUROVISIONE\nAbituati alla vita sotterranea, avete una vista superiore in condizioni di buio o luce debole.\nPotete vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\nNon potete discernere i colori nell\'oscurità, solo sfumature di grigio.\n\nASTUZIA GNOMESCA\nAvete vantaggio in tutti i tiri salvezza su Intelligenza, Saggezza e Carisma contro la magia.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune e Gnomesco.\nIl linguaggio Gnomesco, che usa l\'alfabeto Nanico, è rinomato per i suoi trattati tecnici e i suoi cataloghi di conoscenza sul mondo naturale.\n\nSOTTORAZZA\nSi trovano due sottorazze di gnomi tra i mondi di D&amp;D: gnomi delle foreste e gnomi delle rocce.\nScegliete una di queste sottorazze.\n'),
   halfling(
       'Halfling',
@@ -1087,6 +1103,7 @@ enum Race implements EnumWithTitle {
       0,
       0,
       [],
+      7.5,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Destrezza aumenta di 2.\n\nETÀ\nUn halfling raggiunge la maturità all\'età di 20 anni e generalmente vive fino a metà del suo secondo secolo.\n\nALLINEAMENTO\nMolti halfling sono legali buoni.\nCome regola, sono di buon cuore e gentili, odiano vedere gli altri in pena e non tollerano l\'oppressione.\nSono anche molto ordinati e tradizionali e si appoggiano pesantemente al supporto delle loro comunità e al conforto delle loro tradizioni.\n\nTAGLIA\nGli halfling raggiungono circa 90 cm e pesano circa 18 kg.\nLa taglia è Piccola.\n\nVELOCITÀ\nLa velocità base sul terreno è 7,5 metri.\n\nFORTUNATO\nQuando ottenete un 1 ad un tiro per colpire, prova caratteristica o tiro salvezza, potete ritirare il dado e dovete usare il nuovo risultato.\n\nCORAGGIOSO\nAvete vantaggio nei tiri salvezza contro l\'essere spaventato.\n\nVERSATILITÀ HALFLING\nPotete muovervi attraverso lo spazio di qualunque creatura che è di una taglia più grande di voi.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune e Halfling.\nIl linguaggio Halfling non è segreto, ma gli halfling sono restii a condividerlo con altri.\nScrivono molto poco, per cui non hanno una ricca letteratura. Comunque la loro tradizione orale è molto forte.\nPraticamente tutti gli halfling parlano il Comune per conversare con la gente delle terre in cui abitano o attraverso cui stanno viaggiando.\n\nSOTTORAZZA\nI due tipi principali di halfling, piedelesto e tozzo, sono più come famiglie strettamente imparentate che vere sottorazze.\nScegliete una di queste sottorazze.\n'),
   mezzelfo(
       'Mezzelfo',
@@ -1100,6 +1117,7 @@ enum Race implements EnumWithTitle {
       2,
       2,
       [],
+      9,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Carisma aumenta di 2 ed altri due punteggi di caratteristica a vostra scelta aumentano di 1.\n\nETÀ\nI mezzelfi maturano allo stesso ritmo degli umani e raggiungono la maturità attorno all\'età di 20 anni.\nVivono però molto più a lungo degli umani, spesso sforando i 180 anni.\n\nALLINEAMENTO\nI mezzelfi condividono l\'inclinazione caotica della loro eredità elfica.\nValorizzano sia la libertà personale che l\'espressione creativa, non dimostrando né amore per i capi né desiderio di seguaci.\nSi irritano per le regole, se la prendono per le richieste altrui ed a volte si dimostrano inaffidabili o almeno imprevedibili.\n\nTAGLIA\nI mezzelfi hanno la stessa taglia degli umani, spaziando da 150 a 180 cm.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nSCUROVISIONE\nGrazie al sangue elfico, avete una vista superiore in condizioni di buio o luce debole.\nPotete vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\nNon potete discernere i colori nell\'oscurità, solo sfumature di grigio.\n\nSTIRPE FATATA\nAvete vantaggio nei tiri salvezza contro l\'essere affascinati e la magia non può farvi addormentare.\n\nVERSATILITÀ\nGuadagnate competenza in due abilità a vostra scelta.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune, Elfico ed un linguaggio extra a vostra scelta.\n'),
   mezzorco(
       'Mezzorco',
@@ -1113,6 +1131,7 @@ enum Race implements EnumWithTitle {
       0,
       0,
       [],
+      9,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Forza aumenta di 2 ed il punteggio di Costituzione aumenta di 1.\n\nETÀ\nI mezzorchi maturano poco più velocemente degli umani, raggiungendo la maturità a circa 14 anni.\nInvecchiano visibilmente prima e raramente vivono oltre i 75.\n\nALLINEAMENTO\nI mezzorchi ereditano una tendenza verso il caos dai loro genitori orchi e non sono molto inclini al bene.\nI mezzorchi cresciuti tra gli orchi e che vogliono vivere tra loro sono di solito malvagi.\n\nTAGLIA\nI mezzorchi sono un po\' più grandi e massicci degli umani e sono alti tra 150 e ben più di 180 cm.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nSCUROVISIONE\nGrazie al sangue orchesco, avete una vista superiore in condizioni di buio o luce debole.\nPotete vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\nNon potete discernere i colori nell\'oscurità, solo sfumature di grigio.\n\nMINACCIOSO\nGuadagnate competenza nell\'abilità Intimidire.\n\nRESISTENZA INESORABILE\nQuando siete ridotti a 0 punti ferita ma non uccisi sul colpo, potete invece tornare ad 1 punto ferita.\nNon potete usare questo privilegio nuovamente finché non completate un riposo lungo.\n\nATTACCHI SELVAGGI\nQuando ottenete un colpo critico con un attacco con arma da mischia, potete tirare uno dei dadi del danno da arma una volta in più e aggiungerlo al danno extra del colpo critico.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune ed Orchesco.\nL\'Orchesco è un linguaggio duro e stridente con consonanti dure.\nNon ha un suo alfabeto ma viene scritto con l\'alfabeto Nanico.\n'),
   tiefling(
       'Tiefling',
@@ -1129,6 +1148,7 @@ enum Race implements EnumWithTitle {
       0,
       0,
       [],
+      9,
       'INCREMENTO DEI PUNTEGGI CARATTERISTICA\nIl punteggio di Intelligenza aumenta di 1 e il punteggio di Carisma aumenta di 2.\n\nETÀ\nI tiefling maturano allo stesso ritmo degli umani ma vivono qualche anno più a lungo.\n\nALLINEAMENTO\nI tiefling possono non avere una tendenza innata verso il male, ma molti di loro finiscono lì.\nMalvagi o no, una natura indipendente fa propendere molti tiefling verso un allineamento caotico.\n\nTAGLIA\nI tiefling hanno circa la stessa taglia e corporatura degli umani.\nLa taglia è Media.\n\nVELOCITÀ\nLa velocità base sul terreno è 9 metri.\n\nSCUROVISIONE\nGrazie all\'eredità infernale, avete una vista superiore in condizioni di buio o luce debole.\nPotete vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\nNon potete discernere i colori nell\'oscurità, solo sfumature di grigio.\n\nRESISTENZA DIABOLICA\nAvete resistenza al danno da fuoco.\n\nRETAGGIO INFERNALE\nConoscete il trucco taumaturgia.\nUna volta raggiunto il 3° livello, potete lanciare l\'incantesimo rimprovero diabolico una volta al giorno come incantesimo di 2° livello.\nUna volta raggiunto il 5° livello, potete anche lanciare l\'incantesimo oscurità una volta al giorno.\nIl Carisma è la caratteristica chiave per questi incantesimi.\n\nLINGUAGGI\nPotete parlare, leggere e scrivere in Comune ed Infernale.');
 
   final String title, description;
@@ -1139,6 +1159,7 @@ enum Race implements EnumWithTitle {
   final int numChoiceableSkill, numChoiceableSubSkill; // solo mezzelfo
 
   // final List<Mastery> defaultMasteries QUI NO! (VERIFICATO)
+  final num defaultVelocity;
   final List<Mastery> choiceableMasteries; // ce l'ha il nano
 
   const Race(
@@ -1150,6 +1171,7 @@ enum Race implements EnumWithTitle {
       this.numChoiceableSkill,
       this.numChoiceableSubSkill,
       this.choiceableMasteries,
+      this.defaultVelocity,
       this.description);
 }
 
