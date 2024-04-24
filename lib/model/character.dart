@@ -968,7 +968,7 @@ enum SubRace {
   final String? description;
   final int numChoiceableLanguages;
   final Map<Skill, int> defaultSkill;
-  final num defaultVelocity;
+  final double defaultVelocity;
   final List<Mastery> defaultMasteries;
 
   const SubRace(this.title, this.numChoiceableLanguages, this.defaultSkill,
@@ -1159,7 +1159,7 @@ enum Race implements EnumWithTitle {
   final int numChoiceableSkill, numChoiceableSubSkill; // solo mezzelfo
 
   // final List<Mastery> defaultMasteries QUI NO! (VERIFICATO)
-  final num defaultVelocity;
+  final double defaultVelocity;
   final List<Mastery> choiceableMasteries; // ce l'ha il nano
 
   const Race(
@@ -1435,6 +1435,8 @@ class Character implements JSONSerializable, WithUID {
   final Map<SubSkill, int> subSkills;
   final List<Mastery> masteries;
   final List<Language> languages;
+  final Race velocityRace;
+  final SubRace? velocitySubRace;
   final Status? status;
   Alignment alignment;
   int level;
@@ -1456,6 +1458,8 @@ class Character implements JSONSerializable, WithUID {
       languages,
       this.status,
       this.alignment,
+      this.velocityRace,
+      this.velocitySubRace,
       this.level)
       : skills = skills ?? {},
         subSkills = subSkills ?? {},
