@@ -97,6 +97,7 @@ class _DicePageState extends State<DicePage>
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       GestureDetector(
+                        behavior: HitTestBehavior.translucent ,
                         onTap: () {
                           Navigator.of(context).pop();
                         },

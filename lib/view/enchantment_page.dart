@@ -49,8 +49,8 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // TODO: the tap zone is too small
                       GestureDetector(
+                        behavior: HitTestBehavior.translucent ,
                         onTap: () {
                           Navigator.of(context).pop();
                         },

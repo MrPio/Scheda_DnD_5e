@@ -25,6 +25,7 @@ class GlassBottomBarIcon extends StatelessWidget {
       child: SizedBox(
         width: 64,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             (active ? iconPathOn : iconPathOff).toIcon(height: 30),
             const SizedBox(height: Measures.vMarginMoreThin),

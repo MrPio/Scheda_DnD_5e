@@ -1,11 +1,14 @@
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/characters_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
+import 'package:tuple/tuple.dart';
 
 import 'partial/glass_bottom_bar_icon.dart';
 import 'partial/gradient_background.dart';
@@ -69,68 +72,86 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final fabs = [
+      Tuple3(() => Navigator.of(context).pushNamed('/create_character'),
+          Palette.primaryBlue, 'add'),
+      null, null, null, null
+    ];
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Palette.background,
       body: Stack(
         children: [
           // Background
           GradientBackground(topColor: _colors[_index]),
           // Foreground
-          Column(
-            children: [
-              Expanded(
-                child: Stack(children: [
-                  PageView(
-                    controller: _pageController,
-                    children: _screens,
-                  ),
-                  // Fade to black
-                  Transform.translate(
-                    offset: const Offset(0, 2),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Image.asset('assets/images/linear_vignette.png',
-                          color: Palette.background,
-                          fit: BoxFit.fill,
-                          height: 40,
-                          width: double.infinity),
-                      /*Container(
-                          height: 50,
-                          width: double.infinity,
-                          decoration: const BoxDecoration(
-                            gradient: LinearGradient(colors: [
-                              Colors.transparent,
-                              Palette.background
-                            ], begin: Alignment(0, -1), end: Alignment(0, 0.5)),
-                          )),*/
-                    ),
-                  ),
-                ]),
+          Stack(children: [
+            // Page content
+            PageView(
+              controller: _pageController,
+              children: _screens,
+            ),
+            // Fade to black
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Image.asset('assets/images/linear_vignette.png',
+                      color: Palette.background,
+                      fit: BoxFit.fill,
+                      height: 70,
+                      width: double.infinity),
+                  Container(height: 30,
+                      width: double.infinity,
+                      color: Palette.background),
+                ],
               ),
+            ),
+            // FAB
+            if(fabs[_index] != null)
               Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: Measures.hPadding)
-                          .copyWith(top: Measures.vMarginThin)
-                          .copyWith(bottom: Measures.vMarginThin),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: _screens.map((e) {
-                      final i = _screens.indexOf(e);
-                      return GlassBottomBarIcon(
-                        title: _screenNames[i],
-                        iconPathOn: '${_screenIconPaths[i]}_on',
-                        iconPathOff: '${_screenIconPaths[i]}_off',
-                        active: _index == i,
-                        onTap: () =>
-                            setState(() => _pageController.animateToPage(i, duration: Durations.medium3*pow((_index-i).abs(),0.7), curve: Curves.easeOutCubic)),
-                      );
-                    }).toList(),
-                  ),
-                ),
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: Measures.fABBottomMargin,right: Measures.hPadding),
+                    child: FloatingActionButton(
+                      onPressed: fabs[_index]!.item1,
+                      elevation: 0,
+                      foregroundColor: fabs[_index]!.item2,
+                      backgroundColor: fabs[_index]!.item2,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(999)),
+                      child: fabs[_index]!.item3.toIcon(height: 20),
+                    ),
+                  )),
+          ]),
+          // Bottom bar
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding:
+              const EdgeInsets.symmetric(horizontal: Measures.hPadding)
+                  .copyWith(top: Measures.vMarginThin)
+                  .copyWith(bottom: Measures.vMarginThin),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: _screens.map((e) {
+                  final i = _screens.indexOf(e);
+                  return GlassBottomBarIcon(
+                    title: _screenNames[i],
+                    iconPathOn: '${_screenIconPaths[i]}_on',
+                    iconPathOff: '${_screenIconPaths[i]}_off',
+                    active: _index == i,
+                    onTap: () =>
+                        setState(() =>
+                            _pageController.animateToPage(i,
+                                duration: Durations.medium3 *
+                                    pow((_index - i).abs(), 0.7),
+                                curve: Curves.easeOutCubic)),
+                  );
+                }).toList(),
               ),
-            ],
+            ),
           ),
         ],
       ),

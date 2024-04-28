@@ -49,7 +49,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           isLoading=true;
         });
         await Future.delayed(const Duration(milliseconds: 300));
-        Navigator.of(context).pushNamed('/home');
+        Navigator.of(context).popAndPushNamed('/home');
         context.snackbar('Bentornato ${AccountManager().user.nickname}!',
             backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
       }
@@ -232,7 +232,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           } else if (status == SignInStatus.success) {
             context.snackbar('Bentornato ${AccountManager().user.nickname}!',
                 backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
-            Navigator.of(context).pushNamed('/home');
+            Navigator.of(context).popAndPushNamed('/home');
           }
         }
       });
@@ -251,11 +251,11 @@ class _SignInPageState extends State<SignInPage> with Loadable {
         } else if (status == SignInStatus.success) {
           context.snackbar('Bentornato ${AccountManager().user.nickname}!',
               backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
-          Navigator.of(context).pushNamed('/home');
+          Navigator.of(context).popAndPushNamed('/home');
         } else if (status == SignInStatus.successNewAccount) {
           context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
               backgroundColor: Palette.primaryGreen, bottomMargin: Measures.bottomBarHeight);
-          Navigator.of(context).pushNamed('/home');
+          Navigator.of(context).popAndPushNamed('/home');
         }
       });
 
