@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:scheda_dnd_5e/interface/with_title.dart';
+import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 
 part 'part/loot.g.dart';
 
-abstract class InventoryItem extends EnumWithTitle{}
+abstract class InventoryItem extends EnumWithTitle {}
 
 enum Weapon implements InventoryItem {
   // Armi da Mischia Semplici

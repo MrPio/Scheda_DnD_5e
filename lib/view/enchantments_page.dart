@@ -44,19 +44,19 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
         setState(() {});
       });
     _filters = [
-      Filter<Enchantment,Class>(
+      Filter<Enchantment, Class>(
           'Classe',
           Palette.primaryGreen,
           Class.values.where((e) => e.isEnchanter).toList(),
           (enchantment, values) =>
               enchantment.classes.any((c) => values.contains(c))),
-      Filter<Enchantment,Level>('Livello', Palette.primaryRed, Level.values,
+      Filter<Enchantment, Level>('Livello', Palette.primaryRed, Level.values,
           (enchantment, values) => values.contains(enchantment.level)),
-      Filter<Enchantment,Type>('Tipo', Palette.primaryBlue, Type.values,
+      Filter<Enchantment, Type>('Tipo', Palette.primaryBlue, Type.values,
           (enchantment, values) => values.contains(enchantment.type)),
     ];
     DataManager().enchantments.addListener(() {
-      if(mounted) {
+      if (mounted) {
         setState(() {});
       }
     });
@@ -99,7 +99,10 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
             child: Column(children: [
               const SizedBox(height: Measures.vMarginMed),
               // Page Title
-              Align(alignment:Alignment.centerLeft,child: Text('Che incantesimo stai cercando?', style: Fonts.black())),
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Che incantesimo stai cercando?',
+                      style: Fonts.black())),
               const SizedBox(height: Measures.vMarginMed),
               // Search TextField
               GlassTextField(
@@ -121,8 +124,9 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                           text: _filters[i].title,
                           color: _filters[i].color,
                           onPressed: () => _filters[i].selectedValues.isNotEmpty
-                              ? setState(() => _filters[i].selectedValues.clear())
-                              : context.checklist(
+                              ? setState(
+                                  () => _filters[i].selectedValues.clear())
+                              : context.checkList(
                                   'Filtro su ${_filters[i].title.toLowerCase()}',
                                   values: _filters[i].values,
                                   color: _filters[i].color,
@@ -136,9 +140,11 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
               const SizedBox(height: Measures.vMarginSmall),
               // Nothing to show
               if (isDataReady && enchantments.isEmpty)
-                Align(
-                    child: Text('Niente da mostrare',
-                        style: Fonts.black(color: Palette.card2))),
+                Padding(
+                  padding: const EdgeInsets.only(top: Measures.vMarginSmall),
+                  child: Text('Niente da mostrare',
+                      style: Fonts.black(color: Palette.card2)),
+                ),
               Expanded(
                 child: ListView.builder(
                     itemCount: isDataReady ? enchantments.length : 10,

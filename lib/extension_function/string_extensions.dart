@@ -18,7 +18,26 @@ extension StringExtensions on String {
 
   /// 'home' ==> 'assets/images/icons/home.svg'
   /// 'png/home' ==> 'assets/images/icons/png/home.png'
-  Widget toIcon({double height=22}) => contains('png')
-      ? Image.asset('assets/images/icons/$this.png', height: height)
-      : SvgPicture.asset('assets/images/icons/$this.svg', height: height);
+  Widget toIcon(
+      {double height = 22, Function()? onTap, padding = const EdgeInsets.all(12.0)}) {
+    var icon = contains('png')
+        ? Image.asset('assets/images/icons/$this.png', height: height)
+        : SvgPicture.asset('assets/images/icons/$this.svg', height: height);
+    if (onTap == null) {
+      return icon;
+    } else {
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(999),
+          splashColor: Palette.onBackground.withOpacity(0.5),
+          onTap: onTap,
+          child: Padding(
+            padding: padding,
+            child: icon,
+          ),
+        ),
+      );
+    }
+  }
 }

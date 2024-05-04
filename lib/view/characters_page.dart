@@ -99,7 +99,7 @@ class _CharactersPageState extends State<CharactersPage> {
                                   .isNotEmpty
                               ? setState(
                                   () => _filters[i].selectedValues.clear())
-                              : context.checklist(
+                              : context.checkList(
                                   'Filtro su ${_filters[i].title.toLowerCase()}',
                                   values: _filters[i].values,
                                   color: _filters[i].color,
@@ -115,9 +115,11 @@ class _CharactersPageState extends State<CharactersPage> {
               const SizedBox(height: Measures.vMarginSmall),
               // Nothing to show
               if (isDataReady && characters.isEmpty)
-                Align(
-                    child: Text('Niente da mostrare',
-                        style: Fonts.black(color: Palette.card2))),
+                Padding(
+                  padding: const EdgeInsets.only(top: Measures.vMarginSmall),
+                  child: Text('Niente da mostrare',
+                      style: Fonts.black(color: Palette.card2)),
+                ),
               Expanded(
                 child: ListView.builder(
                     itemCount: isDataReady ? characters.length : 10,

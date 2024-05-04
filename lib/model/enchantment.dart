@@ -1,7 +1,7 @@
 import 'package:scheda_dnd_5e/mixin/comparable.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
-import '../interface/with_title.dart';
+import '../interface/enum_with_title.dart';
 import 'character.dart';
 
 part 'part/enchantment.g.dart';
@@ -23,6 +23,7 @@ enum Level implements EnumWithTitle {
   int get num => int.parse(name.split('level')[1]);
 
   const Level(this.title);
+
 }
 
 enum Type implements EnumWithTitle{
@@ -38,6 +39,7 @@ enum Type implements EnumWithTitle{
   final String title;
 
   const Type(this.title);
+
 }
 
 enum Range {

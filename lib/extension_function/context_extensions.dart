@@ -1,14 +1,15 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
-import 'package:scheda_dnd_5e/interface/with_title.dart';
+import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 
 extension ContextExtensions on BuildContext {
-  popup(String title,
+  Future<void> popup(String title,
       {String? message,
       Widget? child,
       String? positiveText,
@@ -16,78 +17,90 @@ extension ContextExtensions on BuildContext {
       Function()? positiveCallback,
       String? negativeText,
       Function()? negativeCallback,
-      bool noContentHPadding = false}) {
-    showDialog(
+      bool noContentHPadding = false,
+      dismissible = true}) async{
+    await showDialog(
+      barrierDismissible: dismissible,
       context: this,
       builder: (_) {
-        return AlertDialog(
-          shadowColor: Colors.transparent,
-          surfaceTintColor: Colors.transparent,
-          backgroundColor: Colors.transparent,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          contentPadding: EdgeInsets.zero,
-          content: ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 16.0, sigmaY: 16.0),
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                    vertical: 26, horizontal: noContentHPadding ? 0 : 26),
-                color: backgroundColor,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: noContentHPadding ? 26 : 0),
-                      child: Text(title, style: Fonts.bold()),
-                    ),
-                    const SizedBox(height: Measures.vMarginSmall),
-                    if (message != null)
+        return PopScope(
+          canPop: dismissible,
+          child: AlertDialog(
+            shadowColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: Colors.transparent,
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            contentPadding: EdgeInsets.zero,
+            content: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 16.0, sigmaY: 16.0),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      vertical: 26, horizontal: noContentHPadding ? 0 : 26),
+                  color: backgroundColor,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Padding(
                         padding: EdgeInsets.symmetric(
-                                horizontal: noContentHPadding ? 26 : 0)
-                            .copyWith(bottom: Measures.vMarginSmall),
-                        child: Text(message, style: Fonts.light(size: 16)),
+                            horizontal: noContentHPadding ? 26 : 0),
+                        child: Text(title, style: Fonts.bold()),
                       ),
-                    if (child != null)
-                      ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            minHeight: 50,
-                            maxHeight: 316,
+                      const SizedBox(height: Measures.vMarginSmall),
+                      if (message != null)
+                        Flexible(
+                          child: SingleChildScrollView(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                      horizontal: noContentHPadding ? 26 : 0)
+                                  .copyWith(bottom: Measures.vMarginSmall),
+                              child: MarkdownBody(
+                                  data: message,
+                                  shrinkWrap: true,
+                                  styleSheet: MarkdownStyleSheet(
+                                      p: Fonts.light(size: 15),
+                                      tableBody: Fonts.light(size: 12),
+                                      listBullet: Fonts.light(size: 15),
+                                      tableCellsPadding:
+                                          const EdgeInsets.all(4))),
+                            ),
                           ),
-                          child: SingleChildScrollView(child: child)),
-                    const SizedBox(height: Measures.vMarginThin),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: noContentHPadding ? 26 : 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if (positiveText != null)
-                            TextButton(
-                              onPressed: () {
-                                positiveCallback?.call();
-                                Navigator.pop(this);
-                              },
-                              child: Text(positiveText.toUpperCase(),
-                                  style: Fonts.bold(size: 15)),
-                            ),
-                          if (negativeText != null)
-                            TextButton(
-                              onPressed: () {
-                                negativeCallback?.call();
-                                Navigator.pop(this);
-                              },
-                              child: Text(negativeText.toUpperCase(),
-                                  style: Fonts.bold(size: 15)),
-                            ),
-                        ],
-                      ),
-                    )
-                  ],
+                        ),
+                      if (child != null)
+                        Flexible(child: SingleChildScrollView(child: child)),
+                      const SizedBox(height: Measures.vMarginThin),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: noContentHPadding ? 26 : 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            if (positiveText != null)
+                              TextButton(
+                                onPressed: () {
+                                  positiveCallback?.call();
+                                  Navigator.pop(this);
+                                },
+                                child: Text(positiveText.toUpperCase(),
+                                    style: Fonts.bold(size: 15)),
+                              ),
+                            if (negativeText != null)
+                              TextButton(
+                                onPressed: () {
+                                  negativeCallback?.call();
+                                  Navigator.pop(this);
+                                },
+                                child: Text(negativeText.toUpperCase(),
+                                    style: Fonts.bold(size: 15)),
+                              ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -106,39 +119,45 @@ extension ContextExtensions on BuildContext {
     );
   }
 
-  checklist<T extends EnumWithTitle>(String title,
+  Future<void> checkList<T extends EnumWithTitle>(String title,
       {required List<T> values,
-        Function(T)? onChanged,
+      Function(T)? onChanged,
+        Function()? positiveCallback,
         bool Function(T)? value,
-        Color color = Palette.primaryBlue}) {
-    popup(title,
+      Color color = Palette.primaryBlue,
+      bool isRadio = false,
+      dismissible = true,}) async{
+    await popup(title,
+        dismissible: dismissible,
         noContentHPadding: true,
         backgroundColor: Palette.popup,
         positiveText: 'Ok',
+        positiveCallback: positiveCallback,
         child: StatefulBuilder(
           builder: (context, setState) => Column(
             children: List.generate(
                 values.length,
-                    (j) => Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () => setState(() => onChanged?.call(values[j])),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 26),
-                      child: Row(
-                        children: [
-                          GlassCheckbox(
-                            value: value?.call(values[j]),
-                            onChanged: () =>
-                                setState(() => onChanged?.call(values[j])),
-                            color: color,
+                (j) => Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () => setState(() => onChanged?.call(values[j])),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 26),
+                          child: Row(
+                            children: [
+                              GlassCheckbox(
+                                isRadio: isRadio,
+                                value: value?.call(values[j]),
+                                onChanged: () =>
+                                    setState(() => onChanged?.call(values[j])),
+                                color: color,
+                              ),
+                              Text(values[j].title, style: Fonts.regular())
+                            ],
                           ),
-                          Text(values[j].title, style: Fonts.regular())
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
-                )),
+                    )),
           ),
         ));
   }
@@ -161,6 +180,4 @@ extension ContextExtensions on BuildContext {
           content: Text(message, style: Fonts.regular()),
         ),
       );
-
-
 }

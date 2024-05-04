@@ -5,14 +5,16 @@ class GlassCheckbox extends StatelessWidget {
   final bool? value;
   final Function()? onChanged;
   final Color color;
+  final bool isRadio;
 
-  const GlassCheckbox({super.key,this.value, this.onChanged, this.color=Palette.onBackground});
+  const GlassCheckbox({super.key,this.value, this.onChanged, this.color=Palette.onBackground, this.isRadio=false});
 
   @override
   Widget build(BuildContext context) {
     return Checkbox(
+        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(3),
+          borderRadius: BorderRadius.circular(isRadio?999:3),
         ),
         side: MaterialStateBorderSide.resolveWith(
           (states) => states.contains(MaterialState.selected)

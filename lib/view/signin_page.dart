@@ -48,10 +48,10 @@ class _SignInPageState extends State<SignInPage> with Loadable {
         setState(() {
           isLoading=true;
         });
-        await Future.delayed(const Duration(milliseconds: 300));
+        await Future.delayed(const Duration(milliseconds: 220));
         Navigator.of(context).popAndPushNamed('/home');
-        context.snackbar('Bentornato ${AccountManager().user.nickname}!',
-            backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
+        // context.snackbar('Bentornato ${AccountManager().user.nickname}!',
+        //     backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
       }
 
         // 📘📘📘 FIREBASE FIRESTORE 📘📘📘

@@ -2,12 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/characters_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
+import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:tuple/tuple.dart';
 
 import 'partial/glass_bottom_bar_icon.dart';
@@ -90,23 +92,8 @@ class _HomePageState extends State<HomePage> {
               controller: _pageController,
               children: _screens,
             ),
-            // Fade to black
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset('assets/images/linear_vignette.png',
-                      color: Palette.background,
-                      fit: BoxFit.fill,
-                      height: 70,
-                      width: double.infinity),
-                  Container(height: 30,
-                      width: double.infinity,
-                      color: Palette.background),
-                ],
-              ),
-            ),
+            // Bottom vignette
+            const BottomVignette(),
             // FAB
             if(fabs[_index] != null)
               Align(
