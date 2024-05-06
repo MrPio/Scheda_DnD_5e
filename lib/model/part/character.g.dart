@@ -16,10 +16,18 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       $enumDecode(_$SubClassEnumMap, json['subClass']),
       $enumDecode(_$RaceEnumMap, json['race']),
       $enumDecodeNullable(_$SubRaceEnumMap, json['subRace']),
-      json['skills'],
-      json['subSkills'],
-      json['masteries'],
-      json['languages'],
+      (json['skills'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), e as int),
+      ),
+      (json['subSkills'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry($enumDecode(_$SubSkillEnumMap, k), e as int),
+      ),
+      (json['masteries'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$MasteryEnumMap, e))
+          .toSet(),
+      (json['languages'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$LanguageEnumMap, e))
+          .toSet(),
       $enumDecodeNullable(_$StatusEnumMap, json['status']),
       $enumDecode(_$AlignmentEnumMap, json['alignment']),
       json['level'] as int,
@@ -138,35 +146,6 @@ const _$SubRaceEnumMap = {
   SubRace.dragoVerde: 'dragoVerde',
 };
 
-const _$StatusEnumMap = {
-  Status.accecato: 'accecato',
-  Status.affascinato: 'affascinato',
-  Status.afferrato: 'afferrato',
-  Status.assordato: 'assordato',
-  Status.avvelenato: 'avvelenato',
-  Status.incapacitato: 'incapacitato',
-  Status.invisibile: 'invisibile',
-  Status.paralizzato: 'paralizzato',
-  Status.pietrificato: 'pietrificato',
-  Status.privo: 'privo',
-  Status.prono: 'prono',
-  Status.spaventato: 'spaventato',
-  Status.stordito: 'stordito',
-  Status.trattenuto: 'trattenuto',
-};
-
-const _$AlignmentEnumMap = {
-  Alignment.legaleBuono: 'legaleBuono',
-  Alignment.neutraleBuono: 'neutraleBuono',
-  Alignment.caoticoBuono: 'caoticoBuono',
-  Alignment.legaleNeutrale: 'legaleNeutrale',
-  Alignment.neutralePuro: 'neutralePuro',
-  Alignment.caoticoNeutrale: 'caoticoNeutrale',
-  Alignment.legaleMalvagio: 'legaleMalvagio',
-  Alignment.neutraleMalvagio: 'neutraleMalvagio',
-  Alignment.caoticoMalvagio: 'caoticoMalvagio',
-};
-
 const _$SkillEnumMap = {
   Skill.forza: 'forza',
   Skill.destrezza: 'destrezza',
@@ -273,4 +252,33 @@ const _$LanguageEnumMap = {
   Language.sottocomune: 'sottocomune',
   Language.elfico: 'elfico',
   Language.comune: 'comune',
+};
+
+const _$StatusEnumMap = {
+  Status.accecato: 'accecato',
+  Status.affascinato: 'affascinato',
+  Status.afferrato: 'afferrato',
+  Status.assordato: 'assordato',
+  Status.avvelenato: 'avvelenato',
+  Status.incapacitato: 'incapacitato',
+  Status.invisibile: 'invisibile',
+  Status.paralizzato: 'paralizzato',
+  Status.pietrificato: 'pietrificato',
+  Status.privo: 'privo',
+  Status.prono: 'prono',
+  Status.spaventato: 'spaventato',
+  Status.stordito: 'stordito',
+  Status.trattenuto: 'trattenuto',
+};
+
+const _$AlignmentEnumMap = {
+  Alignment.legaleBuono: 'legaleBuono',
+  Alignment.neutraleBuono: 'neutraleBuono',
+  Alignment.caoticoBuono: 'caoticoBuono',
+  Alignment.legaleNeutrale: 'legaleNeutrale',
+  Alignment.neutralePuro: 'neutralePuro',
+  Alignment.caoticoNeutrale: 'caoticoNeutrale',
+  Alignment.legaleMalvagio: 'legaleMalvagio',
+  Alignment.neutraleMalvagio: 'neutraleMalvagio',
+  Alignment.caoticoMalvagio: 'caoticoMalvagio',
 };

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
@@ -7,7 +9,7 @@ import 'loot.dart';
 
 part 'part/character.g.dart';
 
-enum SubClass {
+enum SubClass implements EnumWithTitle{
   // Servono solo per lettura info
   collegioSapienza('Collegio sapienza',
       '**COMPETENZE** **BONUS**\nQuando un bardo si unisce al Collegio della Sapienza al 3° livello, ottiene competenza in tre abilità a sua scelta.\n\n---\n\n**PAROLE** **TAGLIENTI**\nSempre al 3° livello, il bardo impara anche a fare buon uso del suo ingegno per distrarre, confondere e fiaccare la determinazione e la competenza altrui.\nQuando una creatura situata entro 18 metri e che il bardo sia in grado di vedere effettua un tiro per colpire, una prova di caratteristica o un tiro per i danni, il bardo può usare la sua reazione per spendere uno dei suoi utilizzi di Ispirazione Bardica, tirare un dado di Ispirazione Bardica e sottrarre il numero ottenuto dal tiro della creatura.\nPuò scegliere di utilizzare questo privilegio dopo che la creatura ha effettuato il suo tiro, ma prima che il **DM** dichiari se il tiro per colpire o la prova di caratteristica abbia avuto successo o meno, o prima che la creatura infligga i danni.\nLa creatura è immune se non è in grado di sentire il bardo o se non può essere affascinata.\n\n---\n\n**SEGRETI** **MAGICI** **AGGIUNTIVI**\nAl 6° livello, un bardo impara due incantesimi a sua scelta da qualsiasi classe.\nOgni incantesimo scelto deve essere di un livello che il bardo sia in grado di lanciare, come indicato dalla tabella "Bardo", oppure deve essere un trucchetto.\nGli incantesimi scelti contano come incantesimi da bardo, ma non contano al fine di determinare il numero di incantesimi da bardo conosciuti.\n\nABILITÀ **IMPAREGGIABILE**\nA partire dal 14° livello, quando un bardo effettua una prova di caratteristica, può spendere un utilizzo di Ispirazione Bardita.\nSe lo fa, tira un dado di Ispirazione Bardica e aggiunge il risultato ottenuto alla sua prova di caratteristica.\nPuò scegliere di farlo dopo avere tirato il dado per la prova di caratteristica, ma prima che il **DM** dichiari se la prova abbia avuto successo o meno.\n'),
@@ -901,7 +903,7 @@ enum Class implements EnumWithTitle {
       this.description);
 }
 
-enum SubRace {
+enum SubRace implements EnumWithTitle {
   elfoAlto(
       'Elfo alto',
       1,
@@ -963,14 +965,20 @@ enum SubRace {
   ;
 
   final String title;
-  final String? description;
+  final String? _description;
   final int numChoiceableLanguages;
-  final Map<Skill, int> defaultSkill;
-  final double defaultVelocity;
+  final Map<Skill, int> defaultSkills;
+  final double defaultSpeed;
   final List<Mastery> defaultMasteries;
 
-  const SubRace(this.title, this.numChoiceableLanguages, this.defaultSkill,
-      this.defaultMasteries, this.defaultVelocity, this.description);
+  const SubRace(this.title, this.numChoiceableLanguages, this.defaultSkills,
+      this.defaultMasteries, this.defaultSpeed, this._description);
+
+  String get description =>
+      _description ??
+      Race.values.firstWhere((e) => e.subRaces.contains(this)).description;
+
+  Race get race => Race.values.firstWhere((e) => e.subRaces.contains(this));
 }
 
 enum Race implements EnumWithTitle {
@@ -1157,7 +1165,7 @@ enum Race implements EnumWithTitle {
   final int numChoiceableSkill, numChoiceableSubSkill; // solo mezzelfo
 
   // final List<Mastery> defaultMasteries **QUI** **NO**! (**VERIFICATO**)
-  final double defaultVelocity;
+  final double defaultSpeed;
   final List<Mastery> choiceableMasteries; // ce l'ha il nano
 
   const Race(
@@ -1169,7 +1177,7 @@ enum Race implements EnumWithTitle {
       this.numChoiceableSkill,
       this.numChoiceableSubSkill,
       this.choiceableMasteries,
-      this.defaultVelocity,
+      this.defaultSpeed,
       this.description);
 
   String get subRacesInfo => subRaces.isEmpty
@@ -1226,7 +1234,7 @@ enum Skill implements EnumWithTitle {
   const Skill(this.title, this.subSkills, this.description);
 }
 
-enum SubSkill implements EnumWithTitle{
+enum SubSkill implements EnumWithTitle {
   // Forza
   atletica('Atletica'),
   // Destrezza
@@ -1436,6 +1444,7 @@ class Character implements JSONSerializable, WithUID {
   Map<SubSkill, int> subSkills = {};
   Set<Mastery> masteries = {};
   Set<Language> languages = {};
+  Set<Skill> savingThrows={};
   Status? status;
   Alignment alignment;
   int level;
@@ -1460,18 +1469,20 @@ class Character implements JSONSerializable, WithUID {
       this.subClass,
       this.race,
       this.subRace,
-      skills,
-      subSkills,
-      masteries,
-      languages,
+      Map<Skill, int>? skills,
+      Map<SubSkill, int>? subSkills,
+      Set<Mastery>? masteries,
+      Set<Language>? languages,
+      Set<Skill>? savingThrows,
       this.status,
       this.alignment,
       this.level)
       : skills = skills ?? {},
         subSkills = subSkills ?? {},
-        masteries = masteries ?? [],
-        languages = languages ?? [] {
-    for (var qta in inventory.values) {
+        masteries = masteries ?? {},
+        languages = languages ?? {},
+        savingThrows=savingThrows??{}{
+    for (var qta in _inventory.values) {
       assert(qta < 1);
     }
   }
@@ -1491,9 +1502,11 @@ class Character implements JSONSerializable, WithUID {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   Map<InventoryItem, int> get inventory =>
-      _inventory as Map<InventoryItem, int>;
+      _inventory.cast<InventoryItem, int>();
 
-  get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
+  DateTime get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
+
+  double get defaultSpeed => subRace?.defaultSpeed ?? race.defaultSpeed;
 
   addLoot(Loot loot) {
     loot.content.forEach((item, qta) {
@@ -1507,4 +1520,9 @@ class Character implements JSONSerializable, WithUID {
 
   @override
   Map<String, dynamic> toJSON() => _$CharacterToJson(this);
+
+  @override
+  String toString(){
+    return json.encode(toJSON());
+  }
 }

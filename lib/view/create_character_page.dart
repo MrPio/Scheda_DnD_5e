@@ -8,6 +8,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/set_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
@@ -32,14 +33,17 @@ class CreateCharacterPage extends StatefulWidget {
 
 class _CreateCharacterPageState extends State<CreateCharacterPage>
     with Validable {
-  Character character = Character();
+  List<Character?> characters = [Character(), null, null, null, null];
+
+  Character get character => characters[_index]!;
+
   late final PageController _pageController;
   late final TextEditingController _nameController;
 
   List<Widget>? _screens;
 
-  final _hasBottomButton = [true, false, false, false];
-  var _index = 0;
+  final _hasBottomButton = [true, false, false, false, false, false, false];
+  int _index = 0;
 
   @override
   void initState() {
@@ -65,7 +69,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
 
   @override
   Widget build(BuildContext context) {
-    _screens = [
+    _screens /*TODO: add ??*/ = [
       // Choose name
       Column(children: [
         // Page Title
@@ -110,7 +114,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                             children: [
                               GlassCard(
                                 onTap: () async {
-                                  // Set race and clear the fields to be set
+                                  // Set race fields
                                   character.race = e;
                                   character.languages =
                                       e.defaultLanguages.toSet();
@@ -149,7 +153,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                       dismissible: false,
                                       isRadio: true,
                                       values: e.choiceableMasteries,
-                                      color: Palette.primaryRed,
+                                      color: Palette.primaryBlue,
                                       onChanged: (value) =>
                                           character.masteries = {value},
                                       value: (value) =>
@@ -168,11 +172,13 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                       values: Skill.values,
                                       color: Palette.primaryYellow,
                                       onChanged: (value) {
-                                        var selected=character.skills-e.defaultSkills;
-                                        if(selected.containsKey(value)){
+                                        var selected =
+                                            character.skills - e.defaultSkills;
+                                        if (selected.containsKey(value)) {
                                           character.skills -= {value: 1};
-                                        }
-                                        else if(selected.isEmpty || selected.values.toList().sum()<e.numChoiceableSkill){
+                                        } else if (selected.isEmpty ||
+                                            selected.values.toList().sum() <
+                                                e.numChoiceableSkill) {
                                           character.skills += {value: 1};
                                         }
                                       },
@@ -184,8 +190,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   if (e.numChoiceableSubSkill > 0) {
                                     SubSkill.values
                                         .sublist(0, e.numChoiceableSkill)
-                                        .forEach((subSkill) =>
-                                    character.subSkills += {subSkill: 1});
+                                        .forEach((subSkill) => character
+                                            .subSkills += {subSkill: 1});
                                     await context.checkList<SubSkill>(
                                       'Scegli ${e.numChoiceableSubSkill} sottocompetenza/e',
                                       dismissible: false,
@@ -193,18 +199,23 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                       values: SubSkill.values,
                                       color: Palette.primaryYellow,
                                       onChanged: (value) {
-                                        if(character.subSkills.containsKey(value)){
+                                        if (character.subSkills
+                                            .containsKey(value)) {
                                           character.subSkills -= {value: 1};
-                                        }
-                                        else if(character.subSkills.isEmpty || character.subSkills.values.toList().sum()<e.numChoiceableSubSkill){
+                                        } else if (character
+                                                .subSkills.isEmpty ||
+                                            character.subSkills.values
+                                                    .toList()
+                                                    .sum() <
+                                                e.numChoiceableSubSkill) {
                                           character.subSkills += {value: 1};
                                         }
                                       },
                                       value: (value) =>
-                                      character.subSkills[value] == 1,
+                                          character.subSkills[value] == 1,
                                     );
                                   }
-                                  next();
+                                  next(step: e.subRaces.isEmpty ? 2 : 1);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -257,21 +268,33 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                       width:
                                                           Measures.hMarginBig)
                                                 ].cast<Widget>() +
-                                                e.defaultLanguages
-                                                    .map((e) => Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  right: 6.0),
-                                                          child: RadioButton(
-                                                            text: e.title,
-                                                            color: Palette
-                                                                .primaryGreen,
-                                                            isSmall: true,
-                                                            width: 100,
-                                                          ),
-                                                        ))
-                                                    .toList() +
+                                                (e.defaultLanguages.isEmpty
+                                                    ? [
+                                                        const RadioButton(
+                                                          text: 'Nessuna',
+                                                          color: Palette
+                                                              .primaryGreen,
+                                                          isSmall: true,
+                                                          width: 100,
+                                                        )
+                                                      ]
+                                                    : e.defaultLanguages
+                                                        .map((e) => Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      right:
+                                                                          6.0),
+                                                              child:
+                                                                  RadioButton(
+                                                                text: e.title,
+                                                                color: Palette
+                                                                    .primaryGreen,
+                                                                isSmall: true,
+                                                                width: 100,
+                                                              ),
+                                                            ))
+                                                        .toList()) +
                                                 (e.canChoiceLanguage
                                                     ? [
                                                         const Padding(
@@ -307,22 +330,34 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                       width:
                                                           Measures.hMarginBig)
                                                 ].cast<Widget>() +
-                                                e.defaultSkills.entries
-                                                    .map((e) => Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  right: 6.0),
-                                                          child: RadioButton(
-                                                            text:
-                                                                '${e.key.title} +${e.value}',
-                                                            color: Palette
-                                                                .primaryYellow,
-                                                            isSmall: true,
-                                                            width: 100,
-                                                          ),
-                                                        ))
-                                                    .toList(),
+                                                (e.defaultSkills.isEmpty
+                                                    ? [
+                                                        const RadioButton(
+                                                          text: 'Nessuna',
+                                                          color: Palette
+                                                              .primaryYellow,
+                                                          isSmall: true,
+                                                          width: 100,
+                                                        )
+                                                      ]
+                                                    : e.defaultSkills.entries
+                                                        .map((e) => Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      right:
+                                                                          6.0),
+                                                              child:
+                                                                  RadioButton(
+                                                                text:
+                                                                    '${e.key.title} +${e.value}',
+                                                                color: Palette
+                                                                    .primaryYellow,
+                                                                isSmall: true,
+                                                                width: 100,
+                                                              ),
+                                                            ))
+                                                        .toList()),
                                           ),
                                         ),
                                       ),
@@ -356,7 +391,488 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                 [const SizedBox(height: Measures.vMarginBig)]),
       ]),
       // Select subRace
-      Placeholder(),
+      Column(children: [
+        // Page Title
+        Align(
+            alignment: Alignment.centerLeft,
+            child: Text('Seleziona la sottorazza', style: Fonts.black())),
+        const SizedBox(height: Measures.vMarginMed),
+        // Legend
+        const Legend(items: {
+          'Punti caratteristica': Palette.primaryYellow,
+          'Maestrie': Palette.primaryBlue
+        }),
+        const SizedBox(height: Measures.vMarginMed),
+        // SubRaces cards
+        Column(
+            children: character.race.subRaces.isEmpty
+                ? [
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(top: Measures.vMarginSmall),
+                      child: Text('Niente da mostrare',
+                          style: Fonts.black(color: Palette.card2)),
+                    )
+                  ]
+                : character.race.subRaces
+                        .map((e) => Padding(
+                              padding: const EdgeInsets.only(
+                                  bottom: Measures.vMarginThin),
+                              child: Stack(
+                                children: [
+                                  GlassCard(
+                                    onTap: () async {
+                                      // Set subRace fields
+                                      character.subRace = e;
+                                      character.skills += e.defaultSkills;
+                                      character.masteries
+                                          .addAll(e.defaultMasteries);
+                                      Set<Language> backupLanguages =
+                                          Set.from(character.languages);
+                                      // Ask the possible choices before continuing
+                                      if (e.numChoiceableLanguages > 0) {
+                                        final languages = Language.values
+                                            .where((language) => !character
+                                                .languages
+                                                .contains(language))
+                                            .toList()
+                                          ..sort((a, b) =>
+                                              a.title.compareTo(b.title));
+                                        character.languages.addAll(
+                                            languages.sublist(
+                                                0, e.numChoiceableLanguages));
+                                        await context.checkList<Language>(
+                                          'Scegli ${e.numChoiceableLanguages} linguaggio/i',
+                                          dismissible: false,
+                                          isRadio:
+                                              e.numChoiceableLanguages == 1,
+                                          values: languages,
+                                          color: Palette.primaryGreen,
+                                          onChanged: (value) {
+                                            if (e.numChoiceableLanguages > 1 &&
+                                                character.languages
+                                                    .contains(value)) {
+                                              character.languages.remove(value);
+                                            } else if (e.numChoiceableLanguages ==
+                                                    1 &&
+                                                !character.languages
+                                                    .contains(value)) {
+                                              character.languages.clear();
+                                              character.languages.addAll(
+                                                  backupLanguages + {value});
+                                            } else if (character
+                                                        .languages.length -
+                                                    backupLanguages.length <
+                                                e.numChoiceableLanguages) {
+                                              character.languages.add(value);
+                                            }
+                                          },
+                                          value: (value) => character.languages
+                                              .contains(value),
+                                        );
+                                      }
+                                      next();
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: Measures.hMarginMed),
+                                      child: Column(
+                                        children: [
+                                          // Title, description and info button
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal:
+                                                    Measures.hMarginBig),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(e.title,
+                                                          style: Fonts.bold(
+                                                              size: 16)),
+                                                      SingleChildScrollView(
+                                                        scrollDirection:
+                                                            Axis.horizontal,
+                                                        child: Text(
+                                                            e.race.title,
+                                                            style: Fonts.light(
+                                                                size: 14)),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                    width: Measures.hMarginBig),
+                                              ],
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                              height: Measures.vMarginThin),
+                                          // Skills
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                      const SizedBox(
+                                                          width: Measures
+                                                              .hMarginBig)
+                                                    ].cast<Widget>() +
+                                                    (e.defaultSkills.isEmpty
+                                                        ? [
+                                                            const RadioButton(
+                                                              text: 'Nessuna',
+                                                              color: Palette
+                                                                  .primaryBlue,
+                                                              isSmall: true,
+                                                              width: 100,
+                                                            )
+                                                          ]
+                                                        : e.defaultSkills
+                                                            .entries
+                                                            .map((e) => Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                          right:
+                                                                              6.0),
+                                                                  child:
+                                                                      RadioButton(
+                                                                    text:
+                                                                        '${e.key.title} +${e.value}',
+                                                                    color: Palette
+                                                                        .primaryYellow,
+                                                                    isSmall:
+                                                                        true,
+                                                                    width: 100,
+                                                                  ),
+                                                                ))
+                                                            .toList()),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                              height: Measures.vMarginThin),
+                                          // Masteries
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                      const SizedBox(
+                                                          width: Measures
+                                                              .hMarginBig)
+                                                    ].cast<Widget>() +
+                                                    (e.defaultMasteries.isEmpty
+                                                        ? [
+                                                            const RadioButton(
+                                                              text: 'Nessuna',
+                                                              color: Palette
+                                                                  .primaryBlue,
+                                                              isSmall: true,
+                                                              width: 100,
+                                                            )
+                                                          ]
+                                                        : e.defaultMasteries
+                                                            .map((e) => Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                          right:
+                                                                              6.0),
+                                                                  child:
+                                                                      RadioButton(
+                                                                    text:
+                                                                        e.title,
+                                                                    color: Palette
+                                                                        .primaryBlue,
+                                                                    isSmall:
+                                                                        true,
+                                                                    width: 100,
+                                                                  ),
+                                                                ))
+                                                            .toList()),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  // Info button
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: Measures.hMarginSmall,
+                                          right: Measures.hMarginSmall),
+                                      child: 'info'.toIcon(
+                                          onTap: () {
+                                            context.popup(e.title,
+                                                message: e.description,
+                                                positiveText: 'Ok',
+                                                backgroundColor: Palette
+                                                    .background
+                                                    .withOpacity(0.5));
+                                          },
+                                          padding: const EdgeInsets.all(12)),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ))
+                        .toList()
+                        .cast<Widget>() +
+                    [const SizedBox(height: Measures.vMarginBig)]),
+      ]),
+      // Select class
+      Column(children: [
+        // Page Title
+        Align(
+            alignment: Alignment.centerLeft,
+            child: Text('Seleziona la classe', style: Fonts.black())),
+        const SizedBox(height: Measures.vMarginMed),
+        // Legend
+        const Legend(items: {
+          'Tiri salvezza': Palette.primaryYellow,
+          'Maestrie': Palette.primaryBlue
+        }),
+        const SizedBox(height: Measures.vMarginMed),
+        // Classes cards
+        Column(
+            children: Class.values
+                    .map((e) => Padding(
+                          padding: const EdgeInsets.only(
+                              bottom: Measures.vMarginThin),
+                          child: Stack(
+                            children: [
+                              GlassCard(
+                                onTap: () async {
+                                  // Set class fields
+                                  character.class_ = e;
+                                  character.masteries
+                                      .addAll(e.defaultMasteries);
+                                  character.savingThrows
+                                      .addAll(e.savingThrowSkills);
+                                  Map<Skill, int> backupSkills =
+                                      Map.from(character.skills);
+                                  Map<SubSkill, int> backupSubSkills =
+                                      Map.from(character.subSkills);
+                                  // Ask the possible choices before continuing
+                                  if (e.numChoiceableSkills > 0) {
+                                    character.skills+=Skill.values.sublist(0,e.numChoiceableSkills).map((e) => {e:1}).reduce((value, element) => value+element);
+                                    await context.checkList<Skill>(
+                                      'Scegli ${e.numChoiceableSkills} competenza/e',
+                                      dismissible: false,
+                                      isRadio: e.numChoiceableSkills == 1,
+                                      values: Skill.values,
+                                      color: Palette.primaryYellow,
+                                      onChanged: (value) {
+
+                                        /*TODO
+                                        var selected =
+                                            character.skills - e.defaultSkills;
+                                        if (selected.containsKey(value)) {
+                                          character.skills -= {value: 1};
+                                        } else if (selected.isEmpty ||
+                                            selected.values.toList().sum() <
+                                                e.numChoiceableSkill) {
+                                          character.skills += {value: 1};
+                                        }
+                                        */
+
+                                        // if (e.numChoiceableSkills > 1 &&
+                                        //     character.skills
+                                        //         .contains(value)) {
+                                        //   character.subSkills.remove(value);
+                                        // } else if (e.numChoiceableSkills == 1 &&
+                                        //     !character.subSkills
+                                        //         .contains(value)) {
+                                        //   character.subSkills.clear();
+                                        //   character.subSkills.addAll(
+                                        //       backupSkills + {value});
+                                        // } else if (character.subSkills.length -
+                                        //     backupSkills.length <
+                                        //     e.numChoiceableSkills) {
+                                        //   character.subSkills.add(value);
+                                        // }
+                                      },
+                                      value: (value) =>
+                                      character.skills[value] ==
+                                          (backupSkills[value] ?? 0) + 1,
+                                    );
+                                  }
+                                  next();
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: Measures.hMarginMed),
+                                  child: Column(
+                                    children: [
+                                      // Title, description and info button
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: Measures.hMarginBig),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(e.title,
+                                                      style:
+                                                          Fonts.bold(size: 16)),
+                                                  SingleChildScrollView(
+                                                    scrollDirection:
+                                                        Axis.horizontal,
+                                                    child: Text(e.race.title,
+                                                        style: Fonts.light(
+                                                            size: 14)),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                                width: Measures.hMarginBig),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                          height: Measures.vMarginThin),
+                                      // Skills
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                                  const SizedBox(
+                                                      width:
+                                                          Measures.hMarginBig)
+                                                ].cast<Widget>() +
+                                                (e.defaultSkills.isEmpty
+                                                    ? [
+                                                        const RadioButton(
+                                                          text: 'Nessuna',
+                                                          color: Palette
+                                                              .primaryBlue,
+                                                          isSmall: true,
+                                                          width: 100,
+                                                        )
+                                                      ]
+                                                    : e.defaultSkills.entries
+                                                        .map((e) => Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      right:
+                                                                          6.0),
+                                                              child:
+                                                                  RadioButton(
+                                                                text:
+                                                                    '${e.key.title} +${e.value}',
+                                                                color: Palette
+                                                                    .primaryYellow,
+                                                                isSmall: true,
+                                                                width: 100,
+                                                              ),
+                                                            ))
+                                                        .toList()),
+                                          ),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                          height: Measures.vMarginThin),
+                                      // Masteries
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                                  const SizedBox(
+                                                      width:
+                                                          Measures.hMarginBig)
+                                                ].cast<Widget>() +
+                                                (e.defaultMasteries.isEmpty
+                                                    ? [
+                                                        const RadioButton(
+                                                          text: 'Nessuna',
+                                                          color: Palette
+                                                              .primaryBlue,
+                                                          isSmall: true,
+                                                          width: 100,
+                                                        )
+                                                      ]
+                                                    : e.defaultMasteries
+                                                        .map((e) => Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      right:
+                                                                          6.0),
+                                                              child:
+                                                                  RadioButton(
+                                                                text: e.title,
+                                                                color: Palette
+                                                                    .primaryBlue,
+                                                                isSmall: true,
+                                                                width: 100,
+                                                              ),
+                                                            ))
+                                                        .toList()),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              // Info button
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: Measures.hMarginSmall,
+                                      right: Measures.hMarginSmall),
+                                  child: 'info'.toIcon(
+                                      onTap: () {
+                                        context.popup(e.title,
+                                            message: e.description,
+                                            positiveText: 'Ok',
+                                            backgroundColor: Palette.background
+                                                .withOpacity(0.5));
+                                      },
+                                      padding: const EdgeInsets.all(12)),
+                                ),
+                              )
+                            ],
+                          ),
+                        ))
+                    .toList()
+                    .cast<Widget>() +
+                [const SizedBox(height: Measures.vMarginBig)]),
+      ]),
     ];
     return PopScope(
       canPop: false,
@@ -446,19 +962,34 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
     );
   }
 
-  next() {
+  next({int step = 1}) {
+    // Cloning the previous state
+    for (var i = 1; i <= step; i++) {
+      characters[_index + i] = Character.fromJson(character.toJSON());
+    }
     FocusManager.instance.primaryFocus?.unfocus();
-    _pageController.nextPage(
+    _pageController.animateToPage(_index + step,
         duration: Durations.medium1, curve: Curves.easeOutCubic);
+    print(characters);
   }
 
   previous() {
+    // Reset the current screen state
+    int step = (_index == 3 && characters[2]!.race.subRaces.isEmpty)
+        ? 2
+        : 1; // Skipp-able screens
+    if (_index > 0) {
+      characters[_index - step] = _index > 1
+          ? Character.fromJson(characters[_index - step - 1]!.toJSON())
+          : Character();
+    }
     FocusManager.instance.primaryFocus?.unfocus();
     if (_index == 0) {
       Navigator.of(context).pop();
     } else {
-      _pageController.previousPage(
+      _pageController.animateToPage(_index - step,
           duration: Durations.medium1, curve: Curves.easeOutCubic);
     }
+    print(characters);
   }
 }

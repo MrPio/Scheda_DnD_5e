@@ -306,7 +306,7 @@ class Loot implements JSONSerializable {
   Loot.jsonConstructor(this._name, this._content);
 
   Loot(this._content, [this._name]) {
-    for (var qta in content.values) {
+    for (var qta in _content.values) {
       assert(qta < 1);
     }
   }
@@ -314,7 +314,7 @@ class Loot implements JSONSerializable {
   String get name => _name ?? content.keys.toList()[0].title;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
-  Map<EnumWithTitle, int> get content => _content as Map<EnumWithTitle, int>;
+  Map<EnumWithTitle, int> get content => _content.cast<EnumWithTitle, int>();
 
   @override
   factory Loot.fromJson(Map<String, dynamic> json) => _$LootFromJson(json);
