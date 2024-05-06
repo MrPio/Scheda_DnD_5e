@@ -10,6 +10,7 @@ import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/set_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
+import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
@@ -42,7 +43,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
 
   List<Widget>? _screens;
 
-  final _hasBottomButton = [true, false, false, false, false, false, false];
+  final _hasBottomButton = [true, false, false, false, false];
   int _index = 0;
 
   @override
@@ -136,6 +137,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                       isRadio: true,
                                       values: languages,
                                       color: Palette.primaryGreen,
+                                      selectionRequirement: 1,
                                       onChanged: (value) =>
                                           character.languages =
                                               (e.defaultLanguages + [value])
@@ -154,23 +156,26 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                       isRadio: true,
                                       values: e.choiceableMasteries,
                                       color: Palette.primaryBlue,
+                                      selectionRequirement: 1,
                                       onChanged: (value) =>
                                           character.masteries = {value},
                                       value: (value) =>
                                           character.masteries.contains(value),
                                     );
                                   }
-                                  if (e.numChoiceableSkill > 0) {
+                                  if (e.numChoiceableSkills > 0) {
                                     Skill.values
-                                        .sublist(0, e.numChoiceableSkill)
+                                        .sublist(0, e.numChoiceableSkills)
                                         .forEach((skill) =>
                                             character.skills += {skill: 1});
                                     await context.checkList<Skill>(
-                                      'Scegli ${e.numChoiceableSkill} competenza/e a cui assegnare +1',
+                                      'Scegli ${e.numChoiceableSkills} competenza/e a cui assegnare +1',
                                       dismissible: false,
-                                      isRadio: e.numChoiceableSkill == 1,
+                                      isRadio: e.numChoiceableSkills == 1,
                                       values: Skill.values,
                                       color: Palette.primaryYellow,
+                                      selectionRequirement:
+                                          e.numChoiceableSkills,
                                       onChanged: (value) {
                                         var selected =
                                             character.skills - e.defaultSkills;
@@ -178,8 +183,13 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                           character.skills -= {value: 1};
                                         } else if (selected.isEmpty ||
                                             selected.values.toList().sum() <
-                                                e.numChoiceableSkill) {
+                                                e.numChoiceableSkills) {
                                           character.skills += {value: 1};
+                                        } else if (e.numChoiceableSkills == 1 &&
+                                            !selected.containsKey(value)) {
+                                          character.skills.clear();
+                                          character.skills.addAll(
+                                              e.defaultSkills + {value: 1});
                                         }
                                       },
                                       value: (value) =>
@@ -187,17 +197,19 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                           (e.defaultSkills[value] ?? 0) + 1,
                                     );
                                   }
-                                  if (e.numChoiceableSubSkill > 0) {
+                                  if (e.numChoiceableSubSkills > 0) {
                                     SubSkill.values
-                                        .sublist(0, e.numChoiceableSkill)
+                                        .sublist(0, e.numChoiceableSkills)
                                         .forEach((subSkill) => character
                                             .subSkills += {subSkill: 1});
                                     await context.checkList<SubSkill>(
-                                      'Scegli ${e.numChoiceableSubSkill} sottocompetenza/e',
+                                      'Scegli ${e.numChoiceableSubSkills} sottocompetenza/e',
                                       dismissible: false,
-                                      isRadio: e.numChoiceableSubSkill == 1,
+                                      isRadio: e.numChoiceableSubSkills == 1,
                                       values: SubSkill.values,
                                       color: Palette.primaryYellow,
+                                      selectionRequirement:
+                                          e.numChoiceableSubSkills,
                                       onChanged: (value) {
                                         if (character.subSkills
                                             .containsKey(value)) {
@@ -207,8 +219,15 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                             character.subSkills.values
                                                     .toList()
                                                     .sum() <
-                                                e.numChoiceableSubSkill) {
+                                                e.numChoiceableSubSkills) {
                                           character.subSkills += {value: 1};
+                                        } else if (e.numChoiceableSubSkills ==
+                                                1 &&
+                                            !character.subSkills
+                                                .containsKey(value)) {
+                                          character.subSkills.clear();
+                                          character.subSkills
+                                              .addAll({value: 1});
                                         }
                                       },
                                       value: (value) =>
@@ -448,6 +467,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                               e.numChoiceableLanguages == 1,
                                           values: languages,
                                           color: Palette.primaryGreen,
+                                          selectionRequirement:
+                                              e.numChoiceableLanguages,
                                           onChanged: (value) {
                                             if (e.numChoiceableLanguages > 1 &&
                                                 character.languages
@@ -667,53 +688,115 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                       .addAll(e.defaultMasteries);
                                   character.savingThrows
                                       .addAll(e.savingThrowSkills);
-                                  Map<Skill, int> backupSkills =
-                                      Map.from(character.skills);
                                   Map<SubSkill, int> backupSubSkills =
                                       Map.from(character.subSkills);
+                                  Set<Mastery> backupMasteries =
+                                      Set.from(character.masteries);
                                   // Ask the possible choices before continuing
                                   if (e.numChoiceableSubSkills > 0) {
-                                    character.skills+=Skill.values.sublist(0,e.numChoiceableSubSkills).map((e) => {e:1}).reduce((value, element) => value+element);
-                                    await context.checkList<Skill>(
-                                      'Scegli ${e.numChoiceableSubSkills} competenza/e',
+                                    character.subSkills += e.choiceableSubSkills
+                                        .sublist(0, e.numChoiceableSubSkills)
+                                        .map((e) => {e: 1})
+                                        .reduce((value, element) =>
+                                            value + element);
+                                    await context.checkList<SubSkill>(
+                                      'Scegli ${e.numChoiceableSubSkills} sottocompetenza/e',
                                       dismissible: false,
                                       isRadio: e.numChoiceableSubSkills == 1,
-                                      values: Skill.values,
+                                      values: e.choiceableSubSkills,
                                       color: Palette.primaryYellow,
+                                      selectionRequirement:
+                                          e.numChoiceableSubSkills,
                                       onChanged: (value) {
-
-                                        /*TODO
-                                        var selected =
-                                            character.skills - e.defaultSkills;
+                                        var selected = character.subSkills -
+                                            backupSubSkills;
                                         if (selected.containsKey(value)) {
-                                          character.skills -= {value: 1};
+                                          character.subSkills -= {value: 1};
                                         } else if (selected.isEmpty ||
                                             selected.values.toList().sum() <
-                                                e.numChoiceableSkill) {
-                                          character.skills += {value: 1};
+                                                e.numChoiceableSubSkills) {
+                                          character.subSkills += {value: 1};
+                                        } else if (e.numChoiceableSubSkills ==
+                                                1 &&
+                                            !selected.containsKey(value)) {
+                                          character.subSkills.clear();
+                                          character.subSkills.addAll(
+                                              backupSubSkills + {value: 1});
                                         }
-                                        */
-
-                                        // if (e.numChoiceableSkills > 1 &&
-                                        //     character.skills
-                                        //         .contains(value)) {
-                                        //   character.subSkills.remove(value);
-                                        // } else if (e.numChoiceableSkills == 1 &&
-                                        //     !character.subSkills
-                                        //         .contains(value)) {
-                                        //   character.subSkills.clear();
-                                        //   character.subSkills.addAll(
-                                        //       backupSkills + {value});
-                                        // } else if (character.subSkills.length -
-                                        //     backupSkills.length <
-                                        //     e.numChoiceableSkills) {
-                                        //   character.subSkills.add(value);
-                                        // }
                                       },
                                       value: (value) =>
-                                      character.skills[value] ==
-                                          (backupSkills[value] ?? 0) + 1,
+                                          character.subSkills[value] ==
+                                          (backupSubSkills[value] ?? 0) + 1,
                                     );
+                                  }
+                                  if (e.numChoiceableMasteries > 0) {
+                                    final masteries = e.choiceableMasteryTypes
+                                        .map((e) => e.masteries)
+                                        .flatten;
+                                    character.masteries += masteries
+                                        .sublist(0, e.numChoiceableMasteries)
+                                        .toSet();
+                                    await context.checkList<Mastery>(
+                                      'Scegli ${e.numChoiceableMasteries} maestria/e',
+                                      dismissible: false,
+                                      isRadio: e.numChoiceableMasteries == 1,
+                                      values: masteries,
+                                      color: Palette.primaryBlue,
+                                      selectionRequirement:
+                                          e.numChoiceableMasteries,
+                                      onChanged: (value) {
+                                        var selected = character.masteries -
+                                            backupMasteries;
+                                        if (selected.contains(value)) {
+                                          character.masteries -= {value};
+                                        } else if (selected.length <
+                                            e.numChoiceableMasteries) {
+                                          character.masteries += {value};
+                                        } else if (e.numChoiceableMasteries ==
+                                                1 &&
+                                            !selected.contains(value)) {
+                                          character.masteries.clear();
+                                          character.masteries.addAll(
+                                              backupMasteries + {value});
+                                        }
+                                      },
+                                      value: (value) =>
+                                          character.masteries.contains(value),
+                                    );
+                                  }
+                                  if (e.choiceableItems.isNotEmpty) {
+                                    for (var (i, items)
+                                        in e.choiceableItems.indexed) {
+                                      var backupInventory = character.inventory;
+                                      character.addLoot(Loot({
+                                        items.entries.first.key:
+                                            items.entries.first.value
+                                      }));
+                                      if (items.length > 1) {
+                                        await context.checkList<InventoryItem>(
+                                          'Scegli un oggetto (${i + 1}/${e.choiceableItems.length})',
+                                          dismissible: false,
+                                          isRadio: true,
+                                          values: items.keys.toList(),
+                                          color: Palette.primaryRed,
+                                          selectionRequirement: 1,
+                                          onChanged: (value) {
+                                            var selected = character.inventory -
+                                                backupInventory;
+                                            if (!selected.containsKey(value)) {
+                                              character.inventory =
+                                                  backupInventory;
+                                              character.addLoot(
+                                                  Loot({value: items[value]!}));
+                                            }
+                                          },
+                                          value: (value) =>
+                                              (character.inventory -
+                                                      backupInventory)
+                                                  .containsKey(value),
+                                        );
+                                      }
+                                    }
                                   }
                                   next();
                                 },
@@ -741,7 +824,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                   SingleChildScrollView(
                                                     scrollDirection:
                                                         Axis.horizontal,
-                                                    child: Text(e.race.title,
+                                                    child: Text(
+                                                        e.subClassesInfo,
                                                         style: Fonts.light(
                                                             size: 14)),
                                                   ),
@@ -755,7 +839,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                       ),
                                       const SizedBox(
                                           height: Measures.vMarginThin),
-                                      // Skills
+                                      // Saving throws
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: SingleChildScrollView(
@@ -768,7 +852,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                       width:
                                                           Measures.hMarginBig)
                                                 ].cast<Widget>() +
-                                                (e.defaultSkills.isEmpty
+                                                (e.savingThrowSkills.isEmpty
                                                     ? [
                                                         const RadioButton(
                                                           text: 'Nessuna',
@@ -778,7 +862,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                           width: 100,
                                                         )
                                                       ]
-                                                    : e.defaultSkills.entries
+                                                    : e.savingThrowSkills
                                                         .map((e) => Padding(
                                                               padding:
                                                                   const EdgeInsets
@@ -787,8 +871,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                                           6.0),
                                                               child:
                                                                   RadioButton(
-                                                                text:
-                                                                    '${e.key.title} +${e.value}',
+                                                                text: e.title,
                                                                 color: Palette
                                                                     .primaryYellow,
                                                                 isSmall: true,
@@ -897,7 +980,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                       )))
                   .toList(),
             ),
-            // Chevron // Todo: all toIcon() with tap detection should be written as follows:
+            // Chevron // Todo: Every toIcon() with tap detection should be written as follows:
             Padding(
               padding: const EdgeInsets.only(
                   top: Measures.vMarginBig, left: Measures.hMarginMed),
@@ -936,7 +1019,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: List.generate(
-                            (_screens?.length ?? 0) + 5,
+                            _screens?.length ?? 0,
                             (index) => Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 3.2),

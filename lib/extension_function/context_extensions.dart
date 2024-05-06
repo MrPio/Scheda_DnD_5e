@@ -5,6 +5,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 
@@ -15,10 +16,11 @@ extension ContextExtensions on BuildContext {
       String? positiveText,
       Color backgroundColor = Palette.background,
       Function()? positiveCallback,
+      bool Function()? canPopPositiveCallback,
       String? negativeText,
       Function()? negativeCallback,
       bool noContentHPadding = false,
-      dismissible = true}) async{
+      dismissible = true}) async {
     await showDialog(
       barrierDismissible: dismissible,
       context: this,
@@ -53,6 +55,7 @@ extension ContextExtensions on BuildContext {
                       if (message != null)
                         Flexible(
                           child: SingleChildScrollView(
+
                             child: Padding(
                               padding: EdgeInsets.symmetric(
                                       horizontal: noContentHPadding ? 26 : 0)
@@ -82,7 +85,9 @@ extension ContextExtensions on BuildContext {
                               TextButton(
                                 onPressed: () {
                                   positiveCallback?.call();
-                                  Navigator.pop(this);
+                                  if (canPopPositiveCallback?.call() ?? true) {
+                                    Navigator.pop(this);
+                                  }
                                 },
                                 child: Text(positiveText.toUpperCase(),
                                     style: Fonts.bold(size: 15)),
@@ -119,20 +124,24 @@ extension ContextExtensions on BuildContext {
     );
   }
 
-  Future<void> checkList<T extends EnumWithTitle>(String title,
-      {required List<T> values,
-      Function(T)? onChanged,
-        Function()? positiveCallback,
-        bool Function(T)? value,
-      Color color = Palette.primaryBlue,
-      bool isRadio = false,
-      dismissible = true,}) async{
+  Future<void> checkList<T extends EnumWithTitle>(
+    String title, {
+    required List<T> values,
+    Function(T)? onChanged,
+    // Function()? positiveCallback,
+    bool Function(T)? value,
+    Color color = Palette.primaryBlue,
+    bool isRadio = false,
+    dismissible = true,
+        int? selectionRequirement
+  }) async {
     await popup(title,
         dismissible: dismissible,
         noContentHPadding: true,
         backgroundColor: Palette.popup,
         positiveText: 'Ok',
-        positiveCallback: positiveCallback,
+        // positiveCallback: positiveCallback,
+        canPopPositiveCallback: ()=>selectionRequirement==null||selectionRequirement==values.map((e) => (value?.call(e)??false)?1:0).toList().sum(),
         child: StatefulBuilder(
           builder: (context, setState) => Column(
             children: List.generate(
@@ -152,7 +161,7 @@ extension ContextExtensions on BuildContext {
                                     setState(() => onChanged?.call(values[j])),
                                 color: color,
                               ),
-                              Text(values[j].title, style: Fonts.regular())
+                              Flexible(child: Text(values[j].title, style: Fonts.regular(), overflow: TextOverflow.ellipsis,maxLines: 2,))
                             ],
                           ),
                         ),

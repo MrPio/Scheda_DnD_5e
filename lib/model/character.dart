@@ -4,12 +4,13 @@ import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
 
 import 'loot.dart';
 
 part 'part/character.g.dart';
 
-enum SubClass implements EnumWithTitle{
+enum SubClass implements EnumWithTitle {
   // Servono solo per lettura info
   collegioSapienza('Collegio sapienza',
       '**COMPETENZE** **BONUS**\nQuando un bardo si unisce al Collegio della Sapienza al 3° livello, ottiene competenza in tre abilità a sua scelta.\n\n---\n\n**PAROLE** **TAGLIENTI**\nSempre al 3° livello, il bardo impara anche a fare buon uso del suo ingegno per distrarre, confondere e fiaccare la determinazione e la competenza altrui.\nQuando una creatura situata entro 18 metri e che il bardo sia in grado di vedere effettua un tiro per colpire, una prova di caratteristica o un tiro per i danni, il bardo può usare la sua reazione per spendere uno dei suoi utilizzi di Ispirazione Bardica, tirare un dado di Ispirazione Bardica e sottrarre il numero ottenuto dal tiro della creatura.\nPuò scegliere di utilizzare questo privilegio dopo che la creatura ha effettuato il suo tiro, ma prima che il **DM** dichiari se il tiro per colpire o la prova di caratteristica abbia avuto successo o meno, o prima che la creatura infligga i danni.\nLa creatura è immune se non è in grado di sentire il bardo o se non può essere affascinata.\n\n---\n\n**SEGRETI** **MAGICI** **AGGIUNTIVI**\nAl 6° livello, un bardo impara due incantesimi a sua scelta da qualsiasi classe.\nOgni incantesimo scelto deve essere di un livello che il bardo sia in grado di lanciare, come indicato dalla tabella "Bardo", oppure deve essere un trucchetto.\nGli incantesimi scelti contano come incantesimi da bardo, ma non contano al fine di determinare il numero di incantesimi da bardo conosciuti.\n\nABILITÀ **IMPAREGGIABILE**\nA partire dal 14° livello, quando un bardo effettua una prova di caratteristica, può spendere un utilizzo di Ispirazione Bardita.\nSe lo fa, tira un dado di Ispirazione Bardica e aggiunge il risultato ottenuto alla sua prova di caratteristica.\nPuò scegliere di farlo dopo avere tirato il dado per la prova di caratteristica, ma prima che il **DM** dichiari se la prova abbia avuto successo o meno.\n'),
@@ -887,7 +888,7 @@ enum Class implements EnumWithTitle {
   final List<Mastery> defaultMasteries;
   final List<MasteryType> choiceableMasteryTypes;
   final List<Skill> savingThrowSkills;
-  final List<Map<EnumWithTitle, int>> choiceableItems;
+  final List<Map<InventoryItem, int>> choiceableItems;
 
   const Class(
       this.title,
@@ -901,6 +902,10 @@ enum Class implements EnumWithTitle {
       this.savingThrowSkills,
       this.choiceableItems,
       this.description);
+
+  String get subClassesInfo => subClasses.isEmpty
+      ? 'Nessuna sottoclasse'
+      : subClasses.map((e) => e.title).join(', ');
 }
 
 enum SubRace implements EnumWithTitle {
@@ -1162,8 +1167,7 @@ enum Race implements EnumWithTitle {
   final List<Language> defaultLanguages;
   final bool canChoiceLanguage;
   final Map<Skill, int> defaultSkills;
-  final int numChoiceableSkill, numChoiceableSubSkill; // solo mezzelfo
-
+  final int numChoiceableSkills, numChoiceableSubSkills; // solo mezzelfo
   // final List<Mastery> defaultMasteries **QUI** **NO**! (**VERIFICATO**)
   final double defaultSpeed;
   final List<Mastery> choiceableMasteries; // ce l'ha il nano
@@ -1174,8 +1178,8 @@ enum Race implements EnumWithTitle {
       this.defaultLanguages,
       this.canChoiceLanguage,
       this.defaultSkills,
-      this.numChoiceableSkill,
-      this.numChoiceableSubSkill,
+      this.numChoiceableSkills,
+      this.numChoiceableSubSkills,
       this.choiceableMasteries,
       this.defaultSpeed,
       this.description);
@@ -1308,7 +1312,7 @@ enum Mastery implements EnumWithTitle {
   cornamusa('Cornamusa'),
   corno('Corno'),
   dulcimer('Dulcimer'),
-  flauto('  Flauto'),
+  flauto('Flauto'),
   flautoDiPan('Flauto di Pan'),
   lira('Lira'),
   liuto('Liuto'),
@@ -1444,12 +1448,12 @@ class Character implements JSONSerializable, WithUID {
   Map<SubSkill, int> subSkills = {};
   Set<Mastery> masteries = {};
   Set<Language> languages = {};
-  Set<Skill> savingThrows={};
+  Set<Skill> savingThrows = {};
   Status? status;
   Alignment alignment;
   int level;
   @JsonKey(includeFromJson: true, includeToJson: true)
-  Map<Object, int> _inventory = {};
+  Map<String, int> _inventory = {};
 
   String get name => _name;
 
@@ -1481,9 +1485,9 @@ class Character implements JSONSerializable, WithUID {
         subSkills = subSkills ?? {},
         masteries = masteries ?? {},
         languages = languages ?? {},
-        savingThrows=savingThrows??{}{
+        savingThrows = savingThrows ?? {} {
     for (var qta in _inventory.values) {
-      assert(qta < 1);
+      assert(qta >0);
     }
   }
 
@@ -1502,7 +1506,10 @@ class Character implements JSONSerializable, WithUID {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   Map<InventoryItem, int> get inventory =>
-      _inventory.cast<InventoryItem, int>();
+      _inventory.map((key, value) => MapEntry(InventoryItem.fromName(key), value));
+
+  set inventory(Map<InventoryItem, int> value) => _inventory = value.map((key, value) =>
+  MapEntry(key.toString(), value));
 
   DateTime get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
 
@@ -1510,7 +1517,7 @@ class Character implements JSONSerializable, WithUID {
 
   addLoot(Loot loot) {
     loot.content.forEach((item, qta) {
-      _inventory[item] = _inventory[item] ?? 0 + qta;
+      inventory += {item: qta};
     });
   }
 
@@ -1522,7 +1529,7 @@ class Character implements JSONSerializable, WithUID {
   Map<String, dynamic> toJSON() => _$CharacterToJson(this);
 
   @override
-  String toString(){
+  String toString() {
     return json.encode(toJSON());
   }
 }

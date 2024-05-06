@@ -28,6 +28,9 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       (json['languages'] as List<dynamic>?)
           ?.map((e) => $enumDecode(_$LanguageEnumMap, e))
           .toSet(),
+      (json['savingThrows'] as List<dynamic>?)
+          ?.map((e) => $enumDecode(_$SkillEnumMap, e))
+          .toSet(),
       $enumDecodeNullable(_$StatusEnumMap, json['status']),
       $enumDecode(_$AlignmentEnumMap, json['alignment']),
       json['level'] as int,
@@ -47,6 +50,8 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'masteries': instance.masteries.map((e) => _$MasteryEnumMap[e]!).toList(),
       'languages':
           instance.languages.map((e) => _$LanguageEnumMap[e]!).toList(),
+      'savingThrows':
+          instance.savingThrows.map((e) => _$SkillEnumMap[e]!).toList(),
       'status': _$StatusEnumMap[instance.status],
       'alignment': _$AlignmentEnumMap[instance.alignment]!,
       'level': instance.level,
