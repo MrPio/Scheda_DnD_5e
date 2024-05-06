@@ -672,12 +672,12 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   Map<SubSkill, int> backupSubSkills =
                                       Map.from(character.subSkills);
                                   // Ask the possible choices before continuing
-                                  if (e.numChoiceableSkills > 0) {
-                                    character.skills+=Skill.values.sublist(0,e.numChoiceableSkills).map((e) => {e:1}).reduce((value, element) => value+element);
+                                  if (e.numChoiceableSubSkills > 0) {
+                                    character.skills+=Skill.values.sublist(0,e.numChoiceableSubSkills).map((e) => {e:1}).reduce((value, element) => value+element);
                                     await context.checkList<Skill>(
-                                      'Scegli ${e.numChoiceableSkills} competenza/e',
+                                      'Scegli ${e.numChoiceableSubSkills} competenza/e',
                                       dismissible: false,
-                                      isRadio: e.numChoiceableSkills == 1,
+                                      isRadio: e.numChoiceableSubSkills == 1,
                                       values: Skill.values,
                                       color: Palette.primaryYellow,
                                       onChanged: (value) {

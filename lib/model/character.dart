@@ -883,7 +883,7 @@ enum Class implements EnumWithTitle {
   final List<SubClass> subClasses;
   final bool isEnchanter;
   final List<SubSkill> choiceableSubSkills;
-  final int numChoiceableSkills, numChoiceableMasteries;
+  final int numChoiceableSubSkills, numChoiceableMasteries;
   final List<Mastery> defaultMasteries;
   final List<MasteryType> choiceableMasteryTypes;
   final List<Skill> savingThrowSkills;
@@ -894,7 +894,7 @@ enum Class implements EnumWithTitle {
       this.subClasses,
       this.isEnchanter,
       this.choiceableSubSkills,
-      this.numChoiceableSkills,
+      this.numChoiceableSubSkills,
       this.defaultMasteries,
       this.numChoiceableMasteries,
       this.choiceableMasteryTypes,
