@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
 
 class Fonts {
-  static light({color,double size=17}) => GoogleFonts.lato(
+  static light({color,double size=16}) => GoogleFonts.lato(
       color: color ??Palette.onBackground,
       fontSize: size,
       fontWeight: FontWeight.w300);

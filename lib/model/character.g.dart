@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of '../character.dart';
+part of 'character.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -286,4 +286,5 @@ const _$AlignmentEnumMap = {
   Alignment.legaleMalvagio: 'legaleMalvagio',
   Alignment.neutraleMalvagio: 'neutraleMalvagio',
   Alignment.caoticoMalvagio: 'caoticoMalvagio',
+  Alignment.nessuno: 'nessuno',
 };

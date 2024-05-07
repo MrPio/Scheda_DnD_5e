@@ -209,6 +209,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.6"
+  dynamic_height_grid_view:
+    dependency: "direct main"
+    description:
+      name: dynamic_height_grid_view
+      sha256: "89b37bf6179af6bc496135c0c786c1f13e117c4ec7ce2278be52df75be90e1d8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   expand_tap_area:
     dependency: "direct main"
     description:

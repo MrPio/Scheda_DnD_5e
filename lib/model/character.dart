@@ -8,7 +8,7 @@ import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
 
 import 'loot.dart';
 
-part 'part/character.g.dart';
+part 'character.g.dart';
 
 enum SubClass implements EnumWithTitle {
   // Servono solo per lettura info
@@ -93,6 +93,7 @@ enum SubClass implements EnumWithTitle {
   lImmondo('L\' immondo',
       '**LISTA** **AMPLIATA** **DEGLI** **INCANTESIMI**\nL\'Immondo consente al warlock di accedere a una lista ampliata di incantesimi quando deve apprendere un incantesimo da warlock.\nIl warlock aggiunge gli incantesimi seguenti alla sua lista degli incantesimi da warlock.\n\n---\n\n**INCANTESIMI** **AMPLIATI** **DELL**\'**IMMONDO**\n---\n\n**LIVELLO**    **INCANTESIMI**\n1°      comando, mani brucianti\n2°      cecità/sordità, raggio rovente\n3°      nube maleodorante, palla di fuoco\n4°      muro di fuoco, scudo di fuoco\n5°      colpo infuocato, santificare\n\n---\n\n**BENEDIZIONE** **DELL**\'**OSCURO**\nA partire dal 1° livello, quando il warlock porta una creatura ostile a 0 punti ferita, ottiene un ammontare di punti ferita temporanei pari al proprio modificatore di Carisma + il proprio livello da warlock (fino a un minimo di 1).\n\n---\n\n**FORTUNA** **DELL**\'**OSCURO**\nA partire dal 6° livello, il warlock può appellarsi al suo patrono per alterare il fato in suo favore.\nQuando effettua una prova di caratteristica o un tiro salvezza, può utilizzare questo privilegio per aggiungere un d10 al suo tiro.\nPuò farlo dopo avere visto il tiro iniziale, ma prima che qualsiasi effetto del tiro sia applicato.\nUna volta utilizzato questo privilegio, il warlock non può più utilizzarlo finché non completa un riposo breve o lungo.\n\n---\n\n**RESILIENZA** **IMMONDA**\nA partire dal 10° livello, il warlock può scegliere un tipo di danno quando completa un riposo breve o lungo.\nOttiene resistenza a quel tipo di danno finché non ne sceglie uno diverso tramite questo privilegio.\nI danni delle armi magiche o delle armi argentate ignorano questa resistenza.\n\n---\n\n**SCAGLIARE** **ALL**\'**INFERNO**\nA partire dal 14° livello, quando il warlock colpisce una creatura con un attacco, può utilizzare questo privilegio per trascinare istantaneamente il bersaglio sui piani inferiori.\nLa creatura scompare e sfreccia attraverso un territorio da incubo.\nAlla fine del turno successivo del warlock, il bersaglio torna nello spazio che occupava in precedenza, o nello spazio libero più vicino.\nSe il bersaglio non è un immondo, subisce 10d10 psichici in quanto resta sconvolto da questa esperienza terrificante.\nUna volta utilizzato questo privilegio, il warlock non può più utilizzarlo finché non completa un riposo lungo.');
 
+  @override
   final String title, description;
 
   const SubClass(this.title, this.description);
@@ -880,6 +881,7 @@ enum Class implements EnumWithTitle {
       ],
       'Un Warlock ottieni i seguenti privilegi di classe:\n\n---\n\n**PUNTI** **FERITA**\nDadi Vita: 1d8 per livello da warlock.\nPunti ferita al 1° livello: 8 + il tuo modificatore di Costituzione del warlock.\nPunti ferita ai livelli successivi: 1d8 (o 5) + il modificatore di Costituzione del warlock per ogni livello da warlock dopo il 1°.\n\n---\n\n**COMPETENZE**\nArmature: Armature leggere.\nArmi: Armi semplici.\nStrumenti: Nessuno.\nTiri Salvezza: Carisma e Saggezza.\nAbilità: Due a scelta tra Arcano, Indagare, Inganno, Intimidire, Natura, Religione, Storia.\n\n---\n\n**EQUIPAGGIAMENTO**\nUn warlock inizia con il seguente equipaggiamento, in aggiunta all\' equipaggiamento conferito dal suo background:\n(a) una balestra leggera e 20 quadrelli o (b) una qualsiasi arma semplice.\n(a) una borsa per componenti o (b) un focus arcano.\n(a) una dotazione da studioso o (b) una dotazione da avventuriero.\nUn\'armatura di cuoio, una qualsiasi arma semplice e due pugnali.\n\n---\n\n**PATRONO** **ULTRATERRENO**\nAl 1° livello, un warlock stipula un patto con un essere extraplanare a sua scelta: il Signore Fatato, l\'Immondo o il Grande Antico, ognuno dei quali è descritto in dettaglio alla fine della sezione di questa classe.\nLa scelta del patrono gli conferisce alcuni privilegi al 1° livello e poi ancora al 6°, 10° e 14° livello.\n\n---\n\n**MAGIA** **DEL** **PATTO**\nLe ricerche arcane condotte dal warlock e l\'energia magica che il suo patrono gli conferisce rendono il warlock particolarmente abile nell\'uso degli incantesimi.\nVedi il capitolo 10 per le regole generali relative alla magia e il capitolo 11 per la lista degli incantesimi da warlock.\n\n---\n\n**TRUCCHETTI**\nUn warlock conosce due trucchetti a sua scelta tratti dalla lista degli incantesimi da warlock.\nApprende ulteriori trucchetti da warlock a sua scelta ai livelli successivi, come indicato dalla colonna "Trucchetti Conosciuti" nella tabella "Warlock".\n\n---\n\n**SLOT** **INCANTESIMO**\nLa tabella "Warlock" indica quanti slot incantesimo possiede un warlock.\nLa tabella indica anche il livello di quegli slot; tutti gli slot incantesimo da warlock sono dello stesso livello.\nPer lanciare un incantesimo pari o superiore 1°, il warlock deve spendere uno slot incantesimo.\nIl warlock recupera tutti gli slot incantesimo spesi quando completa un riposo breve o lungo.\nPer esempio, un warlock di 5° livello possiede due slot incantesimo di 3° livello.\nPer lanciare l\'incantesimo di 1° livello dardo stregato deve spendere uno di quegli slot e lanciarlo come incantesimo di 3° livello.\n\n---\n\n**INCANTESIMI** **CONOSCIUTI** **DI** 1° **LIVELLO** E **DI** **LIVELLO** **SUPERIORE**\nAl 1° livello, un warlock conosce due incantesimi di 1° livello a sua scelta dalla lista degli incantesimi da warlock.\nLa colonna "Incantesimi Conosciuti" nella tabella "Warlock" indica quando un warlock impara altri incantesimi da warlock a sua scelta, di 1° livello o superiore.\nOgnuno di questi incantesimi deve appartenere a un livello pari o inferiore al "Livello di Slot" relativo al livello attuale del warlock e indicato nella sua tabella.\nPer esempio, quando un warlock arriva al 6° livello apprende un nuovo incantesimo da warlock di 1°, 2° o 3° livello.\nInoltre, quando un warlock acquisisce un livello, può scegliere un incantesimo da warlock che conosce e sostituirlo con un altro incantesimo della lista degli incantesimi da warlock; anche il nuovo incantesimo deve essere di un livello di cui il warlock possiede degli slot incantesimo.\n\n---\n\n**CARATTERISTICA** **DA** **INCANTATORE**\nCarisma è la caratteristica da incantatore per gli incantesimi da warlock, quindi un warlock usa Carisma ogni volta che un incantesimo fa riferimento alla sua caratteristica da incantatore.\nUsa inoltre il suo modificatore di Carisma per definire la **CD** del tiro salvezza di un incantesimo da warlock da lui lanciato e quando effettua un tiro per colpire con un incantesimo.\n\n---\n\n**CD** del tiro salvezza dell\'incantesimo = 8 + il bonus di competenza del warlock + il modificatore di Carisma del warlock\nModificatore di attacco dell\'incantesimo = il bonus di competenza del warlock + il modificatore di Carisma del warlock\n\n---\n\n**FOCUS** **DA** **INCANTATORE**\nUn warlock può usare un focus (vedi il capitolo 5, "Equipaggiamento") come focus da incantatore per i suoi incantesimi da warlock.\n\n---\n\n**SUPPLICHE** **OCCULTE**\nDedicandosi allo studio delle scienze occulte, un warlock ha scoperto come usare alcune suppliche occulte, frammenti di conoscenze proibite che gli conferiscono persistenti doti magiche.\nAl 2° livello, il warlock ottiene due suppliche occulte a sua scelta.\nLe sue opzioni di invocazione sono descritte alla fine della sezione di questa classe.\nQuando il warlock raggiunge livelli superiori, ottiene ulteriori suppliche a sua scelta, come indicato nella colonna "Suppliche Conosciute" nella tabella "Warlock".\nInoltre, quando acquisisce un nuovo livello, il warlock può scegliere una delle suppliche che conosce e sostituirla con un\'altra che potrebbe imparare a quel livello.\n\n---\n\n**DONO** **DEL** **PATTO**\nAl 3° livello, il patrono ultraterreno elargisce al warlock un dono per ricompensarlo dei suoi fedeli servigi.\nIl warlock ottiene uno dei privilegi seguenti a sua scelta.\n\n---\n\n**PATTO** **DELLA** **CATENA**\nIl warlock impara l\'incantesimo trova famiglio e può lanciarlo come rituale.\nQuesto incantesimo non va conteggiato al fine di determinare il numero di incantesimi conosciuti dal warlock.\nQuando il warlock lancia l\'incantesimo può scegliere per il suo famiglio una delle forme normali o una delle forme speciali seguenti: imp, pseudodrago, quasit o spiritello.\nInoltre, quando effettua l\'azione di Attacco, il warlock può rinunciare a uno dei suoi attacchi per consentire al suo famiglio di effettuare un suo attacco individuale con la sua reazione.\n\n---\n\n**PATTO** **DELLA** **LAMA**\nIl warlock può usare la sua azione per fare apparire un\'arma del patto nella sua mano vuota.\nPuò scegliere la forma che questa arma da mischia assume ogni volta che la crea(vedi capito lo 5 per le armi disponibili).\nIl warlock è considerato competente nell\'arma fintanto che la impugna.\nQuesta arma è considerata magica al fine di oltrepassare la resistenza e l\'immunità agli attacchi e ai danni non magici.\nL\'arma del patto scompare se rimane per un minuto a più di 1,5 metri di distanza dal warlock.\nL\'arma scompare anche se il warlock utilizza di nuovo il privilegio, se la congeda (non è richiesta alcuna azione per farlo), o se muore.\nIl warlock può trasformare un\'arma magica nella sua arma del patto celebrando un rituale speciale mentre la impugna.\nIl rituale dura 1 ora e può essere completato durante un periodo di riposo breve.\nUna volta completato il rituale, il warlock può congedare l\'arma relegandola in uno spazio extradimensionale; da allora in poi compare ogni volta che il warlock crea la sua arma del patto.\nNon è possibile influenzare un artefatto o un\'arma senziente in questo modo.\nL\'arma cessa di essere l\'arma del patto se il warlock muore, se celebra un rituale di 1 ora su un\'altra arma o se celebra un altro rituale di 1 ora per spezzare il suo vincolo con l\'arma.\nSe l\'arma si trova nello spazio extradimensionale quando il vincolo viene spezzato, essa ricompare ai piedi del warlock.\n\n---\n\n**PATTO** **DEL** **TOMO**\nIl patrono dona al warlock un grimorio chiamato Libro dell Ombre.\nQuando ottiene questo privilegio, il warlock può scegliere tre trucchetti dalla lista degli incantesimi di qualsiasi classe (che non devono necessariamente appartenere nella stessa lista).\nQuando il warlock porta il libro con sè, può lanciare quei trucchetti a volontà.\nNon vengono conteggiati al fine di determinare il numero di trucchetti conosciuto dal warlock.\nAnche se non compaiono sulla lista degli incantesimi da warlock, sono comunque considerati incantesimi da warlock per lui.\nSe il Libro delle Ombre viene perduto, il warlock può effettuare un cerimoniale da 1 ora per ricevere un altro dal proprio patrono.\nTale cerimoniale può essere effettuato durante un periodo di riposo breve o lungo, e provoca la distruzione del vecchio libro.\nIl libro si riduce in polvere alla morte del warlock.\n\n---\n\n**INCREMENTO** **DEI** **PUNTEGGI** **CARATTERISTICA**\nQuando arriva al 4° livello, e poi di nuovo all\'8°,12°,16° e 19° livello, un warlock può aumentare di 2 un punteggio di caratteristica a sua scelta, oppure può aumentare di 1 due punteggi di caratteristica a sua scelta.\nCome di consueto, non è consentito aumentare un punteggio di caratteristica a più di 20 utilizzando questo privilegio.\n\n---\n\n**ARCANUM** **MISTICO**\nAll\'11° livello, il patrono rivela al warlock un segreto magico chiamato arcanum.\nIl warlock sceglie un incantesimo di 6° livello dalla lista degli incantesimi da warlock come arcanum.\nIl warlock può lanciare il suo incantesimo arcanum senza spendere uno slot incantesimo.\nDeve completare un riposo lungo prima di poterlo fare di nuovo.\nAi livelli successivi, il warlock ottiene altri incantesimi da warlock a sua scelta da lanciare in questo modo: un incantesimo di 7° livello al 13°livello, un incantesimo di 8° livello al 15° livello e un incantesimo di 9° livello al 17° livello.\nRecupera tutti gli utilizzi del suo Arcanum Mistico quando completa un riposo lungo.\n\n---\n\n**MAESTRO** **DELL**\'**OCCULTO**\nAl 20° livello, il warlock è in grado di attingere alla sua riserva interiore di potere mistico quando invoca il suo patrono per riottenere gli slot incantesimo spesi.\nIl warlock può trascorrere 1 minuto invocando l\'aiuto del suo patrono per riottenere tutti gli slot incantesimo concessi dal privilegio Magia del Patto che ha speso.\nUna volta riottenuti gli slot incantesimo tramite questo privilegio, il warlock deve completare un riposo lungo prima di poterlo fare di nuovo.\n\n---\n\n**SUPPLICHE** **OCCULTE**\nSe una supplica occulta prevede dei prerequisiti, il warlock deve soddisfarli per poterla apprendere.\nPuò apprendere quella supplica nel momento in cui ne soddisfa i prerequisiti.\nUn prerequisito di livello indica il livello nella classe del warlock.\n\n---\n\n**ARMATURA** **DELLE** **OMBRE**\nIl warlock può lanciare armatura magica su se stesso a volontà, senza spendere uno slot incantesimo o componenti materiali.\n\n---\n\n**BALZO** **ULTRATERRENO**\nPrerequisito: 9° livello.\nIl warlock può lanciare saltare su se stesso a volontà, senza spendere uno slot incantesimo o componenti materiali.\n\n---\n\n**CATENE** **DI** **CARCERI**\nPrerequisiti: 15° livello, privilegio Patto della Catena.\nIl warlock può lanciare blocca mostri a volontà (bersagliando un celestiale, un immondo o un elementale) senza spendere uno slot incantesimo o componenti materiali.\nDeve completare un riposo lungo prima che possa usare di nuovo questa supplica sulla stessa creatura.\n\n---\n\n**DEFLAGRAZIONE** **AGONIZZANTE**\nPrerequisito: trucchetto deflagrazione occulta.\nQuando il warlock lancia deflagrazione occulta, aggiunge il suo modificatore di Carisma ai danni che infligge quando colpisce il bersaglio.\n\n---\n\n**DEFLAGRAZIONE** **RESPINGENTE**\nPrerequisito: trucchetto deflagrazione occulta.\nQuando il warlock colpisce una creatura con deflagrazione occulta, può spingere la creatura fino a un massimo di 3 metri per allontanarla da sé in linea retta.\n\n---\n\n**FARDELLO** **MENTALE**\nPrerequisito: 5° livello.\nIl warlock può lanciare lentezza una volta usando uno slot incantesimo da warlock.\nNon può farlo di nuovo finché non completa un riposo lungo.\n\n---\n\n**INFLUENZA** **SEDUCENTE**\nIl warlock ottiene competenza nelle abilità Inganno e Persuasione.\n\n---\n\n**LADRO** **DEI** **CINQUE** **FATI**\nIl warlock può lanciare anatema una volta usando uno slot incantesimo da warlock.\nNon può farlo di nuovo finché non completa un riposo lungo.\n\n---\n\n**LAMA** **ASSETATA**\nPrerequisiti: 5° livello, privilegio Patto della Lama.\nOgni volta che effettua l\'azione di Attacco nel suo turno, il warlock può attaccare con la sua arma del patto due volte anziché una volta.\n\n---\n\n**LANCIA** **OCCULTA**\nPrerequisito: trucchetto deflagrazione occulta.\nQuando il warlock lancia deflagrazione occulta, la sua gittata è di 90 metri.\n\n---\n\n**LIBRO** **DEGLI** **ANTICHI** **SEGRETI**\nPrerequisito: privilegio Patto del Tomo.\nIl warlock può ora trascrivere i rituali magici nel suo Libro delle Ombre.\nSceglie due incantesimi di 1° livello con il descrittore rituale dalle liste di incantesimi di qualsiasi classe (non è necessario che i due incantesimi appartengano alla stessa lista).\nGli incantesimi compaiono nel libro e non contano ai fini di determinare il numero di incantesimi che il warlock conosce.\nQuando il warJock impugna il suo Libro delle Ombre, può lanciare gli incantesimi scelti come rituali.\nPuò lanciare quegli incantesimi soltanto come rituali, a meno che non li abbia appresi anche in altri modi.\nPuò inoltre lanciare un incantesimo da warlock che lui conosce come rituale, se tale incantesimo possiede il descrittore rituale.\nNel corso delle sue avventure, il warlock può aggiungere altri incantesimi rituali al suo Libro delle Ombre.\nQuando trova un incantesimo del genere, può aggiungerlo al libro se il livello dell\'incantesimo è pari o inferiore alla metà del suo livello da warlock (arrotondato per eccesso) e se dispone di abbastanza tempo da trascrivere l\'incantesimo.\nPer ogni livello dell\'incantesimo, il processo di trascrizione richiede 2 ore e costa 50 mo per gli inchiostri rari richiesti.\n\n---\n\n**LINGUE** **DELLE** **BESTIE**\nIl warlock può lanciare parlare con ali animali a volontà, senza spendere uno slot incantesimo.\n\n---\n\n**MAESTRO** **DI** **MILLE** **FORME**\nPrerequisito: 15° livello.\nIl warlock può lanciare alterare se stesso a volontà, senza spendere uno slot incantesimo.\n\n---\n\n**MASCHERA** **DEI** **MOLTI** **VOLTI**\nIl warlock può lanciare camuffare se stesso a volontà, senza spendere uno slot incantesimo.\n\n---\n\n**OCCHI** **DEL** **CUSTODE** **DELLE** **RUNE**\nIl warlock è in grado di leggere ogni forma di scrittura.\n\n---\n\n**PAROLA** **TEMIBILE**\nPrerequisito: 7° livello.\nIl warlock può lanciare confusione una volta usando uno slot incantesimo da warlock.\nNon pub farlo di nuovo finché non completa un riposo lungo.\n\n---\n\n**PASSO** **ASCENDENTE**\nPrerequisito: 9° livello.\nIl warlock pub lanciare levitazione su se stesso a volontà, senza spendere uno slot incantesimo o componenti materiali.\n\n---\n\n**PRESAGIO** **DI** **SVENTURA**\nPrerequisito: 5° livello.\nIl warlock può lanciare scagliare maledizione una volta usando uno slot incantesimo da warlock.\nNon può farlo di nuovo finché non completa un riposo lungo.\n\n---\n\n**SCULTORE** **DELLA** **CARNE**\nPrerequisito: 7° livello.\nIl warlock può lanciare metamorfosi una volta usando uno slot incantesimo da warlock.\nNon può farlo di nuovo finché non completa un riposo lungo.\n\n---\n\n**SERVITORI** **DEL** **CAOS**\nPrerequisito: 9° livello.\nIl warlock può lanciare evoca e/ementa/e una volta usando uno slot incantesimo da warlock.\nNon può farlo di nuovo finché non completa un riposo lungo.\n\n---\n\n**SGUARDO** **DELLE** **DUE** **MENTI**\nIl warlock può usare la sua azione per toccare un umanoide consenziente e percepire il mondo attraverso i suoi sensi fino alla fine del proprio turno successivo.\nFintanto che la creatura si trova sullo stesso piano di esistenza del warlock, quest\'ultimo può usare la sua azione nei turni successivi per mantenere questo legame, estendendo la durata fino alla fine del suo turno successivo.\nFinché percepisce il mondo attraverso i sensi dell\'altra creatura, il warlock beneficia degli eventuali sensi speciali posseduti da essa, ma è cieco e sordo riguardo a cib che accade attorno a lui.\n\n---\n\n**SUCCHIAVITA**\nPrerequisiti: 12° livello, privilegio Patto della Lama.\nQuando il warlock colpisce una creatura con la sua arma del patto, quella creatura subisce danni necrotici extra pari al modificatore di Carisma del warlock (fino a un minimo di 1).\n\n---\n\n**SUSSURRI** **DALLA** **TOMBA**\nPrerequisito: 9° livello.\nIl warlock può lanciare parlare con i morti a volontà, senza spendere uno slot incantesimo.\n\n---\n\n**SUSSURRI** **STREGATI**\nPrerequisito: 7° livello.\nIl warlock può lanciare compulsione una volta usando uno slot incantesimo da warlock.\nNon può farlo di nuovo finché non completa un riposo lungo.\n\n---\n\n**TUTT**\'**UNO** **CON** **LE** **OMBRE**\nPrerequisito: 5° livello.\nQuando il warlock si trova in un\'area di luce fioca o di oscurità, può usare la sua azione per diventare invisibile finché non si muove, effettua un\'azione o una reazione.\n\n---\n\n**VIGORE** **IMMONDO**\nIl warlock può lanciare vita falsata su se stesso a volontà come incantesimo di 1° livello, senza spendere uno slot incantesimo o componenti materiali.\n\n---\n\n**VISIONE** **DEI** **REAMI** **LONTANI**\nPrerequisito: 15° livello.\nIl warlock può lanciare occhio arcano a volontà, senza spendere uno slot incantesimo.\n\n---\n\n**VISIONI** **VELATE**\nIl warlock può lanciare immagine silenziosa a volontà, senza spendere uno slot incantesimo o componenti materiali.\n\n---\n\n**VISTA** **DEL** DIAVOLOIl warlock è in grado di vedere normalmente nell\'oscurità, sia magica che comune, fino a una distanza di 36 metri.\n\n---\n\n**VISTA** **DELL**\'**OCCULTO**\nIl warlock può lanciare individuazione del magico a volontà, senza spendere uno slot incantesimo.\n\n---\n\n**VISTA** **STREGATA**\nPrerequisito: 15° livello.\nIl warlock è in grado di vedere la vera forma di qualsiasi mutaforma o creatura celata da una magia di illusione o trasmutazione, fintanto che quella creatura si trova entro 9 metri da lui ed entro linea di vista.\n\n---\n\n**VOCE** **DEL** **SIGNORE** **DELLE** **CATENE**\nPrerequisito: privilegio Patto della Catena.\nIl warlock può comunicare telepaticamente con il suo famiglio e percepire il mondo attraverso i sensi di quest\'ultimo, purché entrambi si trovino sullo stesso piano di esistenza.\nInoltre, finché percepisce il mondo attraverso i sensi del suo famiglio, il warlock può anche parlare attraverso il famiglio con la propria voce anche se il suo famiglio normalmente non è in grado di parlare.\n');
 
+  @override
   final String title, description;
   final List<SubClass> subClasses;
   final bool isEnchanter;
@@ -969,6 +971,7 @@ enum SubRace implements EnumWithTitle {
   dragoVerde("Drago verde", 0, {}, [], 9, null),
   ;
 
+  @override
   final String title;
   final String? _description;
   final int numChoiceableLanguages;
@@ -1162,6 +1165,7 @@ enum Race implements EnumWithTitle {
       9,
       '**INCREMENTO** **DEI** **PUNTEGGI** **CARATTERISTICA**\n\nIl punteggio di Intelligenza aumenta di 1 e il punteggio di Carisma aumenta di 2.\n\n---\n\n**ETÀ**\n\nI tiefling maturano allo stesso ritmo degli umani ma vivono qualche anno più a lungo.\n\n---\n\n**ALLINEAMENTO**\n\nI tiefling possono non avere una tendenza innata verso il male, ma molti di loro finiscono lì.\n\nMalvagi o no, una natura indipendente fa propendere molti tiefling verso un allineamento caotico.\n\n---\n\n**TAGLIA**\n\nI tiefling hanno circa la stessa taglia e corporatura degli umani.\n\nLa taglia è Media.\n\n---\n\n**VELOCITÀ**\n\nLa velocità base sul terreno è 9 metri.\n\n---\n\n**SCUROVISIONE**\n\nGrazie all\'eredità infernale, avete una vista superiore in condizioni di buio o luce debole.\n\nPotete vedere con luce debole entro 18 metri come se fosse luce intensa e nell\'oscurità come fosse luce debole.\n\nNon potete discernere i colori nell\'oscurità, solo sfumature di grigio.\n\n---\n\n**RESISTENZA** **DIABOLICA**\n\nAvete resistenza al danno da fuoco.\n\n---\n\n**RETAGGIO** **INFERNALE**\n\nConoscete il trucco taumaturgia.\n\nUna volta raggiunto il 3° livello, potete lanciare l\'incantesimo rimprovero diabolico una volta al giorno come incantesimo di 2° livello.\n\nUna volta raggiunto il 5° livello, potete anche lanciare l\'incantesimo oscurità una volta al giorno.\n\nIl Carisma è la caratteristica chiave per questi incantesimi.\n\n---\n\n**LINGUAGGI**\n\nPotete parlare, leggere e scrivere in Comune ed Infernale.');
 
+  @override
   final String title, description;
   final List<SubRace> subRaces;
   final List<Language> defaultLanguages;
@@ -1190,20 +1194,24 @@ enum Race implements EnumWithTitle {
 }
 
 enum Skill implements EnumWithTitle {
-  forza('Forza', [SubSkill.atletica],
+  forza('Forza',
+      'png/strength', [SubSkill.atletica],
       'La Forza misura la potenza del proprio corpo, l\'addestramento fisico e l\'efficaciacon cui un personaggio è in grado di esercitare la propria potenza fisica.\nUna prova di forza può rappresentareogni tentativo di sollevare, spingere, tirareo spezzare qualcosa,di farsi strada atraverso uno spazio, o di applicare in altri modi la forza bruta a una situazione.\nL\'abilità atletica rappresenta una maggiore prestanza in certi tipi di prove di forza.'),
   destrezza(
       'Destrezza',
+      'png/dexterity',
       [
         SubSkill.acrobazia,
         SubSkill.furtivita,
         SubSkill.rapiditaDiMano,
       ],
       'La Destrezza misura l\'agilità, i riflessi e l\'equilibrio.\nUna prova di destrezza può rappresentar ogni tentativo di muoversi agilmente, rapidamente o silenziosamente, o di evitare di cadere quando ci si muove su una superficie precaria.\nLe abilità acrobazia, furtività e rapidità di mano rappresentano una maggiore bravura in certi tipi di prove di destrezza.'),
-  costituzione('Costituzione', [],
+  costituzione('Costituzione',
+      'png/costitution', [],
       'La Costituzione misura la salute, la resistenza fisica e l\'energia vitale del personaggio.\nLe prove di costituzione sono rare: nessuna abilità viene applicata alle prove di costituzione, in quanto la resistenza fisica rappresenta da questa caratteristica è principalmente una dote passiva e non richiede uno sforzo specifico da parte di un personaggio o di un mostro.\nUna prova di costituzione può tuttavia rappresentare il tentativo di un personaggio di spingersi oltre i propri limiti.'),
   intelligenza(
       'Intelligenza',
+      'png/intelligence',
       [
         SubSkill.arcano,
         SubSkill.storia,
@@ -1214,6 +1222,7 @@ enum Skill implements EnumWithTitle {
       'L\'Intelligenza misura l\'acume mentale, la precisione della memoria e le capacità logiche.\nUna prova di Intelligenza entra in gioco quando un personaggio ricorre alla logica, all\'istruzione, alla memoria o al ragionamento deduttivo.\nLe abilità arcano, indagare, natura, religione e storia rappresentano una preparazione superiore in certi tipi di prove di intelligenza.'),
   saggezza(
       'Saggezza',
+      'png/wisdom',
       [
         SubSkill.addestrareAnimali,
         SubSkill.intuizione,
@@ -1224,6 +1233,7 @@ enum Skill implements EnumWithTitle {
       'La Saggezza rappresenta la percezione, l\'intuizione e il grado di sintonia del personaggio con il mondo circostante.\nUna prova di saggezza rappresenta un tentativo di interpretare il linguaggio corporeo o le emozioni di qualcuno, notare qualcosa nell\'ambiente o prendersi cura di una persona ferita.\nLe abilità addestrare animali, intuizione, medicina, percezione e sopravvivenza rappresentano una maggiore sensibilità in certi tipi di prove di saggezza.'),
   carisma(
       'Carisma',
+      'png/carisma',
       [
         SubSkill.inganno,
         SubSkill.intimidire,
@@ -1232,10 +1242,13 @@ enum Skill implements EnumWithTitle {
       ],
       'Il Carisma misura la capacità del personaggio di interagire con successo con gli altri.\nInclude fattori come la sua sicurezza e la sua eloquenza e può rappresentare una personalità accattivante o imperiosa.\nUn personaggio può effettuare una prova di carisma quando cerca di influenzare o di intrattenere gli altri, quando tenta di impressionare qualcuno o di raccontare una bugia convincente, o quando deve destreggiarsi in una situazione sociale spinosa.\nLe abilità Inganno, Intimidire, Intrattenere e Persuasione rappresentano una maggiore disinvoltura in certi tipi di prove di Carisma.');
 
-  final String title, description;
+  @override
+  final String title;
+  final String iconPath,description;
   final List<SubSkill> subSkills;
+  final Color color;
 
-  const Skill(this.title, this.subSkills, this.description);
+  const Skill(this.title,this.iconPath,this.color, this.subSkills, this.description);
 }
 
 enum SubSkill implements EnumWithTitle {
@@ -1263,6 +1276,7 @@ enum SubSkill implements EnumWithTitle {
   intrattenere('Intrattenere'),
   persuasione('Persuasione');
 
+  @override
   final String title;
 
   const SubSkill(this.title);
@@ -1369,6 +1383,7 @@ enum Mastery implements EnumWithTitle {
   scimitarre('Scimitarre'),
   strumentiDaErborista('Strumenti da Erborista');
 
+  @override
   final String title;
 
   const Mastery(this.title);
@@ -1392,6 +1407,7 @@ enum Language implements EnumWithTitle {
   elfico('Elfico'),
   comune('Comune');
 
+  @override
   final String title;
 
   const Language(this.title);
@@ -1419,19 +1435,47 @@ enum Status {
 }
 
 enum Alignment implements EnumWithTitle {
-  legaleBuono('Legale buono'),
-  neutraleBuono('Neutrale buono'),
-  caoticoBuono('Caotico buono'),
-  legaleNeutrale('Legale neutrale'),
-  neutralePuro('Neutrale puro'),
-  caoticoNeutrale('Caotico neutrale'),
-  legaleMalvagio('Legale malvagio'),
-  neutraleMalvagio('Neutrale malvagio'),
-  caoticoMalvagio('Caotico malvagio');
+  legaleBuono('Legale buono', 'LB',
+      'Creature su cui si può contare facciano la cosa corretta da fare secondo la società civile. Draghi d’oro, paladini e la maggior parte dei nani sono legali buoni.'),
+  neutraleBuono('Neutrale buono', 'NB',
+      'Creature che cercano di fare del loro meglio per aiutare il prossimo nelle sue necessità. Molti celestiali, alcuni giganti delle nuvole e la maggior parte degli gnomi sono neutrali buoni.'),
+  caoticoBuono('Caotico buono', 'CB',
+      'Creature che agiscono secondo la propria coscienza, con poca considerazione delle aspettative altrui. Draghi di rame, molti elfi e gli unicorni sono caotici buoni'),
+  legaleNeutrale('Legale neutrale', 'LN',
+      'Individui che agiscono secondo leggi, tradizioni o codici personali. Molti monaci e alcuni maghi sono legali neutrali.\n\nNeutrale (N) è l’allineamento di coloro che preferiscono evitare le questioni morali e non schierarsi, facendo quella che sembra la cosa migliore da fare in quel momento. I lucertoloidi, la maggior parte dei druidi e molti umani sono neutrali.'),
+  neutralePuro('Neutrale puro', 'NN',
+      'Un personaggio neutrale fa sempre ciò che gli sembra essere una buona idea. Quando si tratta del male e del bene, della legge e del caos non ha particolari tendenze dall’una o dall’altra parte.'),
+  caoticoNeutrale('Caotico neutrale', 'CN',
+      'Creature che seguono il proprio istinto, e che considerano la libertà personale al di sopra di tutto. Molti barbari e ladri, e alcuni bardi, sono caotici neutrali.'),
+  legaleMalvagio('Legale malvagio', 'LM',
+      'Creature che metodicamente prendono ciò che vogliono entro i limiti di un codice di tradizioni, della lealtà o dell’ordine. Diavoli, draghi blu e hobgoblin sono legali malvagi.'),
+  neutraleMalvagio('Neutrale malvagio', 'NM',
+      'E’ l’allineamento di coloro che agiscono in qualsiasi modo ritengano più opportuno, senza compassione o scrupoli. Molti elfi oscuri, alcuni giganti delle nuvole e i goblin sono neutrali malvagi.'),
+  caoticoMalvagio('Caotico malvagio', 'CM',
+      'Creature che agiscono in base ad un’arbitraria violenza, alimentata da avidità, odio o sete di sangue. Demoni, draghi rossi e orchi sono caotici malvagi.'),
+  nessuno('Nessun allineamento', null,
+      'La maggior parte delle creature prive di pensiero razionale non hanno allineamenti: sono senza allineamento. Una creatura del genere è incapace di effettuare scelte etiche o morali e agisce secondo la sua natura bestiale. Per dire, gli squali sono selvaggi predatori, ma non sono malvagi; non hanno alcun allineamento.');
 
+  @override
   final String title;
+  final String description;
+  final String? initials;
 
-  const Alignment(this.title);
+  const Alignment(this.title, this.initials, this.description);
+
+  static const _initials = {
+    'L': 'Legale',
+    'N': 'Neutrale',
+    'C': 'Caotico',
+    'B': 'Buono',
+    'M': 'Malvagio'
+  };
+
+  List<String> get fullInitials => switch (this) {
+        Alignment.nessuno => ['Nessuno'],
+        Alignment.neutralePuro => ['Neutrale', 'Puro'],
+        _ => initials!.split('').map((e) => _initials[e]!).toList(),
+      };
 }
 
 @JsonSerializable(constructor: 'jsonConstructor')
@@ -1487,7 +1531,7 @@ class Character implements JSONSerializable, WithUID {
         languages = languages ?? {},
         savingThrows = savingThrows ?? {} {
     for (var qta in _inventory.values) {
-      assert(qta >0);
+      assert(qta > 0);
     }
   }
 
@@ -1498,18 +1542,18 @@ class Character implements JSONSerializable, WithUID {
         regDateTimestamp = DateTime.now().millisecondsSinceEpoch,
         class_ = Class.barbaro,
         race = Race.umano,
-        alignment = Alignment.caoticoBuono;
+        alignment = Alignment.nessuno;
 
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   late final String? uid;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
-  Map<InventoryItem, int> get inventory =>
-      _inventory.map((key, value) => MapEntry(InventoryItem.fromName(key), value));
+  Map<InventoryItem, int> get inventory => _inventory
+      .map((key, value) => MapEntry(InventoryItem.fromName(key), value));
 
-  set inventory(Map<InventoryItem, int> value) => _inventory = value.map((key, value) =>
-  MapEntry(key.toString(), value));
+  set inventory(Map<InventoryItem, int> value) =>
+      _inventory = value.map((key, value) => MapEntry(key.toString(), value));
 
   DateTime get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
 

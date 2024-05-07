@@ -36,7 +36,7 @@ class _GlassCardState extends State<GlassCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.onTap,
+      onTap: (widget.onTap),
       onTapDown: (_) => widget.clickable ? setState(() => _down = true) : null,
       onTapUp: (_) => widget.clickable ? setState(() => _down = false) : null,
       onTapCancel: () =>
