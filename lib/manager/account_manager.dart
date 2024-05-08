@@ -43,7 +43,7 @@ class AccountManager {
   Future<bool> cacheSignIn() async {
     if (_auth.currentUser != null) {
       user =
-          await DataManager().loadUser(_auth.currentUser?.uid, useCache: false);
+          await DataManager().load(_auth.currentUser!.uid, useCache: false);
     }
     return _auth.currentUser != null;
   }
@@ -53,7 +53,7 @@ class AccountManager {
       final userCredential = await _auth.signInWithEmailAndPassword(
           email: emailAddress, password: password);
       user = await DataManager()
-          .loadUser(userCredential.user?.uid, useCache: false);
+          .load(userCredential.user!.uid, useCache: false);
     } catch (e) {
       if (e.toString().contains("type 'Null' is not a subtype")) {
         return SignInStatus.userNotInDatabase;
@@ -123,7 +123,7 @@ class AccountManager {
           print('👤 SignIn with Google');
           print('📘${userCredential.additionalUserInfo!.profile}');
           user = await DataManager()
-              .loadUser(userCredential.user?.uid, useCache: false);
+              .load(userCredential.user!.uid, useCache: false);
           return SignInStatus.success;
         }
       } else {
@@ -145,5 +145,14 @@ class AccountManager {
     } catch (e) {
       return ResetPasswordStatus.error;
     }
+  }
+
+  reloadUser()async {
+    User newUser=await DataManager().load(user.uid!,useCache: false);
+    user.charactersUIDs=newUser.charactersUIDs;
+    user.campaignsUIDs=newUser.campaignsUIDs;
+    // All other fields that may have changed
+    // Note: I intentionally do not reassign the user with the new instance
+    // in order to maintain any listener to the ValueListener fields
   }
 }

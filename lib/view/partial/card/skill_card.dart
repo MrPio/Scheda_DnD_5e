@@ -18,8 +18,8 @@ import '../../../model/character.dart';
 class SkillCard extends StatelessWidget {
   final Skill skill;
   final TextEditingController skillInputController;
-
-  const SkillCard(this.skill, {super.key, required this.skillInputController});
+final int raceSkill; // The contribute given by the race and subRace selection
+  const SkillCard(this.skill, {super.key, required this.skillInputController, required this.raceSkill});
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class SkillCard extends StatelessWidget {
                           isDense: true,
                           style: Fonts.black(size: 26)),
                       // TODO: edit this +2
-                      Text('+ 2', style: Fonts.light(size: 16)),
+                      Text('+ $raceSkill', style: Fonts.light(size: 16)),
                     ],
                   )
                 ]),

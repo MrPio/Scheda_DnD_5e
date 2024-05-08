@@ -17,7 +17,10 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       $enumDecode(_$SubClassEnumMap, json['subClass']),
       $enumDecode(_$RaceEnumMap, json['race']),
       $enumDecodeNullable(_$SubRaceEnumMap, json['subRace']),
-      (json['skills'] as Map<String, dynamic>?)?.map(
+      (json['_chosenSkills'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), e as int),
+      ),
+      (json['rollSkills'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), e as int),
       ),
       (json['subSkills'] as Map<String, dynamic>?)?.map(
@@ -35,7 +38,11 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       $enumDecodeNullable(_$StatusEnumMap, json['status']),
       $enumDecode(_$AlignmentEnumMap, json['alignment']),
       json['level'] as int,
-    )..name = json['name'] as String;
+    )
+      ..name = json['name'] as String
+      ..chosenSkills = (json['chosenSkills'] as Map<String, dynamic>).map(
+        (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), e as int),
+      );
 
 Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'regDateTimestamp': instance.regDateTimestamp,
@@ -46,7 +53,10 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'subClass': _$SubClassEnumMap[instance.subClass]!,
       'race': _$RaceEnumMap[instance.race]!,
       'subRace': _$SubRaceEnumMap[instance.subRace],
-      'skills': instance.skills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
+      '_chosenSkills':
+          instance._chosenSkills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
+      'rollSkills':
+          instance.rollSkills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
       'subSkills':
           instance.subSkills.map((k, e) => MapEntry(_$SubSkillEnumMap[k]!, e)),
       'masteries': instance.masteries.map((e) => _$MasteryEnumMap[e]!).toList(),
@@ -59,6 +69,8 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'level': instance.level,
       '_inventory': instance._inventory,
       'name': instance.name,
+      'chosenSkills':
+          instance.chosenSkills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
     };
 
 const _$ClassEnumMap = {

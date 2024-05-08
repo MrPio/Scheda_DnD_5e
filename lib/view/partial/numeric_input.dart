@@ -74,25 +74,31 @@ class _NumericInputState extends State<NumericInput> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: widget.width,
-      child: TextField(
-        onSubmitted: (_){
-          value=value;
-        },
-          keyboardAppearance: Brightness.dark,
-          keyboardType: TextInputType.number,
-          maxLength: widget.max.toString().length + (hasSign ? 1 : 0),
-          textAlign: TextAlign.center,
-          decoration: InputDecoration(
-              hintText: widget.hint,
-              isDense: widget.isDense,
-              border: widget.isDense ? null : InputBorder.none,
-              contentPadding: widget.contentPadding,
-              hintStyle: Fonts.light(color: Palette.hint),
-              hoverColor: Palette.onBackground,
-              focusColor: Palette.onBackground,
-              counterText: ''),
-          controller: widget.controller,
-          style: widget.style ?? Fonts.black(size: 26)),
+      child: Focus(
+        onFocusChange: (_)=>
+        value=value,
+        child: TextField(
+          onSubmitted: (_)=>
+            value=value,
+            onEditingComplete: ()=>
+              value=value,
+            onTapOutside: (_)=>value=value,
+            keyboardAppearance: Brightness.dark,
+            keyboardType: TextInputType.number,
+            maxLength: widget.max.toString().length + (hasSign ? 1 : 0),
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+                hintText: widget.hint,
+                isDense: widget.isDense,
+                border: widget.isDense ? null : InputBorder.none,
+                contentPadding: widget.contentPadding,
+                hintStyle: Fonts.light(color: Palette.hint),
+                hoverColor: Palette.onBackground,
+                focusColor: Palette.onBackground,
+                counterText: ''),
+            controller: widget.controller,
+            style: widget.style ?? Fonts.black(size: 26)),
+      ),
     );
   }
 }

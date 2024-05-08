@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -12,17 +13,17 @@ class User implements JSONSerializable, WithUID {
   final int regDateTimestamp;
 
   // Note: It is not needed to distinguish between created and joined campaigns
-  final List<String> campaignsUIDs, charactersUIDs;
+  List<String> campaignsUIDs, charactersUIDs;
 
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   late final String? uid;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
-  List<Campaign> campaigns = [];
+  ValueNotifier<List<Campaign>?> campaigns = ValueNotifier(null);
 
   @JsonKey(includeFromJson: false, includeToJson: false)
-  List<Character> characters = [];
+  ValueNotifier<List<Character>?> characters = ValueNotifier(null);
 
   User(
       {this.nickname = 'Anonimo',

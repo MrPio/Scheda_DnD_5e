@@ -77,10 +77,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final fabs = [
-      Tuple3(() => Navigator.of(context).pushNamed('/create_character'),
-          Palette.primaryBlue, 'add'),
+      const Tuple2(Palette.primaryBlue, 'add'),
       null,
-      Tuple3(HomePage.onFabTaps[DicePage], Palette.primaryGreen, 'refresh'),
+      const Tuple2(Palette.primaryGreen, 'refresh'),
       null,
       null
     ];
@@ -108,13 +107,13 @@ class _HomePageState extends State<HomePage> {
                         bottom: Measures.fABBottomMargin,
                         right: Measures.hPadding),
                     child: FloatingActionButton(
-                      onPressed: fabs[_index]!.item1,
+                      onPressed: ()=>HomePage.onFabTaps[_screens[_index].runtimeType]?.call(),
                       elevation: 0,
-                      foregroundColor: fabs[_index]!.item2,
-                      backgroundColor: fabs[_index]!.item2,
+                      foregroundColor: fabs[_index]!.item1,
+                      backgroundColor: fabs[_index]!.item1,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(999)),
-                      child: fabs[_index]!.item3.toIcon(height: 20),
+                      child: fabs[_index]!.item2.toIcon(height: 20),
                     ),
                   )),
           ]),
@@ -130,15 +129,14 @@ class _HomePageState extends State<HomePage> {
                 children: _screens.map((e) {
                   final i = _screens.indexOf(e);
                   return GlassBottomBarIcon(
-                    title: _screenNames[i],
-                    iconPathOn: '${_screenIconPaths[i]}_on',
-                    iconPathOff: '${_screenIconPaths[i]}_off',
-                    active: _index == i,
-                    onTap: () => _pageController.animateToPage(i,
-                        duration:
-                            Durations.medium3 * pow((_index - i).abs(), 0.7),
-                        curve: Curves.easeOutCubic)
-                  );
+                      title: _screenNames[i],
+                      iconPathOn: '${_screenIconPaths[i]}_on',
+                      iconPathOff: '${_screenIconPaths[i]}_off',
+                      active: _index == i,
+                      onTap: () => _pageController.animateToPage(i,
+                          duration:
+                              Durations.medium3 * pow((_index - i).abs(), 0.7),
+                          curve: Curves.easeOutCubic));
                 }).toList(),
               ),
             ),

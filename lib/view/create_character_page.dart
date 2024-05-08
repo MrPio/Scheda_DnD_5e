@@ -13,7 +13,9 @@ import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/set_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
+import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
+import 'package:scheda_dnd_5e/mixin/loadable.dart';
 import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
@@ -24,6 +26,7 @@ import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';
 import 'package:scheda_dnd_5e/view/partial/legend.dart';
+import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 
@@ -41,10 +44,9 @@ class CreateCharacterPage extends StatefulWidget {
 }
 
 class _CreateCharacterPageState extends State<CreateCharacterPage>
-    with Validable {
+    with Validable, Loadable {
   List<Character?> characters = [
     Character(),
-    null,
     null,
     null,
     null,
@@ -58,10 +60,11 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
   late final TextEditingController _nameController;
 
   List<Widget>? _screens;
+  List<Function()?>? _bottomButtons;
 
-  final _hasBottomButton = [true, false, false, false, false, false, false];
   int _index = 0;
-  final List<TextEditingController> skillControllers=List.generate(Skill.values.length, (_) => TextEditingController(text:'3'));
+  final List<TextEditingController> _skillControllers = List.generate(
+      Skill.values.length, (_) => TextEditingController(text: '3'));
 
   @override
   void initState() {
@@ -87,7 +90,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
 
   @override
   Widget build(BuildContext context) {
-    _screens ??= [
+    _screens = [
       // Choose name
       Column(children: [
         // Page Title
@@ -139,7 +142,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                               character.race = e;
                               character.languages = e.defaultLanguages.toSet();
                               character.masteries.clear();
-                              character.skills = e.defaultSkills;
+                              character.chosenSkills = e.defaultSkills;
                               character.subSkills.clear();
                               // Ask the possible choices before continuing
                               if (e.canChoiceLanguage) {
@@ -183,7 +186,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                 Skill.values
                                     .sublist(0, e.numChoiceableSkills)
                                     .forEach((skill) =>
-                                        character.skills += {skill: 1});
+                                        character.chosenSkills += {skill: 1});
                                 await context.checkList<Skill>(
                                   'Scegli ${e.numChoiceableSkills} competenza/e a cui assegnare +1',
                                   dismissible: false,
@@ -192,23 +195,23 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   color: Palette.primaryYellow,
                                   selectionRequirement: e.numChoiceableSkills,
                                   onChanged: (value) {
-                                    var selected =
-                                        character.skills - e.defaultSkills;
+                                    var selected = character.chosenSkills -
+                                        e.defaultSkills;
                                     if (selected.containsKey(value)) {
-                                      character.skills -= {value: 1};
+                                      character.chosenSkills -= {value: 1};
                                     } else if (selected.isEmpty ||
                                         selected.values.toList().sum() <
                                             e.numChoiceableSkills) {
-                                      character.skills += {value: 1};
+                                      character.chosenSkills += {value: 1};
                                     } else if (e.numChoiceableSkills == 1 &&
                                         !selected.containsKey(value)) {
-                                      character.skills.clear();
-                                      character.skills
+                                      character.chosenSkills.clear();
+                                      character.chosenSkills
                                           .addAll(e.defaultSkills + {value: 1});
                                     }
                                   },
                                   value: (value) =>
-                                      character.skills[value] ==
+                                      character.chosenSkills[value] ==
                                       (e.defaultSkills[value] ?? 0) + 1,
                                 );
                               }
@@ -456,7 +459,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                 onTap: () async {
                                   // Set subRace fields
                                   character.subRace = e;
-                                  character.skills += e.defaultSkills;
+                                  character.chosenSkills += e.defaultSkills;
                                   character.masteries
                                       .addAll(e.defaultMasteries);
                                   Set<Language> backupLanguages =
@@ -772,6 +775,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                 );
                               }
                               if (e.choiceableItems.isNotEmpty) {
+                                var count=0;
                                 for (var (i, items)
                                     in e.choiceableItems.indexed) {
                                   var backupInventory = character.inventory;
@@ -780,8 +784,9 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                         items.entries.first.value
                                   }));
                                   if (items.length > 1) {
+                                    ++count;
                                     await context.checkList<InventoryItem>(
-                                      'Scegli un oggetto (${i + 1}/${e.choiceableItems.length})',
+                                      'Scegli un oggetto ($count/${e.choiceableItems.where((e) => e.length>1).length})',
                                       dismissible: false,
                                       isRadio: true,
                                       values: items.keys.toList(),
@@ -1052,16 +1057,35 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
             mainAxisSpacing: Measures.vMarginThin,
             physics: const NeverScrollableScrollPhysics(),
             builder: (context, i) => SkillCard(
-              Skill.values[i],
-              skillInputController: skillControllers[i],
-            )),
-        SizedBox(height:MediaQuery.of(context).viewInsets.bottom+ Measures.vMarginBig), // <-- This is essential, as it is dynamic based on the keyboard status.
+                  Skill.values[i],
+                  raceSkill: character.chosenSkills[Skill.values[i]] ??
+                      0 +
+                          (character.race.defaultSkills[Skill.values[i]] ?? 0) +
+                          (character.subRace?.defaultSkills[Skill.values[i]] ??
+                              0),
+                  skillInputController: _skillControllers[i],
+                )),
+        SizedBox(
+            height:
+                MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig),
+        // <-- This is essential, as it is dynamic based on the keyboard status.
       ]),
+    ];
+    _bottomButtons??=[
+          () {
+        if (validate(
+                () => character.name = _nameController.text)) {
+          next();
+        }
+      },null,null,null,null,(){
+      character.chosenSkills=_skillControllers.asMap().map((i,e) => MapEntry(Skill.values[i], int.parse(e.text)));
+      next();
+      },
     ];
     return PopScope(
       canPop: false,
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: _index!=5,
         body: Stack(
           children: [
             // Background
@@ -1104,14 +1128,11 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Continue button
-                    if (_hasBottomButton[_index])
+                    if (_bottomButtons?[_index]!=null)
                       GlassButton(
                         'PROSEGUI',
                         color: Palette.primaryBlue,
-                        onTap: () {
-                          // TODO: i also need to distinguish between base Skill and Race+SubRace+Choiches skills
-                            next();
-                        },
+                        onTap: _bottomButtons?[_index],
                       ),
                     const SizedBox(height: Measures.vMarginMed),
                     // Bottom Progress
@@ -1139,6 +1160,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                 ),
               ),
             ),
+            // LoadingView
+            LoadingView(visible: isLoading)
           ],
         ),
       ),
@@ -1151,20 +1174,23 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
   }
 
   next({int step = 1}) {
-    if(_index+step>=(_screens?.length??0)){
-      DataManager().save(character);
-      Navigator.of(context).pop();
-    }
-    else{
+    if (_index + step >= (_screens?.length ?? 0)) {
+      // The character creation is completed
+      withLoading(() async{
+        character.uid = await DataManager().save(character, SaveMode.post);
+        AccountManager().user.charactersUIDs.add(character.uid!);
+        await DataManager().save(AccountManager().user);
+        Navigator.of(context).pop();
+      });
 
-    // Cloning the previous state
-    for (var i = 1; i <= step; i++) {
-      characters[_index + i] = Character.fromJson(character.toJSON());
-    }
-    FocusManager.instance.primaryFocus?.unfocus();
-    _pageController.animateToPage(_index + step,
-        duration: Durations.medium1, curve: Curves.easeOutCubic);
-    print(characters.reversed);
+    } else {
+      // Cloning the previous state
+      for (var i = 1; i <= step; i++) {
+        characters[_index + i] = Character.fromJson(character.toJSON());
+      }
+      FocusManager.instance.primaryFocus?.unfocus();
+      _pageController.animateToPage(_index + step,
+          duration: Durations.medium1, curve: Curves.easeOutCubic);
     }
   }
 
@@ -1185,6 +1211,5 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
       _pageController.animateToPage(_index - step,
           duration: Durations.medium1, curve: Curves.easeOutCubic);
     }
-    print(characters);
   }
 }

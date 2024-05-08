@@ -63,7 +63,7 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
     // Forcing shimmer effect
     final tmpEnchantments = DataManager().enchantments.value;
     DataManager().enchantments.value = null;
-    Future.delayed(Durations.long3,
+    Future.delayed(Durations.long1,
         () => DataManager().enchantments.value = tmpEnchantments);
     super.initState();
   }

@@ -14,6 +14,7 @@ import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 
 import '../enum/fonts.dart';
 import '../enum/measures.dart';
+import 'home_page.dart';
 import 'partial/radio_button.dart';
 
 class CharactersPage extends StatefulWidget {
@@ -27,12 +28,22 @@ class _CharactersPageState extends State<CharactersPage> {
   late final TextEditingController _searchController;
   late final List<Filter> _filters;
 
-  List<Character> get _characters => AccountManager().user.characters;
+  List<Character> get _characters =>
+      (AccountManager().user.characters.value ?? [])
+          .where((e) =>
+              _filters.every((filter) => filter.checkFilter(e)) &&
+              e.name.match(_searchController.text))
+          .toList()
+        ..sort();
 
-  bool get isDataReady => true; //DataManager().enchantments.value != null;
+  bool get isDataReady => AccountManager().user.characters.value != null;
 
   @override
   void initState() {
+    HomePage.onFabTaps[widget.runtimeType] = () async {
+      await Navigator.of(context).pushNamed('/create_character');
+      refresh();
+    };
     _searchController = TextEditingController()
       ..addListener(() {
         setState(() {});
@@ -48,6 +59,12 @@ class _CharactersPageState extends State<CharactersPage> {
           ch.Alignment.values,
           (character, values) => values.contains(character.alignment)),
     ];
+    AccountManager().user.characters.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+    refresh();
     super.initState();
   }
 
@@ -94,9 +111,7 @@ class _CharactersPageState extends State<CharactersPage> {
                           selected: _filters[i].selectedValues.isNotEmpty,
                           text: _filters[i].title,
                           color: _filters[i].color,
-                          onPressed: () => _filters[i]
-                                  .selectedValues
-                                  .isNotEmpty
+                          onPressed: () => _filters[i].selectedValues.isNotEmpty
                               ? setState(
                                   () => _filters[i].selectedValues.clear())
                               : context.checkList(
@@ -104,9 +119,7 @@ class _CharactersPageState extends State<CharactersPage> {
                                   values: _filters[i].values,
                                   color: _filters[i].color,
                                   onChanged: (value) => setState(() =>
-                                      _filters[i]
-                                          .selectedValues
-                                          .toggle(value)),
+                                      _filters[i].selectedValues.toggle(value)),
                                   value: (value) => _filters[i]
                                       .selectedValues
                                       .contains(value),
@@ -125,8 +138,7 @@ class _CharactersPageState extends State<CharactersPage> {
                     itemCount: isDataReady ? characters.length : 10,
                     itemBuilder: (_, i) => isDataReady
                         ? characterCard(characters[i])
-                        : const GlassCard(
-                            isShimmer: true, shimmerHeight: 75)),
+                        : const GlassCard(isShimmer: true, shimmerHeight: 75)),
               ),
             ]),
           ),
@@ -138,8 +150,8 @@ class _CharactersPageState extends State<CharactersPage> {
   characterCard(Character character) => Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: GlassCard(
-          onTap: () =>
-              Navigator.of(context).pushNamed('/character', arguments: character),
+          onTap: () => Navigator.of(context)
+              .pushNamed('/character', arguments: character),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
             child: Row(
@@ -151,7 +163,8 @@ class _CharactersPageState extends State<CharactersPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SingleChildScrollView(
-                          child: Text(character.name, style: Fonts.bold(size: 18))),
+                          child: Text(character.name,
+                              style: Fonts.bold(size: 18))),
                       Text(character.subRace?.title ?? character.race.title,
                           style: Fonts.light(size: 16)),
                     ],
@@ -176,4 +189,13 @@ class _CharactersPageState extends State<CharactersPage> {
           ),
         ),
       );
+
+  // Refreshing the characters UIDs
+  refresh() {
+    AccountManager().user.characters.value=null;
+    Future.delayed(Durations.long1, () async {
+      await AccountManager().reloadUser();
+      await DataManager().loadUserCharacters(AccountManager().user);
+    });
+  }
 }

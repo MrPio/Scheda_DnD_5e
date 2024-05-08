@@ -11,7 +11,8 @@ import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart';
 import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
-
+import 'dart:core' as core show Type;
+import 'dart:core' hide Type;
 import '../model/campaign.dart';
 
 enum SaveMode { post, put }
@@ -28,7 +29,16 @@ class DataManager {
 
   final anonymous = User();
   List<User> cachedUsers = [];
+  List<Character> cachedCharacters = [];
+  List<Character> cachedCampaigns = [];
   ValueNotifier<List<Enchantment>?> enchantments = ValueNotifier(null);
+
+  Map<core.Type, List<WithUID>> get caches =>
+      {
+        User: cachedUsers,
+        Campaign: cachedCampaigns,
+        Character: cachedCharacters,
+      };
 
   // This should be called after obtaining the auth
   fetchData() async {
@@ -41,63 +51,64 @@ class DataManager {
         .inDays >= 7) {
       print('⬇️ Scarico gli enchantments');
       enchantments.value = await DatabaseManager()
-          .getList<Enchantment>(DatabaseManager.collections[Enchantment]!, pageSize: 9999) ??
+          .getList<Enchantment>(
+          DatabaseManager.collections[Enchantment]!, pageSize: 9999) ??
           [];
-      IOManager().serializeObjects(DatabaseManager.collections[Enchantment]!, enchantments.value!);
+      IOManager().serializeObjects(
+          DatabaseManager.collections[Enchantment]!, enchantments.value!);
     } else {
       print('⚡ Leggo localmente gli enchantments');
       enchantments.value =
-      await IOManager().deserializeObjects<Enchantment>(DatabaseManager.collections[Enchantment]!);
+      await IOManager().deserializeObjects<Enchantment>(
+          DatabaseManager.collections[Enchantment]!);
     }
   }
 
-  // Load a single User object from a given uid
-  Future<User> loadUser(String? uid, {bool useCache = true}) async {
+  // Load a single object from a given uid
+  Future<T> load<T extends WithUID>(String uid,
+      {bool useCache = true}) async {
     if (useCache) {
-      // Is anonymous?
-      if (uid == null) {
-        return anonymous;
+      if( T.runtimeType==User){
+        // Is current User?
+        if (AccountManager().user.uid == uid) return AccountManager().user as T;
       }
-
-      // Already cached?
-      User? cachedUser =
-      cachedUsers.firstWhereOrNull((user) => user.uid == uid);
-      if (cachedUser != null) return cachedUser;
-
-      // Is current User?
-      if (AccountManager().user.uid == uid) return AccountManager().user;
+      WithUID? obj =
+      caches[T]?.firstWhereOrNull((e) => e.uid == uid);
+      if (obj != null) return obj as T;
     }
 
-    // Ask the database for the user and caching it
-    User? user = User.fromJson(await DatabaseManager().get("${DatabaseManager.collections[User]!}$uid"));
-    user.uid = uid;
-    // loadUserPosts(user);
-    cachedUsers.add(user);
-    return user;
+    // Ask the database for the character and caching it
+    T obj = JSONSerializable.modelFactories[T]!(await DatabaseManager().get(
+        "${DatabaseManager.collections[T]!}$uid"));
+    obj.uid = uid;
+    caches[T]?.removeWhere((e) => e.uid == uid);
+    caches[T]?.add(obj);
+    return obj;
   }
+
+  // Load the characters of a given user
+  loadUserCharacters(User user) async =>
+    user.characters.value= [for (var characterUID in user.charactersUIDs) await load(characterUID)];
 
   // Save Model objects
-  save(Object model, [SaveMode mode = SaveMode.put]) async {
+  Future<String?> save(JSONSerializable model,
+      [SaveMode mode = SaveMode.put]) async {
     String path = DatabaseManager.collections[model.runtimeType] ??
         '';
     if (mode == SaveMode.put) {
       if (model is WithUID) {
-        path += model.uid ?? '';
+        path += (model as WithUID).uid ?? '';
       } else if (model is Enchantment) {
         path += model.name.replaceAll('/', ' ');
       }
     }
 
     // Query the FirebaseRD
-    if (model is JSONSerializable) {
-      if (mode == SaveMode.put) {
-        DatabaseManager().put(path, model.toJSON());
-      } else {
-        String? uid = await DatabaseManager().post(path, model.toJSON());
-        if (uid != null) {
-          // Any operations to be performed with the retrieved uid
-        }
-      }
+    if (mode == SaveMode.put) {
+      DatabaseManager().put(path, model.toJSON());
+    } else {
+      return await DatabaseManager().post(path, model.toJSON());
     }
+    return null;
   }
 }
