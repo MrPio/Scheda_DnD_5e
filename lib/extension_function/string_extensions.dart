@@ -19,10 +19,10 @@ extension StringExtensions on String {
   /// 'home' ==> 'assets/images/icons/home.svg'
   /// 'png/home' ==> 'assets/images/icons/png/home.png'
   Widget toIcon(
-      {double height = 22, Function()? onTap, padding = const EdgeInsets.all(12.0)}) {
+      {double height = 22, Function()? onTap, padding = const EdgeInsets.all(12.0), color=Palette.onBackground}) {
     var icon = contains('png')
-        ? Image.asset('assets/images/icons/$this.png', height: height)
-        : SvgPicture.asset('assets/images/icons/$this.svg', height: height);
+        ? Image.asset('assets/images/icons/$this.png', height: height,color: color)
+        : SvgPicture.asset('assets/images/icons/$this.svg', height: height, color: color);
     if (onTap == null) {
       return icon;
     } else {

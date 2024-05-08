@@ -10,6 +10,7 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
     Character.jsonConstructor(
       json['regDateTimestamp'] as int,
       json['campaignUID'] as String?,
+      json['authorUID'] as String,
       json['_name'] as String,
       Map<String, int>.from(json['_inventory'] as Map),
       $enumDecode(_$ClassEnumMap, json['class_']),
@@ -39,6 +40,7 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'regDateTimestamp': instance.regDateTimestamp,
       'campaignUID': instance.campaignUID,
+      'authorUID': instance.authorUID,
       '_name': instance._name,
       'class_': _$ClassEnumMap[instance.class_]!,
       'subClass': _$SubClassEnumMap[instance.subClass]!,

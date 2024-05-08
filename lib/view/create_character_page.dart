@@ -13,6 +13,7 @@ import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/set_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
+import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
@@ -24,7 +25,7 @@ import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';
 import 'package:scheda_dnd_5e/view/partial/legend.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
-import 'package:scheda_dnd_5e/model/character.dart'as ch show Alignment ;
+import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 
 import '../enum/fonts.dart';
 import '../enum/measures.dart';
@@ -41,7 +42,15 @@ class CreateCharacterPage extends StatefulWidget {
 
 class _CreateCharacterPageState extends State<CreateCharacterPage>
     with Validable {
-  List<Character?> characters = [Character(), null, null, null, null, null, null];
+  List<Character?> characters = [
+    Character(),
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ];
 
   Character get character => characters[_index]!;
 
@@ -52,6 +61,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
 
   final _hasBottomButton = [true, false, false, false, false, false, false];
   int _index = 0;
+  final List<TextEditingController> skillControllers=List.generate(Skill.values.length, (_) => TextEditingController(text:'3'));
 
   @override
   void initState() {
@@ -77,7 +87,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
 
   @override
   Widget build(BuildContext context) {
-    _screens /*TODO: add ??*/ = [
+    _screens ??= [
       // Choose name
       Column(children: [
         // Page Title
@@ -127,19 +137,17 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                             onTap: () async {
                               // Set race fields
                               character.race = e;
-                              character.languages =
-                                  e.defaultLanguages.toSet();
+                              character.languages = e.defaultLanguages.toSet();
                               character.masteries.clear();
                               character.skills = e.defaultSkills;
                               character.subSkills.clear();
                               // Ask the possible choices before continuing
                               if (e.canChoiceLanguage) {
                                 final languages = Language.values
-                                    .where((language) => !e.defaultLanguages
-                                        .contains(language))
+                                    .where((language) =>
+                                        !e.defaultLanguages.contains(language))
                                     .toList()
-                                  ..sort(
-                                      (a, b) => a.title.compareTo(b.title));
+                                  ..sort((a, b) => a.title.compareTo(b.title));
                                 character.languages.add(languages[0]);
                                 await context.checkList<Language>(
                                   'Scegli un linguaggio',
@@ -148,10 +156,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   values: languages,
                                   color: Palette.primaryGreen,
                                   selectionRequirement: 1,
-                                  onChanged: (value) =>
-                                      character.languages =
-                                          (e.defaultLanguages + [value])
-                                              .toSet(),
+                                  onChanged: (value) => character.languages =
+                                      (e.defaultLanguages + [value]).toSet(),
                                   value: (value) =>
                                       character.languages.contains(value),
                                 );
@@ -184,8 +190,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   isRadio: e.numChoiceableSkills == 1,
                                   values: Skill.values,
                                   color: Palette.primaryYellow,
-                                  selectionRequirement:
-                                      e.numChoiceableSkills,
+                                  selectionRequirement: e.numChoiceableSkills,
                                   onChanged: (value) {
                                     var selected =
                                         character.skills - e.defaultSkills;
@@ -198,8 +203,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                     } else if (e.numChoiceableSkills == 1 &&
                                         !selected.containsKey(value)) {
                                       character.skills.clear();
-                                      character.skills.addAll(
-                                          e.defaultSkills + {value: 1});
+                                      character.skills
+                                          .addAll(e.defaultSkills + {value: 1});
                                     }
                                   },
                                   value: (value) =>
@@ -210,8 +215,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                               if (e.numChoiceableSubSkills > 0) {
                                 SubSkill.values
                                     .sublist(0, e.numChoiceableSkills)
-                                    .forEach((subSkill) => character
-                                        .subSkills += {subSkill: 1});
+                                    .forEach((subSkill) =>
+                                        character.subSkills += {subSkill: 1});
                                 await context.checkList<SubSkill>(
                                   'Scegli ${e.numChoiceableSubSkills} sottocompetenza/e',
                                   dismissible: false,
@@ -224,20 +229,17 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                     if (character.subSkills
                                         .containsKey(value)) {
                                       character.subSkills -= {value: 1};
-                                    } else if (character
-                                            .subSkills.isEmpty ||
+                                    } else if (character.subSkills.isEmpty ||
                                         character.subSkills.values
                                                 .toList()
                                                 .sum() <
                                             e.numChoiceableSubSkills) {
                                       character.subSkills += {value: 1};
-                                    } else if (e.numChoiceableSubSkills ==
-                                            1 &&
+                                    } else if (e.numChoiceableSubSkills == 1 &&
                                         !character.subSkills
                                             .containsKey(value)) {
                                       character.subSkills.clear();
-                                      character.subSkills
-                                          .addAll({value: 1});
+                                      character.subSkills.addAll({value: 1});
                                     }
                                   },
                                   value: (value) =>
@@ -407,7 +409,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                           context.popup(e.title,
                                               message: e.description,
                                               positiveText: 'Ok',
-                                              backgroundColor: Palette.background
+                                              backgroundColor: Palette
+                                                  .background
                                                   .withOpacity(0.5));
                                         },
                                         padding: const EdgeInsets.all(12)),
@@ -465,16 +468,14 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                             .languages
                                             .contains(language))
                                         .toList()
-                                      ..sort((a, b) =>
-                                          a.title.compareTo(b.title));
-                                    character.languages.addAll(
-                                        languages.sublist(
-                                            0, e.numChoiceableLanguages));
+                                      ..sort(
+                                          (a, b) => a.title.compareTo(b.title));
+                                    character.languages.addAll(languages
+                                        .sublist(0, e.numChoiceableLanguages));
                                     await context.checkList<Language>(
                                       'Scegli ${e.numChoiceableLanguages} linguaggio/i',
                                       dismissible: false,
-                                      isRadio:
-                                          e.numChoiceableLanguages == 1,
+                                      isRadio: e.numChoiceableLanguages == 1,
                                       values: languages,
                                       color: Palette.primaryGreen,
                                       selectionRequirement:
@@ -491,21 +492,19 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                           character.languages.clear();
                                           character.languages.addAll(
                                               backupLanguages + {value});
-                                        } else if (character
-                                                    .languages.length -
+                                        } else if (character.languages.length -
                                                 backupLanguages.length <
                                             e.numChoiceableLanguages) {
                                           character.languages.add(value);
                                         }
                                       },
-                                      value: (value) => character.languages
-                                          .contains(value),
+                                      value: (value) =>
+                                          character.languages.contains(value),
                                     );
                                   }
                                   next();
                                 },
                                 child: Stack(
-
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -695,8 +694,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                             onTap: () async {
                               // Set class fields
                               character.class_ = e;
-                              character.masteries
-                                  .addAll(e.defaultMasteries);
+                              character.masteries.addAll(e.defaultMasteries);
                               character.savingThrows
                                   .addAll(e.savingThrowSkills);
                               Map<SubSkill, int> backupSubSkills =
@@ -708,8 +706,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                 character.subSkills += e.choiceableSubSkills
                                     .sublist(0, e.numChoiceableSubSkills)
                                     .map((e) => {e: 1})
-                                    .reduce((value, element) =>
-                                        value + element);
+                                    .reduce(
+                                        (value, element) => value + element);
                                 await context.checkList<SubSkill>(
                                   'Scegli ${e.numChoiceableSubSkills} sottocompetenza/e',
                                   dismissible: false,
@@ -719,20 +717,19 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   selectionRequirement:
                                       e.numChoiceableSubSkills,
                                   onChanged: (value) {
-                                    var selected = character.subSkills -
-                                        backupSubSkills;
+                                    var selected =
+                                        character.subSkills - backupSubSkills;
                                     if (selected.containsKey(value)) {
                                       character.subSkills -= {value: 1};
                                     } else if (selected.isEmpty ||
                                         selected.values.toList().sum() <
                                             e.numChoiceableSubSkills) {
                                       character.subSkills += {value: 1};
-                                    } else if (e.numChoiceableSubSkills ==
-                                            1 &&
+                                    } else if (e.numChoiceableSubSkills == 1 &&
                                         !selected.containsKey(value)) {
                                       character.subSkills.clear();
-                                      character.subSkills.addAll(
-                                          backupSubSkills + {value: 1});
+                                      character.subSkills
+                                          .addAll(backupSubSkills + {value: 1});
                                     }
                                   },
                                   value: (value) =>
@@ -756,19 +753,18 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   selectionRequirement:
                                       e.numChoiceableMasteries,
                                   onChanged: (value) {
-                                    var selected = character.masteries -
-                                        backupMasteries;
+                                    var selected =
+                                        character.masteries - backupMasteries;
                                     if (selected.contains(value)) {
                                       character.masteries -= {value};
                                     } else if (selected.length <
                                         e.numChoiceableMasteries) {
                                       character.masteries += {value};
-                                    } else if (e.numChoiceableMasteries ==
-                                            1 &&
+                                    } else if (e.numChoiceableMasteries == 1 &&
                                         !selected.contains(value)) {
                                       character.masteries.clear();
-                                      character.masteries.addAll(
-                                          backupMasteries + {value});
+                                      character.masteries
+                                          .addAll(backupMasteries + {value});
                                     }
                                   },
                                   value: (value) =>
@@ -795,16 +791,14 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                         var selected = character.inventory -
                                             backupInventory;
                                         if (!selected.containsKey(value)) {
-                                          character.inventory =
-                                              backupInventory;
+                                          character.inventory = backupInventory;
                                           character.addLoot(
                                               Loot({value: items[value]!}));
                                         }
                                       },
-                                      value: (value) =>
-                                          (character.inventory -
-                                                  backupInventory)
-                                              .containsKey(value),
+                                      value: (value) => (character.inventory -
+                                              backupInventory)
+                                          .containsKey(value),
                                     );
                                   }
                                 }
@@ -955,7 +949,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                           context.popup(e.title,
                                               message: e.description,
                                               positiveText: 'Ok',
-                                              backgroundColor: Palette.background
+                                              backgroundColor: Palette
+                                                  .background
                                                   .withOpacity(0.5));
                                         },
                                         padding: const EdgeInsets.all(12)),
@@ -977,20 +972,24 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
             child: Text('Scegli l’allineamento', style: Fonts.black())),
         const SizedBox(height: Measures.vMarginThin),
         // Subtitle
-        Text('L’allineamento è dato dalla moralità (buono, malvagio o neutrale) e dal  comportamento nei confronti della società (legale, caotico o neutrale).',
+        Text(
+            'L’allineamento è dato dalla moralità (buono, malvagio o neutrale) e dal  comportamento nei confronti della società (legale, caotico o neutrale).',
             style: Fonts.light()),
         const SizedBox(height: Measures.vMarginMed),
         // LB, NB, CB alignments =============================
         Row(
           children: [
             Expanded(
-                child: AlignmentCard(ch.Alignment.legaleBuono, onTap: selectAlignment)),
+                child: AlignmentCard(ch.Alignment.legaleBuono,
+                    onTap: selectAlignment)),
             const SizedBox(width: Measures.vMarginThin),
             Expanded(
-                child: AlignmentCard(ch.Alignment.neutraleBuono, onTap: selectAlignment)),
+                child: AlignmentCard(ch.Alignment.neutraleBuono,
+                    onTap: selectAlignment)),
             const SizedBox(width: Measures.vMarginThin),
             Expanded(
-                child: AlignmentCard(ch.Alignment.caoticoBuono, onTap: selectAlignment)),
+                child: AlignmentCard(ch.Alignment.caoticoBuono,
+                    onTap: selectAlignment)),
           ],
         ),
         const SizedBox(height: Measures.vMarginThin),
@@ -998,13 +997,16 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
         Row(
           children: [
             Expanded(
-                child: AlignmentCard(ch.Alignment.legaleNeutrale, onTap: selectAlignment)),
+                child: AlignmentCard(ch.Alignment.legaleNeutrale,
+                    onTap: selectAlignment)),
             const SizedBox(width: Measures.vMarginThin),
             Expanded(
-                child: AlignmentCard(ch.Alignment.neutralePuro, onTap: selectAlignment)),
+                child: AlignmentCard(ch.Alignment.neutralePuro,
+                    onTap: selectAlignment)),
             const SizedBox(width: Measures.vMarginThin),
             Expanded(
-                child: AlignmentCard(ch.Alignment.caoticoNeutrale, onTap: selectAlignment)),
+                child: AlignmentCard(ch.Alignment.caoticoNeutrale,
+                    onTap: selectAlignment)),
           ],
         ),
         const SizedBox(height: Measures.vMarginThin),
@@ -1012,18 +1014,22 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
         Row(
           children: [
             Expanded(
-                child: AlignmentCard(ch.Alignment.legaleMalvagio, onTap: selectAlignment)),
+                child: AlignmentCard(ch.Alignment.legaleMalvagio,
+                    onTap: selectAlignment)),
             const SizedBox(width: Measures.vMarginThin),
             Expanded(
-                child: AlignmentCard(ch.Alignment.neutraleMalvagio, onTap: selectAlignment)),
+                child: AlignmentCard(ch.Alignment.neutraleMalvagio,
+                    onTap: selectAlignment)),
             const SizedBox(width: Measures.vMarginThin),
             Expanded(
-                child: AlignmentCard(ch.Alignment.caoticoMalvagio, onTap: selectAlignment)),
+                child: AlignmentCard(ch.Alignment.caoticoMalvagio,
+                    onTap: selectAlignment)),
           ],
         ),
         const SizedBox(height: Measures.vMarginThin),
         // No alignment ===============================
-        AlignmentCard(ch.Alignment.nessuno, onTap: selectAlignment, isSmall: true),
+        AlignmentCard(ch.Alignment.nessuno,
+            onTap: selectAlignment, isSmall: true),
       ]),
       // Set stats
       Column(children: [
@@ -1033,25 +1039,29 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
             child: Text('Completa le statistiche', style: Fonts.black())),
         const SizedBox(height: Measures.vMarginThin),
         // Subtitle
-        Text('Per ogni competenza, lancia 4 D6, scarta il minore e calcola somma dei rimanenti. Puoi lanciare i dadi direttamente dall’app!',
+        Text(
+            'Per ogni competenza, lancia 4 D6, scarta il minore e calcola somma dei rimanenti. Puoi lanciare i dadi direttamente dall’app!',
             style: Fonts.light()),
         const SizedBox(height: Measures.vMarginThin),
-        // Forza, Destrezza, Costituzione skills =============================
+        // Skill cards =============================
         DynamicHeightGridView(
-          shrinkWrap: true,
+            shrinkWrap: true,
             itemCount: Skill.values.length,
             crossAxisCount: 2,
             crossAxisSpacing: Measures.vMarginThin,
             mainAxisSpacing: Measures.vMarginThin,
             physics: const NeverScrollableScrollPhysics(),
-            builder: (context, i) => SkillCard(Skill.values[i],)
-        ),
-        const SizedBox(height: Measures.vMarginThin),
+            builder: (context, i) => SkillCard(
+              Skill.values[i],
+              skillInputController: skillControllers[i],
+            )),
+        SizedBox(height:MediaQuery.of(context).viewInsets.bottom+ Measures.vMarginBig), // <-- This is essential, as it is dynamic based on the keyboard status.
       ]),
     ];
     return PopScope(
       canPop: false,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Stack(
           children: [
             // Background
@@ -1099,10 +1109,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                         'PROSEGUI',
                         color: Palette.primaryBlue,
                         onTap: () {
-                          if (validate(
-                              () => character.name = _nameController.text)) {
+                          // TODO: i also need to distinguish between base Skill and Race+SubRace+Choiches skills
                             next();
-                          }
                         },
                       ),
                     const SizedBox(height: Measures.vMarginMed),
@@ -1136,12 +1144,19 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
       ),
     );
   }
-  selectAlignment(ch.Alignment alignment){
-    character.alignment=alignment;
+
+  selectAlignment(ch.Alignment alignment) {
+    character.alignment = alignment;
     next();
   }
 
   next({int step = 1}) {
+    if(_index+step>=(_screens?.length??0)){
+      DataManager().save(character);
+      Navigator.of(context).pop();
+    }
+    else{
+
     // Cloning the previous state
     for (var i = 1; i <= step; i++) {
       characters[_index + i] = Character.fromJson(character.toJSON());
@@ -1150,6 +1165,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
     _pageController.animateToPage(_index + step,
         duration: Durations.medium1, curve: Curves.easeOutCubic);
     print(characters.reversed);
+    }
   }
 
   previous() {

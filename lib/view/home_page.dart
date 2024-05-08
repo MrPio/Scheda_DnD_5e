@@ -16,6 +16,8 @@ import 'partial/glass_bottom_bar_icon.dart';
 import 'partial/gradient_background.dart';
 
 class HomePage extends StatefulWidget {
+  static Map<Type, Function()> onFabTaps = {};
+
   const HomePage({super.key});
 
   @override
@@ -77,7 +79,10 @@ class _HomePageState extends State<HomePage> {
     final fabs = [
       Tuple3(() => Navigator.of(context).pushNamed('/create_character'),
           Palette.primaryBlue, 'add'),
-      null, null, null, null
+      null,
+      Tuple3(HomePage.onFabTaps[DicePage], Palette.primaryGreen, 'refresh'),
+      null,
+      null
     ];
     return Scaffold(
       backgroundColor: Palette.background,
@@ -95,12 +100,13 @@ class _HomePageState extends State<HomePage> {
             // Bottom vignette
             const BottomVignette(),
             // FAB
-            if(fabs[_index] != null)
+            if (fabs[_index] != null)
               Align(
                   alignment: Alignment.bottomRight,
                   child: Padding(
                     padding: const EdgeInsets.only(
-                        bottom: Measures.fABBottomMargin,right: Measures.hPadding),
+                        bottom: Measures.fABBottomMargin,
+                        right: Measures.hPadding),
                     child: FloatingActionButton(
                       onPressed: fabs[_index]!.item1,
                       elevation: 0,
@@ -116,8 +122,7 @@ class _HomePageState extends State<HomePage> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding:
-              const EdgeInsets.symmetric(horizontal: Measures.hPadding)
+              padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding)
                   .copyWith(top: Measures.vMarginThin)
                   .copyWith(bottom: Measures.vMarginThin),
               child: Row(
@@ -129,12 +134,10 @@ class _HomePageState extends State<HomePage> {
                     iconPathOn: '${_screenIconPaths[i]}_on',
                     iconPathOff: '${_screenIconPaths[i]}_off',
                     active: _index == i,
-                    onTap: () =>
-                        setState(() =>
-                            _pageController.animateToPage(i,
-                                duration: Durations.medium3 *
-                                    pow((_index - i).abs(), 0.7),
-                                curve: Curves.easeOutCubic)),
+                    onTap: () => _pageController.animateToPage(i,
+                        duration:
+                            Durations.medium3 * pow((_index - i).abs(), 0.7),
+                        curve: Curves.easeOutCubic)
                   );
                 }).toList(),
               ),

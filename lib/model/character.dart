@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
+import 'package:scheda_dnd_5e/manager/account_manager.dart';
 
 import 'loot.dart';
 
@@ -1195,11 +1197,11 @@ enum Race implements EnumWithTitle {
 
 enum Skill implements EnumWithTitle {
   forza('Forza',
-      'png/strength', [SubSkill.atletica],
+      'png/strength', Color(0xFFe5737c),[SubSkill.atletica],
       'La Forza misura la potenza del proprio corpo, l\'addestramento fisico e l\'efficaciacon cui un personaggio è in grado di esercitare la propria potenza fisica.\nUna prova di forza può rappresentareogni tentativo di sollevare, spingere, tirareo spezzare qualcosa,di farsi strada atraverso uno spazio, o di applicare in altri modi la forza bruta a una situazione.\nL\'abilità atletica rappresenta una maggiore prestanza in certi tipi di prove di forza.'),
   destrezza(
       'Destrezza',
-      'png/dexterity',
+      'png/dexterity',Color(0xFFe5ac73),
       [
         SubSkill.acrobazia,
         SubSkill.furtivita,
@@ -1207,11 +1209,11 @@ enum Skill implements EnumWithTitle {
       ],
       'La Destrezza misura l\'agilità, i riflessi e l\'equilibrio.\nUna prova di destrezza può rappresentar ogni tentativo di muoversi agilmente, rapidamente o silenziosamente, o di evitare di cadere quando ci si muove su una superficie precaria.\nLe abilità acrobazia, furtività e rapidità di mano rappresentano una maggiore bravura in certi tipi di prove di destrezza.'),
   costituzione('Costituzione',
-      'png/costitution', [],
+      'png/costitution',Color(0xFFe5e573), [],
       'La Costituzione misura la salute, la resistenza fisica e l\'energia vitale del personaggio.\nLe prove di costituzione sono rare: nessuna abilità viene applicata alle prove di costituzione, in quanto la resistenza fisica rappresenta da questa caratteristica è principalmente una dote passiva e non richiede uno sforzo specifico da parte di un personaggio o di un mostro.\nUna prova di costituzione può tuttavia rappresentare il tentativo di un personaggio di spingersi oltre i propri limiti.'),
   intelligenza(
       'Intelligenza',
-      'png/intelligence',
+      'png/intelligence',Color(0xFF6cd9a2),
       [
         SubSkill.arcano,
         SubSkill.storia,
@@ -1222,7 +1224,7 @@ enum Skill implements EnumWithTitle {
       'L\'Intelligenza misura l\'acume mentale, la precisione della memoria e le capacità logiche.\nUna prova di Intelligenza entra in gioco quando un personaggio ricorre alla logica, all\'istruzione, alla memoria o al ragionamento deduttivo.\nLe abilità arcano, indagare, natura, religione e storia rappresentano una preparazione superiore in certi tipi di prove di intelligenza.'),
   saggezza(
       'Saggezza',
-      'png/wisdom',
+      'png/wisdom',Color(0xFF7979f2),
       [
         SubSkill.addestrareAnimali,
         SubSkill.intuizione,
@@ -1233,7 +1235,7 @@ enum Skill implements EnumWithTitle {
       'La Saggezza rappresenta la percezione, l\'intuizione e il grado di sintonia del personaggio con il mondo circostante.\nUna prova di saggezza rappresenta un tentativo di interpretare il linguaggio corporeo o le emozioni di qualcuno, notare qualcosa nell\'ambiente o prendersi cura di una persona ferita.\nLe abilità addestrare animali, intuizione, medicina, percezione e sopravvivenza rappresentano una maggiore sensibilità in certi tipi di prove di saggezza.'),
   carisma(
       'Carisma',
-      'png/carisma',
+      'png/carisma',Color(0xFFd273e5),
       [
         SubSkill.inganno,
         SubSkill.intimidire,
@@ -1482,6 +1484,7 @@ enum Alignment implements EnumWithTitle {
 class Character implements JSONSerializable, WithUID {
   int regDateTimestamp;
   String? campaignUID;
+  String authorUID;
   @JsonKey(includeFromJson: true, includeToJson: true)
   String _name;
   Class class_;
@@ -1511,6 +1514,7 @@ class Character implements JSONSerializable, WithUID {
   Character.jsonConstructor(
       this.regDateTimestamp,
       this.campaignUID,
+      this.authorUID,
       this._name,
       this._inventory,
       this.class_,
@@ -1537,6 +1541,7 @@ class Character implements JSONSerializable, WithUID {
 
   Character()
       : _name = '',
+        authorUID=AccountManager().user.uid!,
         level = 0,
         subClass = Class.barbaro.subClasses[0],
         regDateTimestamp = DateTime.now().millisecondsSinceEpoch,
