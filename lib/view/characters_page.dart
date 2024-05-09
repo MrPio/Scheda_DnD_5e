@@ -162,11 +162,18 @@ class _CharactersPageState extends State<CharactersPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SingleChildScrollView(
-                          child: Text(character.name,
-                              style: Fonts.bold(size: 18))),
-                      Text(character.subRace?.title ?? character.race.title,
-                          style: Fonts.light(size: 16)),
+                      Row(
+                        children: [
+                          character.class_.iconPath.toIcon(height: 24),
+                          const SizedBox(width: Measures.hMarginBig),
+                          Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
+                            Text(character.name, style: Fonts.bold(size: 18)),
+                            Text(character.subRace?.title ?? character.race.title,
+                                style: Fonts.light(size: 16)),
+                          ],)
+                        ],
+                      ),
+
                     ],
                   ),
                 ),
@@ -192,7 +199,7 @@ class _CharactersPageState extends State<CharactersPage> {
 
   // Refreshing the characters UIDs
   refresh() {
-    AccountManager().user.characters.value=null;
+    AccountManager().user.characters.value = null;
     Future.delayed(Durations.long1, () async {
       await AccountManager().reloadUser();
       await DataManager().loadUserCharacters(AccountManager().user);

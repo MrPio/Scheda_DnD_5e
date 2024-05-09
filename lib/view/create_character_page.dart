@@ -45,14 +45,7 @@ class CreateCharacterPage extends StatefulWidget {
 
 class _CreateCharacterPageState extends State<CreateCharacterPage>
     with Validable, Loadable {
-  List<Character?> characters = [
-    Character(),
-    null,
-    null,
-    null,
-    null,
-    null
-  ];
+  List<Character?> characters = [Character(), null, null, null, null, null];
 
   Character get character => characters[_index]!;
 
@@ -97,6 +90,13 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
         Align(
             alignment: Alignment.centerLeft,
             child: Text('Assegna un nome', style: Fonts.black())),
+        const SizedBox(height: Measures.vMarginThin),
+        // Subtitle
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text('Come vuoi chiamare il tuo nuovo personaggio?',
+              style: Fonts.light()),
+        ),
         const SizedBox(height: Measures.vMarginMed),
         // Search TextField
         GlassTextField(
@@ -123,6 +123,14 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
         Align(
             alignment: Alignment.centerLeft,
             child: Text('Seleziona la razza', style: Fonts.black())),
+        const SizedBox(height: Measures.vMarginThin),
+        // Subtitle
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+              'La Razza rappresenta il popolo e l’etnia di cui farà parte il personaggio.',
+              style: Fonts.light()),
+        ),
         const SizedBox(height: Measures.vMarginMed),
         // Legend
         const Legend(items: {
@@ -433,6 +441,14 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
         Align(
             alignment: Alignment.centerLeft,
             child: Text('Seleziona la sottorazza', style: Fonts.black())),
+        const SizedBox(height: Measures.vMarginThin),
+        // Subtitle
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+              'I membri di una sottorazza hanno i tratti della razza genitrice in aggiunta ai tratti specificati per la loro sottorazza.',
+              style: Fonts.light()),
+        ),
         const SizedBox(height: Measures.vMarginMed),
         // Legend
         const Legend(items: {
@@ -680,6 +696,14 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
         Align(
             alignment: Alignment.centerLeft,
             child: Text('Seleziona la classe', style: Fonts.black())),
+        const SizedBox(height: Measures.vMarginThin),
+        // Subtitle
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+              'La Classe rappresenta la vocazione del personaggio, e determina la sua abilità nel combattimento e nell\'uso della magia.',
+              style: Fonts.light()),
+        ),
         const SizedBox(height: Measures.vMarginMed),
         // Legend
         const Legend(items: {
@@ -775,7 +799,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                 );
                               }
                               if (e.choiceableItems.isNotEmpty) {
-                                var count=0;
+                                var count = 0;
                                 for (var (i, items)
                                     in e.choiceableItems.indexed) {
                                   var backupInventory = character.inventory;
@@ -786,7 +810,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   if (items.length > 1) {
                                     ++count;
                                     await context.checkList<InventoryItem>(
-                                      'Scegli un oggetto ($count/${e.choiceableItems.where((e) => e.length>1).length})',
+                                      'Scegli un oggetto ($count/${e.choiceableItems.where((e) => e.length > 1).length})',
                                       dismissible: false,
                                       isRadio: true,
                                       values: items.keys.toList(),
@@ -825,6 +849,9 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
+                                            e.iconPath.toIcon(height: 24),
+                                            const SizedBox(
+                                                width: Measures.hMarginMed),
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
@@ -1071,21 +1098,27 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
         // <-- This is essential, as it is dynamic based on the keyboard status.
       ]),
     ];
-    _bottomButtons??=[
-          () {
-        if (validate(
-                () => character.name = _nameController.text)) {
+    _bottomButtons ??= [
+      () {
+        if (validate(() => character.name = _nameController.text)) {
           next();
         }
-      },null,null,null,null,(){
-      character.chosenSkills=_skillControllers.asMap().map((i,e) => MapEntry(Skill.values[i], int.parse(e.text)));
-      next();
+      },
+      null,
+      null,
+      null,
+      null,
+      () {
+        character.rollSkills = _skillControllers
+            .asMap()
+            .map((i, e) => MapEntry(Skill.values[i], int.parse(e.text)));
+        next();
       },
     ];
     return PopScope(
       canPop: false,
       child: Scaffold(
-        resizeToAvoidBottomInset: _index!=5,
+        resizeToAvoidBottomInset: _index != 5,
         body: Stack(
           children: [
             // Background
@@ -1128,7 +1161,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     // Continue button
-                    if (_bottomButtons?[_index]!=null)
+                    if (_bottomButtons?[_index] != null)
                       GlassButton(
                         'PROSEGUI',
                         color: Palette.primaryBlue,
@@ -1176,13 +1209,12 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
   next({int step = 1}) {
     if (_index + step >= (_screens?.length ?? 0)) {
       // The character creation is completed
-      withLoading(() async{
+      withLoading(() async {
         character.uid = await DataManager().save(character, SaveMode.post);
         AccountManager().user.charactersUIDs.add(character.uid!);
         await DataManager().save(AccountManager().user);
         Navigator.of(context).pop();
       });
-
     } else {
       // Cloning the previous state
       for (var i = 1; i <= step; i++) {
