@@ -34,7 +34,7 @@ class _CharactersPageState extends State<CharactersPage> {
               _filters.every((filter) => filter.checkFilter(e)) &&
               e.name.match(_searchController.text))
           .toList()
-        ..sort();
+        ..sort()..reversed;
 
   bool get isDataReady => AccountManager().user.characters.value != null;
 
@@ -99,6 +99,7 @@ class _CharactersPageState extends State<CharactersPage> {
                 textController: _searchController,
               ),
               // Filters
+              if(characters.length>5)
               GridView.count(
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: 3,

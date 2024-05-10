@@ -6,6 +6,7 @@ import 'package:scheda_dnd_5e/enum/fonts.dart';
 import 'package:scheda_dnd_5e/enum/measures.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 
@@ -189,4 +190,51 @@ extension ContextExtensions on BuildContext {
           content: Text(message, style: Fonts.regular()),
         ),
       );
+
+  bottomSheet()=>
+      showModalBottomSheet(
+          context: this,
+          backgroundColor: Colors.transparent,
+          builder: (BuildContext context) {
+            return SizedBox(
+                // height: 200,
+                width: double.infinity,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(32), topRight:Radius.circular(32) ),
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 16.0, sigmaY: 16.0),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 26, horizontal: 0),
+                      color: Palette.popup,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: Measures.vMarginSmall),
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => {},
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 26),
+                                child: SizedBox(
+                                  height: 60,
+                                  child: Row(
+                                    children: [
+                                      'dice'.toIcon(),
+                                      const SizedBox(width: Measures.hMarginMed),
+                                      Flexible(child: Text('Ciao', style: Fonts.regular(), overflow: TextOverflow.ellipsis))
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )                        ],
+                      ),
+                    ),
+                  ),
+                )
+            );
+          });
 }

@@ -1,6 +1,13 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:shimmer/shimmer.dart';
+
+import '../../enum/fonts.dart';
+import '../../enum/measures.dart';
 
 class GlassCard extends StatefulWidget {
   final double? width, height, shimmerHeight;
@@ -36,9 +43,12 @@ class _GlassCardState extends State<GlassCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: widget.clickable?widget.onTap:null,
+      onTap: widget.clickable ? widget.onTap : null,
       onTapDown: (_) => widget.clickable ? setState(() => _down = true) : null,
       onTapUp: (_) => widget.clickable ? setState(() => _down = false) : null,
+      onLongPress: () {
+        context.bottomSheet();
+      },
       onTapCancel: () =>
           widget.clickable ? setState(() => _down = false) : null,
       child: widget.isShimmer

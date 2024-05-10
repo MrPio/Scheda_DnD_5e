@@ -12,6 +12,8 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       json['campaignUID'] as String?,
       json['authorUID'] as String,
       json['_name'] as String,
+      json['_hp'] as int?,
+      json['_maxHp'] as int?,
       Map<String, int>.from(json['_inventory'] as Map),
       $enumDecode(_$ClassEnumMap, json['class_']),
       $enumDecode(_$SubClassEnumMap, json['subClass']),
@@ -49,6 +51,8 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'campaignUID': instance.campaignUID,
       'authorUID': instance.authorUID,
       '_name': instance._name,
+      '_hp': instance._hp,
+      '_maxHp': instance._maxHp,
       'class_': _$ClassEnumMap[instance.class_]!,
       'subClass': _$SubClassEnumMap[instance.subClass]!,
       'race': _$RaceEnumMap[instance.race]!,
@@ -71,6 +75,8 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'name': instance.name,
       'chosenSkills':
           instance.chosenSkills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
+      'hp': instance.hp,
+      'maxHp': instance.maxHp,
     };
 
 const _$ClassEnumMap = {

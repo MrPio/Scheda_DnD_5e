@@ -1498,12 +1498,16 @@ enum Alignment implements EnumWithTitle {
 }
 
 @JsonSerializable(constructor: 'jsonConstructor')
-class Character with Comparable<Character> implements JSONSerializable, WithUID {
+class Character
+    with Comparable<Character>
+    implements JSONSerializable, WithUID {
   int regDateTimestamp;
   String? campaignUID;
   String authorUID;
   @JsonKey(includeFromJson: true, includeToJson: true)
   String _name;
+  @JsonKey(includeFromJson: true, includeToJson: true)
+  int _hp, _maxHp;
   Class class_;
   SubClass subClass;
   Race race;
@@ -1521,15 +1525,17 @@ class Character with Comparable<Character> implements JSONSerializable, WithUID 
   @JsonKey(includeFromJson: true, includeToJson: true)
   Map<String, int> _inventory = {};
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String get name => _name;
 
   set name(String value) {
     if (value.length < 3) {
-      throw const FormatException('Il nome deve avere almeno 3 caratteri');
+      throw const FormatException('The name must have at least 3 characters');
     }
     _name = value;
   }
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   Map<Skill, int> get chosenSkills => _chosenSkills;
 
   set chosenSkills(Map<Skill, int> value) {
@@ -1537,11 +1543,38 @@ class Character with Comparable<Character> implements JSONSerializable, WithUID 
         value.map((key, value) => MapEntry(key, max(3, min(18, value))));
   }
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  int get hp => _hp;
+
+  set hp(int value) {
+    if (value < 0 || value > _maxHp) {
+      throw const FormatException(
+          'The HP must be non negative and less than max HP');
+    }
+    _hp = value;
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  int get maxHp => _maxHp;
+
+  set maxHp(int value) {
+    if (value <= 0 || value > 99) {
+      throw const FormatException(
+          'The max HP must be positive and less than 100');
+    }
+    if (_hp > value) {
+      _hp = value;
+    }
+    _maxHp = value;
+  }
+
   Character.jsonConstructor(
       this.regDateTimestamp,
       this.campaignUID,
       this.authorUID,
       this._name,
+      int? _hp,
+      int? _maxHp,
       this._inventory,
       this.class_,
       this.subClass,
@@ -1561,7 +1594,9 @@ class Character with Comparable<Character> implements JSONSerializable, WithUID 
         subSkills = subSkills ?? {},
         masteries = masteries ?? {},
         languages = languages ?? {},
-        savingThrows = savingThrows ?? {} {
+        savingThrows = savingThrows ?? {},
+        _hp = _hp ?? 10,
+        _maxHp = _maxHp ?? 10 {
     for (var qta in _inventory.values) {
       assert(qta > 0);
     }
@@ -1569,6 +1604,8 @@ class Character with Comparable<Character> implements JSONSerializable, WithUID 
 
   Character()
       : _name = '',
+        _hp = 10,
+        _maxHp = 10,
         authorUID = AccountManager().user.uid!,
         level = 0,
         subClass = Class.barbaro.subClasses[0],
@@ -1620,9 +1657,6 @@ class Character with Comparable<Character> implements JSONSerializable, WithUID 
   }
 
   @override
-  // Compare first by level then by name
-  int compareTo(Character other) =>
-      level.compareTo(other.level) == 0
-          ? name.compareTo(other.name)
-          : level.compareTo(other.level);
+  // Compare first by creation date
+  int compareTo(Character other) => level.compareTo(other.regDateTimestamp);
 }
