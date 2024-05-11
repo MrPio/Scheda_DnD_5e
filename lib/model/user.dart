@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:scheda_dnd_5e/model/campaign.dart';
 import 'package:scheda_dnd_5e/model/character.dart';
 
-part 'user.g.dart';
+part 'part/user.g.dart';
 
 @JsonSerializable()
 class User implements JSONSerializable, WithUID {

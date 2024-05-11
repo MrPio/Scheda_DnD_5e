@@ -246,10 +246,10 @@ class _CharactersPageState extends State<CharactersPage> {
   refresh() {
     AccountManager().user.characters.value = null;
     Future.delayed(Duration.zero, () async {
-      DateTime startTime = DateTime.now();
+      final startTime = DateTime.now();
       await AccountManager().reloadUser();
       await DataManager().loadUserCharacters(AccountManager().user);
-      print('Elapsed time: ${DateTime.now().difference(startTime).inMilliseconds} milliseconds');
+      print('CharactersPage:refresh() --> ${DateTime.now().difference(startTime).inMilliseconds} millis');
     });
   }
 }

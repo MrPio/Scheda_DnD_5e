@@ -27,7 +27,9 @@ class DatabaseManager {
 
   // Get an identifiable object from the given location
   Future<T> get<T extends WithUID>(String collection, String uid) async =>
-      (JSONSerializable.modelFactories[T]!((await _database.doc(collection+uid).get()).data()) as T)..uid=uid;
+      (JSONSerializable.modelFactories[T]!(
+          (await _database.doc(collection + uid).get()).data()) as T)
+        ..uid = uid;
 
   // Get a list of documents and paginate it
   Future<List<T>?> getList<T extends JSONSerializable>(String collection,
@@ -44,29 +46,31 @@ class DatabaseManager {
     paginateKeys[collection] =
         dataSnapshot.docs.isNotEmpty ? dataSnapshot.docs.last.id : null;
 
-    List<Map<String, dynamic>> dataList = [];
-    for (var doc in dataSnapshot.docs) {
-      var data = doc.data();
-      if (T is WithUID) {
-        data['uid'] = doc.id;
-      }
-      dataList.add(data);
-    }
-    return dataList.map((e) => JSONSerializable.modelFactories[T]!(e)).toList().cast<T>() ;
+    final dataList = dataSnapshot.docs
+        .map((e) => T is WithUID
+            ? ((JSONSerializable.modelFactories[T]!(e.data()) as WithUID)
+              ..uid = e.id)
+            : JSONSerializable.modelFactories[T]!(e.data()) as T)
+        .toList()
+        .cast<T>();
+    return dataList
+        .map((e) => JSONSerializable.modelFactories[T]!(e))
+        .toList()
+        .cast<T>();
   }
 
   // Get all the identifiable documents corresponding to the given UIDs
-  Future<List<T>?> getListFromUIDs<T extends WithUID>(String collection,
-      List<String> uids) async {
-    final dataSnapshot = await _database.collection(collection).where(FieldPath.documentId, whereIn: uids).get();
-
-    List<Map<String, dynamic>> dataList = [];
-    for (var doc in dataSnapshot.docs) {
-      var data = doc.data();
-        data['uid'] = doc.id;
-      dataList.add(data);
-    }
-    return dataList.map((e) => JSONSerializable.modelFactories[T]!(e)).toList().cast<T>() ;
+  Future<List<T>?> getListFromUIDs<T extends WithUID>(
+      String collection, List<String> uids) async {
+    final dataSnapshot = await _database
+        .collection(collection)
+        .where(FieldPath.documentId, whereIn: uids)
+        .get();
+    return dataSnapshot.docs
+        .map((e) =>
+            (JSONSerializable.modelFactories[T]!(e.data()) as T)..uid = e.id)
+        .toList()
+        .cast<T>();
   }
 
   // Put an object to a given location
