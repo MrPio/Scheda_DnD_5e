@@ -1500,7 +1500,7 @@ enum Alignment implements EnumWithTitle {
 @JsonSerializable(constructor: 'jsonConstructor')
 class Character
     with Comparable<Character>
-    implements JSONSerializable, WithUID {
+    implements WithUID {
   int regDateTimestamp;
   String? campaignUID;
   String authorUID;

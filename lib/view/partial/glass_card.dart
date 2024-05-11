@@ -14,6 +14,7 @@ class GlassCard extends StatefulWidget {
   final Widget? child;
   final bool clickable, isShimmer;
   final void Function()? onTap;
+  final Widget? bottomSheetHeader;final List<BottomSheetItem>? bottomSheetItems;
 
   const GlassCard(
       {super.key,
@@ -23,7 +24,9 @@ class GlassCard extends StatefulWidget {
       this.clickable = true,
       this.isShimmer = false,
       this.shimmerHeight,
-      this.onTap});
+      this.onTap,
+        this.bottomSheetHeader, this.bottomSheetItems
+        });
 
   @override
   State<GlassCard> createState() => _GlassCardState();
@@ -47,7 +50,9 @@ class _GlassCardState extends State<GlassCard> {
       onTapDown: (_) => widget.clickable ? setState(() => _down = true) : null,
       onTapUp: (_) => widget.clickable ? setState(() => _down = false) : null,
       onLongPress: () {
-        context.bottomSheet();
+        if(widget.bottomSheetHeader!=null || widget.bottomSheetItems!=null) {
+          context.bottomSheet(header: widget.bottomSheetHeader, items: widget.bottomSheetItems);
+        }
       },
       onTapCancel: () =>
           widget.clickable ? setState(() => _down = false) : null,

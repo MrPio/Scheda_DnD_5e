@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'part/campaign.g.dart';
 
 @JsonSerializable()
-class Campaign implements JSONSerializable, WithUID {
+class Campaign implements  WithUID {
   final String? name;
   final String? authorUID;
   final String? password;

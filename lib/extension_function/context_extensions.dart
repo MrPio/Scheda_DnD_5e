@@ -9,13 +9,21 @@ import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
+import 'package:scheda_dnd_5e/view/partial/rule.dart';
+
+class BottomSheetItem {
+  final String iconPath, text;
+  final Function() onTap;
+
+  BottomSheetItem(this.iconPath, this.text, this.onTap);
+}
 
 extension ContextExtensions on BuildContext {
   Future<void> popup(String title,
       {String? message,
       Widget? child,
-      String? positiveText,
       Color backgroundColor = Palette.background,
+      String? positiveText,
       Function()? positiveCallback,
       bool Function()? canPopPositiveCallback,
       String? negativeText,
@@ -56,7 +64,6 @@ extension ContextExtensions on BuildContext {
                       if (message != null)
                         Flexible(
                           child: SingleChildScrollView(
-
                             child: Padding(
                               padding: EdgeInsets.symmetric(
                                       horizontal: noContentHPadding ? 26 : 0)
@@ -125,24 +132,28 @@ extension ContextExtensions on BuildContext {
     );
   }
 
-  Future<void> checkList<T extends EnumWithTitle>(
-    String title, {
-    required List<T> values,
-    Function(T)? onChanged,
-    // Function()? positiveCallback,
-    bool Function(T)? value,
-    Color color = Palette.primaryBlue,
-    bool isRadio = false,
-    dismissible = true,
-        int? selectionRequirement
-  }) async {
+  Future<void> checkList<T extends EnumWithTitle>(String title,
+      {required List<T> values,
+      Function(T)? onChanged,
+      // Function()? positiveCallback,
+      bool Function(T)? value,
+      Color color = Palette.primaryBlue,
+      bool isRadio = false,
+      dismissible = true,
+      int? selectionRequirement}) async {
     await popup(title,
         dismissible: dismissible,
         noContentHPadding: true,
         backgroundColor: Palette.popup,
         positiveText: 'Ok',
         // positiveCallback: positiveCallback,
-        canPopPositiveCallback: ()=>selectionRequirement==null||selectionRequirement==values.map((e) => (value?.call(e)??false)?1:0).toList().sum(),
+        canPopPositiveCallback: () =>
+            selectionRequirement == null ||
+            selectionRequirement ==
+                values
+                    .map((e) => (value?.call(e) ?? false) ? 1 : 0)
+                    .toList()
+                    .sum(),
         child: StatefulBuilder(
           builder: (context, setState) => Column(
             children: List.generate(
@@ -162,7 +173,13 @@ extension ContextExtensions on BuildContext {
                                     setState(() => onChanged?.call(values[j])),
                                 color: color,
                               ),
-                              Flexible(child: Text(values[j].title, style: Fonts.regular(), overflow: TextOverflow.ellipsis,maxLines: 2,))
+                              Flexible(
+                                  child: Text(
+                                values[j].title,
+                                style: Fonts.regular(),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              ))
                             ],
                           ),
                         ),
@@ -174,9 +191,11 @@ extension ContextExtensions on BuildContext {
 
   snackbar(String message,
           {Color backgroundColor = Palette.background,
-          double bottomMargin = Measures.hPadding}) =>
-      ScaffoldMessenger.of(this).showSnackBar(
+          double bottomMargin = Measures.vMarginSmall,
+          Function()? undoCallback,})async =>
+      await ScaffoldMessenger.of(this).showSnackBar(
         SnackBar(
+          duration: undoCallback==null?const Duration(seconds: 4):const Duration(seconds: 6),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
           margin: EdgeInsets.only(
               left: Measures.hPadding,
@@ -185,56 +204,88 @@ extension ContextExtensions on BuildContext {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(25))),
           behavior: SnackBarBehavior.floating,
-          backgroundColor: backgroundColor.withOpacity(0.925),
+          backgroundColor: backgroundColor,
           elevation: 0,
-          content: Text(message, style: Fonts.regular()),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(message, style: Fonts.regular()),
+              if(undoCallback!=null)
+                TextButton(
+                  onPressed: (){
+                    ScaffoldMessenger.of(this).clearSnackBars();
+                    undoCallback();
+                  },
+                  child: Text('ANNULLA',
+                      style: Fonts.bold(size: 15)),
+                )
+            ],
+          ),
         ),
-      );
+      ).closed;
 
-  bottomSheet()=>
+  bottomSheet({Widget? header, List<BottomSheetItem>? items}) =>
       showModalBottomSheet(
           context: this,
-          backgroundColor: Colors.transparent,
+          backgroundColor: Palette.background,
+          showDragHandle: true,
+          enableDrag: true,
           builder: (BuildContext context) {
-            return SizedBox(
-                // height: 200,
-                width: double.infinity,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(32), topRight:Radius.circular(32) ),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 16.0, sigmaY: 16.0),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 26, horizontal: 0),
-                      color: Palette.popup,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const SizedBox(height: Measures.vMarginSmall),
-                          Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              onTap: () => {},
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 26),
-                                child: SizedBox(
-                                  height: 60,
-                                  child: Row(
-                                    children: [
-                                      'dice'.toIcon(),
-                                      const SizedBox(width: Measures.hMarginMed),
-                                      Flexible(child: Text('Ciao', style: Fonts.regular(), overflow: TextOverflow.ellipsis))
-                                    ],
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (header != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 26),
+                    child: header,
+                  ),
+                if (header != null && items != null)
+                  const Padding(
+                    padding: EdgeInsets.only(top: Measures.vMarginSmall),
+                    child: Rule(),
+                  ),
+                if (items != null)
+                  Column(
+                    children: [
+                          const SizedBox(height: Measures.vMarginThin) as Widget
+                        ] +
+                        items
+                            .map(
+                              (e) => Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  onTap: (){
+                                    e.onTap();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 26),
+                                    child: SizedBox(
+                                      height: 60,
+                                      child: Row(
+                                        children: [
+                                          e.iconPath.toIcon(height: 24),
+                                          const SizedBox(
+                                              width: Measures.hMarginBig),
+                                          Flexible(
+                                              child: Text(e.text,
+                                                  style: Fonts.bold(size: 18),
+                                                  overflow:
+                                                      TextOverflow.ellipsis)),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          )                        ],
-                      ),
-                    ),
+                            )
+                            .toList()
+                            .cast<Widget>(),
                   ),
-                )
+                const SizedBox(height: Measures.vMarginThin),
+              ],
             );
           });
 }

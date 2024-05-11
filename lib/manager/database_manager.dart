@@ -25,11 +25,11 @@ class DatabaseManager {
   final FirebaseFirestore _database = FirebaseFirestore.instance;
   var paginateKeys = HashMap<String, String?>();
 
-  // Get an object from the given location
-  Future<Map<String, dynamic>> get(String path) async =>
-      jsonDecode(jsonEncode((await _database.doc(path).get()).data() as Map));
+  // Get an identifiable object from the given location
+  Future<T> get<T extends WithUID>(String collection, String uid) async =>
+      (JSONSerializable.modelFactories[T]!((await _database.doc(collection+uid).get()).data()) as T)..uid=uid;
 
-  // Get a list of object and paginate it
+  // Get a list of documents and paginate it
   Future<List<T>?> getList<T extends JSONSerializable>(String collection,
       {pageSize = 30}) async {
     final lastKey = paginateKeys[collection];
@@ -50,6 +50,20 @@ class DatabaseManager {
       if (T is WithUID) {
         data['uid'] = doc.id;
       }
+      dataList.add(data);
+    }
+    return dataList.map((e) => JSONSerializable.modelFactories[T]!(e)).toList().cast<T>() ;
+  }
+
+  // Get all the identifiable documents corresponding to the given UIDs
+  Future<List<T>?> getListFromUIDs<T extends WithUID>(String collection,
+      List<String> uids) async {
+    final dataSnapshot = await _database.collection(collection).where(FieldPath.documentId, whereIn: uids).get();
+
+    List<Map<String, dynamic>> dataList = [];
+    for (var doc in dataSnapshot.docs) {
+      var data = doc.data();
+        data['uid'] = doc.id;
       dataList.add(data);
     }
     return dataList.map((e) => JSONSerializable.modelFactories[T]!(e)).toList().cast<T>() ;

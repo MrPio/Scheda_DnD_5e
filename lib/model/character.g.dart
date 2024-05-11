@@ -40,11 +40,7 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       $enumDecodeNullable(_$StatusEnumMap, json['status']),
       $enumDecode(_$AlignmentEnumMap, json['alignment']),
       json['level'] as int,
-    )
-      ..name = json['name'] as String
-      ..chosenSkills = (json['chosenSkills'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), e as int),
-      );
+    );
 
 Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'regDateTimestamp': instance.regDateTimestamp,
@@ -72,11 +68,6 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'alignment': _$AlignmentEnumMap[instance.alignment]!,
       'level': instance.level,
       '_inventory': instance._inventory,
-      'name': instance.name,
-      'chosenSkills':
-          instance.chosenSkills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
-      'hp': instance.hp,
-      'maxHp': instance.maxHp,
     };
 
 const _$ClassEnumMap = {

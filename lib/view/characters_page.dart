@@ -7,7 +7,7 @@ import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
-import 'package:scheda_dnd_5e/model/enchantment.dart';
+// import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/filter.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
@@ -34,7 +34,8 @@ class _CharactersPageState extends State<CharactersPage> {
               _filters.every((filter) => filter.checkFilter(e)) &&
               e.name.match(_searchController.text))
           .toList()
-        ..sort()..reversed;
+        ..sort()
+        ..reversed;
 
   bool get isDataReady => AccountManager().user.characters.value != null;
 
@@ -99,32 +100,36 @@ class _CharactersPageState extends State<CharactersPage> {
                 textController: _searchController,
               ),
               // Filters
-              if(characters.length>5)
-              GridView.count(
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 3,
-                  childAspectRatio: 2.5,
-                  shrinkWrap: true,
-                  crossAxisSpacing: 10,
-                  children: List.generate(
-                      _filters.length,
-                      (i) => RadioButton(
-                          selected: _filters[i].selectedValues.isNotEmpty,
-                          text: _filters[i].title,
-                          color: _filters[i].color,
-                          onPressed: () => _filters[i].selectedValues.isNotEmpty
-                              ? setState(
-                                  () => _filters[i].selectedValues.clear())
-                              : context.checkList(
-                                  'Filtro su ${_filters[i].title.toLowerCase()}',
-                                  values: _filters[i].values,
-                                  color: _filters[i].color,
-                                  onChanged: (value) => setState(() =>
-                                      _filters[i].selectedValues.toggle(value)),
-                                  value: (value) => _filters[i]
-                                      .selectedValues
-                                      .contains(value),
-                                )))),
+              if (characters.length > 5)
+                GridView.count(
+                    physics: const NeverScrollableScrollPhysics(),
+                    crossAxisCount: 3,
+                    childAspectRatio: 2.5,
+                    shrinkWrap: true,
+                    crossAxisSpacing: 10,
+                    children: List.generate(
+                        _filters.length,
+                        (i) => RadioButton(
+                            selected: _filters[i].selectedValues.isNotEmpty,
+                            text: _filters[i].title,
+                            color: _filters[i].color,
+                            onPressed: () => _filters[i]
+                                    .selectedValues
+                                    .isNotEmpty
+                                ? setState(
+                                    () => _filters[i].selectedValues.clear())
+                                : context.checkList(
+                                    'Filtro su ${_filters[i].title.toLowerCase()}',
+                                    values: _filters[i].values,
+                                    color: _filters[i].color,
+                                    onChanged: (value) => setState(() =>
+                                        _filters[i]
+                                            .selectedValues
+                                            .toggle(value)),
+                                    value: (value) => _filters[i]
+                                        .selectedValues
+                                        .contains(value),
+                                  )))),
               // Found enchantments
               const SizedBox(height: Measures.vMarginSmall),
               // Nothing to show
@@ -153,6 +158,41 @@ class _CharactersPageState extends State<CharactersPage> {
         child: GlassCard(
           onTap: () => Navigator.of(context)
               .pushNamed('/character', arguments: character),
+          bottomSheetHeader: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  character.class_.iconPath.toIcon(height: 24),
+                  const SizedBox(width: Measures.hMarginBig),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(character.name, style: Fonts.bold(size: 18)),
+                      Text(character.subRace?.title ?? character.race.title,
+                          style: Fonts.light(size: 16)),
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
+          bottomSheetItems: [
+            BottomSheetItem('png/delete_2', 'Elimina', () async{
+              AccountManager().user.deleteCharacter(character.uid!);
+              setState(() {});
+              bool hasUndone=false;
+              await context.snackbar('Hai eliminato ${character.name}',
+                  backgroundColor: Palette.primaryBlue, undoCallback: () {
+                    hasUndone=true;
+                    AccountManager().user.restoreCharacter(character.uid!);
+                    setState(() {});
+                  });
+              if(!hasUndone){
+                DataManager().save(AccountManager().user);
+              }
+            })
+          ],
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
             child: Row(
@@ -167,14 +207,18 @@ class _CharactersPageState extends State<CharactersPage> {
                         children: [
                           character.class_.iconPath.toIcon(height: 24),
                           const SizedBox(width: Measures.hMarginBig),
-                          Column(crossAxisAlignment: CrossAxisAlignment.start,children: [
-                            Text(character.name, style: Fonts.bold(size: 18)),
-                            Text(character.subRace?.title ?? character.race.title,
-                                style: Fonts.light(size: 16)),
-                          ],)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(character.name, style: Fonts.bold(size: 18)),
+                              Text(
+                                  character.subRace?.title ??
+                                      character.race.title,
+                                  style: Fonts.light(size: 16)),
+                            ],
+                          )
                         ],
                       ),
-
                     ],
                   ),
                 ),
@@ -201,9 +245,11 @@ class _CharactersPageState extends State<CharactersPage> {
   // Refreshing the characters UIDs
   refresh() {
     AccountManager().user.characters.value = null;
-    Future.delayed(Durations.long1, () async {
+    Future.delayed(Duration.zero, () async {
+      DateTime startTime = DateTime.now();
       await AccountManager().reloadUser();
       await DataManager().loadUserCharacters(AccountManager().user);
+      print('Elapsed time: ${DateTime.now().difference(startTime).inMilliseconds} milliseconds');
     });
   }
 }
