@@ -1607,7 +1607,7 @@ class Character
         _hp = 10,
         _maxHp = 10,
         authorUID = AccountManager().user.uid!,
-        level = 0,
+        level = 1,
         subClass = Class.barbaro.subClasses[0],
         regDateTimestamp = DateTime.now().millisecondsSinceEpoch,
         class_ = Class.barbaro,

@@ -13,6 +13,7 @@ class Measures {
   static const alignmentCardHeight = 62.0;
   static const alignmentCardSmallHeight = 54.0;
   static const skillCardHeight =94.0;
+  static const hpBarHeight =12.0;
   // Others
   static const bottomButtonMargin = 30.0;
   static const bottomBarHeight = 80.0;

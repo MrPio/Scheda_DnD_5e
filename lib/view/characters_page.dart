@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/enum/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
@@ -11,6 +13,7 @@ import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
 import 'package:scheda_dnd_5e/model/filter.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
+import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 
 import '../enum/fonts.dart';
 import '../enum/measures.dart';
@@ -195,47 +198,55 @@ class _CharactersPageState extends State<CharactersPage> {
           ],
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
-                // Title and type
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                // Class icon, name and race
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Title and type
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          character.class_.iconPath.toIcon(height: 24),
-                          const SizedBox(width: Measures.hMarginBig),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Row(
                             children: [
-                              Text(character.name, style: Fonts.bold(size: 18)),
-                              Text(
-                                  character.subRace?.title ??
-                                      character.race.title,
-                                  style: Fonts.light(size: 16)),
+                              character.class_.iconPath.toIcon(height: 24),
+                              const SizedBox(width: Measures.hMarginBig),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(character.name, style: Fonts.bold(size: 18)),
+                                  Text(
+                                      character.subRace?.title ??
+                                          character.race.title,
+                                      style: Fonts.light(size: 16)),
+                                ],
+                              )
                             ],
-                          )
+                          ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: Measures.hMarginMed),
+                    // Level
+                    Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.fromBorderSide(BorderSide(
+                                color: Color.lerp(Palette.primaryYellow,
+                                    Palette.primaryRed, character.level / 10.0)!,
+                                width: 2))),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Text(character.level.toString(),
+                              style: Fonts.regular(size: 16)),
+                        )),
+                  ],
                 ),
-                const SizedBox(width: Measures.hMarginMed),
-                // Level
-                Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.fromBorderSide(BorderSide(
-                            color: Color.lerp(Palette.primaryYellow,
-                                Palette.primaryRed, character.level / 10.0)!,
-                            width: 2))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Text(character.level.toString(),
-                          style: Fonts.regular(size: 16)),
-                    )),
+                const SizedBox(height: Measures.vMarginThin),
+                // HP bar
+                HpBar(character.hp, character.maxHp),
               ],
             ),
           ),

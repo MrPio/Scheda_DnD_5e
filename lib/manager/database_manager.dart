@@ -46,15 +46,11 @@ class DatabaseManager {
     paginateKeys[collection] =
         dataSnapshot.docs.isNotEmpty ? dataSnapshot.docs.last.id : null;
 
-    final dataList = dataSnapshot.docs
+    return dataSnapshot.docs
         .map((e) => T is WithUID
             ? ((JSONSerializable.modelFactories[T]!(e.data()) as WithUID)
               ..uid = e.id)
             : JSONSerializable.modelFactories[T]!(e.data()) as T)
-        .toList()
-        .cast<T>();
-    return dataList
-        .map((e) => JSONSerializable.modelFactories[T]!(e))
         .toList()
         .cast<T>();
   }

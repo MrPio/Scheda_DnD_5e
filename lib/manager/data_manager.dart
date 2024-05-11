@@ -94,22 +94,25 @@ class DataManager {
         WithUID? obj = caches[T]?.firstWhereOrNull((e) => e.uid == uid);
         if (obj != null) {
           objects.add(obj as T);
-          uids.removeWhere((e) => e == uid);
         }
       }
+      uids.removeWhere((e) => objects.map((e1) => e1.uid).contains(e));
     }
 
     // Ask the database for the objects and caching it
-    objects.addAll( await DatabaseManager()
-            .getListFromUIDs<T>(DatabaseManager.collections[T]!, uids) ??
-        []);
-    caches[T]?.removeWhere((e) => uids.contains(e.uid));
-    caches[T]?.addAll(objects);
+    if (uids.isNotEmpty) {
+      objects.addAll(await DatabaseManager()
+              .getListFromUIDs<T>(DatabaseManager.collections[T]!, uids) ??
+          []);
+      caches[T]?.removeWhere((e) => uids.contains(e.uid));
+      caches[T]?.addAll(objects);
+    }
     return objects;
   }
 
   // Load the characters of a given user
-  loadUserCharacters(User user) async => user.characters.value = await loadList(user.charactersUIDs);
+  loadUserCharacters(User user) async =>
+      user.characters.value = await loadList(user.charactersUIDs);
 
   // Save Model objects
   Future<String?> save(JSONSerializable model,
