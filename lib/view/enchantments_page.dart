@@ -14,6 +14,7 @@ import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
 import 'package:scheda_dnd_5e/model/enchantment.dart' hide Level;
 import 'package:scheda_dnd_5e/model/enchantment.dart' as enc show Level;
 import 'package:scheda_dnd_5e/model/filter.dart';
+import 'package:scheda_dnd_5e/view/partial/grid_rows.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
@@ -114,30 +115,23 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                 textController: _searchController,
               ),
               // Filters
-              DynamicHeightGridView(
-                itemCount: _filters.length,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: 3,
-                  shrinkWrap: true,
-                  crossAxisSpacing: 10,
-                  builder: (context, i) => RadioButton(
-                      selected: _filters[i].selectedValues.isNotEmpty,
-                      text: _filters[i].title,
-                      color: _filters[i].color,
-                      onPressed: () => _filters[i].selectedValues.isNotEmpty
-                          ? setState(
-                              () => _filters[i].selectedValues.clear())
-                          : context.checkList(
-                        'Filtro su ${_filters[i].title.toLowerCase()}',
-                        values: _filters[i].values,
-                        color: _filters[i].color,
-                        onChanged: (value) => setState(() =>
-                            _filters[i].selectedValues.toggle(value)),
-                        value: (value) => _filters[i]
-                            .selectedValues
-                            .contains(value),
-                      )),
-),
+              GridRows(crossAxisCount: 3,crossAxisSpacing: 10, children: _filters.map((e) => RadioButton(
+                  selected: e.selectedValues.isNotEmpty,
+                  text: e.title,
+                  color: e.color,
+                  onPressed: () => e.selectedValues.isNotEmpty
+                      ? setState(
+                          () => e.selectedValues.clear())
+                      : context.checkList(
+                    'Filtro su ${e.title.toLowerCase()}',
+                    values: e.values,
+                    color: e.color,
+                    onChanged: (value) => setState(() =>
+                        e.selectedValues.toggle(value)),
+                    value: (value) => e
+                        .selectedValues
+                        .contains(value),
+                  ))).toList()),
               // Found enchantments
               const SizedBox(height: Measures.vMarginThin),
               // Nothing to show

@@ -17,6 +17,7 @@ import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/mixin/loadable.dart';
 import 'package:scheda_dnd_5e/model/loot.dart';
+import 'package:scheda_dnd_5e/view/partial/grid_rows.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/dice_card.dart';
@@ -1077,22 +1078,18 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
             style: Fonts.light()),
         const SizedBox(height: Measures.vMarginThin),
         // Skill cards =============================
-        DynamicHeightGridView(
-            shrinkWrap: true,
-            itemCount: Skill.values.length,
+        GridRows(
             crossAxisCount: 2,
-            crossAxisSpacing: Measures.vMarginThin,
-            mainAxisSpacing: Measures.vMarginThin,
-            physics: const NeverScrollableScrollPhysics(),
-            builder: (context, i) => SkillCard(
-                  Skill.values[i],
-                  raceSkill: character.chosenSkills[Skill.values[i]] ??
-                      0 +
-                          (character.race.defaultSkills[Skill.values[i]] ?? 0) +
-                          (character.subRace?.defaultSkills[Skill.values[i]] ??
-                              0),
-                  skillInputController: _skillControllers[i],
-                )),
+            children: Skill.values
+                .map((e) => SkillCard(
+                      e,
+                      raceSkill: character.chosenSkills[e] ??
+                          0 +
+                              (character.race.defaultSkills[e] ?? 0) +
+                              (character.subRace?.defaultSkills[e] ?? 0),
+                      skillInputController: _skillControllers[e.index],
+                    ))
+                .toList()),
         SizedBox(
             height:
                 MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig),

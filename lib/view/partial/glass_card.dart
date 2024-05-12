@@ -34,7 +34,7 @@ class GlassCard extends StatefulWidget {
 }
 
 class _GlassCardState extends State<GlassCard> {
-  final double borderRadiusUp = 16, borderRadiusDown = 10;
+  final double borderRadiusUp = 14;
 
   get _borderRadius => _down ? 10.0 : 16.0;
 

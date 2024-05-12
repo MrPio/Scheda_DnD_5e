@@ -7,9 +7,9 @@ class Measures {
       vMarginThin = 9.0,
       vMarginMoreThin = 5.0;
   static const vButtonPadding = 11.0, vButtonPaddingSmall = 6.0;
-  static const hMarginBig = 20.0, hMarginMed = 12.0, hMarginSmall = 6.0;
+  static const hMarginBig = 20.0, hMarginMed = 12.0, hMarginSmall = 6.0,hMarginThin = 4.0;
   static const hTextFieldPadding = 18.0;
-  static const hPadding = 24.0;
+  static const hPadding = 20.0;
 
   // Cards
   static const diceCardHeight = 62.0;

@@ -1498,9 +1498,7 @@ enum Alignment implements EnumWithTitle {
 }
 
 @JsonSerializable(constructor: 'jsonConstructor')
-class Character
-    with Comparable<Character>
-    implements WithUID {
+class Character with Comparable<Character> implements WithUID {
   int regDateTimestamp;
   String? campaignUID;
   String authorUID;
@@ -1630,6 +1628,7 @@ class Character
   double get defaultSpeed => subRace?.defaultSpeed ?? race.defaultSpeed;
 
   Map<Skill, int> get skills =>
+      Map.fromIterable(Skill.values, value: (_) => 0).cast<Skill, int>() +
       rollSkills +
       _chosenSkills +
       race.defaultSkills +

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,12 +22,19 @@ extension StringExtensions on String {
   /// 'home' ==> 'assets/images/icons/home.svg'
   /// 'png/home' ==> 'assets/images/icons/png/home.png'
   Widget toIcon(
-      {double height = 22, Function()? onTap, padding = const EdgeInsets.all(12.0), margin=EdgeInsets.zero,color=Palette.onBackground}) {
+      {double height = 22,
+      Function()? onTap,
+      padding = const EdgeInsets.all(12.0),
+      margin = EdgeInsets.zero,
+      color = Palette.onBackground,
+      double rotation =0}) {
     var icon = contains('png')
-        ? Image.asset('assets/images/icons/$this.png', height: height,color: color)
-        : SvgPicture.asset('assets/images/icons/$this.svg', height: height, color: color);
+        ? Image.asset('assets/images/icons/$this.png',
+            height: height, color: color)
+        : SvgPicture.asset('assets/images/icons/$this.svg',
+            height: height, color: color);
     if (onTap == null) {
-      return icon;
+      return Transform.rotate(angle: rotation,child: icon);
     } else {
       return Padding(
         padding: margin,
@@ -34,7 +43,7 @@ extension StringExtensions on String {
           onTap: onTap,
           child: Padding(
             padding: padding,
-            child: icon,
+            child: Transform.rotate(angle: rotation,child: icon),
           ),
         ),
       );

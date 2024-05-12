@@ -15,6 +15,7 @@ import 'package:scheda_dnd_5e/extension_function/int_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/home_page.dart';
+import 'package:scheda_dnd_5e/view/partial/grid_rows.dart';
 import 'package:scheda_dnd_5e/view/partial/card/dice_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
@@ -51,7 +52,7 @@ class _DicePageState extends State<DicePage>
       maxModifier = 20;
   late final AnimationController _diceRotationController;
   final TextEditingController _modifierController =
-  TextEditingController(text: '0');
+      TextEditingController(text: '0');
 
   /// The integer value of the modifier
   int get modifier => int.parse(_modifierController.text);
@@ -107,11 +108,7 @@ class _DicePageState extends State<DicePage>
 
   @override
   Widget build(BuildContext context) {
-    args =
-    (ModalRoute
-        .of(context)!
-        .settings
-        .arguments) as DiceArgs?;
+    args = (ModalRoute.of(context)!.settings.arguments) as DiceArgs?;
     _selectedDice = args?.dices ?? _selectedDice;
     var page = Padding(
       padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
@@ -125,9 +122,12 @@ class _DicePageState extends State<DicePage>
                 left: 10,
                 right: 10),
             child: Stack(alignment: Alignment.center, children: [
-              Align(child: Padding(
-                padding: const EdgeInsets.only(top: Measures.vMarginThin,
-                  bottom: Measures.vMarginThin,),
+              Align(
+                  child: Padding(
+                padding: const EdgeInsets.only(
+                  top: Measures.vMarginThin,
+                  bottom: Measures.vMarginThin,
+                ),
                 child: Text(args?.title ?? 'Lanciatore dadi',
                     style: Fonts.black(size: 18)),
               )),
@@ -135,11 +135,13 @@ class _DicePageState extends State<DicePage>
                   (args?.modifier == null && modifier != 0))
                 Align(
                   alignment: Alignment.centerRight,
-                  child: 'close'.toIcon(height: 20, onTap: () {
-                    _selectedDice = [];
-                    modifier = 0;
-                    setState(() {});
-                  }),
+                  child: 'close'.toIcon(
+                      height: 20,
+                      onTap: () {
+                        _selectedDice = [];
+                        modifier = 0;
+                        setState(() {});
+                      }),
                 ),
             ]),
           ),
@@ -156,161 +158,153 @@ class _DicePageState extends State<DicePage>
                       child: Align(
                         child: _selectedDice.isEmpty
                             ? Text('Seleziona i dadi da lanciare',
-                            style: Fonts.regular(color: Palette.hint))
+                                style: Fonts.regular(color: Palette.hint))
                             : Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20.0),
-                          child: GridView.count(
-                            shrinkWrap: true,
-                            crossAxisCount: numberOfCols,
-                            physics: const NeverScrollableScrollPhysics(),
-                            mainAxisSpacing: Measures.vMarginSmall,
-                            crossAxisSpacing: Measures.vMarginSmall,
-                            padding: const EdgeInsets.all(10.0),
-                            childAspectRatio: ratio,
-                            children:
-                            List.generate(_selectedDice.length, dice),
-                          ),
-                        ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: GridView.count(
+                                  shrinkWrap: true,
+                                  crossAxisCount: numberOfCols,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  mainAxisSpacing: Measures.vMarginSmall,
+                                  crossAxisSpacing: Measures.vMarginSmall,
+                                  padding: const EdgeInsets.all(10.0),
+                                  childAspectRatio: ratio,
+                                  children:
+                                      List.generate(_selectedDice.length, dice),
+                                ),
+                              ),
                       )),
                   const SizedBox(height: Measures.vMarginSmall),
-                  Column(children: [
-                    DynamicHeightGridView(
-                        shrinkWrap: true,
-                        itemCount: Dice.values.length - 1,
-                        crossAxisCount: 3,
-                        crossAxisSpacing: Measures.vMarginThin,
-                        mainAxisSpacing: Measures.vMarginThin,
-                        physics: const NeverScrollableScrollPhysics(),
-                        builder: (context, i) =>
-                            DiceCard(
-                              Dice.values.where((e) => e != Dice.d20).elementAt(
-                                  i),
+                  GridRows(
+                    crossAxisSpacing: Measures.vMarginThin,
+                    mainAxisSpacing: Measures.vMarginThin,
+                    crossAxisCount: 3,
+                    children: Dice.values
+                        .map((e) => DiceCard(
+                              e,
                               onTap: selectDice,
                               clickable: args?.dices == null,
-                            )),
-                    const SizedBox(height: Measures.vMarginThin),
-                    // D20 Dice ===============================
-                    DiceCard(Dice.d20,
-                        onTap: selectDice, clickable: args?.dices == null),
-                    const SizedBox(height: Measures.vMarginSmall),
-                  ]),
+                            ))
+                        .toList(),
+                  ),
+                  const SizedBox(height: Measures.vMarginSmall),
                   // Modifier
                   args?.modifier == null
                       ? GlassCard(
-                    clickable: false,
-                    child: Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: Column(
-                        children: [
-                          Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text('Modificatore',
-                                  style: Fonts.regular())),
-                          const SizedBox(height: Measures.vMarginSmall),
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(999)),
-                                color: Palette.card2),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
+                          clickable: false,
+                          child: Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: Column(
                               children: [
-                                SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      if (modifier > minModifier) {
-                                        setState(() {
-                                          modifier--;
-                                        });
-                                      }
-                                    },
-                                    onLongPress: () {
-                                      if (modifier > minModifier + 4) {
-                                        setState(() {
-                                          modifier -= 5;
-                                        });
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Palette.background,
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 13),
-                                      elevation: 0,
-                                    ),
-                                    child: const Icon(Icons.remove,
-                                        color: Palette.onBackground,
-                                        size: 26),
-                                  ),
-                                ),
-                                const SizedBox(
-                                    width: Measures.hMarginMed),
-                                NumericInput(
-                                  minModifier,
-                                  maxModifier,
-                                  controller: _modifierController,
-                                  width: 60,
-                                  contentPadding:
-                                  const EdgeInsets.fromLTRB(
-                                      4, 8, 4, 8),
-                                  style: Fonts.black(),
-                                ),
-                                const SizedBox(
-                                    width: Measures.hMarginMed),
-                                SizedBox(
-                                  height: 50,
-                                  width: 50,
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      if (modifier < maxModifier) {
-                                        setState(() {
-                                          modifier++;
-                                        });
-                                      }
-                                    },
-                                    onLongPress: () {
-                                      if (modifier < maxModifier - 4) {
-                                        setState(() {
-                                          modifier += 5;
-                                        });
-                                      }
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Palette.background,
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 13),
-                                      elevation: 0,
-                                    ),
-                                    child: const Icon(Icons.add,
-                                        color: Palette.onBackground,
-                                        size: 26),
+                                Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text('Modificatore',
+                                        style: Fonts.regular())),
+                                const SizedBox(height: Measures.vMarginSmall),
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: const BoxDecoration(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(999)),
+                                      color: Palette.card2),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            if (modifier > minModifier) {
+                                              setState(() {
+                                                modifier--;
+                                              });
+                                            }
+                                          },
+                                          onLongPress: () {
+                                            if (modifier > minModifier + 4) {
+                                              setState(() {
+                                                modifier -= 5;
+                                              });
+                                            }
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Palette.background,
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 13),
+                                            elevation: 0,
+                                          ),
+                                          child: const Icon(Icons.remove,
+                                              color: Palette.onBackground,
+                                              size: 26),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                          width: Measures.hMarginMed),
+                                      NumericInput(
+                                        minModifier,
+                                        maxModifier,
+                                        controller: _modifierController,
+                                        width: 60,
+                                        contentPadding:
+                                            const EdgeInsets.fromLTRB(
+                                                4, 8, 4, 8),
+                                        style: Fonts.black(),
+                                      ),
+                                      const SizedBox(
+                                          width: Measures.hMarginMed),
+                                      SizedBox(
+                                        height: 50,
+                                        width: 50,
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            if (modifier < maxModifier) {
+                                              setState(() {
+                                                modifier++;
+                                              });
+                                            }
+                                          },
+                                          onLongPress: () {
+                                            if (modifier < maxModifier - 4) {
+                                              setState(() {
+                                                modifier += 5;
+                                              });
+                                            }
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Palette.background,
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 13),
+                                            elevation: 0,
+                                          ),
+                                          child: const Icon(Icons.add,
+                                              color: Palette.onBackground,
+                                              size: 26),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 )
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-                  )
+                          ),
+                        )
                       : GlassCard(
-                    clickable: false,
-                    child: Padding(
-                      padding: const EdgeInsets.all(14.0),
-                      child: Row(
-                        children: [
-                          Text('Modificatore:',
-                              style: Fonts.regular()),
-                          const SizedBox(width: Measures.hMarginMed),
-                          Text('${modifier.toSignString()} ${modifier.abs()}',
-                              style: Fonts.black()),
-                        ],
-                      ),
-                    ),
-                  ),
+                          clickable: false,
+                          child: Padding(
+                            padding: const EdgeInsets.all(14.0),
+                            child: Row(
+                              children: [
+                                Text('Modificatore:', style: Fonts.regular()),
+                                const SizedBox(width: Measures.hMarginMed),
+                                Text(
+                                    '${modifier.toSignString()} ${modifier.abs()}',
+                                    style: Fonts.black()),
+                              ],
+                            ),
+                          ),
+                        ),
                   const SizedBox(
                       height: Measures.vMarginBig + Measures.vMarginBig),
                 ],
@@ -358,16 +352,14 @@ class _DicePageState extends State<DicePage>
       _diceValues = List<int>.filled(maxSelection, 0);
       setState(() => _selectedDice.add(dice));
     } else {
-      context.snackbar(
-        'Non puoi aggiungere altri dadi',
-        backgroundColor: Palette.backgroundGreen,
-          bottomMargin: args == null ? Measures.bottomBarHeight:Measures.vMarginSmall
-      );
+      context.snackbar('Non puoi aggiungere altri dadi',
+          backgroundColor: Palette.backgroundGreen,
+          bottomMargin:
+              args == null ? Measures.bottomBarHeight : Measures.vMarginSmall);
     }
   }
 
-  Widget dice(int i) =>
-      GestureDetector(
+  Widget dice(int i) => GestureDetector(
         onTap: () {
           _diceValues = List<int>.filled(maxSelection, 0);
           setState(() => _selectedDice.removeAt(i));
@@ -417,9 +409,7 @@ class _DicePageState extends State<DicePage>
               child: Column(
                 children: [
                   Text(
-                      '(${_diceValues.where((e) => e > 0).join(
-                          ' + ')})${modifier != 0 ? ' ${modifier
-                          .toSignString()} ${modifier.abs()}' : ''} =',
+                      '(${_diceValues.where((e) => e > 0).join(' + ')})${modifier != 0 ? ' ${modifier.toSignString()} ${modifier.abs()}' : ''} =',
                       style: Fonts.regular(size: 24)),
                   Text((_diceValues.sum() + modifier).toString(),
                       style: Fonts.black(size: 42))
@@ -431,11 +421,10 @@ class _DicePageState extends State<DicePage>
         }
       });
     } else if (_selectedDice.isEmpty) {
-      context.snackbar(
-          'Seleziona almeno un dado',
+      context.snackbar('Seleziona almeno un dado',
           backgroundColor: Palette.backgroundGreen,
-          bottomMargin: args == null ? Measures.bottomBarHeight:Measures.vMarginSmall
-      );
+          bottomMargin:
+              args == null ? Measures.bottomBarHeight : Measures.vMarginSmall);
     }
   }
 }
