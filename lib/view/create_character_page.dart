@@ -6,7 +6,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:scheda_dnd_5e/enum/character_names.dart';
+import 'package:scheda_dnd_5e/constant/character_names.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/iterable_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
@@ -21,6 +21,7 @@ import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/dice_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/skill_card.dart';
+import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
@@ -30,9 +31,9 @@ import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 
-import '../enum/fonts.dart';
-import '../enum/measures.dart';
-import '../enum/palette.dart';
+import '../constant/fonts.dart';
+import '../constant/measures.dart';
+import '../constant/palette.dart';
 import '../mixin/validable.dart';
 import '../model/character.dart' hide Alignment;
 
@@ -1139,16 +1140,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                       )))
                   .toList(),
             ),
-            // Chevron // Todo: Every toIcon() with tap detection should be written as follows:
-            Padding(
-              padding: const EdgeInsets.only(
-                  top: Measures.vMarginBig, left: Measures.hMarginMed),
-              child: 'chevron_left'.toIcon(
-                  height: 24,
-                  onTap: previous,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10)),
-            ),
+            // Chevron
+            Chevron(onTap: previous),
             // Bottom vignette
             const BottomVignette(height: 0, spread: 80),
             // Bottom points

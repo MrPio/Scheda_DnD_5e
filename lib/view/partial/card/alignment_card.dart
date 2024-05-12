@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/enum/fonts.dart';
-import 'package:scheda_dnd_5e/enum/measures.dart';
-import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/constant/fonts.dart';
+import 'package:scheda_dnd_5e/constant/measures.dart';
+import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;

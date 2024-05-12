@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/enum/fonts.dart';
+import 'package:scheda_dnd_5e/constant/fonts.dart';
 
-import '../../enum/measures.dart';
+import '../../constant/measures.dart';
 
 class Legend extends StatelessWidget {
   final Map<String, Color> items;

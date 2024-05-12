@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/enum/fonts.dart';
-import 'package:scheda_dnd_5e/enum/measures.dart';
-import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/constant/fonts.dart';
+import 'package:scheda_dnd_5e/constant/measures.dart';
+import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/mixin/loadable.dart';
@@ -166,10 +166,10 @@ class _SignUpPageState extends State<SignUpPage> with Loadable {
         }
         if (!_usernameController.text.isUsername) {
           context.snackbar('Per favore inserisci un nome utente valido',
-              backgroundColor: Palette.primaryBlue);
+              backgroundColor: Palette.backgroundGreen);
         } else if (!_emailController.text.isEmail) {
           context.snackbar('Per favore inserisci una email valida',
-              backgroundColor: Palette.primaryBlue);
+              backgroundColor: Palette.backgroundGreen);
         } else {
           SignUpStatus status = await AccountManager().signUp(
               _emailController.text,
@@ -188,7 +188,7 @@ class _SignUpPageState extends State<SignUpPage> with Loadable {
                 backgroundColor: Palette.primaryRed);
           } else if (status == SignUpStatus.success) {
             context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
-                backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
+                backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
             Navigator.of(context).popAndPushNamed('/home');
           }
         }
@@ -207,11 +207,11 @@ class _SignUpPageState extends State<SignUpPage> with Loadable {
               backgroundColor: Palette.primaryRed);
         } else if (status == SignInStatus.success) {
           context.snackbar('Bentornato ${AccountManager().user.nickname}!',
-              backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
+              backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
           Navigator.of(context).popAndPushNamed('/home');
         } else if (status == SignInStatus.successNewAccount) {
           context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
-              backgroundColor: Palette.primaryGreen, bottomMargin: Measures.bottomBarHeight);
+              backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
           Navigator.of(context).popAndPushNamed('/home');
         }
       });

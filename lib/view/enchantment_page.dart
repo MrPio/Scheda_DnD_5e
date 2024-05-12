@@ -1,16 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:scheda_dnd_5e/enum/fonts.dart';
-import 'package:scheda_dnd_5e/enum/measures.dart';
-import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/constant/fonts.dart';
+import 'package:scheda_dnd_5e/constant/measures.dart';
+import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
+import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
+import 'package:scheda_dnd_5e/view/partial/level.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
 
-import '../model/enchantment.dart';
+import '../model/enchantment.dart' hide Level;
 import 'partial/gradient_background.dart';
 
 class EnchantmentPage extends StatefulWidget {
@@ -46,18 +46,6 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                     Text(enchantment.name, style: Fonts.black(size: 20)),
                     Text(enchantment.type.title, style: Fonts.light(size: 16))
                   ]),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        behavior: HitTestBehavior.translucent ,
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: 'chevron_left'.toIcon(height: 24),
-                      ),
-                    ],
-                  ),
                 ]),
               ),
               // Body
@@ -143,6 +131,17 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
               ),
             ],
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Chevron(),
+              Padding(
+                padding: const EdgeInsets.only(
+                    top: Measures.vMarginBig, right: Measures.hPadding),
+                child: Level(level: enchantment.level.num, maxLevel: 9),
+              ),
+            ],
+          )
         ],
       ),
     );

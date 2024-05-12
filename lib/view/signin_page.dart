@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/enum/fonts.dart';
-import 'package:scheda_dnd_5e/enum/measures.dart';
+import 'package:scheda_dnd_5e/constant/fonts.dart';
+import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/mixin/loadable.dart';
@@ -16,7 +16,7 @@ import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';
 import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
 
-import '../enum/palette.dart';
+import '../constant/palette.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -219,7 +219,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
         }
         if (!_emailController.text.isEmail) {
           context.snackbar('Per favore inserisci una email valida',
-              backgroundColor: Palette.primaryBlue);
+              backgroundColor: Palette.backgroundBlue);
         } else {
           SignInStatus status = await AccountManager()
               .signIn(_emailController.text, _passwordController.text);
@@ -231,7 +231,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
                 backgroundColor: Palette.primaryRed);
           } else if (status == SignInStatus.success) {
             context.snackbar('Bentornato ${AccountManager().user.nickname}!',
-                backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
+                backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
             Navigator.of(context).popAndPushNamed('/home');
           }
         }
@@ -250,11 +250,11 @@ class _SignInPageState extends State<SignInPage> with Loadable {
               backgroundColor: Palette.primaryRed);
         } else if (status == SignInStatus.success) {
           context.snackbar('Bentornato ${AccountManager().user.nickname}!',
-              backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
+              backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
           Navigator.of(context).popAndPushNamed('/home');
         } else if (status == SignInStatus.successNewAccount) {
           context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
-              backgroundColor: Palette.primaryGreen, bottomMargin: Measures.bottomBarHeight);
+              backgroundColor: Palette.backgroundGreen, bottomMargin: Measures.bottomBarHeight);
           Navigator.of(context).popAndPushNamed('/home');
         }
       });
@@ -274,7 +274,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           if (status == ResetPasswordStatus.success) {
             context.snackbar(
                 'Controlla il tuo indirizzo per reimpostare la password',
-                backgroundColor: Palette.primaryBlue);
+                backgroundColor: Palette.backgroundBlue);
           } else {
             context.snackbar('Errore generico!',
                 backgroundColor: Palette.primaryRed);

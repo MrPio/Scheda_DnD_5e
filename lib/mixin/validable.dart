@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 
-import '../enum/palette.dart';
+import '../constant/palette.dart';
 
 mixin Validable<T extends StatefulWidget> on State<T> {
   bool validate(Function() task) {

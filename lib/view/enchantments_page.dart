@@ -2,18 +2,20 @@ import 'dart:core' as core show Type;
 import 'dart:core' hide Type;
 
 import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/enum/fonts.dart';
-import 'package:scheda_dnd_5e/enum/measures.dart';
-import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/constant/fonts.dart';
+import 'package:scheda_dnd_5e/constant/measures.dart';
+import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
-import 'package:scheda_dnd_5e/model/enchantment.dart';
+import 'package:scheda_dnd_5e/model/enchantment.dart' hide Level;
+import 'package:scheda_dnd_5e/model/enchantment.dart' as enc show Level;
 import 'package:scheda_dnd_5e/model/filter.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
+import 'package:scheda_dnd_5e/view/partial/level.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
 
 class EnchantmentsPage extends StatefulWidget {
@@ -50,7 +52,7 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
           Class.values.where((e) => e.isEnchanter).toList(),
           (enchantment, values) =>
               enchantment.classes.any((c) => values.contains(c))),
-      Filter<Enchantment, Level>('Livello', Palette.primaryRed, Level.values,
+      Filter<Enchantment, enc.Level>('Livello', Palette.primaryRed, enc.Level.values,
           (enchantment, values) => values.contains(enchantment.level)),
       Filter<Enchantment, Type>('Tipo', Palette.primaryBlue, Type.values,
           (enchantment, values) => values.contains(enchantment.type)),
@@ -63,7 +65,7 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
     // Forcing shimmer effect
     final tmpEnchantments = DataManager().enchantments.value;
     DataManager().enchantments.value = null;
-    Future.delayed(Durations.long1,
+    Future.delayed(Durations.medium1,
         () => DataManager().enchantments.value = tmpEnchantments);
     super.initState();
   }
@@ -159,11 +161,11 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
     );
   }
 
-  enchantmentCard(Enchantment model) => Padding(
+  enchantmentCard(Enchantment enchantment) => Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: GlassCard(
           onTap: () =>
-              Navigator.of(context).pushNamed('/enchantment', arguments: model),
+              Navigator.of(context).pushNamed('/enchantment', arguments: enchantment),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
             child: Row(
@@ -175,25 +177,14 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SingleChildScrollView(
-                          child: Text(model.name, style: Fonts.bold(size: 18))),
-                      Text(model.type.title, style: Fonts.light(size: 16)),
+                          child: Text(enchantment.name, style: Fonts.bold(size: 18))),
+                      Text(enchantment.type.title, style: Fonts.light(size: 16)),
                     ],
                   ),
                 ),
                 const SizedBox(width: Measures.hMarginMed),
                 // Level
-                Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.fromBorderSide(BorderSide(
-                            color: Color.lerp(Palette.primaryYellow,
-                                Palette.primaryRed, model.level.num / 7.0)!,
-                            width: 2))),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Text(model.level.num.toString(),
-                          style: Fonts.regular(size: 16)),
-                    )),
+                Level(level: enchantment.level.num, maxLevel: 9),
               ],
             ),
           ),

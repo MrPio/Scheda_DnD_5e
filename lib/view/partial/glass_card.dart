@@ -1,13 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../../enum/fonts.dart';
-import '../../enum/measures.dart';
+import '../../constant/fonts.dart';
+import '../../constant/measures.dart';
 
 class GlassCard extends StatefulWidget {
   final double? width, height, shimmerHeight;

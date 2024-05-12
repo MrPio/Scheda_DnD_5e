@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
@@ -9,14 +9,16 @@ import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
+
 // import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/filter.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
+import 'package:scheda_dnd_5e/view/partial/level.dart';
 
-import '../enum/fonts.dart';
-import '../enum/measures.dart';
+import '../constant/fonts.dart';
+import '../constant/measures.dart';
 import 'home_page.dart';
 import 'partial/radio_button.dart';
 
@@ -181,17 +183,17 @@ class _CharactersPageState extends State<CharactersPage> {
             ],
           ),
           bottomSheetItems: [
-            BottomSheetItem('png/delete_2', 'Elimina', () async{
+            BottomSheetItem('png/delete_2', 'Elimina', () async {
               AccountManager().user.deleteCharacter(character.uid!);
               setState(() {});
-              bool hasUndone=false;
+              bool hasUndone = false;
               await context.snackbar('Hai eliminato ${character.name}',
-                  backgroundColor: Palette.primaryBlue, undoCallback: () {
-                    hasUndone=true;
-                    AccountManager().user.restoreCharacter(character.uid!);
-                    setState(() {});
-                  });
-              if(!hasUndone){
+                  backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight,undoCallback: () {
+                hasUndone = true;
+                AccountManager().user.restoreCharacter(character.uid!);
+                setState(() {});
+              });
+              if (!hasUndone) {
                 DataManager().save(AccountManager().user);
               }
             })
@@ -216,7 +218,8 @@ class _CharactersPageState extends State<CharactersPage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(character.name, style: Fonts.bold(size: 18)),
+                                  Text(character.name,
+                                      style: Fonts.bold(size: 18)),
                                   Text(
                                       character.subRace?.title ??
                                           character.race.title,
@@ -230,18 +233,7 @@ class _CharactersPageState extends State<CharactersPage> {
                     ),
                     const SizedBox(width: Measures.hMarginMed),
                     // Level
-                    Container(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.fromBorderSide(BorderSide(
-                                color: Color.lerp(Palette.primaryYellow,
-                                    Palette.primaryRed, character.level / 10.0)!,
-                                width: 2))),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Text(character.level.toString(),
-                              style: Fonts.regular(size: 16)),
-                        )),
+                    Level(level: character.level, maxLevel: 10),
                   ],
                 ),
                 const SizedBox(height: Measures.vMarginThin),
@@ -256,11 +248,12 @@ class _CharactersPageState extends State<CharactersPage> {
   // Refreshing the characters UIDs
   refresh() {
     AccountManager().user.characters.value = null;
-    Future.delayed(Duration.zero, () async {
+    Future.delayed(Durations.medium1, () async {
       final startTime = DateTime.now();
       await AccountManager().reloadUser();
       await DataManager().loadUserCharacters(AccountManager().user);
-      print('CharactersPage:refresh() --> ${DateTime.now().difference(startTime).inMilliseconds} millis');
+      print(
+          'CharactersPage:refresh() --> ${DateTime.now().difference(startTime).inMilliseconds} millis');
     });
   }
 }

@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import '../../enum/fonts.dart';
-import '../../enum/palette.dart';
+import '../../constant/fonts.dart';
+import '../../constant/palette.dart';
 
 class NumericInput extends StatefulWidget {
   final double width;

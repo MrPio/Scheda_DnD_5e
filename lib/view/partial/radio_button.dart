@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/enum/fonts.dart';
-import 'package:scheda_dnd_5e/enum/measures.dart';
-import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/constant/fonts.dart';
+import 'package:scheda_dnd_5e/constant/measures.dart';
+import 'package:scheda_dnd_5e/constant/palette.dart';
 
 class RadioButton extends StatefulWidget {
   final String text;
@@ -50,7 +50,7 @@ class _RadioButtonState extends State<RadioButton> {
               vertical: widget.isSmall
                   ? Measures.vButtonPaddingSmall
                   : Measures.vButtonPadding,
-              horizontal: widget.width==null?Measures.hPadding / 2:0),
+              horizontal: widget.width==null?Measures.hPadding *.75:0),
         ),
         child: Text(widget.text, style: textStyle,overflow: TextOverflow.ellipsis,maxLines: 1,));
   }

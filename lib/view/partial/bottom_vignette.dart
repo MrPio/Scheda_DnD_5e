@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
-import '../../enum/palette.dart';
+import '../../constant/palette.dart';
 
 class BottomVignette extends StatelessWidget {
   final double height,spread;
@@ -9,23 +11,29 @@ class BottomVignette extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset('assets/images/linear_vignette.png',
-                color: Palette.background,
-                fit: BoxFit.fill,
-                height: spread,
-                width: double.infinity),
-            Container(
-                height: height,
-                width: double.infinity,
-                color: Palette.background),
-          ],
-        ),
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            alignment:  Alignment.bottomCenter,
+            children: [
+              IgnorePointer(
+                child: Image.asset('assets/images/linear_vignette.png',
+                    color: Palette.background,
+                    fit: BoxFit.fill,
+                    height: spread,
+                    width: double.infinity),
+              ),
+              AbsorbPointer(child: Container(height:spread*.5))
+            ],
+          ),
+          Container(
+              height: height,
+              width: double.infinity,
+              color: Palette.background),
+        ],
       ),
     );
   }

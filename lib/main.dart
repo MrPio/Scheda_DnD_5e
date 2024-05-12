@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:scheda_dnd_5e/view/character_page.dart';
 import 'package:scheda_dnd_5e/view/create_character_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantment_page.dart';
@@ -9,7 +10,7 @@ import 'package:scheda_dnd_5e/view/signin_page.dart';
 import 'package:scheda_dnd_5e/view/signup_page.dart';
 import 'package:tuple/tuple.dart';
 
-import 'enum/palette.dart';
+import 'constant/palette.dart';
 
 void main() async {
   runApp(const MyApp());
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
         '/enchantments': (context) => const EnchantmentsPage(),
         '/enchantment': (context) => const EnchantmentPage(),
         '/create_character':(context) => const CreateCharacterPage(),
+        '/character':(context) => const CharacterPage(),
       },
     );
   }

@@ -2,9 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:scheda_dnd_5e/enum/fonts.dart';
-import 'package:scheda_dnd_5e/enum/measures.dart';
-import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/constant/fonts.dart';
+import 'package:scheda_dnd_5e/constant/measures.dart';
+import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
@@ -195,7 +195,7 @@ extension ContextExtensions on BuildContext {
           Function()? undoCallback,})async =>
       await ScaffoldMessenger.of(this).showSnackBar(
         SnackBar(
-          duration: undoCallback==null?const Duration(seconds: 4):const Duration(seconds: 6),
+          duration: undoCallback==null?const Duration(seconds: 3):const Duration(seconds: 6),
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
           margin: EdgeInsets.only(
               left: Measures.hPadding,

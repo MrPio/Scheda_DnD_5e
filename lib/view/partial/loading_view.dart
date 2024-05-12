@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/enum/palette.dart';
+import 'package:scheda_dnd_5e/constant/palette.dart';
 
 class LoadingView extends StatelessWidget {
   final bool visible;

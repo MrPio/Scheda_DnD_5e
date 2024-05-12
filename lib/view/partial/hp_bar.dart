@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../enum/fonts.dart';
-import '../../enum/measures.dart';
-import '../../enum/palette.dart';
+import '../../constant/fonts.dart';
+import '../../constant/measures.dart';
+import '../../constant/palette.dart';
 import '../../model/character.dart';
 
 class HpBar extends StatelessWidget {
