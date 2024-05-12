@@ -52,7 +52,7 @@ final int raceSkill; // The contribute given by the race and subRace selection
                           controller: skillInputController,
                           width: 50,
                           isDense: true,
-                          style: Fonts.black(size: 26)),
+                          style: Fonts.black()),
                       // TODO: edit this +2
                       Text('+ $raceSkill', style: Fonts.light(size: 16)),
                     ],

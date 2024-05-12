@@ -50,7 +50,7 @@ class IOManager {
 
   Future<List<T>> deserializeObjects<T extends JSONSerializable>(
           String key) async =>
-      jsonDecode(await get(key) ?? '')
+      jsonDecode(await get<String>(key) ?? '')
           .map((e) => JSONSerializable.modelFactories[T]!(e) as T)
           .toList()
           .cast<T>();

@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
+import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
+import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
 
 import '../model/character.dart' hide Alignment;
@@ -15,10 +18,47 @@ class CharacterPage extends StatefulWidget {
   State<CharacterPage> createState() => _CharacterPageState();
 }
 
-class _CharacterPageState extends State<CharacterPage> {
+class _CharacterPageState extends State<CharacterPage>
+    with TickerProviderStateMixin {
+  late final TabController _tabController;
+  List<Widget>? _screens;
+
+  @override
+  void initState() {
+    _screens = [
+      Column(
+        children: [
+          SizedBox(height: Measures.vMarginSmall),
+        ],
+      ),
+      Column(
+        children: [
+          SizedBox(height: Measures.vMarginSmall),
+        ],
+      ),
+      Column(
+        children: [
+          SizedBox(height: Measures.vMarginSmall),
+        ],
+      ),
+    ];
+    _tabController = TabController(length: _screens!.length, vsync: this)
+      ..addListener(() {
+        setState(() {});
+      });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final character = ModalRoute.of(context)!.settings.arguments as Character;
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Stack(
@@ -27,6 +67,7 @@ class _CharacterPageState extends State<CharacterPage> {
           const GradientBackground(topColor: Palette.backgroundBlue),
           // Header + Body
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               // Header
               Padding(
@@ -34,7 +75,7 @@ class _CharacterPageState extends State<CharacterPage> {
                 child: SizedBox(
                   width: double.infinity,
                   child: Column(children: [
-                    Text(character.name, style: Fonts.black(size: 20)),
+                    Text(character.name, style: Fonts.black(size: 18)),
                     Text(
                         character.subRace == null
                             ? character.race.title
@@ -43,18 +84,54 @@ class _CharacterPageState extends State<CharacterPage> {
                   ]),
                 ),
               ),
+              const SizedBox(height: Measures.vMarginSmall),
+              // TabBar
+              TabBar(
+                  controller: _tabController,
+                  isScrollable: true,
+                  dividerHeight: 0,
+                  tabs: {
+                    'Scheda': 'png/sheet',
+                    'Inventario': 'png/inventory',
+                    'Incantesimi': 'png/scepter',
+                    'Background': 'png/background',
+                  }
+                      .entries
+                      .indexed
+                      .map((e) => Tab(
+                            child: Row(
+                              children: [
+                                (e.$2.value +
+                                        (_tabController.index == e.$1
+                                            ? '_on'
+                                            : '_off'))
+                                    .toIcon(height: 22),
+                                const SizedBox(width: Measures.hMarginSmall),
+                                Text(
+                                  e.$2.key,
+                                  style: _tabController.index == e.$1
+                                      ? Fonts.bold(size: 16)
+                                      : Fonts.light(size: 16),
+                                ),
+                              ],
+                            ),
+                          ))
+                      .toList()
+                      .cast<Widget>()),
               // Body
-              const Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      SizedBox(height: Measures.vMarginSmall),
-                    ],
-                  ),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: _screens!
+                      .map((e) => SingleChildScrollView(
+                            child: e,
+                          ))
+                      .toList(),
                 ),
               ),
             ],
           ),
+          // Chevron + Level
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

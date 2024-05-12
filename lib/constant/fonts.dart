@@ -3,17 +3,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 
 class Fonts {
-  static light({color,double size=15}) => GoogleFonts.lato(
+  static light({color,double size=14}) => GoogleFonts.lato(
       color: color ??Palette.onBackground,
       fontSize: size,
       fontWeight: FontWeight.w300);
 
-  static regular({color,double size=17}) => GoogleFonts.lato(
+  static regular({color,double size=16}) => GoogleFonts.lato(
       color: color ??Palette.onBackground,
       fontSize: size,
       fontWeight: FontWeight.normal);
 
-  static bold({color,double size=20}) => GoogleFonts.lato(
+  static bold({color,double size=16}) => GoogleFonts.lato(
       color: color ?? Palette.onBackground,
       fontSize: size,
       fontWeight: FontWeight.bold);
@@ -28,7 +28,7 @@ class Fonts {
       fontSize: size,
       fontWeight: FontWeight.normal);
 
-  static black({color,double size=28}) => GoogleFonts.lato(
+  static black({color,double size=24}) => GoogleFonts.lato(
       color: color ??Palette.onBackground,
       fontSize: size,
       fontWeight: FontWeight.w900).copyWith(height: 1.25);

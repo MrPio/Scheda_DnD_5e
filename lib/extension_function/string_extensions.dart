@@ -29,16 +29,12 @@ extension StringExtensions on String {
     } else {
       return Padding(
         padding: margin,
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(999),
-            splashColor: Palette.onBackground.withOpacity(0),
-            onTap: onTap,
-            child: Padding(
-              padding: padding,
-              child: icon,
-            ),
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: onTap,
+          child: Padding(
+            padding: padding,
+            child: icon,
           ),
         ),
       );

@@ -129,7 +129,7 @@ class _DicePageState extends State<DicePage>
                 padding: const EdgeInsets.only(top: Measures.vMarginThin,
                   bottom: Measures.vMarginThin,),
                 child: Text(args?.title ?? 'Lanciatore dadi',
-                    style: Fonts.black(size: 20)),
+                    style: Fonts.black(size: 18)),
               )),
               if ((args?.dices == null && _selectedDice.isNotEmpty) ||
                   (args?.modifier == null && modifier != 0))
@@ -256,7 +256,7 @@ class _DicePageState extends State<DicePage>
                                   contentPadding:
                                   const EdgeInsets.fromLTRB(
                                       4, 8, 4, 8),
-                                  style: Fonts.black(size: 28),
+                                  style: Fonts.black(),
                                 ),
                                 const SizedBox(
                                     width: Measures.hMarginMed),
@@ -306,7 +306,7 @@ class _DicePageState extends State<DicePage>
                               style: Fonts.regular()),
                           const SizedBox(width: Measures.hMarginMed),
                           Text('${modifier.toSignString()} ${modifier.abs()}',
-                              style: Fonts.black(size: 24)),
+                              style: Fonts.black()),
                         ],
                       ),
                     ),
@@ -422,7 +422,7 @@ class _DicePageState extends State<DicePage>
                           .toSignString()} ${modifier.abs()}' : ''} =',
                       style: Fonts.regular(size: 24)),
                   Text((_diceValues.sum() + modifier).toString(),
-                      style: Fonts.black(size: 48))
+                      style: Fonts.black(size: 42))
                 ],
               ),
             ));

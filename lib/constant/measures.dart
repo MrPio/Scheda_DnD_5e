@@ -6,7 +6,7 @@ class Measures {
       vMarginSmall = 18.0,
       vMarginThin = 9.0,
       vMarginMoreThin = 5.0;
-  static const vButtonPadding = 13.0, vButtonPaddingSmall = 6.0;
+  static const vButtonPadding = 11.0, vButtonPaddingSmall = 6.0;
   static const hMarginBig = 20.0, hMarginMed = 12.0, hMarginSmall = 6.0;
   static const hTextFieldPadding = 18.0;
   static const hPadding = 24.0;
@@ -16,7 +16,7 @@ class Measures {
   static const alignmentCardHeight = 62.0;
   static const alignmentCardSmallHeight = 54.0;
   static const skillCardHeight = 94.0;
-  static const hpBarHeight = 12.0;
+  static const hpBarHeight = 10.0;
 
   // Chevron
   static EdgeInsets chevronPadding =

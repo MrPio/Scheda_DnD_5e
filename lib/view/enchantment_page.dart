@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
+import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
@@ -43,7 +44,7 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                     right: Measures.hPadding + 10),
                 child: Stack(alignment: Alignment.center, children: [
                   Column(children: [
-                    Text(enchantment.name, style: Fonts.black(size: 20)),
+                    Text(enchantment.name, style: Fonts.black(size: 18)),
                     Text(enchantment.type.title, style: Fonts.light(size: 16))
                   ]),
                 ]),
@@ -85,7 +86,6 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                       ),
                       const SizedBox(height: Measures.vMarginSmall),
                       // Classes
-                      // TODO: Class page opens onTap
                       Align(
                         alignment: Alignment.centerLeft,
                         child: SingleChildScrollView(
@@ -102,6 +102,14 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                                             padding: const EdgeInsets.only(
                                                 right: 10),
                                             child: RadioButton(
+                                              onPressed: (){
+                                                context.popup(enchantment.classes[i].title,
+                                                    message: enchantment.classes[i].description,
+                                                    positiveText: 'Ok',
+                                                    backgroundColor: Palette
+                                                        .background
+                                                        .withOpacity(0.5));
+                                              },
                                               color: Palette.primaryBlue,
                                               text:
                                                   enchantment.classes[i].title,
@@ -122,7 +130,7 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                             data: enchantment.description,
                             shrinkWrap: true,
                             styleSheet: MarkdownStyleSheet(
-                                p: Fonts.light(), listBullet: Fonts.light())),
+                                p: Fonts.light(size: 16), listBullet: Fonts.light(size: 16))),
                       ),
                       const SizedBox(height: Measures.vMarginBig)
                     ],
@@ -152,8 +160,8 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
         child: RichText(
           text: TextSpan(
             children: [
-              TextSpan(text: '$key: ', style: Fonts.bold(size: 18)),
-              TextSpan(text: value, style: Fonts.light(size: 18)),
+              TextSpan(text: '$key: ', style: Fonts.bold(size: 16)),
+              TextSpan(text: value, style: Fonts.light(size: 16)),
             ],
           ),
         ),

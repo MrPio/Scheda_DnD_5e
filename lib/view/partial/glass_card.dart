@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
@@ -50,6 +51,7 @@ class _GlassCardState extends State<GlassCard> {
       onTapDown: (_) => widget.clickable ? setState(() => _down = true) : null,
       onTapUp: (_) => widget.clickable ? setState(() => _down = false) : null,
       onLongPress: () {
+        HapticFeedback.mediumImpact();
         if(widget.bottomSheetHeader!=null || widget.bottomSheetItems!=null) {
           context.bottomSheet(header: widget.bottomSheetHeader, items: widget.bottomSheetItems);
         }

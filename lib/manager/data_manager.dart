@@ -54,6 +54,7 @@ class DataManager {
           DatabaseManager.collections[Enchantment]!, enchantments.value!);
     } else {
       print('⚡ Leggo localmente gli enchantments');
+      print(await IOManager().get<String>(DatabaseManager.collections[Enchantment]!));
       enchantments.value = await IOManager().deserializeObjects<Enchantment>(
           DatabaseManager.collections[Enchantment]!);
     }

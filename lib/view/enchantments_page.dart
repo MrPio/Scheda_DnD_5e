@@ -1,6 +1,7 @@
 import 'dart:core' as core show Type;
 import 'dart:core' hide Type;
 
+import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
@@ -113,33 +114,32 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                 textController: _searchController,
               ),
               // Filters
-              GridView.count(
+              DynamicHeightGridView(
+                itemCount: _filters.length,
                   physics: const NeverScrollableScrollPhysics(),
                   crossAxisCount: 3,
-                  childAspectRatio: 2.5,
                   shrinkWrap: true,
                   crossAxisSpacing: 10,
-                  children: List.generate(
-                      _filters.length,
-                      (i) => RadioButton(
-                          selected: _filters[i].selectedValues.isNotEmpty,
-                          text: _filters[i].title,
-                          color: _filters[i].color,
-                          onPressed: () => _filters[i].selectedValues.isNotEmpty
-                              ? setState(
-                                  () => _filters[i].selectedValues.clear())
-                              : context.checkList(
-                                  'Filtro su ${_filters[i].title.toLowerCase()}',
-                                  values: _filters[i].values,
-                                  color: _filters[i].color,
-                                  onChanged: (value) => setState(() =>
-                                      _filters[i].selectedValues.toggle(value)),
-                                  value: (value) => _filters[i]
-                                      .selectedValues
-                                      .contains(value),
-                                )))),
+                  builder: (context, i) => RadioButton(
+                      selected: _filters[i].selectedValues.isNotEmpty,
+                      text: _filters[i].title,
+                      color: _filters[i].color,
+                      onPressed: () => _filters[i].selectedValues.isNotEmpty
+                          ? setState(
+                              () => _filters[i].selectedValues.clear())
+                          : context.checkList(
+                        'Filtro su ${_filters[i].title.toLowerCase()}',
+                        values: _filters[i].values,
+                        color: _filters[i].color,
+                        onChanged: (value) => setState(() =>
+                            _filters[i].selectedValues.toggle(value)),
+                        value: (value) => _filters[i]
+                            .selectedValues
+                            .contains(value),
+                      )),
+),
               // Found enchantments
-              const SizedBox(height: Measures.vMarginSmall),
+              const SizedBox(height: Measures.vMarginThin),
               // Nothing to show
               if (isDataReady && enchantments.isEmpty)
                 Padding(
@@ -167,7 +167,7 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
           onTap: () =>
               Navigator.of(context).pushNamed('/enchantment', arguments: enchantment),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -177,8 +177,8 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SingleChildScrollView(
-                          child: Text(enchantment.name, style: Fonts.bold(size: 18))),
-                      Text(enchantment.type.title, style: Fonts.light(size: 16)),
+                          child: Text(enchantment.name, style: Fonts.bold(size: 16))),
+                      Text(enchantment.type.title, style: Fonts.light(size: 14)),
                     ],
                   ),
                 ),

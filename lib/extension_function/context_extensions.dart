@@ -266,12 +266,12 @@ extension ContextExtensions on BuildContext {
                                       height: 60,
                                       child: Row(
                                         children: [
-                                          e.iconPath.toIcon(height: 24),
+                                          e.iconPath.toIcon(),
                                           const SizedBox(
                                               width: Measures.hMarginBig),
                                           Flexible(
                                               child: Text(e.text,
-                                                  style: Fonts.bold(size: 18),
+                                                  style: Fonts.bold(size: 16),
                                                   overflow:
                                                       TextOverflow.ellipsis)),
                                         ],

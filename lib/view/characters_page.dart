@@ -168,14 +168,14 @@ class _CharactersPageState extends State<CharactersPage> {
             children: [
               Row(
                 children: [
-                  character.class_.iconPath.toIcon(height: 24),
+                  character.class_.iconPath.toIcon(),
                   const SizedBox(width: Measures.hMarginBig),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(character.name, style: Fonts.bold(size: 18)),
+                      Text(character.name, style: Fonts.bold(size: 16)),
                       Text(character.subRace?.title ?? character.race.title,
-                          style: Fonts.light(size: 16)),
+                          style: Fonts.light(size: 14)),
                     ],
                   )
                 ],
@@ -219,11 +219,11 @@ class _CharactersPageState extends State<CharactersPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(character.name,
-                                      style: Fonts.bold(size: 18)),
+                                      style: Fonts.bold(size: 16)),
                                   Text(
                                       character.subRace?.title ??
                                           character.race.title,
-                                      style: Fonts.light(size: 16)),
+                                      style: Fonts.light(size: 14)),
                                 ],
                               )
                             ],
