@@ -13,9 +13,10 @@ import '../../constant/measures.dart';
 class GlassCard extends StatefulWidget {
   final double? width, height, shimmerHeight;
   final Widget? child;
-  final bool clickable, isShimmer;
+  final bool clickable, isShimmer,isLight;
   final void Function()? onTap;
-  final Widget? bottomSheetHeader;final List<BottomSheetItem>? bottomSheetItems;
+  final Widget? bottomSheetHeader;
+  final List<BottomSheetItem>? bottomSheetItems;
 
   const GlassCard(
       {super.key,
@@ -26,8 +27,8 @@ class GlassCard extends StatefulWidget {
       this.isShimmer = false,
       this.shimmerHeight,
       this.onTap,
-        this.bottomSheetHeader, this.bottomSheetItems
-        });
+      this.bottomSheetHeader,
+      this.bottomSheetItems,this.isLight=false});
 
   @override
   State<GlassCard> createState() => _GlassCardState();
@@ -52,8 +53,10 @@ class _GlassCardState extends State<GlassCard> {
       onTapUp: (_) => widget.clickable ? setState(() => _down = false) : null,
       onLongPress: () {
         HapticFeedback.mediumImpact();
-        if(widget.bottomSheetHeader!=null || widget.bottomSheetItems!=null) {
-          context.bottomSheet(header: widget.bottomSheetHeader, items: widget.bottomSheetItems);
+        if (widget.bottomSheetHeader != null ||
+            widget.bottomSheetItems != null) {
+          context.bottomSheet(
+              header: widget.bottomSheetHeader, items: widget.bottomSheetItems);
         }
       },
       onTapCancel: () =>
@@ -96,7 +99,7 @@ class _GlassCardState extends State<GlassCard> {
                     duration: const Duration(milliseconds: 120),
                     decoration: BoxDecoration(
                         color: Palette.card
-                            .withOpacity(Palette.card.opacity * _opacity),
+                            .withOpacity(Palette.card.opacity * _opacity*(widget.isLight?0.35:1)),
                         borderRadius: BorderRadius.circular(_borderRadius)),
                     child: widget.child,
                   ),

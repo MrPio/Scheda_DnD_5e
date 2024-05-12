@@ -3,37 +3,39 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 
-class GridCols extends StatelessWidget {
+class GridRow extends StatelessWidget {
   final double crossAxisSpacing, mainAxisSpacing;
-  final int crossAxisCount;
+  final int columnsCount;
   final List<Widget> children;
+  final bool fill;
 
-  const GridCols(
+  const GridRow(
       {super.key,
       this.crossAxisSpacing = Measures.vMarginMoreThin,
       this.mainAxisSpacing = Measures.vMarginMoreThin,
-      required this.crossAxisCount,
+      this.fill = false,
+      required this.columnsCount,
       required this.children});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
-      children: List.generate(children.length ~/ crossAxisCount + 1, (i) {
+      children: List.generate(children.length ~/ columnsCount + 1, (i) {
         List<Widget> elements = [];
-        for (var j = 0;
-            j < min(crossAxisCount, children.length - crossAxisCount * i);
-            j++) {
-          elements.add(Flexible(child: children[i * crossAxisCount + j]));
-          if (j <
-              min(crossAxisCount, children.length - crossAxisCount * i) - 1) {
+        final int rowSize = fill
+            ? columnsCount
+            : min(columnsCount, children.length - columnsCount * i);
+        for (var j = 0; j < rowSize; j++) {
+          elements.add(Flexible(child: (i * columnsCount + j<children.length)?children[i * columnsCount + j]:Container()));
+          if (j < rowSize - 1) {
             elements.add(SizedBox(width: crossAxisSpacing));
           }
         }
         return Padding(
           padding: EdgeInsets.only(
               bottom:
-                  i <= children.length ~/ crossAxisCount ? mainAxisSpacing : 0),
+                  i <= children.length ~/ columnsCount ? mainAxisSpacing : 0),
           child: Row(
               crossAxisAlignment: CrossAxisAlignment.start, children: elements),
         );

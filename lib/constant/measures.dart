@@ -17,6 +17,7 @@ class Measures {
   static const alignmentCardSmallHeight = 54.0;
   static const skillCardHeight = 94.0;
   static const hpBarHeight = 10.0;
+  static const sheetCardSmallHeight=48.0;
 
   // Chevron
   static EdgeInsets chevronPadding =

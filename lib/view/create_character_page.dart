@@ -17,7 +17,7 @@ import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/mixin/loadable.dart';
 import 'package:scheda_dnd_5e/model/loot.dart';
-import 'package:scheda_dnd_5e/view/partial/grid_rows.dart';
+import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/dice_card.dart';
@@ -152,7 +152,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                               character.race = e;
                               character.languages = e.defaultLanguages.toSet();
                               character.masteries.clear();
-                              character.chosenSkills = e.defaultSkills;
+                              character.chosenSkills.clear();
                               character.subSkills.clear();
                               // Ask the possible choices before continuing
                               if (e.canChoiceLanguage) {
@@ -205,8 +205,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   color: Palette.primaryYellow,
                                   selectionRequirement: e.numChoiceableSkills,
                                   onChanged: (value) {
-                                    var selected = character.chosenSkills -
-                                        e.defaultSkills;
+                                    var selected = character.chosenSkills;
                                     if (selected.containsKey(value)) {
                                       character.chosenSkills -= {value: 1};
                                     } else if (selected.isEmpty ||
@@ -216,13 +215,11 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                     } else if (e.numChoiceableSkills == 1 &&
                                         !selected.containsKey(value)) {
                                       character.chosenSkills.clear();
-                                      character.chosenSkills
-                                          .addAll(e.defaultSkills + {value: 1});
+                                      character.chosenSkills.addAll({value: 1});
                                     }
                                   },
                                   value: (value) =>
-                                      character.chosenSkills[value] ==
-                                      (e.defaultSkills[value] ?? 0) + 1,
+                                      character.chosenSkills[value] ==1,
                                 );
                               }
                               if (e.numChoiceableSubSkills > 0) {
@@ -477,7 +474,6 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                 onTap: () async {
                                   // Set subRace fields
                                   character.subRace = e;
-                                  character.chosenSkills += e.defaultSkills;
                                   character.masteries
                                       .addAll(e.defaultMasteries);
                                   Set<Language> backupLanguages =
@@ -1078,15 +1074,12 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
             style: Fonts.light()),
         const SizedBox(height: Measures.vMarginThin),
         // Skill cards =============================
-        GridRows(
-            crossAxisCount: 2,
+        GridRow(
+            columnsCount: 2,
             children: Skill.values
                 .map((e) => SkillCard(
                       e,
-                      raceSkill: character.chosenSkills[e] ??
-                          0 +
-                              (character.race.defaultSkills[e] ?? 0) +
-                              (character.subRace?.defaultSkills[e] ?? 0),
+                      raceSkill: character.skillValue(e) ,
                       skillInputController: _skillControllers[e.index],
                     ))
                 .toList()),
@@ -1200,6 +1193,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
     if (_index + step >= (_screens?.length ?? 0)) {
       // The character creation is completed
       withLoading(() async {
+        character.initiative=character.skillModifier(Skill.destrezza);
         character.uid = await DataManager().save(character, SaveMode.post);
         AccountManager().user.charactersUIDs.add(character.uid!);
         await DataManager().save(AccountManager().user);

@@ -256,8 +256,8 @@ extension ContextExtensions on BuildContext {
                                 color: Colors.transparent,
                                 child: InkWell(
                                   onTap: (){
-                                    e.onTap();
                                     Navigator.of(context).pop();
+                                    e.onTap();
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(

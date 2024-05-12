@@ -15,7 +15,7 @@ import 'package:scheda_dnd_5e/extension_function/int_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/home_page.dart';
-import 'package:scheda_dnd_5e/view/partial/grid_rows.dart';
+import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/card/dice_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
@@ -176,10 +176,10 @@ class _DicePageState extends State<DicePage>
                               ),
                       )),
                   const SizedBox(height: Measures.vMarginSmall),
-                  GridRows(
+                  GridRow(
                     crossAxisSpacing: Measures.vMarginThin,
                     mainAxisSpacing: Measures.vMarginThin,
-                    crossAxisCount: 3,
+                    columnsCount: 3,
                     children: Dice.values
                         .map((e) => DiceCard(
                               e,
@@ -299,7 +299,7 @@ class _DicePageState extends State<DicePage>
                                 Text('Modificatore:', style: Fonts.regular()),
                                 const SizedBox(width: Measures.hMarginMed),
                                 Text(
-                                    '${modifier.toSignString()} ${modifier.abs()}',
+                                    modifier.toSignedString(),
                                     style: Fonts.black()),
                               ],
                             ),
@@ -409,7 +409,7 @@ class _DicePageState extends State<DicePage>
               child: Column(
                 children: [
                   Text(
-                      '(${_diceValues.where((e) => e > 0).join(' + ')})${modifier != 0 ? ' ${modifier.toSignString()} ${modifier.abs()}' : ''} =',
+                      '(${_diceValues.where((e) => e > 0).join(' + ')})${modifier != 0 ? ' ${modifier.toSignedString()}' : ''} =',
                       style: Fonts.regular(size: 24)),
                   Text((_diceValues.sum() + modifier).toString(),
                       style: Fonts.black(size: 42))

@@ -8,13 +8,16 @@ import 'package:flutter/widgets.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
+import 'package:scheda_dnd_5e/extension_function/int_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
-import 'package:scheda_dnd_5e/view/partial/grid_rows.dart';
+import 'package:scheda_dnd_5e/view/partial/grid_column.dart';
+import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
+import 'package:scheda_dnd_5e/view/partial/rule.dart';
 
 import '../model/character.dart' hide Alignment;
 import 'partial/gradient_background.dart';
@@ -42,74 +45,174 @@ class _CharacterPageState extends State<CharacterPage>
   Widget build(BuildContext context) {
     final character = ModalRoute.of(context)!.settings.arguments as Character;
     var attributes = [
-      const SheetItemCard(
-          iconPath: 'png/shield', text: 'CA', value: '18', subValue: '20'),
-      const SheetItemCard(
-          iconPath: 'png/hp', text: 'HP', value: '18', subValue: '20'),
-      const SheetItemCard(
-          iconPath: 'png/max_hp', text: 'Max HP', value: '18', subValue: '20'),
-      const SheetItemCard(
+      SheetItemCard(
+          iconPath: 'png/shield',
+          text: 'CA',
+          value: character.armorClass.toString()),
+      SheetItemCard(
+        iconPath: 'png/hp',
+        text: 'HP',
+        value: character.hp.toString(),
+        subValue: character.maxHp.toString(),
+      ),
+      SheetItemCard(
+          iconPath: 'png/bonus',
+          text: 'BC',
+          value: character.competenceBonus.toSignedString()),
+      SheetItemCard(
+          iconPath: 'png/speed',
+          text: 'Speed',
+          value: '${character.defaultSpeed.round()}m'),
+      SheetItemCard(
+          iconPath: 'png/status',
+          text: 'Status',
+          value: character.status?.title ?? '-'),
+      SheetItemCard(
           iconPath: 'png/initiative',
           text: 'Iniziativa',
-          value: '18',
-          subValue: '20'),
-      const SheetItemCard(
-          iconPath: 'png/speed', text: 'Speed', value: '18', subValue: '20'),
-      const SheetItemCard(
-          iconPath: 'png/bonus', text: 'BC', value: '18', subValue: '20'),
+          value: character.initiative.toSignedString()),
     ];
-    var skills = [Skill.forza,Skill.costituzione,Skill.destrezza,Skill.intelligenza,Skill.saggezza,Skill.carisma]
-        .map((e) => SheetItemCard(
-              iconPath: e.iconPath,
-              text: e.title,
-              iconColor: e.color,
-              value: character.skillsModifier[e].toString(),
-              subValue: character.skills[e].toString(),
+    var skills = [
+      Skill.forza,
+      Skill.costituzione,
+      Skill.destrezza,
+      Skill.intelligenza,
+      Skill.saggezza,
+      Skill.carisma
+    ]
+        .map((skill) => SheetItemCard(
+              iconPath: skill.iconPath,
+              text: skill.title,
+              iconColor: skill.color,
+              value: character.skillModifier(skill).toSignedString(),
+              subValue: character.skillValue(skill).toString(),
               child: _isSkillsExpanded
                   ? Column(
-                      children: e.subSkills
-                          .map((e1) => Material(
-                                color: Colors.transparent,
-                                child: InkWell(
+                      children: [
+                            Material(
+                              color: Colors.transparent,
+                              child: InkWell(
                                   onTap: () {},
                                   child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: Measures.hMarginMed,
-                                        vertical: Measures.vMarginMoreThin),
-                                    child: Row(
-                                      children: [
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: Measures.hMarginMed,
+                                          vertical: Measures.vMarginMoreThin),
+                                      child: Row(children: [
+                                        // SubSkill title
                                         Flexible(
                                           fit: FlexFit.tight,
-                                          child: Text(e1.title,
-                                              style: Fonts.regular(size: 13),maxLines: 1,overflow: TextOverflow.ellipsis,),
+                                          child: Text(
+                                            'Tiro salvezza',
+                                            style: Fonts.regular(size: 13),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
                                         ),
+                                        // SubSkill value
                                         Text(
-                                            (character.subSkills[e1] ?? 0)
-                                                .toString(),
-                                            style: Fonts.regular(size: 14)),
-                                        SizedBox(width: Measures.hMarginThin),
+                                            character
+                                                .savingThrowValue(skill)
+                                                .toSignedString(),
+                                            style: Fonts.black(size: 14)),
+                                        const SizedBox(
+                                            width: Measures.hMarginSmall),
+                                        // Competenza
                                         Container(
                                             width: 12,
                                             height: 12,
                                             decoration: BoxDecoration(
-                                                color: Palette.onBackground,
+                                                color: character.savingThrows
+                                                        .contains(skill)
+                                                    ? Palette.onBackground
+                                                    : Colors.transparent,
+                                                border: Border.all(
+                                                    color: Palette.onBackground,
+                                                    width: 0.65),
                                                 borderRadius:
                                                     BorderRadius.circular(
                                                         999))),
-                                        SizedBox(width: Measures.hMarginThin),
-                                        Container(
-                                            width: 12,
-                                            height: 12,
-                                            decoration: BoxDecoration(
-                                                color: Palette.onBackground,
-                                                borderRadius:
-                                                    BorderRadius.circular(2)))
-                                      ],
+                                      ]))),
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: Measures.vMarginMoreThin),
+                              child: Rule(),
+                            ),
+                          ].cast<Widget>() +
+                          skill.subSkills
+                              .map((subSkill) => Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: () {},
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: Measures.hMarginMed,
+                                            vertical: Measures.vMarginMoreThin),
+                                        child: Row(
+                                          children: [
+                                            // SubSkill title
+                                            Flexible(
+                                              fit: FlexFit.tight,
+                                              child: Text(
+                                                subSkill.title,
+                                                style: Fonts.regular(size: 13),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            // SubSkill value
+                                            Text(
+                                                character
+                                                    .subSkillValue(subSkill)
+                                                    .toSignedString(),
+                                                style: Fonts.black(size: 14)),
+                                            const SizedBox(
+                                                width: Measures.hMarginSmall),
+                                            // Competenza
+                                            Container(
+                                                width: 12,
+                                                height: 12,
+                                                decoration: BoxDecoration(
+                                                    color: (character.subSkills[
+                                                                    subSkill] ??
+                                                                0) >=
+                                                            1
+                                                        ? Palette.onBackground
+                                                        : Colors.transparent,
+                                                    border: Border.all(
+                                                        color: Palette
+                                                            .onBackground,
+                                                        width: 0.65),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            999))),
+                                            const SizedBox(
+                                                width: Measures.hMarginThin),
+                                            // Maestria
+                                            Container(
+                                                width: 12,
+                                                height: 12,
+                                                decoration: BoxDecoration(
+                                                    color: (character.subSkills[
+                                                                    subSkill] ??
+                                                                0) >=
+                                                            2
+                                                        ? Palette.onBackground
+                                                        : Colors.transparent,
+                                                    border: Border.all(
+                                                        color: Palette
+                                                            .onBackground,
+                                                        width: 0.65),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            1.75)))
+                                          ],
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              ))
-                          .toList(),
+                                  ))
+                              .toList()
+                              .cast<Widget>(),
                     )
                   : null,
             ))
@@ -119,15 +222,18 @@ class _CharacterPageState extends State<CharacterPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: Measures.vMarginMed),
+          // HP bar
           HpBar(character.hp, character.maxHp),
           const SizedBox(height: Measures.vMarginSmall),
+          // Attributes
           Text('Attributi', style: Fonts.black(size: 18)),
           const SizedBox(height: Measures.vMarginThin),
-          GridRows(
-            crossAxisCount: 3,
+          GridRow(
+            columnsCount: 3,
             children: attributes,
           ),
           const SizedBox(height: Measures.vMarginThin),
+          // Skills and subSkills
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () => setState(() {
@@ -144,12 +250,54 @@ class _CharacterPageState extends State<CharacterPage>
               ]),
             ),
           ),
-          GridRows(
-            crossAxisCount: _isSkillsExpanded ? 2 : 3,
-            children: skills,
-          ),
+          _isSkillsExpanded
+              ? GridColumn(
+                  columnsCount: 2,
+                  children: skills,
+                )
+              : GridRow(
+                  columnsCount: 3,
+                  children: skills,
+                ),
           const SizedBox(height: Measures.vMarginSmall),
+          // Masteries
           Text('Competenze', style: Fonts.black(size: 18)),
+          const SizedBox(height: Measures.vMarginThin),
+          GridRow(
+              fill: true,
+              columnsCount: 3,
+              children: character.masteries
+                      .map((e) => SheetItemCard(
+                            text: e.title,
+                            iconPath: e.masteryType.iconPath,
+                          ))
+                      .toList()
+                      .cast<Widget>() +
+                  [
+                    GlassCard(
+                        height: Measures.sheetCardSmallHeight,
+                        isLight: true,
+                        child: Center(child: 'add'.toIcon(height: 16)))
+                  ]),
+          const SizedBox(height: Measures.vMarginSmall),
+          // Languages
+          Text('Competenze', style: Fonts.black(size: 18)),
+          const SizedBox(height: Measures.vMarginThin),
+          GridRow(
+            fill: true,
+              columnsCount: 3,
+              children: character.languages
+                  .map((e) => SheetItemCard(
+                        text: e.title,
+                        iconPath: 'png/warrior',
+                      ))
+                  .toList().cast<Widget>() +
+                  [
+                    GlassCard(
+                        height: Measures.sheetCardSmallHeight,
+                        isLight: true,
+                        child: Center(child: 'add'.toIcon(height: 16)))
+                  ]),
           const SizedBox(height: Measures.vMarginBig),
         ],
       ),
@@ -188,6 +336,7 @@ class _CharacterPageState extends State<CharacterPage>
               TabBar(
                   controller: _tabController,
                   isScrollable: true,
+                  indicatorSize: TabBarIndicatorSize.tab,
                   dividerHeight: 0,
                   tabs: {
                     'Scheda': 'png/sheet',
@@ -204,7 +353,7 @@ class _CharacterPageState extends State<CharacterPage>
                                         (_tabController!.index == e.$1
                                             ? '_on'
                                             : '_off'))
-                                    .toIcon(height: 22),
+                                    .toIcon(height: 20),
                                 const SizedBox(width: Measures.hMarginSmall),
                                 Text(
                                   e.$2.key,
@@ -217,6 +366,7 @@ class _CharacterPageState extends State<CharacterPage>
                           ))
                       .toList()
                       .cast<Widget>()),
+              const SizedBox(height: Measures.vMarginThin),
               // Body
               Expanded(
                 child: TabBarView(
@@ -240,7 +390,7 @@ class _CharacterPageState extends State<CharacterPage>
               Padding(
                 padding: const EdgeInsets.only(
                     top: Measures.vMarginBig, right: Measures.hPadding),
-                child: Level(level: character.level, maxLevel: 10),
+                child: Level(level: character.level, maxLevel: 20),
               ),
             ],
           )

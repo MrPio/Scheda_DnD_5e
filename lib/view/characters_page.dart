@@ -163,39 +163,52 @@ class _CharactersPageState extends State<CharactersPage> {
         child: GlassCard(
           onTap: () => Navigator.of(context)
               .pushNamed('/character', arguments: character),
-          bottomSheetHeader: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          bottomSheetHeader: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  character.class_.iconPath.toIcon(),
-                  const SizedBox(width: Measures.hMarginBig),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
-                      Text(character.name, style: Fonts.bold(size: 16)),
-                      Text(character.subRace?.title ?? character.race.title,
-                          style: Fonts.light(size: 14)),
+                      character.class_.iconPath.toIcon(),
+                      const SizedBox(width: Measures.hMarginBig),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(character.name, style: Fonts.bold(size: 16)),
+                          Text(character.subRace?.title ?? character.race.title,
+                              style: Fonts.light(size: 14)),
+                        ],
+                      )
                     ],
-                  )
+                  ),
                 ],
               ),
+              const SizedBox(width: Measures.hMarginBig*2),
+              Flexible(child: HpBar(character.hp, character.maxHp,showText: false,))
             ],
           ),
           bottomSheetItems: [
+            BottomSheetItem('png/open', 'Visualizza scheda', ()  =>
+              Navigator.of(context)
+                  .pushNamed('/character', arguments: character)
+            ),
             BottomSheetItem('png/delete_2', 'Elimina', () async {
-              AccountManager().user.deleteCharacter(character.uid!);
-              setState(() {});
-              bool hasUndone = false;
-              await context.snackbar('Hai eliminato ${character.name}',
-                  backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight,undoCallback: () {
-                hasUndone = true;
-                AccountManager().user.restoreCharacter(character.uid!);
+              context.popup('Stai per eliminare un personaggio',message: 'Sei sicuro di voler eliminare ${character.name}? (Potrai recuperarlo in seguito)',positiveCallback: ()async{
+                AccountManager().user.deleteCharacter(character.uid!);
                 setState(() {});
-              });
-              if (!hasUndone) {
-                DataManager().save(AccountManager().user);
-              }
+                bool hasUndone = false;
+                await context.snackbar('Hai eliminato ${character.name}',
+                    backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight,undoCallback: () {
+                      hasUndone = true;
+                      AccountManager().user.restoreCharacter(character.uid!);
+                      setState(() {});
+                    });
+                if (!hasUndone) {
+                  DataManager().save(AccountManager().user);
+                }
+              },negativeCallback: (){},positiveText: 'Si',negativeText: 'No',backgroundColor: Palette.background.withOpacity(0.5));
             })
           ],
           child: Padding(
@@ -233,7 +246,7 @@ class _CharactersPageState extends State<CharactersPage> {
                     ),
                     const SizedBox(width: Measures.hMarginMed),
                     // Level
-                    Level(level: character.level, maxLevel: 10),
+                    Level(level: character.level, maxLevel: 20),
                   ],
                 ),
                 const SizedBox(height: Measures.vMarginThin),

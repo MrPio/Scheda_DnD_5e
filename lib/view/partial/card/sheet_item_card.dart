@@ -16,30 +16,43 @@ class SheetItemCard extends StatelessWidget {
   const SheetItemCard(
       {super.key,
       required this.iconPath,
-        this.iconColor,
+      this.iconColor,
       required this.text,
       this.value,
-      this.subValue, this.child});
+      this.subValue,
+      this.child});
+
+  bool get isSmall => value == null && subValue == null;
 
   @override
   Widget build(BuildContext context) {
     return GlassCard(
+      height: isSmall ? Measures.sheetCardSmallHeight : null,
       clickable: false,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: Measures.vMarginThin ),
+        padding: EdgeInsets.symmetric(
+            vertical: isSmall ? 0 : Measures.vMarginThin,
+            horizontal: isSmall ? Measures.hMarginMed : 0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment:
+                  isSmall ? MainAxisAlignment.start : MainAxisAlignment.center,
               children: [
-                iconPath.toIcon(height: 15,color: iconColor??Palette.onBackground),
-                const SizedBox(width: Measures.hMarginThin),
+                iconPath.toIcon(
+                    height: 15, color: iconColor ?? Palette.onBackground),
+                SizedBox(
+                    width:
+                        isSmall ? Measures.hMarginSmall : Measures.hMarginThin),
                 Flexible(
                   child: Text(
                     text,
                     style: Fonts.regular(size: 13),
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                    textHeightBehavior:  isSmall?const TextHeightBehavior(
+                        applyHeightToFirstAscent: false,applyHeightToLastDescent: false):null,
+                    maxLines: isSmall ? 2 : 1,
                   ),
                 )
               ],
@@ -57,13 +70,13 @@ class SheetItemCard extends StatelessWidget {
                   ],
                 ),
               ),
-            if(child!=null)
+            if (child != null)
               const Padding(
-                padding: EdgeInsets.symmetric(vertical: Measures.vMarginMoreThin),
+                padding:
+                    EdgeInsets.symmetric(vertical: Measures.vMarginMoreThin),
                 child: Rule(),
               ),
-            if(child!=null)
-              child!,
+            if (child != null) child!,
           ],
         ),
       ),

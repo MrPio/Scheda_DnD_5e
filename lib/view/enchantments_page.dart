@@ -14,7 +14,7 @@ import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
 import 'package:scheda_dnd_5e/model/enchantment.dart' hide Level;
 import 'package:scheda_dnd_5e/model/enchantment.dart' as enc show Level;
 import 'package:scheda_dnd_5e/model/filter.dart';
-import 'package:scheda_dnd_5e/view/partial/grid_rows.dart';
+import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
@@ -115,7 +115,7 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                 textController: _searchController,
               ),
               // Filters
-              GridRows(crossAxisCount: 3,crossAxisSpacing: 10, children: _filters.map((e) => RadioButton(
+              GridRow(columnsCount: 3,crossAxisSpacing: 10, children: _filters.map((e) => RadioButton(
                   selected: e.selectedValues.isNotEmpty,
                   text: e.title,
                   color: e.color,

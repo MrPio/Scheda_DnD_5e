@@ -8,16 +8,17 @@ import '../../model/character.dart';
 
 class HpBar extends StatelessWidget {
   final int hp, maxHp;
+  final bool showText;
 
-  const HpBar(this.hp, this.maxHp, {super.key});
+  const HpBar(this.hp, this.maxHp, {super.key, this.showText = true});
 
   double get hpFraction => hp / maxHp;
 
   Color get color => switch (hpFraction) {
         > .5 => Palette.primaryBlue,
-        > .25 =>
-          Color.lerp(Palette.primaryRed, Palette.primaryBlue, (hpFraction-.25) * 4) ??
-              Palette.primaryBlue,
+        > .25 => Color.lerp(Palette.primaryRed, Palette.primaryBlue,
+                (hpFraction - .25) * 4) ??
+            Palette.primaryBlue,
         _ => Palette.primaryRed
       };
 
@@ -41,14 +42,17 @@ class HpBar extends StatelessWidget {
                   duration: Durations.medium3,
                   width: double.infinity,
                   height: Measures.hpBarHeight,
-                  decoration: BoxDecoration(
-                    boxShadow: [BoxShadow(color: color.withOpacity(0.25),offset: const Offset(0,0),blurRadius: 14)],
-                      borderRadius: BorderRadius.circular(999), color: color),
+                  decoration: BoxDecoration(boxShadow: [
+                    BoxShadow(
+                        color: color.withOpacity(0.25),
+                        offset: const Offset(0, 0),
+                        blurRadius: 14)
+                  ], borderRadius: BorderRadius.circular(999), color: color),
                 ),
               ),
             ],
           ),
-          Text('$hp / $maxHp HP', style: Fonts.light(size: 14))
+          if (showText) Text('$hp / $maxHp HP', style: Fonts.light(size: 14))
         ],
       );
 }

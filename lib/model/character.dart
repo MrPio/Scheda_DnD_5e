@@ -11,7 +11,7 @@ import 'package:scheda_dnd_5e/manager/account_manager.dart';
 
 import 'loot.dart';
 
-part 'part/character.g.dart';
+part 'character.g.dart';
 
 enum SubClass implements EnumWithTitle {
   // Servono solo per lettura info
@@ -1299,6 +1299,8 @@ enum SubSkill implements EnumWithTitle {
   final String title;
 
   const SubSkill(this.title);
+
+  Skill get skill => Skill.values.firstWhere((e) => e.subSkills.contains(this));
 }
 
 enum MasteryType {
@@ -1313,7 +1315,7 @@ enum MasteryType {
     Mastery.liuto,
     Mastery.tamburo,
     Mastery.viola,
-  ]),
+  ], 'png/music'),
   strumentiArtigiano([
     Mastery.scorteDaAlchimista,
     Mastery.scorteDaCalligrafo,
@@ -1331,12 +1333,13 @@ enum MasteryType {
     Mastery.strumentiDaTessitore,
     Mastery.strumentiDaVasaio,
     Mastery.utensiliDaCuoco,
-  ]),
-  nonSceglibili([]);
+  ], 'png/artisan'),
+  nonSceglibili([], 'png/other_tools');
 
   final List<Mastery> masteries;
+  final String iconPath;
 
-  const MasteryType(this.masteries);
+  const MasteryType(this.masteries, this.iconPath);
 }
 
 enum Mastery implements EnumWithTitle {
@@ -1406,6 +1409,10 @@ enum Mastery implements EnumWithTitle {
   final String title;
 
   const Mastery(this.title);
+
+  MasteryType get masteryType =>
+      MasteryType.values.firstWhere((e) => e.masteries.contains(this),
+          orElse: () => MasteryType.nonSceglibili);
 }
 
 enum Language implements EnumWithTitle {
@@ -1519,7 +1526,7 @@ class Character with Comparable<Character> implements WithUID {
   Set<Skill> savingThrows = {};
   Status? status;
   Alignment alignment;
-  int level;
+  int level, armorClass, initiative;
   @JsonKey(includeFromJson: true, includeToJson: true)
   Map<String, int> _inventory = {};
 
@@ -1586,7 +1593,9 @@ class Character with Comparable<Character> implements WithUID {
       Set<Skill>? savingThrows,
       this.status,
       this.alignment,
-      this.level)
+      this.level,
+      this.armorClass,
+      this.initiative)
       : _chosenSkills = _chosenSkills ?? {},
         rollSkills = rollSkills ?? {},
         subSkills = subSkills ?? {},
@@ -1598,6 +1607,10 @@ class Character with Comparable<Character> implements WithUID {
     for (var qta in _inventory.values) {
       assert(qta > 0);
     }
+    assert(level > 0);
+    for (var key in this.subSkills.keys) {
+      assert(0 <= this.subSkills[key]! && this.subSkills[key]! <= 2);
+    }
   }
 
   Character()
@@ -1606,11 +1619,13 @@ class Character with Comparable<Character> implements WithUID {
         _maxHp = 10,
         authorUID = AccountManager().user.uid!,
         level = 1,
+        armorClass = 0,
         subClass = Class.barbaro.subClasses[0],
         regDateTimestamp = DateTime.now().millisecondsSinceEpoch,
         class_ = Class.barbaro,
         race = Race.umano,
-        alignment = Alignment.nessuno;
+        alignment = Alignment.nessuno,
+        initiative = 0;
 
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1623,10 +1638,13 @@ class Character with Comparable<Character> implements WithUID {
   set inventory(Map<InventoryItem, int> value) =>
       _inventory = value.map((key, value) => MapEntry(key.toString(), value));
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   DateTime get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
 
-  double get defaultSpeed => subRace?.defaultSpeed ?? race.defaultSpeed;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  double get defaultSpeed => (subRace?.defaultSpeed ?? race.defaultSpeed);
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   Map<Skill, int> get skills =>
       Map.fromIterable(Skill.values, value: (_) => 0).cast<Skill, int>() +
       rollSkills +
@@ -1634,8 +1652,28 @@ class Character with Comparable<Character> implements WithUID {
       race.defaultSkills +
       (subRace?.defaultSkills ?? {});
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   Map<Skill, int> get skillsModifier =>
       skills.map((skill, value) => MapEntry(skill, (value - 10) ~/ 2));
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  int get competenceBonus => (level - 1) ~/ 4 + 2;
+
+  int skillValue(Skill skill) =>
+      (rollSkills[skill] ?? 0) +
+      (_chosenSkills[skill] ?? 0) +
+      (race.defaultSkills[skill] ?? 0) +
+      (subRace?.defaultSkills[skill] ?? 0);
+
+  int skillModifier(Skill skill) => (skillValue(skill) - 10) ~/ 2;
+
+  int subSkillValue(SubSkill subSkill) =>
+      skillModifier(subSkill.skill) +
+      (subSkills[subSkill] ?? 0) * competenceBonus;
+
+  int savingThrowValue(Skill skill) =>
+      skillModifier(skill) +
+      (savingThrows.contains(skill) ? 1 : 0) * competenceBonus;
 
   addLoot(Loot loot) {
     loot.content.forEach((item, qta) {

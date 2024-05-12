@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of '../character.dart';
+part of 'character.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
@@ -40,6 +40,8 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       $enumDecodeNullable(_$StatusEnumMap, json['status']),
       $enumDecode(_$AlignmentEnumMap, json['alignment']),
       json['level'] as int,
+      json['armorClass'] as int,
+      json['initiative'] as int,
     );
 
 Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
@@ -67,6 +69,8 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'status': _$StatusEnumMap[instance.status],
       'alignment': _$AlignmentEnumMap[instance.alignment]!,
       'level': instance.level,
+      'armorClass': instance.armorClass,
+      'initiative': instance.initiative,
       '_inventory': instance._inventory,
     };
 
