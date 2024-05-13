@@ -8,7 +8,7 @@ import 'package:scheda_dnd_5e/model/character.dart';
 part 'part/user.g.dart';
 
 @JsonSerializable()
-class User implements JSONSerializable, WithUID {
+class User implements  WithUID {
   final String nickname, email;
   final int regDateTimestamp;
 

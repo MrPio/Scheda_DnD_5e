@@ -37,9 +37,15 @@ class DataManager {
         Campaign: cachedCampaigns,
         Character: cachedCharacters,
       };
+  Map<core.Type, Function()> get cachesDeserializer => {
+    User: ()=>IOManager().deserializeObjects<User>(DatabaseManager.collections[User]!),
+    Campaign: ()=>IOManager().deserializeObjects<Campaign>(DatabaseManager.collections[Campaign]!),
+    Character: ()=>IOManager().deserializeObjects<Character>(DatabaseManager.collections[Character]!),
+  };
 
   // This should be called after obtaining the auth
   fetchData() async {
+    print('========================================');
     // Loading enchantments ============================================
     // Check if I have already downloaded the enchantments before 7 days ago
     final enchantmentsTimestamp =
@@ -53,10 +59,26 @@ class DataManager {
       IOManager().serializeObjects(
           DatabaseManager.collections[Enchantment]!, enchantments.value!);
     } else {
-      print('⚡ Leggo localmente gli enchantments');
       enchantments.value = await IOManager().deserializeObjects<Enchantment>(
           DatabaseManager.collections[Enchantment]!);
+      print('📘 Ho letto localmente ${enchantments.value!.length} Enchantments');
     }
+    for (var cache in caches.entries) {
+      final path = DatabaseManager.collections[cache.key]!.replaceAll('/', '');
+      if ((await IOManager().get<int>('${path}_timestamp') ?? 0)
+              .elapsedTime()
+              .inMinutes <
+          10) {
+        caches[cache.key]!.clear();
+        caches[cache.key]!.addAll(await cachesDeserializer[cache.key]!());
+        print('📘 Ho letto localmente ${caches[cache.key]!.length} ${cache.key}s');
+      }else{
+        await IOManager().remove(path);
+        await IOManager().remove('${path}_timestamp');
+        print('❗ Cache invalidata per ${cache.key}');
+      }
+    }
+    print('========================================');
   }
 
   // Load a single object from a given UID
@@ -75,6 +97,9 @@ class DataManager {
         await DatabaseManager().get<T>(DatabaseManager.collections[T]!, uid);
     caches[T]?.removeWhere((e) => e.uid == uid);
     caches[T]?.add(obj);
+    // Write cache to disk
+    await IOManager().serializeObjects(DatabaseManager.collections[T]!, caches[T]!);
+    print('📙 Ho scritto su disco ${caches[T]!.length} ${T}s');
     return obj;
   }
 
@@ -106,6 +131,9 @@ class DataManager {
           []);
       caches[T]?.removeWhere((e) => uids.contains(e.uid));
       caches[T]?.addAll(objects);
+      // Write cache to disk
+      await IOManager().serializeObjects(DatabaseManager.collections[T]!, caches[T]!);
+      print('📙 Ho scritto su disco ${caches[T]!.length} ${T}s');
     }
     return objects;
   }
@@ -120,18 +148,26 @@ class DataManager {
     String path = DatabaseManager.collections[model.runtimeType] ?? '';
     if (mode == SaveMode.put) {
       if (model is WithUID) {
-        path += (model as WithUID).uid ?? '';
+        path += (model).uid ?? '';
       } else if (model is Enchantment) {
         path += model.name.replaceAll('/', ' ');
       }
     }
 
+    String? newUID;
     // Query the FirebaseRD
     if (mode == SaveMode.put) {
       DatabaseManager().put(path, model.toJSON());
     } else {
-      return await DatabaseManager().post(path, model.toJSON());
+      if (model is WithUID) {
+        caches[model.runtimeType]?.add(model);
+      }
+      newUID= await DatabaseManager().post(path, model.toJSON());
     }
-    return null;
+    if (model is WithUID) {
+      await IOManager().serializeObjects(DatabaseManager.collections[model.runtimeType]!, caches[model.runtimeType]!);
+      print('📙 Ho scritto su disco ${caches[model.runtimeType]!.length} ${model.runtimeType}s');
+    }
+    return newUID;
   }
 }

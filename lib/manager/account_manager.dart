@@ -43,7 +43,7 @@ class AccountManager {
   Future<bool> cacheSignIn() async {
     if (_auth.currentUser != null) {
       user =
-          await DataManager().load(_auth.currentUser!.uid, useCache: false);
+          await DataManager().load(_auth.currentUser!.uid, useCache: true);
     }
     return _auth.currentUser != null;
   }

@@ -4,6 +4,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/inheritance_extensions.dart';
+import 'package:scheda_dnd_5e/interface/with_uid.dart';
+import 'package:scheda_dnd_5e/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../interface/json_serializable.dart';
@@ -42,18 +45,31 @@ class IOManager {
 
   remove(String key) async => prefs.remove(key);
 
-  serializeObjects(String key, List<JSONSerializable> objects) async {
+  serializeObjects<T extends JSONSerializable>(String key, List<T> objects) async {
     key=key.replaceAll('/', '');
     await set(key, jsonEncode(objects.map((e) => e.toJSON()).toList()));
     await set('${key}_timestamp', DateTime.now().millisecondsSinceEpoch);
+    if(<T>[] is List<WithUID>) {
+      await set(
+          '${key}_uids', objects.map((e) => (e as WithUID).uid!).toList());
+    }
   }
 
   Future<List<T>> deserializeObjects<T extends JSONSerializable>(
-          String key) async =>
-      jsonDecode(await get<String>(key) ?? '')
+          String key) async {
+    key=key.replaceAll('/', '');
+    final List<T> objs=jsonDecode(await get<String>(key) ?? '')
           .map((e) => JSONSerializable.modelFactories[T]!(e) as T)
           .toList()
           .cast<T>();
+    if(<T>[] is List<WithUID>) {
+      final uids=(await get<List<String>>('${key}_uids'))??[];
+      for(var(i,e) in objs.indexed) {
+        (e as WithUID).uid=uids[i];
+      }
+    }
+    return objs;
+  }
 
   // Check whenever the device has an available internet connection
   Future<bool> hasInternetConnection(BuildContext context) async {

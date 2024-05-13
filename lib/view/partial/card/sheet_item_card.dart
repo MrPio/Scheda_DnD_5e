@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/rule.dart';
@@ -11,7 +12,7 @@ class SheetItemCard extends StatelessWidget {
   final String iconPath, text;
   final Color? iconColor;
   final String? value, subValue;
-  final Widget? child;
+  final Widget? child, popup;
 
   const SheetItemCard(
       {super.key,
@@ -20,15 +21,30 @@ class SheetItemCard extends StatelessWidget {
       required this.text,
       this.value,
       this.subValue,
-      this.child});
+      this.child, this.popup});
 
   bool get isSmall => value == null && subValue == null;
 
   @override
   Widget build(BuildContext context) {
+    final bottomSheetHeader=popup!=null?Column(
+      children: [
+        const SizedBox(height: Measures.vMarginThin),
+        Text( text, style: Fonts.bold(size: 18)),
+        const SizedBox(height: Measures.vMarginMed),
+        popup!,
+        const SizedBox(height: Measures.vMarginMed+Measures.vMarginSmall),
+      ],
+    ):null;
     return GlassCard(
       height: isSmall ? Measures.sheetCardSmallHeight : null,
-      clickable: false,
+      clickable: popup!=null,
+      bottomSheetHeader: bottomSheetHeader,
+      onTap: () {
+        context.bottomSheet(header:bottomSheetHeader);
+        // context.popup('Modifica $text',
+        //     backgroundColor: Palette.background.withOpacity(0.5), child: popup)
+      },
       child: Padding(
         padding: EdgeInsets.symmetric(
             vertical: isSmall ? 0 : Measures.vMarginThin,

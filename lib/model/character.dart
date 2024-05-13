@@ -11,7 +11,7 @@ import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import '../enum/dice.dart';
 import 'loot.dart';
 
-part 'character.g.dart';
+part 'part/character.g.dart';
 
 enum SubClass implements EnumWithTitle {
   // Servono solo per lettura info

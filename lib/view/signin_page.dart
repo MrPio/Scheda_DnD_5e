@@ -35,20 +35,22 @@ class _SignInPageState extends State<SignInPage> with Loadable {
     if (!_isInitialized) {
       _isInitialized = true;
       Future.delayed(Duration.zero, () async {
+        withLoading(()  async{
+
         WidgetsFlutterBinding.ensureInitialized();
         await Firebase.initializeApp(
           options: DefaultFirebaseOptions.currentPlatform,
         );
-        IOManager().init();
+        await IOManager().init();
         if (!await IOManager().hasInternetConnection(context)) {
           return;
         }
+        await DataManager().fetchData();
         // 👤👤👤 FIREBASE AUTH 👤👤👤
       if (await AccountManager().cacheSignIn()) {
         setState(() {
           isLoading=true;
         });
-        await Future.delayed(const Duration(milliseconds: 220));
         Navigator.of(context).popAndPushNamed('/home');
         // context.snackbar('Bentornato ${AccountManager().user.nickname}!',
         //     backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
@@ -61,7 +63,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
         // await IOManager().remove('enchantments_timestamp');
         // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
-        withLoading(() => DataManager().fetchData());
+        });
       });
     }
 

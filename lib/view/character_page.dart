@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
@@ -8,8 +9,11 @@ import 'package:flutter/widgets.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
+import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/int_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
+import 'package:scheda_dnd_5e/manager/data_manager.dart';
+import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_column.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
@@ -19,6 +23,7 @@ import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
 import 'package:scheda_dnd_5e/view/partial/rule.dart';
 import 'package:scroll_to_hide/scroll_to_hide.dart';
+import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 
 import '../model/character.dart' hide Alignment;
 import 'partial/gradient_background.dart';
@@ -36,6 +41,7 @@ class _CharacterPageState extends State<CharacterPage>
   TabController? _tabController;
   late ScrollController _bodyController;
   bool _isSkillsExpanded = false;
+  Character? _character, _oldCharacter;
 
   @override
   void initState() {
@@ -45,6 +51,13 @@ class _CharacterPageState extends State<CharacterPage>
 
   @override
   void dispose() {
+    if (jsonEncode(_oldCharacter!.toJSON()) !=
+        jsonEncode(_character!.toJSON())) {
+      Future.delayed(Duration.zero, () async {
+        await DataManager().save(_character!);
+        print('⬆️ Character Saved');
+      });
+    }
     _tabController?.dispose();
     _bodyController.dispose();
     super.dispose();
@@ -52,7 +65,9 @@ class _CharacterPageState extends State<CharacterPage>
 
   @override
   Widget build(BuildContext context) {
-    final character = ModalRoute.of(context)!.settings.arguments as Character;
+    _character ??= ModalRoute.of(context)!.settings.arguments as Character;
+    final character = _character!;
+    _oldCharacter ??= Character.fromJson(character.toJSON());
     var attributes = [
       SheetItemCard(
           iconPath: 'png/shield',
@@ -73,9 +88,22 @@ class _CharacterPageState extends State<CharacterPage>
           text: 'Speed',
           value: '${character.defaultSpeed.round()}m'),
       SheetItemCard(
-          iconPath: 'png/status',
-          text: 'Status',
-          value: character.status?.title ?? '-'),
+        iconPath: 'png/status',
+        text: 'Allineamento',
+        value: character.alignment.initials ?? '-',
+        popup: GridRow(
+            columnsCount: 3,
+            children: ch.Alignment.values
+                .map((e) => AlignmentCard(
+                      e,
+                      onTap: (alignment) {
+                        character.alignment = alignment;
+                        Navigator.of(context).pop();
+                      },
+                      isSmall: e == ch.Alignment.nessuno,
+                    ))
+                .toList()),
+      ),
       SheetItemCard(
           iconPath: 'png/initiative',
           text: 'Iniziativa',
@@ -337,7 +365,9 @@ class _CharacterPageState extends State<CharacterPage>
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                      const Chevron(inAppBar: true,),
+                          const Chevron(
+                            inAppBar: true,
+                          ),
                           Column(children: [
                             Text(character.name, style: Fonts.black(size: 18)),
                             Text(
@@ -388,7 +418,8 @@ class _CharacterPageState extends State<CharacterPage>
                                                 ? '_on'
                                                 : '_off'))
                                         .toIcon(height: 20),
-                                    const SizedBox(width: Measures.hMarginSmall),
+                                    const SizedBox(
+                                        width: Measures.hMarginSmall),
                                     Text(
                                       e.$2.key,
                                       style: _tabController!.index == e.$1

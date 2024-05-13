@@ -219,7 +219,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                     }
                                   },
                                   value: (value) =>
-                                      character.chosenSkills[value] ==1,
+                                      character.chosenSkills[value] == 1,
                                 );
                               }
                               if (e.numChoiceableSubSkills > 0) {
@@ -279,8 +279,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(e.title,
-                                                      style:
-                                                          Fonts.bold()),
+                                                      style: Fonts.bold()),
                                                   SingleChildScrollView(
                                                     scrollDirection:
                                                         Axis.horizontal,
@@ -856,8 +855,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(e.title,
-                                                      style:
-                                                          Fonts.bold()),
+                                                      style: Fonts.bold()),
                                                   SingleChildScrollView(
                                                     scrollDirection:
                                                         Axis.horizontal,
@@ -1006,61 +1004,18 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
             'L’allineamento è dato dalla moralità (buono, malvagio o neutrale) e dal  comportamento nei confronti della società (legale, caotico o neutrale).',
             style: Fonts.light()),
         const SizedBox(height: Measures.vMarginMed),
-        // LB, NB, CB alignments =============================
-        Row(
-          children: [
-            Expanded(
-                child: AlignmentCard(ch.Alignment.legaleBuono,
-                    onTap: selectAlignment)),
-            const SizedBox(width: Measures.vMarginThin),
-            Expanded(
-                child: AlignmentCard(ch.Alignment.neutraleBuono,
-                    onTap: selectAlignment)),
-            const SizedBox(width: Measures.vMarginThin),
-            Expanded(
-                child: AlignmentCard(ch.Alignment.caoticoBuono,
-                    onTap: selectAlignment)),
-          ],
-        ),
-        const SizedBox(height: Measures.vMarginThin),
-        // LN, NN, CN alignments =============================
-        Row(
-          children: [
-            Expanded(
-                child: AlignmentCard(ch.Alignment.legaleNeutrale,
-                    onTap: selectAlignment)),
-            const SizedBox(width: Measures.vMarginThin),
-            Expanded(
-                child: AlignmentCard(ch.Alignment.neutralePuro,
-                    onTap: selectAlignment)),
-            const SizedBox(width: Measures.vMarginThin),
-            Expanded(
-                child: AlignmentCard(ch.Alignment.caoticoNeutrale,
-                    onTap: selectAlignment)),
-          ],
-        ),
-        const SizedBox(height: Measures.vMarginThin),
-        // LM, NM, CM alignments =============================
-        Row(
-          children: [
-            Expanded(
-                child: AlignmentCard(ch.Alignment.legaleMalvagio,
-                    onTap: selectAlignment)),
-            const SizedBox(width: Measures.vMarginThin),
-            Expanded(
-                child: AlignmentCard(ch.Alignment.neutraleMalvagio,
-                    onTap: selectAlignment)),
-            const SizedBox(width: Measures.vMarginThin),
-            Expanded(
-                child: AlignmentCard(ch.Alignment.caoticoMalvagio,
-                    onTap: selectAlignment)),
-          ],
-        ),
-        const SizedBox(height: Measures.vMarginThin),
-        // No alignment ===============================
-        AlignmentCard(ch.Alignment.nessuno,
-            onTap: selectAlignment, isSmall: true),
+        // Alignments =============================
+        GridRow(
+            columnsCount: 3,
+            children: ch.Alignment.values
+                .map((e) => AlignmentCard(
+                      e,
+                      onTap: selectAlignment,
+                      isSmall: e == ch.Alignment.nessuno,
+                    ))
+                .toList()),
       ]),
+
       // Set stats
       Column(children: [
         // Page Title
@@ -1078,14 +1033,14 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
             columnsCount: 2,
             children: Skill.values
                 .map((e) => SkillCard(
-              e,
-              raceSkill: character.skillValue(e) ,
-              skillInputController: _skillControllers[e.index],
-            ))
+                      e,
+                      raceSkill: character.skillValue(e),
+                      skillInputController: _skillControllers[e.index],
+                    ))
                 .toList()),
         SizedBox(
             height:
-            MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig),
+                MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig),
         // <-- This is essential, as it is dynamic based on the keyboard status.
       ]),
     ];
@@ -1193,7 +1148,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
     if (_index + step >= (_screens?.length ?? 0)) {
       // The character creation is completed
       withLoading(() async {
-        character.initiative=character.skillModifier(Skill.destrezza);
+        character.initiative = character.skillModifier(Skill.destrezza);
         character.uid = await DataManager().save(character, SaveMode.post);
         AccountManager().user.charactersUIDs.add(character.uid!);
         await DataManager().save(AccountManager().user);
