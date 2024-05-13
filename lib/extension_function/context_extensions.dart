@@ -271,7 +271,7 @@ extension ContextExtensions on BuildContext {
                                               width: Measures.hMarginBig),
                                           Flexible(
                                               child: Text(e.text,
-                                                  style: Fonts.bold(size: 16),
+                                                  style: Fonts.bold(),
                                                   overflow:
                                                       TextOverflow.ellipsis)),
                                         ],

@@ -40,7 +40,7 @@ class GlassTextField extends StatelessWidget {
             right: secondaryIconPath != null ? 6 : Measures.hTextFieldPadding),
         child: Row(
           children: [
-            if (iconPath != null) iconPath!.toIcon(),
+            if (iconPath != null) iconPath!.toIcon(height: 18),
             if (iconPath != null) const SizedBox(width: Measures.hMarginMed),
             Expanded(
               child: TextField(
@@ -50,7 +50,7 @@ class GlassTextField extends StatelessWidget {
                   onSubmitted: onSubmitted,
                   cursorColor: Palette.onBackground,
                   autofocus: autofocus,
-                  style: Fonts.regular(size: 16),
+                  style: Fonts.regular(),
                   obscureText: obscureText,
                   keyboardType: keyboardType,
                   decoration: InputDecoration(
@@ -69,7 +69,7 @@ class GlassTextField extends StatelessWidget {
                   const SizedBox(width: Measures.hMarginMed),
                   GestureDetector(
                     onTap: () => textController!.text = '',
-                    child: 'close'.toIcon(height: 16),
+                    child: 'close'.toIcon(height: 14),
                   ),
                 ],
               ),
@@ -82,7 +82,7 @@ class GlassTextField extends StatelessWidget {
                   onTap: onSecondaryIconTap,
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: secondaryIconPath!.toIcon(),
+                    child: secondaryIconPath!.toIcon(height: 18),
                   ),
                 ),
               ),

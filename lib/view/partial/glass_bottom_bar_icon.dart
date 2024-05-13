@@ -27,12 +27,12 @@ class GlassBottomBarIcon extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            (active ? iconPathOn : iconPathOff).toIcon(height: 30),
+            (active ? iconPathOn : iconPathOff).toIcon(height: 28),
             const SizedBox(height: Measures.vMarginMoreThin),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Text(title,
-                  style: active ? Fonts.black(size: 12) : Fonts.regular(size: 0)),
+                  style: active ? Fonts.black(size: 11) : Fonts.regular(size: 0)),
             )
           ],
         ),

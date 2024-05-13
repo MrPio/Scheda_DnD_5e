@@ -52,7 +52,7 @@ class HpBar extends StatelessWidget {
               ),
             ],
           ),
-          if (showText) Text('$hp / $maxHp HP', style: Fonts.light(size: 14))
+          if (showText) Text('$hp / $maxHp HP', style: Fonts.light())
         ],
       );
 }

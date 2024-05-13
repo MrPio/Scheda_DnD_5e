@@ -141,7 +141,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
                             setState(() => _rememberMe = !_rememberMe),
                         color: Palette.primaryBlue,
                       ),
-                      Text('Ricordami', style: Fonts.light(size: 14)),
+                      Text('Ricordami', style: Fonts.light()),
                       Expanded(child: Container()),
                       GestureDetector(
                           onTap: forgotPassword,
@@ -168,7 +168,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
                         ),
                       ),
                       const SizedBox(width: Measures.hMarginMed),
-                      Text('Oppure', style: Fonts.light(size: 14)),
+                      Text('Oppure', style: Fonts.light()),
                       const SizedBox(width: Measures.hMarginMed),
                       Expanded(
                         child: Container(
@@ -192,7 +192,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Non hai un account?', style: Fonts.light(size: 14)),
+                      Text('Non hai un account?', style: Fonts.light()),
                       const SizedBox(width: 6),
                       GestureDetector(
                           onTap: () =>

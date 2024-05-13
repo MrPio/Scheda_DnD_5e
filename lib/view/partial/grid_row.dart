@@ -37,6 +37,7 @@ class GridRow extends StatelessWidget {
               bottom:
                   i <= children.length ~/ columnsCount ? mainAxisSpacing : 0),
           child: Row(
+            mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.start, children: elements),
         );
       }),

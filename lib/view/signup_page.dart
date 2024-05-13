@@ -115,7 +115,7 @@ class _SignUpPageState extends State<SignUpPage> with Loadable {
                         ),
                       ),
                       const SizedBox(width: Measures.hMarginMed),
-                      Text('Oppure', style: Fonts.light(size: 14)),
+                      Text('Oppure', style: Fonts.light()),
                       const SizedBox(width: Measures.hMarginMed),
                       Expanded(
                         child: Container(
@@ -139,7 +139,7 @@ class _SignUpPageState extends State<SignUpPage> with Loadable {
                   Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Hai già un account?', style: Fonts.light(size: 14)),
+                      Text('Hai già un account?', style: Fonts.light()),
                       const SizedBox(width: 6),
                       GestureDetector(
                           onTap: () =>

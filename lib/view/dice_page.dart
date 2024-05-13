@@ -153,7 +153,7 @@ class _DicePageState extends State<DicePage>
                   // Selected dice ===============================
                   const SizedBox(height: Measures.vMarginSmall),
                   GlassCard(
-                      height: 240,
+                      height: 224,
                       clickable: false,
                       child: Align(
                         child: _selectedDice.isEmpty
@@ -212,8 +212,8 @@ class _DicePageState extends State<DicePage>
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       SizedBox(
-                                        height: 50,
-                                        width: 50,
+                                        height: 48,
+                                        width: 48,
                                         child: ElevatedButton(
                                           onPressed: () {
                                             if (modifier > minModifier) {
@@ -255,8 +255,8 @@ class _DicePageState extends State<DicePage>
                                       const SizedBox(
                                           width: Measures.hMarginMed),
                                       SizedBox(
-                                        height: 50,
-                                        width: 50,
+                                        height: 48,
+                                        width: 48,
                                         child: ElevatedButton(
                                           onPressed: () {
                                             if (modifier < maxModifier) {

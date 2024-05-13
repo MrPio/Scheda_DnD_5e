@@ -12,7 +12,7 @@ class Measures {
   static const hPadding = 20.0;
 
   // Cards
-  static const diceCardHeight = 62.0;
+  static const diceCardHeight = 58.0;
   static const alignmentCardHeight = 62.0;
   static const alignmentCardSmallHeight = 54.0;
   static const skillCardHeight = 94.0;

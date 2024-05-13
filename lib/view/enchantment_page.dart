@@ -160,7 +160,7 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
         child: RichText(
           text: TextSpan(
             children: [
-              TextSpan(text: '$key: ', style: Fonts.bold(size: 16)),
+              TextSpan(text: '$key: ', style: Fonts.bold()),
               TextSpan(text: value, style: Fonts.light(size: 16)),
             ],
           ),

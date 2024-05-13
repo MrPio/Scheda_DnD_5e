@@ -19,7 +19,7 @@ class Level extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Text(level.toString(),
-              style: Fonts.regular(size: 16)),
+              style: Fonts.regular()),
         ));
   }
 }

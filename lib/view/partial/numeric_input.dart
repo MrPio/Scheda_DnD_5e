@@ -28,7 +28,7 @@ class NumericInput extends StatefulWidget {
 }
 
 class _NumericInputState extends State<NumericInput> {
-  int get value => max(widget.min,min(widget.max,int.parse(widget.controller.text)));
+  int get value => max(widget.min,min(widget.max,int.tryParse(widget.controller.text)??0));
 
   set value(int value) =>
       setState(() => widget.controller.text = value.toString());
@@ -80,8 +80,6 @@ class _NumericInputState extends State<NumericInput> {
         child: TextField(
           onSubmitted: (_)=>
             value=value,
-            onEditingComplete: ()=>
-              value=value,
             onTapOutside: (_)=>value=value,
             keyboardAppearance: Brightness.dark,
             keyboardType: TextInputType.number,

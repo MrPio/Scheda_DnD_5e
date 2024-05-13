@@ -358,7 +358,7 @@ class _CharacterPageState extends State<CharacterPage>
                                 Text(
                                   e.$2.key,
                                   style: _tabController!.index == e.$1
-                                      ? Fonts.bold(size: 16)
+                                      ? Fonts.bold()
                                       : Fonts.light(size: 16),
                                 ),
                               ],

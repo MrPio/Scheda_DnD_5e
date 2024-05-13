@@ -176,9 +176,9 @@ class _CharactersPageState extends State<CharactersPage> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(character.name, style: Fonts.bold(size: 16)),
+                          Text(character.name, style: Fonts.bold()),
                           Text(character.subRace?.title ?? character.race.title,
-                              style: Fonts.light(size: 14)),
+                              style: Fonts.light()),
                         ],
                       )
                     ],
@@ -232,11 +232,11 @@ class _CharactersPageState extends State<CharactersPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(character.name,
-                                      style: Fonts.bold(size: 16)),
+                                      style: Fonts.bold()),
                                   Text(
                                       character.subRace?.title ??
                                           character.race.title,
-                                      style: Fonts.light(size: 14)),
+                                      style: Fonts.light()),
                                 ],
                               )
                             ],

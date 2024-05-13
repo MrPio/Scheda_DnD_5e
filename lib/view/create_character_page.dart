@@ -86,6 +86,32 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
   @override
   Widget build(BuildContext context) {
     _screens = [
+      Column(children: [
+        // Page Title
+        Align(
+            alignment: Alignment.centerLeft,
+            child: Text('Completa le statistiche', style: Fonts.black())),
+        const SizedBox(height: Measures.vMarginThin),
+        // Subtitle
+        Text(
+            'Per ogni competenza, lancia 4 D6, scarta il minore e calcola somma dei rimanenti. Puoi lanciare i dadi direttamente dall’app!',
+            style: Fonts.light()),
+        const SizedBox(height: Measures.vMarginThin),
+        // Skill cards =============================
+        GridRow(
+            columnsCount: 2,
+            children: Skill.values
+                .map((e) => SkillCard(
+              e,
+              raceSkill: character.skillValue(e) ,
+              skillInputController: _skillControllers[e.index],
+            ))
+                .toList()),
+        SizedBox(
+            height:
+            MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig),
+        // <-- This is essential, as it is dynamic based on the keyboard status.
+      ]),
       // Choose name
       Column(children: [
         // Page Title
@@ -280,7 +306,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                 children: [
                                                   Text(e.title,
                                                       style:
-                                                          Fonts.bold(size: 16)),
+                                                          Fonts.bold()),
                                                   SingleChildScrollView(
                                                     scrollDirection:
                                                         Axis.horizontal,
@@ -857,7 +883,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                 children: [
                                                   Text(e.title,
                                                       style:
-                                                          Fonts.bold(size: 16)),
+                                                          Fonts.bold()),
                                                   SingleChildScrollView(
                                                     scrollDirection:
                                                         Axis.horizontal,
@@ -1062,32 +1088,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
             onTap: selectAlignment, isSmall: true),
       ]),
       // Set stats
-      Column(children: [
-        // Page Title
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Completa le statistiche', style: Fonts.black())),
-        const SizedBox(height: Measures.vMarginThin),
-        // Subtitle
-        Text(
-            'Per ogni competenza, lancia 4 D6, scarta il minore e calcola somma dei rimanenti. Puoi lanciare i dadi direttamente dall’app!',
-            style: Fonts.light()),
-        const SizedBox(height: Measures.vMarginThin),
-        // Skill cards =============================
-        GridRow(
-            columnsCount: 2,
-            children: Skill.values
-                .map((e) => SkillCard(
-                      e,
-                      raceSkill: character.skillValue(e) ,
-                      skillInputController: _skillControllers[e.index],
-                    ))
-                .toList()),
-        SizedBox(
-            height:
-                MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig),
-        // <-- This is essential, as it is dynamic based on the keyboard status.
-      ]),
+
     ];
     _bottomButtons ??= [
       () {

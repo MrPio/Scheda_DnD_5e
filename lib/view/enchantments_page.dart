@@ -54,7 +54,10 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
           Class.values.where((e) => e.isEnchanter).toList(),
           (enchantment, values) =>
               enchantment.classes.any((c) => values.contains(c))),
-      Filter<Enchantment, enc.Level>('Livello', Palette.primaryRed, enc.Level.values,
+      Filter<Enchantment, enc.Level>(
+          'Livello',
+          Palette.primaryRed,
+          enc.Level.values,
           (enchantment, values) => values.contains(enchantment.level)),
       Filter<Enchantment, Type>('Tipo', Palette.primaryBlue, Type.values,
           (enchantment, values) => values.contains(enchantment.type)),
@@ -83,83 +86,101 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
     final enchantments = _enchantments;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-/*          // Header
-          Padding(
-            padding: const EdgeInsets.only(
-                top: Measures.vMarginBig, bottom: Measures.vMarginSmall),
-            child: GestureDetector(
-              onTap: () {
-                throw UnimplementedError();
-              },
-              child: 'menu'.toIconPath(height: 24),
-            ),
-          ),*/
-          const SizedBox(height: Measures.vMarginBig),
-          // Body
-          Expanded(
-            child: Column(children: [
-              const SizedBox(height: Measures.vMarginMed),
-              // Page Title
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Che incantesimo stai cercando?',
-                      style: Fonts.black())),
-              const SizedBox(height: Measures.vMarginMed),
-              // Search TextField
-              GlassTextField(
-                iconPath: 'search_alt',
-                hintText: 'Cerca un incantesimo',
-                textController: _searchController,
-              ),
-              // Filters
-              GridRow(columnsCount: 3,crossAxisSpacing: 10, children: _filters.map((e) => RadioButton(
-                  selected: e.selectedValues.isNotEmpty,
-                  text: e.title,
-                  color: e.color,
-                  onPressed: () => e.selectedValues.isNotEmpty
-                      ? setState(
-                          () => e.selectedValues.clear())
-                      : context.checkList(
-                    'Filtro su ${e.title.toLowerCase()}',
-                    values: e.values,
-                    color: e.color,
-                    onChanged: (value) => setState(() =>
-                        e.selectedValues.toggle(value)),
-                    value: (value) => e
-                        .selectedValues
-                        .contains(value),
-                  ))).toList()),
-              // Found enchantments
-              const SizedBox(height: Measures.vMarginThin),
-              // Nothing to show
-              if (isDataReady && enchantments.isEmpty)
-                Padding(
-                  padding: const EdgeInsets.only(top: Measures.vMarginSmall),
-                  child: Text('Niente da mostrare',
-                      style: Fonts.black(color: Palette.card2)),
-                ),
-              Expanded(
-                child: ListView.builder(
-                    itemCount: isDataReady ? enchantments.length : 10,
-                    itemBuilder: (_, i) => isDataReady
-                        ? enchantmentCard(enchantments[i])
-                        : const GlassCard(isShimmer: true, shimmerHeight: 75)),
-              ),
-            ]),
-          ),
-        ],
-      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+
+        // Found enchantments
+        Expanded(
+          child: ListView.builder(
+              itemCount: (isDataReady ? enchantments.length : 10)+1,
+              itemBuilder: (_, i) {
+                print(i);
+
+                return i==0?
+                    Column(children: [
+                      const SizedBox(height: Measures.vMarginBig ),
+                      // Page Title
+                      Align(
+                          alignment: Alignment.centerLeft,
+                          child:
+                          Text('Che incantesimo stai cercando?', style: Fonts.black())),
+                      const SizedBox(height: Measures.vMarginMed),
+                      // Search TextField
+                      GlassTextField(
+                        iconPath: 'search_alt',
+                        hintText: 'Cerca un incantesimo',
+                        textController: _searchController,
+                      ),
+                      const SizedBox(height: Measures.vMarginSmall),
+
+                      // Filters
+                      DynamicHeightGridView(
+                        itemCount: _filters.length,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: 3,
+                        shrinkWrap: true,
+                        crossAxisSpacing: 10,
+                        builder: (context, i) {
+                          final e = _filters[i];
+                          return RadioButton(
+                              selected: e.selectedValues.isNotEmpty,
+                              text: e.title,
+                              color: e.color,
+                              onPressed: () => e.selectedValues.isNotEmpty
+                                  ? setState(() => e.selectedValues.clear())
+                                  : context.checkList(
+                                'Filtro su ${e.title.toLowerCase()}',
+                                values: e.values,
+                                color: e.color,
+                                onChanged: (value) =>
+                                    setState(() => e.selectedValues.toggle(value)),
+                                value: (value) => e.selectedValues.contains(value),
+                              ));
+                        },
+                      ),
+                      const SizedBox(height: Measures.vMarginSmall
+                      ),
+                      // Nothing to show
+                      if (isDataReady && enchantments.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: Measures.vMarginSmall),
+                          child: Text('Niente da mostrare',
+                              style: Fonts.black(color: Palette.card2)),
+                        ),
+                    ],)
+                    :
+                (isDataReady
+                    ? enchantmentCard(enchantments[i-1])
+                    : const GlassCard(isShimmer: true, shimmerHeight: 75));
+              }),
+        ),
+      ]),
     );
   }
 
   enchantmentCard(Enchantment enchantment) => Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: GlassCard(
-          onTap: () =>
-              Navigator.of(context).pushNamed('/enchantment', arguments: enchantment),
+          bottomSheetHeader: Row(
+            children: [
+              Level(level: enchantment.level.num,maxLevel: 9),
+              const SizedBox(width: Measures.hMarginBig),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(enchantment.name, style: Fonts.bold()),
+                  Text(enchantment.type.title, style: Fonts.light()),
+                ],
+              )
+            ],
+          ),
+          bottomSheetItems: [
+            BottomSheetItem('png/open', 'Visualizza dettagli', ()  =>
+                Navigator.of(context)
+                    .pushNamed('/enchantment', arguments: enchantment)
+            ),
+          ],
+          onTap: () => Navigator.of(context)
+              .pushNamed('/enchantment', arguments: enchantment),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Row(
@@ -171,8 +192,10 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SingleChildScrollView(
-                          child: Text(enchantment.name, style: Fonts.bold(size: 16))),
-                      Text(enchantment.type.title, style: Fonts.light(size: 14)),
+                          child: Text(enchantment.name,
+                              style: Fonts.bold())),
+                      Text(enchantment.type.title,
+                          style: Fonts.light()),
                     ],
                   ),
                 ),

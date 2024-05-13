@@ -24,7 +24,7 @@ class DiceCard extends StatelessWidget {
         children: [
           Text(dice.title, style: Fonts.regular()),
           const SizedBox(width: Measures.vMarginThin),
-          SvgPicture.asset(dice.svgPath, height: 37)
+          SvgPicture.asset(dice.svgPath, height: 34)
         ],
       ),
     );
