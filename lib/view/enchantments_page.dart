@@ -19,6 +19,7 @@ import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
+import 'package:scheda_dnd_5e/view/partial/recycler_view.dart';
 
 class EnchantmentsPage extends StatefulWidget {
   const EnchantmentsPage({super.key});
@@ -86,78 +87,66 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
     final enchantments = _enchantments;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-        // Found enchantments
-        Expanded(
-          child: ListView.builder(
-              itemCount: (isDataReady ? enchantments.length : 10)+1,
-              itemBuilder: (_, i) {
-                print(i);
-
-                return i==0?
-                    Column(children: [
-                      const SizedBox(height: Measures.vMarginBig ),
-                      // Page Title
-                      Align(
-                          alignment: Alignment.centerLeft,
-                          child:
-                          Text('Che incantesimo stai cercando?', style: Fonts.black())),
-                      const SizedBox(height: Measures.vMarginMed),
-                      // Search TextField
-                      GlassTextField(
-                        iconPath: 'search_alt',
-                        hintText: 'Cerca un incantesimo',
-                        textController: _searchController,
-                      ),
-                      const SizedBox(height: Measures.vMarginSmall),
-
-                      // Filters
-                      DynamicHeightGridView(
-                        itemCount: _filters.length,
-                        physics: const NeverScrollableScrollPhysics(),
-                        crossAxisCount: 3,
-                        shrinkWrap: true,
-                        crossAxisSpacing: 10,
-                        builder: (context, i) {
-                          final e = _filters[i];
-                          return RadioButton(
-                              selected: e.selectedValues.isNotEmpty,
-                              text: e.title,
-                              color: e.color,
-                              onPressed: () => e.selectedValues.isNotEmpty
-                                  ? setState(() => e.selectedValues.clear())
-                                  : context.checkList(
-                                'Filtro su ${e.title.toLowerCase()}',
-                                values: e.values,
-                                color: e.color,
-                                onChanged: (value) =>
-                                    setState(() => e.selectedValues.toggle(value)),
-                                value: (value) => e.selectedValues.contains(value),
-                              ));
-                        },
-                      ),
-                      const SizedBox(height: Measures.vMarginSmall
-                      ),
-                      // Nothing to show
-                      if (isDataReady && enchantments.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: Measures.vMarginSmall),
-                          child: Text('Niente da mostrare',
-                              style: Fonts.black(color: Palette.card2)),
-                        ),
-                    ],)
-                    :
-                (isDataReady
-                    ? enchantmentCard(enchantments[i-1])
-                    : const GlassCard(isShimmer: true, shimmerHeight: 75));
-              }),
+      child: RecyclerView(header: Column(children: [
+        const SizedBox(height: Measures.vMarginBig ),
+        // Page Title
+        Align(
+            alignment: Alignment.centerLeft,
+            child:
+            Text('Che incantesimo stai cercando?', style: Fonts.black())),
+        const SizedBox(height: Measures.vMarginMed),
+        // Search TextField
+        GlassTextField(
+          iconPath: 'search_alt',
+          hintText: 'Cerca un incantesimo',
+          textController: _searchController,
         ),
-      ]),
+        const SizedBox(height: Measures.vMarginSmall),
+
+        // Filters
+        DynamicHeightGridView(
+          itemCount: _filters.length,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 3,
+          shrinkWrap: true,
+          crossAxisSpacing: 10,
+          builder: (context, i) {
+            final e = _filters[i];
+            return RadioButton(
+                selected: e.selectedValues.isNotEmpty,
+                text: e.title,
+                color: e.color,
+                onPressed: () => e.selectedValues.isNotEmpty
+                    ? setState(() => e.selectedValues.clear())
+                    : context.checkList(
+                  'Filtro su ${e.title.toLowerCase()}',
+                  values: e.values,
+                  color: e.color,
+                  onChanged: (value) =>
+                      setState(() => e.selectedValues.toggle(value)),
+                  value: (value) => e.selectedValues.contains(value),
+                ));
+          },
+        ),
+        const SizedBox(height: Measures.vMarginSmall
+        ),
+        // Nothing to show
+        if (isDataReady && enchantments.isEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: Measures.vMarginSmall),
+            child: Text('Niente da mostrare',
+                style: Fonts.black(color: Palette.card2)),
+          ),
+      ],),
+      children:
+        isDataReady
+            ? enchantments.map<Widget>(enchantmentCard).toList()
+            : List.filled(10, const GlassCard(isShimmer: true, shimmerHeight: 75))
+      )
     );
   }
 
-  enchantmentCard(Enchantment enchantment) => Padding(
+  Widget enchantmentCard(Enchantment enchantment) => Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: GlassCard(
           bottomSheetHeader: Row(
