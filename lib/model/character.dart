@@ -1363,7 +1363,6 @@ enum MasteryType {
     Mastery.strumentiDaVasaio,
     Mastery.utensiliDaCuoco,
   ], 'png/artisan'),
-
   armiEArmature([], 'png/other_tools');
 
   final List<Mastery> masteries;
