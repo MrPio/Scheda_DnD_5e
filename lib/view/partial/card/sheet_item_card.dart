@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
+import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/partial/rule.dart';
 
 import '../../../constant/fonts.dart';
 import '../../../constant/measures.dart';
 import '../../../constant/palette.dart';
 
-class SheetItemCard extends StatelessWidget {
+class SheetItemCard extends StatefulWidget {
   final String iconPath, text;
   final Color? iconColor;
   final String? value, subValue;
   final Widget? child, popup;
+  final int min,max;
+  final TextEditingController? textEditingController;
 
   const SheetItemCard(
       {super.key,
@@ -21,29 +24,41 @@ class SheetItemCard extends StatelessWidget {
       required this.text,
       this.value,
       this.subValue,
-      this.child, this.popup});
+      this.child, this.popup, this.min=0, this.max=10, this.textEditingController});
 
-  bool get isSmall => value == null && subValue == null;
+  @override
+  State<SheetItemCard> createState() => _SheetItemCardState();
+}
+
+class _SheetItemCardState extends State<SheetItemCard> {
+  bool get isSmall => widget.value == null && widget.subValue == null;
+  @override
+  void initState() {
+    if(widget.textEditingController!=null) {
+      widget.textEditingController!.text=widget.value.toString();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final bottomSheetHeader=popup!=null?Column(
+    final bottomSheetHeader=widget.popup!=null?Column(
       children: [
         const SizedBox(height: Measures.vMarginThin),
-        Text( text, style: Fonts.bold(size: 18)),
+        Text( widget.text, style: Fonts.bold(size: 18)),
         const SizedBox(height: Measures.vMarginMed),
-        popup!,
+        widget.popup!,
         const SizedBox(height: Measures.vMarginMed+Measures.vMarginSmall),
       ],
     ):null;
     return GlassCard(
       height: isSmall ? Measures.sheetCardSmallHeight : null,
-      clickable: popup!=null,
+      clickable: widget.popup!=null,
       bottomSheetHeader: bottomSheetHeader,
       onTap: () {
         context.bottomSheet(header:bottomSheetHeader);
         // context.popup('Modifica $text',
-        //     backgroundColor: Palette.background.withOpacity(0.5), child: popup)
+        //     backgroundColor: Palette.background.withOpacity(0.5), child: popup);
       },
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -56,14 +71,14 @@ class SheetItemCard extends StatelessWidget {
               mainAxisAlignment:
                   isSmall ? MainAxisAlignment.start : MainAxisAlignment.center,
               children: [
-                iconPath.toIcon(
-                    height: 15, color: iconColor ?? Palette.onBackground),
+                widget.iconPath.toIcon(
+                    height: 15, color: widget.iconColor ?? Palette.onBackground),
                 SizedBox(
                     width:
                         isSmall ? Measures.hMarginSmall : Measures.hMarginThin),
                 Flexible(
                   child: Text(
-                    text,
+                    widget.text,
                     style: Fonts.regular(size: 13),
                     overflow: TextOverflow.ellipsis,
                     textHeightBehavior:  isSmall?const TextHeightBehavior(
@@ -74,25 +89,27 @@ class SheetItemCard extends StatelessWidget {
               ],
             ),
             // Value and subValue
-            if (value != null)
+            if (widget.value != null)
               Padding(
                 padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(value!, style: Fonts.black(size: 18)),
-                    if (subValue != null)
-                      Text('($subValue)', style: Fonts.light()),
+                    widget.textEditingController!=null?
+                    NumericInput(widget.min, widget.max, controller: widget.textEditingController!,style: Fonts.black(size: 18)):
+                    Text(widget.value!, style: Fonts.black(size: 18)),
+                    if (widget.subValue != null)
+                      Text('(${widget.subValue})', style: Fonts.light()),
                   ],
                 ),
               ),
-            if (child != null)
+            if (widget.child != null)
               const Padding(
                 padding:
                     EdgeInsets.symmetric(vertical: Measures.vMarginMoreThin),
                 child: Rule(),
               ),
-            if (child != null) child!,
+            if (widget.child != null) widget.child!,
           ],
         ),
       ),

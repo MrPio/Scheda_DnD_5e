@@ -2,6 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 
+import '../enum/dice.dart';
+
 part 'part/loot.g.dart';
 
 abstract class InventoryItem extends EnumWithTitle {
@@ -29,203 +31,166 @@ enum Weapon implements InventoryItem {
   ascia(
       'Ascia',
       '1d6 taglienti',
-      'Lancio (gittata 6/18), Leggera',
-      ''),
+      'Lancio (gittata 6/18), Leggera'
   bastoneFerrato(
       'Bastone Ferrato',
       '1d6 contundenti',
-      'Versatile (1d8)',
-      ''),
+      'Versatile (1d8)'
   falcetto(
       'Falcetto',
       '1d4 taglienti',
-      'Leggera',
-      ''),
+      'Leggera'
   giavellotto(
       'Giavellotto',
       '1d6 perforanti',
-      'Lancio (gittata 9/36)',
-      ''),
+      'Lancio (gittata 9/36)'
   lancia(
       'Lancia',
       '1d6 perforanti',
-      'Lancio (gittata 6/18), Versatile (1d8)',
-      ''),
+      'Lancio (gittata 6/18), Versatile (1d8)'
   martelloLeggero(
       'Martello Leggero',
       '1d4 contundenti',
-      'Lancio (gittata 6/18), Leggera',
-      ''),
+      'Lancio (gittata 6/18), Leggera'
   mazza(
       'Mazza',
       '1d6 contundenti',
-      '',
-      ''),
+      ''
   pugnale(
       'Pugnale',
       '1d4 perforanti',
-      'Accurata, Lancio (gittata 6/18), Leggera',
-      ''),
+      'Accurata, Lancio (gittata 6/18), Leggera'
   randello(
       'Randello',
       '1d4 contundenti',
-      'Leggera',
-      ''),
+      'Leggera'
   randelloPesante(
       'Randello Pesante',
       '1d8 contundenti',
-      'Due Mani',
-      ''),
+      'Due Mani'
   // Armi a Distanza Semplici
   arcoCorto(
       'Arco Corto',
       '1d6 perforanti',
-      'Due Mani, Munizioni (gittata 24/96)',
-      ''),
+      'Due Mani, Munizioni (gittata 24/96)'
   balestraLeggera(
       'Balestra Leggera',
       '1d8 perforanti',
-      'Due Mani, Munizioni (gittata 24/96), Ricarica',
-      ''),
+      'Due Mani, Munizioni (gittata 24/96), Ricarica'
   dardo(
       'Dardo',
       '1d4 perforanti',
-      'Accurata, Lancio (gittata 6/18)',
-      ''),
+      'Accurata, Lancio (gittata 6/18)'
   fionda(
       'Fionda',
       '1d4 contundenti',
-      'Munizioni (gittata 9/36)',
-      ''),
+      'Munizioni (gittata 9/36)'
   // Armi da Mischia da Guerra
   alabarda(
       'Alabarda',
       '1d10 taglienti',
-      'Due Mani, Pesante, Portata',
-      ''),
+      'Due Mani, Pesante, Portata'
   asciaBipenne(
       'Ascia Bipenne',
       '1d12 taglienti',
-      'Due Mani, Pesante',
-      ''),
+      'Due Mani, Pesante'
   asciaDaBattaglia(
       'Ascia da Battaglia',
       '1d8 taglienti',
-      'Versatile (1d1O)',
-      ''),
+      'Versatile (1d1O)'
   falcione(
       'Falcione',
       '1d10 taglienti',
-      'Due Mani, Pesante, Portata',
-      ''),
+      'Due Mani, Pesante, Portata'
   frusta(
       'Frusta',
       '1d4 taglienti',
-      'Accurata, Portata',
-      ''),
+      'Accurata, Portata'
   lanciaDaCavaliere(
       'Lancia da Cavaliere',
       '1d12 perforanti',
-      'Portata, Speciale',
-      ''),
+      'Portata, Speciale'
   maglio(
       'Maglio',
       '2d6 contundenti',
-      'Due Mani, Pesante',
-      ''),
+      'Due Mani, Pesante'
   martelloDaGuerra(
       'Martello da Guerra',
       '1d8 contundenti',
-      'Versatile (1d10)',
-      ''),
+      'Versatile (1d10)'
   mazzafrusto(
       'Mazzafrusto',
       '1d8 contundenti',
-      '',
-      ''),
+      ''
   morningStar(
       'Morning Star',
       '1d8 perforanti',
-      '',
-      ''),
+      ''
   picca(
       'Picca',
       '1d10 perforanti',
-      'Due Mani, Pesante, Portata',
-      ''),
+      'Due Mani, Pesante, Portata'
   picconeDaGuerra(
       'Piccone da Guerra',
       '1d8 perforanti',
-      '',
-      ''),
+      ''
   scimitarra(
       'Scimitarra',
       '1d6 taglienti',
-      'Accurata, leggera',
-      ''),
+      'Accurata, leggera'
   spadaCorta(
       'Spada Corta',
       '1d6 perforanti',
-      'Accurata, leggera',
-      ''),
+      'Accurata, leggera'
   spadaLunga(
       'Spada Lunga',
       '1d8 taglienti',
-      'Versatile (1d10)',
-      ''),
+      'Versatile (1d10)'
   spadone(
       'Spadone',
       '2d6 taglienti',
-      'Due Mani, Pesante',
-      ''),
+      'Due Mani, Pesante'
   stocco(
       'Stocco',
       '1d8 perforanti',
-      'Accurata',
-      ''),
+      'Accurata'
   tridente(
       'Tridente',
       '1d6 perforanti',
-      'Lancio (gittata 6/18), Versatile (1d8)',
-      ''),
+      'Lancio (gittata 6/18), Versatile (1d8)'
   // Armi o Distanza da Guerra
   arcoLungo(
       'Arco Lungo',
       '1d8 perforanti',
-      'Due Mani, Munizioni (gittata 45/180), Pesante',
-      ''),
+      'Due Mani, Munizioni (gittata 45/180), Pesante'
   balestraAMano(
       'Balestra a Mano',
       '1d6 perforanti',
-      'Leggera, Munizioni (gittata 9/36), Ricarica',
-      ''),
+      'Leggera, Munizioni (gittata 9/36), Ricarica'
   balestraPesante(
       'Balestra Pesante',
       '1d10 perforanti',
-      'Due Mani, Munizioni (gittata 30/120), Pesante, Ricarica',
-      ''),
+      'Due Mani, Munizioni (gittata 30/120), Pesante, Ricarica'
   cerbottana(
       'Cerbottana',
       '1 perforante',
-      'Munizioni (gittata 7,5/30), Ricarica',
-      ''),
+      'Munizioni (gittata 7,5/30), Ricarica'
   rete(
       'Rete',
       '',
-      'Lancio (gittata 1,5/4,5), Speciale',
-      '');
+      'Lancio (gittata 1,5/4,5), Speciale'
+      );
 
   @override
   final String title;
-  final String damage;
+  final List<Dice> rollDamage;
+  final int fixedDamage;
   final String property;
-  final String info;
 
   const Weapon(
       this.title,
       this.damage,
-      this.property,
-      this.info);
+      this.property);
 }
 
 enum Armor implements InventoryItem {
@@ -234,83 +199,70 @@ enum Armor implements InventoryItem {
       'Imbottita',
       '11 + modificatore di Destrezza',
       0,
-      true,
-      ''),
+      true
   armaturaDiCuoio(
       'Armatura di cuoio',
       '11 + modificatore di Destrezza',
       0,
-      false,
-      ''),
+      false
   armaturaDiCuoioBorchiato(
       'Armatura di cuoio borchiato',
       '12 + modificatore di Destrezza',
       0,
-      false,
-      ''),
+      false
   // Medie
   armaturaDiPelle(
       'Armatura di pelle',
       '12 + modificatore di Destrezza (max 2)',
       0,
-      false,
-      ''),
+      false
   giacoDiMaglia(
       'Giaco di maglia',
       '13 + modificatore di Destrezza (max 2)',
       0,
-      false,
-      ''),
+      false
   corazzaDiScaglie(
       'Corazza di scaglie',
       '14 + modificatore di Destrezza (max 2)',
       0,
-      true,
-      ''),
+      true
   corazzaDiPiastre(
       'Corazza di piastre',
       '14 + modificatore di Destrezza (max 2)',
       0,
-      false,
-      ''),
+      false
   mezzaArmatura(
       'Mezza armatura',
       '15 + modificatore di Destrezza (max 2)',
       0,
-      true,
-      ''),
+      true
   // Pesanti
   cottaDiMaglia(
       'Cotta di maglia',
       '14',
       0,
-      true,
-      ''),
+      true
   corazzaAdAnelli(
       'Corazza ad anelli',
       '16',
       13,
-      true,
-      ''),
+      true
   corazzaAStriscie(
       'Corazza a strisce',
       '17',
       15,
-      true,
-      ''),
+      true
   armaturaCompleta(
       'Armatura completa',
       '18',
       15,
-      true,
-      ''),
+      true
   // Scudi
   scudo(
       'Scudo',
       '+2',
       0,
-      false,
-      ''),
+      false
   scudoDiLegno(
       'Scudo di legno',
       '+2',

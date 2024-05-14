@@ -180,7 +180,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   e.choiceableMasteries[0]
                                 };
                                 await context.checkList<Mastery>(
-                                  'Scegli una maestria',
+                                  'Scegli una competenza',
                                   dismissible: false,
                                   isRadio: true,
                                   values: e.choiceableMasteries,
@@ -719,8 +719,6 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                               // Set class fields
                               character.class_ = e;
                               character.masteries.addAll(e.defaultMasteries);
-                              character.savingThrows
-                                  .addAll(e.savingThrowSkills);
                               Map<SubSkill, int> backupSubSkills =
                                   Map.from(character.subSkills);
                               Set<Mastery> backupMasteries =
@@ -769,7 +767,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                     .sublist(0, e.numChoiceableMasteries)
                                     .toSet();
                                 await context.checkList<Mastery>(
-                                  'Scegli ${e.numChoiceableMasteries} maestria/e',
+                                  'Scegli ${e.numChoiceableMasteries} competenza/e',
                                   dismissible: false,
                                   isRadio: e.numChoiceableMasteries == 1,
                                   values: masteries,
@@ -887,7 +885,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                       width:
                                                           Measures.hMarginBig)
                                                 ].cast<Widget>() +
-                                                (e.savingThrowSkills.isEmpty
+                                                (e.savingThrows.isEmpty
                                                     ? [
                                                         const RadioButton(
                                                           text: 'Nessuna',
@@ -897,7 +895,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                           width: 100,
                                                         )
                                                       ]
-                                                    : e.savingThrowSkills
+                                                    : e.savingThrows
                                                         .map((e) => Padding(
                                                               padding:
                                                                   const EdgeInsets

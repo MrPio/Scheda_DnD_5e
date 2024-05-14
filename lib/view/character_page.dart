@@ -13,6 +13,8 @@ import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/int_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
+import 'package:scheda_dnd_5e/manager/io_manager.dart';
+import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_column.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
@@ -21,6 +23,7 @@ import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
+import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/partial/rule.dart';
 import 'package:scroll_to_hide/scroll_to_hide.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
@@ -40,11 +43,23 @@ class _CharacterPageState extends State<CharacterPage>
   List<Widget>? _screens;
   TabController? _tabController;
   late ScrollController _bodyController;
-  bool _isSkillsExpanded = false;
+  bool _isSkillsExpanded = true;
   Character? _character, _oldCharacter;
+  late TextEditingController caController,
+      speedController,
+      initiativeController;
 
   @override
   void initState() {
+    Future.delayed(Duration.zero, () async {
+      _isSkillsExpanded =
+          await IOManager().get<bool>('character_page_isSkillsExpanded') ??
+              true;
+      setState(() {});
+    });
+    caController = TextEditingController();
+    speedController = TextEditingController();
+    initiativeController = TextEditingController();
     _bodyController = ScrollController();
     super.initState();
   }
@@ -72,12 +87,18 @@ class _CharacterPageState extends State<CharacterPage>
       SheetItemCard(
           iconPath: 'png/shield',
           text: 'CA',
-          value: character.armorClass.toString()),
+          value: character.armorClass.toString(),
+          textEditingController: caController,
+          min: 0,
+          max: 99),
       SheetItemCard(
         iconPath: 'png/hp',
         text: 'HP',
         value: character.hp.toString(),
         subValue: character.maxHp.toString(),
+        popup: Row(children: [
+          NumericInput(-character.maxHp, character.maxHp, controller: TextEditingController(text: character.hp.toString()))
+        ],),
       ),
       SheetItemCard(
           iconPath: 'png/bonus',
@@ -86,6 +107,9 @@ class _CharacterPageState extends State<CharacterPage>
       SheetItemCard(
           iconPath: 'png/speed',
           text: 'Speed',
+          textEditingController: speedController,
+          min: 0,
+          max: 99,
           value: '${character.defaultSpeed.round()}m'),
       SheetItemCard(
         iconPath: 'png/status',
@@ -107,6 +131,9 @@ class _CharacterPageState extends State<CharacterPage>
       SheetItemCard(
           iconPath: 'png/initiative',
           text: 'Iniziativa',
+          textEditingController: initiativeController,
+          min: -20,
+          max: 20,
           value: character.initiative.toSignedString()),
     ];
     var skills = [
@@ -126,50 +153,46 @@ class _CharacterPageState extends State<CharacterPage>
               child: _isSkillsExpanded
                   ? Column(
                       children: [
-                            Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                  onTap: () {},
-                                  child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: Measures.hMarginMed,
-                                          vertical: Measures.vMarginMoreThin),
-                                      child: Row(children: [
-                                        // SubSkill title
-                                        Flexible(
-                                          fit: FlexFit.tight,
-                                          child: Text(
-                                            'Tiro salvezza',
-                                            style: Fonts.regular(size: 13),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        // SubSkill value
-                                        Text(
-                                            character
-                                                .savingThrowValue(skill)
-                                                .toSignedString(),
-                                            style: Fonts.black(size: 14)),
-                                        const SizedBox(
-                                            width: Measures.hMarginSmall),
-                                        // Competenza
-                                        Container(
-                                            width: 12,
-                                            height: 12,
-                                            decoration: BoxDecoration(
-                                                color: character.savingThrows
-                                                        .contains(skill)
-                                                    ? Palette.onBackground
-                                                    : Colors.transparent,
-                                                border: Border.all(
-                                                    color: Palette.onBackground,
-                                                    width: 0.65),
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        999))),
-                                      ]))),
-                            ),
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Measures.hMarginMed,
+                                    vertical: Measures.vMarginMoreThin),
+                                child: Row(children: [
+                                  // SavingThrow title
+                                  Flexible(
+                                    fit: FlexFit.tight,
+                                    child: Text(
+                                      'Tiro salvezza',
+                                      style: Fonts.regular(size: 13),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  // SavingThrow value
+                                  Text(
+                                      character
+                                          .savingThrowValue(skill)
+                                          .toSignedString(),
+                                      style: Fonts.black(size: 14)),
+                                  const SizedBox(
+                                      width: Measures.hMarginSmall),
+                                  // Saving Throw
+                                  Container(
+                                      width: 12,
+                                      height: 12,
+                                      decoration: BoxDecoration(
+                                          color: character.class_.savingThrows
+                                                  .contains(skill)
+                                              ? Palette.onBackground
+                                              : Colors.transparent,
+                                          border: Border.all(
+                                              color: Palette.onBackground,
+                                              width: 0.65),
+                                          borderRadius:
+                                              BorderRadius.circular(
+                                                  999))),
+                                ])),
+                            if(skill.subSkills.isNotEmpty)
                             const Padding(
                               padding: EdgeInsets.symmetric(
                                   vertical: Measures.vMarginMoreThin),
@@ -225,7 +248,7 @@ class _CharacterPageState extends State<CharacterPage>
                                                             999))),
                                             const SizedBox(
                                                 width: Measures.hMarginThin),
-                                            // Maestria
+                                            // Competenza
                                             Container(
                                                 width: 12,
                                                 height: 12,
@@ -259,6 +282,7 @@ class _CharacterPageState extends State<CharacterPage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: Measures.vMarginMed),
+          // TODO here: class and multiclass
           // HP bar
           HpBar(character.hp, character.maxHp),
           const SizedBox(height: Measures.vMarginSmall),
@@ -275,6 +299,8 @@ class _CharacterPageState extends State<CharacterPage>
             behavior: HitTestBehavior.translucent,
             onTap: () => setState(() {
               _isSkillsExpanded = !_isSkillsExpanded;
+              IOManager()
+                  .set('character_page_isSkillsExpanded', _isSkillsExpanded);
             }),
             child: Padding(
               padding:
@@ -314,11 +340,27 @@ class _CharacterPageState extends State<CharacterPage>
                     GlassCard(
                         height: Measures.sheetCardSmallHeight,
                         isLight: true,
+                        bottomSheetHeader: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: Measures.vMarginThin),
+                              Text('Aggiungi una competenza', style: Fonts.bold(size: 18)),
+                              const SizedBox(height: Measures.vMarginMed),
+                              GridRow(columnsCount: 3, fill: true,children: MasteryType.strumentiMusicali.masteries.map((e) => SheetItemCard(
+                                text: e.title,
+                                iconPath: e.masteryType.iconPath,
+
+                              ))
+                                  .toList()),
+                              const SizedBox(height: Measures.vMarginMed+Measures.vMarginSmall),
+                            ],
+                          ),
+                        ),
                         child: Center(child: 'add'.toIcon(height: 16)))
                   ]),
           const SizedBox(height: Measures.vMarginSmall),
           // Languages
-          Text('Competenze', style: Fonts.black(size: 18)),
+          Text('Linguaggi', style: Fonts.black(size: 18)),
           const SizedBox(height: Measures.vMarginThin),
           GridRow(
               fill: true,
@@ -326,7 +368,7 @@ class _CharacterPageState extends State<CharacterPage>
               children: character.languages
                       .map((e) => SheetItemCard(
                             text: e.title,
-                            iconPath: 'png/warrior',
+                            iconPath: 'png/language',
                           ))
                       .toList()
                       .cast<Widget>() +
@@ -351,7 +393,6 @@ class _CharacterPageState extends State<CharacterPage>
           // Background
           const GradientBackground(topColor: Palette.backgroundBlue),
           // Header + Body
-
           SafeArea(
             child: NestedScrollView(
               floatHeaderSlivers: true,
@@ -401,6 +442,7 @@ class _CharacterPageState extends State<CharacterPage>
                       controller: _tabController,
                       isScrollable: true,
                       indicatorSize: TabBarIndicatorSize.tab,
+                      padding: const EdgeInsets.only(right: Measures.hMarginMed),
                       dividerHeight: 0,
                       tabs: {
                         'Scheda': 'png/sheet',
@@ -449,6 +491,8 @@ class _CharacterPageState extends State<CharacterPage>
               ),
             ),
           ),
+          // Bottom vignette
+          const BottomVignette(height: 0, spread: 50),
         ],
       ),
     );

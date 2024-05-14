@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
-import 'package:scheda_dnd_5e/extension_function/inheritance_extensions.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
