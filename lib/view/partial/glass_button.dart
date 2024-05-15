@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
+import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 
 class GlassButton extends StatelessWidget {
   final Function()? onTap;
@@ -38,7 +39,7 @@ class GlassButton extends StatelessWidget {
           if (iconPath != null)
             Padding(
               padding: const EdgeInsets.only(right: 8.0),
-              child: SvgPicture.asset('assets/images/icons/$iconPath.svg', height: 22),
+              child: iconPath?.toIcon(height: 20, color: outlined ? null : Palette.onBackground),
             ),
           Text(text, style: outlined?Fonts.buttonOutlined():Fonts.button()),
         ]),
