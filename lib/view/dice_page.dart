@@ -242,16 +242,16 @@ class _DicePageState extends State<DicePage>
                                       ),
                                       const SizedBox(
                                           width: Measures.hMarginMed),
-                                      NumericInput(
-                                        minModifier,
-                                        maxModifier,
+                                      NumericInput(NumericInputArgs(
+                                        min: minModifier,
+                                        max: maxModifier,
                                         controller: _modifierController,
                                         width: 60,
                                         contentPadding:
                                             const EdgeInsets.fromLTRB(
                                                 4, 8, 4, 8),
                                         style: Fonts.black(),
-                                      ),
+                                      )),
                                       const SizedBox(
                                           width: Measures.hMarginMed),
                                       SizedBox(
@@ -298,8 +298,7 @@ class _DicePageState extends State<DicePage>
                               children: [
                                 Text('Modificatore:', style: Fonts.regular()),
                                 const SizedBox(width: Measures.hMarginMed),
-                                Text(
-                                    modifier.toSignedString(),
+                                Text(modifier.toSignedString(),
                                     style: Fonts.black()),
                               ],
                             ),

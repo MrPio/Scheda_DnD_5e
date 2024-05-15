@@ -18,8 +18,9 @@ import '../../../model/character.dart';
 class SkillCard extends StatelessWidget {
   final Skill skill;
   final TextEditingController skillInputController;
-final int raceSkill; // The contribute given by the race and subRace selection
-  const SkillCard(this.skill, {super.key, required this.skillInputController, required this.raceSkill});
+  final int raceSkill; // The contribute given by the race and subRace selection
+  const SkillCard(this.skill,
+      {super.key, required this.skillInputController, required this.raceSkill});
 
   @override
   Widget build(BuildContext context) {
@@ -48,12 +49,13 @@ final int raceSkill; // The contribute given by the race and subRace selection
                   // value
                   Row(
                     children: [
-                      NumericInput(3, 18,
+                      NumericInput(NumericInputArgs(
+                          min: 3,
+                          max: 18,
                           controller: skillInputController,
                           width: 50,
                           isDense: true,
-                          style: Fonts.black()),
-                      // TODO: edit this +2
+                          style: Fonts.black())),
                       Text('+ $raceSkill', style: Fonts.light(size: 16)),
                     ],
                   )
@@ -74,14 +76,15 @@ final int raceSkill; // The contribute given by the race and subRace selection
                     padding: const EdgeInsets.all(12)),
                 'png/dice_on'.toIcon(
                     onTap: () async {
-                      int? result = await Navigator.of(context).pushNamed('/dice',
+                      int? result = await Navigator.of(context).pushNamed(
+                          '/dice',
                           arguments: DiceArgs(
                               title: 'Lancio per ${skill.title}',
                               dices: List.filled(3, Dice.d6),
                               modifier: 0,
                               oneShot: true)) as int?;
-                      if(result!=null) {
-                        skillInputController.text=result.toString();
+                      if (result != null) {
+                        skillInputController.text = result.toString();
                       }
                     },
                     padding: const EdgeInsets.all(12))

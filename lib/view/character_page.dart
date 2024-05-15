@@ -45,10 +45,14 @@ class _CharacterPageState extends State<CharacterPage>
   late ScrollController _bodyController;
   bool _isSkillsExpanded = true;
   Character? _character, _oldCharacter;
-  late TextEditingController _armorClassController,
+  late final TextEditingController _armorClassController,
       _speedController,
-      _initiativeController;
-  final String speedSuffix = 'm';
+      _initiativeController,
+      _hpController,
+      _maxHpController;
+  final String _speedSuffix = 'm';
+  bool _isEditingHp = false, _isEditingMaxHp = false;
+  late final FocusNode _hpFocusNode;
 
   @override
   void initState() {
@@ -61,7 +65,10 @@ class _CharacterPageState extends State<CharacterPage>
     _armorClassController = TextEditingController();
     _speedController = TextEditingController();
     _initiativeController = TextEditingController();
+    _hpController = TextEditingController();
+    _maxHpController = TextEditingController();
     _bodyController = ScrollController();
+    _hpFocusNode = FocusNode();
     super.initState();
   }
 
@@ -70,7 +77,7 @@ class _CharacterPageState extends State<CharacterPage>
     _character!.armorClass =
         int.tryParse(_armorClassController.text) ?? _character!.armorClass;
     _character!.speed =
-        double.tryParse(_speedController.text.replaceAll(speedSuffix, '')) ??
+        double.tryParse(_speedController.text.replaceAll(_speedSuffix, '')) ??
             _character!.speed;
     _character!.initiative =
         int.tryParse(_initiativeController.text) ?? _character!.initiative;
@@ -81,8 +88,18 @@ class _CharacterPageState extends State<CharacterPage>
         print('⬆️ Character Saved');
       });
     }
+    for (var e in [
+      _armorClassController,
+      _speedController,
+      _initiativeController,
+      _hpController,
+      _maxHpController
+    ]) {
+      e.dispose();
+    }
     _tabController?.dispose();
     _bodyController.dispose();
+    _hpFocusNode.dispose();
     super.dispose();
   }
 
@@ -93,29 +110,63 @@ class _CharacterPageState extends State<CharacterPage>
     _oldCharacter ??= Character.fromJson(character.toJSON());
     var attributes = [
       SheetItemCard(
-          iconPath: 'png/shield',
-          text: 'CA',
-          value: character.armorClass.toString(),
-          textEditingController: _armorClassController,
-          min: 0,
-          max: 99),
+        iconPath: 'png/shield',
+        text: 'CA',
+        value: character.armorClass.toString(),
+        numericInputArgs: NumericInputArgs(
+            min: 0, max: 99, controller: _armorClassController),
+      ),
       SheetItemCard(
         iconPath: 'png/hp',
-        text: 'HP',
-        value: character.hp.toString(),
-        subValue: character.maxHp.toString(),
+        text: _isEditingMaxHp ? 'Max HP' : 'HP',
+        value: (_isEditingMaxHp ? character.maxHp : character.hp).toString(),
+        subValue:
+            _isEditingMaxHp || _isEditingHp ? null : character.maxHp.toString(),
+        numericInputArgs: (_isEditingHp || _isEditingMaxHp)
+            ? NumericInputArgs(
+                min: _isEditingHp ? -character.maxHp : 0,
+                max: _isEditingHp ? character.maxHp : 999,
+                controller: _isEditingHp ? _hpController : _maxHpController,
+                defaultValue:
+                    (_isEditingHp ? character.hp : character.maxHp).toDouble(),
+                onSubmitted: (value) {
+                  if (_isEditingHp) {
+                    character.hp = value.toInt();
+                  } else if (_isEditingMaxHp) {
+                    character.maxHp = value.toInt();
+                  }
+                },
+                finalize: () {
+                  setState(() {
+                    _isEditingHp = false;
+                    _isEditingMaxHp = false;
+                  });
+                },
+                focusNode: _hpFocusNode)
+            : null,
         bottomSheetItems: [
-          BottomSheetItem('png/hp', 'Modifica gli HP attuali', () {
-            // TODO
-          }),
-          BottomSheetItem('png/max_hp', 'Modifica gli HP massimi', () {
-            // TODO
-          }),
-          BottomSheetItem('png/rest', 'Riposa', () {
+          BottomSheetItem('png/hp', 'Modifica HP', () {
             setState(() {
-              character.hp = character.maxHp;
+              _isEditingHp = true;
+              _isEditingMaxHp = false;
             });
+            _hpFocusNode.requestFocus();
           }),
+          BottomSheetItem('png/max_hp', 'Modifica HP Massimi', () {
+            setState(() {
+              _isEditingHp = false;
+              _isEditingMaxHp = true;
+            });
+            _hpFocusNode.requestFocus();
+          }),
+          if (character.hp < character.maxHp)
+            BottomSheetItem('png/rest', 'Riposa', () {
+              setState(() {
+                character.hp = character.maxHp;
+              });
+              context.snackbar('La vita è stata ripristinata',
+                  backgroundColor: Palette.primaryBlue);
+            }),
         ],
       ),
       SheetItemCard(
@@ -125,15 +176,17 @@ class _CharacterPageState extends State<CharacterPage>
       SheetItemCard(
           iconPath: 'png/speed',
           text: 'Speed',
-          textEditingController: _speedController,
-          min: 0,
-          max: 99,
-          decimalPlaces: 1,
-          defaultValue: character.defaultSpeed,
-          valueRestriction: (value) => value % 1.5 < 1.5 - value % 1.5
-              ? value - value % 1.5
-              : value + value % 1.5,
-          valueSuffix: speedSuffix,
+          numericInputArgs: NumericInputArgs(
+            min: 0,
+            max: 99,
+            controller: _speedController,
+            decimalPlaces: 1,
+            defaultValue: character.defaultSpeed,
+            suffix: _speedSuffix,
+            valueRestriction: (value) => value % 1.5 < 1.5 - value % 1.5
+                ? value - value % 1.5
+                : value + value % 1.5,
+          ),
           value: '${character.speed.toStringAsFixed(1)}m'),
       SheetItemCard(
         iconPath: 'png/status',
@@ -155,10 +208,12 @@ class _CharacterPageState extends State<CharacterPage>
       SheetItemCard(
           iconPath: 'png/initiative',
           text: 'Iniziativa',
-          textEditingController: _initiativeController,
-          min: -20,
-          max: 20,
-          defaultValue: character.skillModifier(Skill.destrezza).toDouble(),
+          numericInputArgs: NumericInputArgs(
+            min: -20,
+            max: 20,
+            controller: _initiativeController,
+            defaultValue: character.skillModifier(Skill.destrezza).toDouble(),
+          ),
           value: character.initiative.toSignedString()),
     ];
     var skills = [
@@ -414,22 +469,22 @@ class _CharacterPageState extends State<CharacterPage>
                       .map((e) => SheetItemCard(
                             text: e.title,
                             iconPath: 'png/language',
-                onTap: () {
+                            onTap: () {
                               // if(e!=Language.comune)
-                  context.popup('Stai per rimuovere un linguaggio',
-                      message:
-                      'Sei sicuro di voler rimuovere **${e.title}**?',
-                      positiveCallback: () {
-                        setState(() {
-                          character.languages.remove(e);
-                        });
-                      },
-                      negativeCallback: () {},
-                      positiveText: 'Si',
-                      negativeText: 'No',
-                      backgroundColor:
-                      Palette.background.withOpacity(0.5));
-                },
+                              context.popup('Stai per rimuovere un linguaggio',
+                                  message:
+                                      'Sei sicuro di voler rimuovere **${e.title}**?',
+                                  positiveCallback: () {
+                                setState(() {
+                                  character.languages.remove(e);
+                                });
+                              },
+                                  negativeCallback: () {},
+                                  positiveText: 'Si',
+                                  negativeText: 'No',
+                                  backgroundColor:
+                                      Palette.background.withOpacity(0.5));
+                            },
                           ))
                       .toList()
                       .cast<Widget>() +

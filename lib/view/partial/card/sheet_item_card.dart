@@ -12,15 +12,11 @@ import '../../../constant/palette.dart';
 class SheetItemCard extends StatelessWidget {
   final String iconPath, text;
   final Color? iconColor;
-  final String? value, subValue, valueSuffix;
+  final String? value, subValue;
   final Widget? child, bottomSheetHeader;
   final List<BottomSheetItem>? bottomSheetItems;
-  final int min, max, decimalPlaces;
-  final TextEditingController? textEditingController;
-  final double Function(double)? valueRestriction;
+  final NumericInputArgs? numericInputArgs;
   final Function()? onTap;
-
-  final double? defaultValue;
 
   SheetItemCard(
       {super.key,
@@ -31,16 +27,11 @@ class SheetItemCard extends StatelessWidget {
       this.subValue,
       this.child,
       this.bottomSheetHeader,
-      this.min = 0,
-      this.max = 10,
-      this.textEditingController,
-      this.defaultValue,
-      this.decimalPlaces = 0,
-      this.valueRestriction,
-      this.valueSuffix,
-      this.bottomSheetItems, this.onTap}){
-    if (textEditingController != null) {
-      textEditingController!.text = value.toString();
+      this.bottomSheetItems,
+      this.numericInputArgs,
+      this.onTap}) {
+    if (numericInputArgs != null) {
+      numericInputArgs!.controller.text = value.toString();
     }
   }
 
@@ -48,32 +39,36 @@ class SheetItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _bottomSheetHeader = (bottomSheetHeader != null||bottomSheetItems!=null)
-        ? Align(
-      alignment: Alignment.center,
-          child: Column(
-              children: [
-                const SizedBox(height: Measures.vMarginThin),
-                Text(text, style: Fonts.bold(size: 18)),
-                if(bottomSheetHeader!=null)
-                const SizedBox(height: Measures.vMarginMed),
-                if(bottomSheetHeader!=null)
-                bottomSheetHeader!,
-                if(bottomSheetHeader!=null)
-                const SizedBox(
-                    height: Measures.vMarginMed + Measures.vMarginSmall),
-              ],
-            ),
-        )
-        : null;
+    final newBottomSheetHeader =
+        (bottomSheetHeader != null || bottomSheetItems != null)
+            ? Align(
+                alignment: Alignment.center,
+                child: Column(
+                  children: [
+                    const SizedBox(height: Measures.vMarginThin),
+                    Text(text, style: Fonts.bold(size: 18)),
+                    if (bottomSheetHeader != null)
+                      const SizedBox(height: Measures.vMarginMed),
+                    if (bottomSheetHeader != null) bottomSheetHeader!,
+                    if (bottomSheetHeader != null)
+                      const SizedBox(
+                          height: Measures.vMarginMed + Measures.vMarginSmall),
+                  ],
+                ),
+              )
+            : null;
     return GlassCard(
       height: isSmall ? Measures.sheetCardSmallHeight : null,
-      clickable: bottomSheetHeader != null || bottomSheetItems!=null || onTap!=null,
-      bottomSheetHeader: _bottomSheetHeader,
+      clickable: bottomSheetHeader != null ||
+          bottomSheetItems != null ||
+          onTap != null,
+      bottomSheetHeader: newBottomSheetHeader,
       bottomSheetItems: bottomSheetItems,
-      onTap: onTap??() {
-        context.bottomSheet(header: _bottomSheetHeader,items: bottomSheetItems);
-      },
+      onTap: onTap ??
+          () {
+            context.bottomSheet(
+                header: newBottomSheetHeader, items: bottomSheetItems);
+          },
       child: Padding(
         padding: EdgeInsets.symmetric(
             vertical: isSmall ? 0 : Measures.vMarginThin,
@@ -86,8 +81,7 @@ class SheetItemCard extends StatelessWidget {
                   isSmall ? MainAxisAlignment.start : MainAxisAlignment.center,
               children: [
                 iconPath.toIcon(
-                    height: 15,
-                    color: iconColor ?? Palette.onBackground),
+                    height: 15, color: iconColor ?? Palette.onBackground),
                 SizedBox(
                     width:
                         isSmall ? Measures.hMarginSmall : Measures.hMarginThin),
@@ -113,18 +107,12 @@ class SheetItemCard extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    textEditingController != null
+                    numericInputArgs != null
                         ? NumericInput(
-                            min,
-                            max,
-                            controller: textEditingController!,
-                            style: Fonts.black(size: 18),
-                            isDense: true,
-                            contentPadding: EdgeInsets.zero,
-                            defaultValue: defaultValue,
-                            decimalPlaces: decimalPlaces,
-                            valueRestriction: valueRestriction,
-                            suffix: valueSuffix,
+                            numericInputArgs!
+                              ..style = Fonts.black(size: 18)
+                              ..isDense = true
+                              ..contentPadding = EdgeInsets.zero,
                           )
                         : Text(value!, style: Fonts.black(size: 18)),
                     if (subValue != null)
