@@ -45,9 +45,10 @@ class _CharacterPageState extends State<CharacterPage>
   late ScrollController _bodyController;
   bool _isSkillsExpanded = true;
   Character? _character, _oldCharacter;
-  late TextEditingController caController,
-      speedController,
-      initiativeController;
+  late TextEditingController _armorClassController,
+      _speedController,
+      _initiativeController;
+  final String speedSuffix = 'm';
 
   @override
   void initState() {
@@ -57,15 +58,22 @@ class _CharacterPageState extends State<CharacterPage>
               true;
       setState(() {});
     });
-    caController = TextEditingController();
-    speedController = TextEditingController();
-    initiativeController = TextEditingController();
+    _armorClassController = TextEditingController();
+    _speedController = TextEditingController();
+    _initiativeController = TextEditingController();
     _bodyController = ScrollController();
     super.initState();
   }
 
   @override
   void dispose() {
+    _character!.armorClass =
+        int.tryParse(_armorClassController.text) ?? _character!.armorClass;
+    _character!.speed =
+        double.tryParse(_speedController.text.replaceAll(speedSuffix, '')) ??
+            _character!.speed;
+    _character!.initiative =
+        int.tryParse(_initiativeController.text) ?? _character!.initiative;
     if (jsonEncode(_oldCharacter!.toJSON()) !=
         jsonEncode(_character!.toJSON())) {
       Future.delayed(Duration.zero, () async {
@@ -88,7 +96,7 @@ class _CharacterPageState extends State<CharacterPage>
           iconPath: 'png/shield',
           text: 'CA',
           value: character.armorClass.toString(),
-          textEditingController: caController,
+          textEditingController: _armorClassController,
           min: 0,
           max: 99),
       SheetItemCard(
@@ -96,13 +104,19 @@ class _CharacterPageState extends State<CharacterPage>
         text: 'HP',
         value: character.hp.toString(),
         subValue: character.maxHp.toString(),
-        popup: Row(
-          children: [
-            NumericInput(-character.maxHp, character.maxHp,
-                controller:
-                    TextEditingController(text: character.hp.toString()))
-          ],
-        ),
+        bottomSheetItems: [
+          BottomSheetItem('png/hp', 'Modifica gli HP attuali', () {
+            // TODO
+          }),
+          BottomSheetItem('png/max_hp', 'Modifica gli HP massimi', () {
+            // TODO
+          }),
+          BottomSheetItem('png/rest', 'Riposa', () {
+            setState(() {
+              character.hp = character.maxHp;
+            });
+          }),
+        ],
       ),
       SheetItemCard(
           iconPath: 'png/bonus',
@@ -111,19 +125,21 @@ class _CharacterPageState extends State<CharacterPage>
       SheetItemCard(
           iconPath: 'png/speed',
           text: 'Speed',
-          textEditingController: speedController,
+          textEditingController: _speedController,
           min: 0,
           max: 99,
           decimalPlaces: 1,
           defaultValue: character.defaultSpeed,
-          valueRestriction: (value) =>value % 1.5< 1.5 - value % 1.5?value-value % 1.5:value+value % 1.5,
-          valueSuffix: 'm',
-          value: '${character.defaultSpeed.round()}m'),
+          valueRestriction: (value) => value % 1.5 < 1.5 - value % 1.5
+              ? value - value % 1.5
+              : value + value % 1.5,
+          valueSuffix: speedSuffix,
+          value: '${character.speed.toStringAsFixed(1)}m'),
       SheetItemCard(
         iconPath: 'png/status',
         text: 'Allineamento',
         value: character.alignment.initials ?? '-',
-        popup: GridRow(
+        bottomSheetHeader: GridRow(
             columnsCount: 3,
             children: ch.Alignment.values
                 .map((e) => AlignmentCard(
@@ -139,7 +155,7 @@ class _CharacterPageState extends State<CharacterPage>
       SheetItemCard(
           iconPath: 'png/initiative',
           text: 'Iniziativa',
-          textEditingController: initiativeController,
+          textEditingController: _initiativeController,
           min: -20,
           max: 20,
           defaultValue: character.skillModifier(Skill.destrezza).toDouble(),
@@ -340,6 +356,21 @@ class _CharacterPageState extends State<CharacterPage>
                       .map((e) => SheetItemCard(
                             text: e.title,
                             iconPath: e.masteryType.iconPath,
+                            onTap: () {
+                              context.popup('Stai per rimuovere una competenza',
+                                  message:
+                                      'Sei sicuro di voler rimuovere **${e.title}**?',
+                                  positiveCallback: () {
+                                setState(() {
+                                  character.masteries.remove(e);
+                                });
+                              },
+                                  negativeCallback: () {},
+                                  positiveText: 'Si',
+                                  negativeText: 'No',
+                                  backgroundColor:
+                                      Palette.background.withOpacity(0.5));
+                            },
                           ))
                       .toList()
                       .cast<Widget>() +
@@ -383,6 +414,22 @@ class _CharacterPageState extends State<CharacterPage>
                       .map((e) => SheetItemCard(
                             text: e.title,
                             iconPath: 'png/language',
+                onTap: () {
+                              // if(e!=Language.comune)
+                  context.popup('Stai per rimuovere un linguaggio',
+                      message:
+                      'Sei sicuro di voler rimuovere **${e.title}**?',
+                      positiveCallback: () {
+                        setState(() {
+                          character.languages.remove(e);
+                        });
+                      },
+                      negativeCallback: () {},
+                      positiveText: 'Si',
+                      negativeText: 'No',
+                      backgroundColor:
+                      Palette.background.withOpacity(0.5));
+                },
                           ))
                       .toList()
                       .cast<Widget>() +

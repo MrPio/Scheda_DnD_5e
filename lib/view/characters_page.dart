@@ -195,7 +195,7 @@ class _CharactersPageState extends State<CharactersPage> {
                   .pushNamed('/character', arguments: character)
             ),
             BottomSheetItem('png/delete_2', 'Elimina', () async {
-              context.popup('Stai per eliminare un personaggio',message: 'Sei sicuro di voler eliminare ${character.name}? (Potrai recuperarlo in seguito)',positiveCallback: ()async{
+              context.popup('Stai per eliminare un personaggio',message: 'Sei sicuro di voler eliminare **${character.name}**? (Potrai recuperarlo in seguito)',positiveCallback: ()async{
                 AccountManager().user.deleteCharacter(character.uid!);
                 setState(() {});
                 bool hasUndone = false;

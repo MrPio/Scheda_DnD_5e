@@ -9,18 +9,20 @@ import '../../../constant/fonts.dart';
 import '../../../constant/measures.dart';
 import '../../../constant/palette.dart';
 
-class SheetItemCard extends StatefulWidget {
+class SheetItemCard extends StatelessWidget {
   final String iconPath, text;
   final Color? iconColor;
-  final String? value, subValue,valueSuffix;
-  final Widget? child, popup;
-  final int min, max,decimalPlaces;
+  final String? value, subValue, valueSuffix;
+  final Widget? child, bottomSheetHeader;
+  final List<BottomSheetItem>? bottomSheetItems;
+  final int min, max, decimalPlaces;
   final TextEditingController? textEditingController;
   final double Function(double)? valueRestriction;
+  final Function()? onTap;
 
   final double? defaultValue;
 
-  const   SheetItemCard(
+  SheetItemCard(
       {super.key,
       required this.iconPath,
       this.iconColor,
@@ -28,48 +30,49 @@ class SheetItemCard extends StatefulWidget {
       this.value,
       this.subValue,
       this.child,
-      this.popup,
+      this.bottomSheetHeader,
       this.min = 0,
       this.max = 10,
-      this.textEditingController, this.defaultValue, this.decimalPlaces=0, this.valueRestriction, this.valueSuffix});
-
-  @override
-  State<SheetItemCard> createState() => _SheetItemCardState();
-}
-
-class _SheetItemCardState extends State<SheetItemCard> {
-  bool get isSmall => widget.value == null && widget.subValue == null;
-
-  @override
-  void initState() {
-    if (widget.textEditingController != null) {
-      widget.textEditingController!.text = widget.value.toString();
+      this.textEditingController,
+      this.defaultValue,
+      this.decimalPlaces = 0,
+      this.valueRestriction,
+      this.valueSuffix,
+      this.bottomSheetItems, this.onTap}){
+    if (textEditingController != null) {
+      textEditingController!.text = value.toString();
     }
-    super.initState();
   }
+
+  bool get isSmall => value == null && subValue == null;
 
   @override
   Widget build(BuildContext context) {
-    final bottomSheetHeader = widget.popup != null
-        ? Column(
-            children: [
-              const SizedBox(height: Measures.vMarginThin),
-              Text(widget.text, style: Fonts.bold(size: 18)),
-              const SizedBox(height: Measures.vMarginMed),
-              widget.popup!,
-              const SizedBox(
-                  height: Measures.vMarginMed + Measures.vMarginSmall),
-            ],
-          )
+    final _bottomSheetHeader = (bottomSheetHeader != null||bottomSheetItems!=null)
+        ? Align(
+      alignment: Alignment.center,
+          child: Column(
+              children: [
+                const SizedBox(height: Measures.vMarginThin),
+                Text(text, style: Fonts.bold(size: 18)),
+                if(bottomSheetHeader!=null)
+                const SizedBox(height: Measures.vMarginMed),
+                if(bottomSheetHeader!=null)
+                bottomSheetHeader!,
+                if(bottomSheetHeader!=null)
+                const SizedBox(
+                    height: Measures.vMarginMed + Measures.vMarginSmall),
+              ],
+            ),
+        )
         : null;
     return GlassCard(
       height: isSmall ? Measures.sheetCardSmallHeight : null,
-      clickable: widget.popup != null,
-      bottomSheetHeader: bottomSheetHeader,
-      onTap: () {
-        context.bottomSheet(header: bottomSheetHeader);
-        // context.popup('Modifica $text',
-        //     backgroundColor: Palette.background.withOpacity(0.5), child: popup);
+      clickable: bottomSheetHeader != null || bottomSheetItems!=null || onTap!=null,
+      bottomSheetHeader: _bottomSheetHeader,
+      bottomSheetItems: bottomSheetItems,
+      onTap: onTap??() {
+        context.bottomSheet(header: _bottomSheetHeader,items: bottomSheetItems);
       },
       child: Padding(
         padding: EdgeInsets.symmetric(
@@ -82,15 +85,15 @@ class _SheetItemCardState extends State<SheetItemCard> {
               mainAxisAlignment:
                   isSmall ? MainAxisAlignment.start : MainAxisAlignment.center,
               children: [
-                widget.iconPath.toIcon(
+                iconPath.toIcon(
                     height: 15,
-                    color: widget.iconColor ?? Palette.onBackground),
+                    color: iconColor ?? Palette.onBackground),
                 SizedBox(
                     width:
                         isSmall ? Measures.hMarginSmall : Measures.hMarginThin),
                 Flexible(
                   child: Text(
-                    widget.text,
+                    text,
                     style: Fonts.regular(size: 13),
                     overflow: TextOverflow.ellipsis,
                     textHeightBehavior: isSmall
@@ -104,38 +107,38 @@ class _SheetItemCardState extends State<SheetItemCard> {
               ],
             ),
             // Value and subValue
-            if (widget.value != null)
+            if (value != null)
               Padding(
                 padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    widget.textEditingController != null
+                    textEditingController != null
                         ? NumericInput(
-                            widget.min,
-                            widget.max,
-                            controller: widget.textEditingController!,
+                            min,
+                            max,
+                            controller: textEditingController!,
                             style: Fonts.black(size: 18),
                             isDense: true,
                             contentPadding: EdgeInsets.zero,
-                      defaultValue: widget.defaultValue,
-                      decimalPlaces: widget.decimalPlaces,
-                      valueRestriction: widget.valueRestriction,
-                      suffix: widget.valueSuffix,
+                            defaultValue: defaultValue,
+                            decimalPlaces: decimalPlaces,
+                            valueRestriction: valueRestriction,
+                            suffix: valueSuffix,
                           )
-                        : Text(widget.value!, style: Fonts.black(size: 18)),
-                    if (widget.subValue != null)
-                      Text('(${widget.subValue})', style: Fonts.light()),
+                        : Text(value!, style: Fonts.black(size: 18)),
+                    if (subValue != null)
+                      Text('($subValue)', style: Fonts.light()),
                   ],
                 ),
               ),
-            if (widget.child != null)
+            if (child != null)
               const Padding(
                 padding:
                     EdgeInsets.symmetric(vertical: Measures.vMarginMoreThin),
                 child: Rule(),
               ),
-            if (widget.child != null) widget.child!,
+            if (child != null) child!,
           ],
         ),
       ),

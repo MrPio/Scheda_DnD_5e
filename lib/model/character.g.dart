@@ -39,6 +39,7 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       json['level'] as int,
       json['armorClass'] as int,
       json['initiative'] as int,
+      (json['speed'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
@@ -67,6 +68,7 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'armorClass': instance.armorClass,
       'initiative': instance.initiative,
       '_inventory': instance._inventory,
+      'speed': instance.speed,
     };
 
 const _$ClassEnumMap = {

@@ -1147,6 +1147,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
       // The character creation is completed
       withLoading(() async {
         character.initiative = character.skillModifier(Skill.destrezza);
+        character.speed=character.defaultSpeed;
         character.uid = await DataManager().save(character, SaveMode.post);
         AccountManager().user.charactersUIDs.add(character.uid!);
         await DataManager().save(AccountManager().user);

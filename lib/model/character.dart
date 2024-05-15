@@ -931,7 +931,7 @@ enum Class implements EnumWithTitle {
   final List<MasteryType> choiceableMasteryTypes;
   final List<Skill> savingThrows;
   final List<Map<InventoryItem, int>> choiceableItems;
-  final List<Tuple2<String, int>>abilities;
+  final List<Tuple2<String, int>> abilities;
   final Dice life;
 
   const Class(
@@ -1557,6 +1557,7 @@ class Character with Comparable<Character> implements WithUID {
   int level, armorClass, initiative;
   @JsonKey(includeFromJson: true, includeToJson: true)
   Map<String, int> _inventory = {};
+  double speed;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   String get name => _name;
@@ -1622,7 +1623,8 @@ class Character with Comparable<Character> implements WithUID {
       this.alignment,
       this.level,
       this.armorClass,
-      this.initiative)
+      this.initiative,
+      this.speed)
       : _chosenSkills = _chosenSkills ?? {},
         rollSkills = rollSkills ?? {},
         subSkills = subSkills ?? {},
@@ -1650,6 +1652,7 @@ class Character with Comparable<Character> implements WithUID {
         regDateTimestamp = DateTime.now().millisecondsSinceEpoch,
         class_ = Class.barbaro,
         race = Race.umano,
+        speed = Race.umano.defaultSpeed,
         alignment = Alignment.nessuno,
         initiative = 0;
 
@@ -1691,7 +1694,8 @@ class Character with Comparable<Character> implements WithUID {
       (_chosenSkills[skill] ?? 0) +
       (race.defaultSkills[skill] ?? 0) +
       (subRace?.defaultSkills[skill] ?? 0);
-          // (editsSkills[skill]?? 0);
+
+  // (editsSkills[skill]?? 0);
 
   int skillModifier(Skill skill) => (skillValue(skill) - 10) ~/ 2;
 
