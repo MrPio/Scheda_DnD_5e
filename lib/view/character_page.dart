@@ -96,9 +96,13 @@ class _CharacterPageState extends State<CharacterPage>
         text: 'HP',
         value: character.hp.toString(),
         subValue: character.maxHp.toString(),
-        popup: Row(children: [
-          NumericInput(-character.maxHp, character.maxHp, controller: TextEditingController(text: character.hp.toString()))
-        ],),
+        popup: Row(
+          children: [
+            NumericInput(-character.maxHp, character.maxHp,
+                controller:
+                    TextEditingController(text: character.hp.toString()))
+          ],
+        ),
       ),
       SheetItemCard(
           iconPath: 'png/bonus',
@@ -110,6 +114,10 @@ class _CharacterPageState extends State<CharacterPage>
           textEditingController: speedController,
           min: 0,
           max: 99,
+          decimalPlaces: 1,
+          defaultValue: character.defaultSpeed,
+          valueRestriction: (value) =>value % 1.5< 1.5 - value % 1.5?value-value % 1.5:value+value % 1.5,
+          valueSuffix: 'm',
           value: '${character.defaultSpeed.round()}m'),
       SheetItemCard(
         iconPath: 'png/status',
@@ -134,6 +142,7 @@ class _CharacterPageState extends State<CharacterPage>
           textEditingController: initiativeController,
           min: -20,
           max: 20,
+          defaultValue: character.skillModifier(Skill.destrezza).toDouble(),
           value: character.initiative.toSignedString()),
     ];
     var skills = [
@@ -174,8 +183,7 @@ class _CharacterPageState extends State<CharacterPage>
                                           .savingThrowValue(skill)
                                           .toSignedString(),
                                       style: Fonts.black(size: 14)),
-                                  const SizedBox(
-                                      width: Measures.hMarginSmall),
+                                  const SizedBox(width: Measures.hMarginSmall),
                                   // Saving Throw
                                   Container(
                                       width: 12,
@@ -189,15 +197,14 @@ class _CharacterPageState extends State<CharacterPage>
                                               color: Palette.onBackground,
                                               width: 0.65),
                                           borderRadius:
-                                              BorderRadius.circular(
-                                                  999))),
+                                              BorderRadius.circular(999))),
                                 ])),
-                            if(skill.subSkills.isNotEmpty)
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: Measures.vMarginMoreThin),
-                              child: Rule(),
-                            ),
+                            if (skill.subSkills.isNotEmpty)
+                              const Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: Measures.vMarginMoreThin),
+                                child: Rule(),
+                              ),
                           ].cast<Widget>() +
                           skill.subSkills
                               .map((subSkill) => Material(
@@ -344,15 +351,22 @@ class _CharacterPageState extends State<CharacterPage>
                           child: Column(
                             children: [
                               const SizedBox(height: Measures.vMarginThin),
-                              Text('Aggiungi una competenza', style: Fonts.bold(size: 18)),
+                              Text('Aggiungi una competenza',
+                                  style: Fonts.bold(size: 18)),
                               const SizedBox(height: Measures.vMarginMed),
-                              GridRow(columnsCount: 3, fill: true,children: MasteryType.strumentiMusicali.masteries.map((e) => SheetItemCard(
-                                text: e.title,
-                                iconPath: e.masteryType.iconPath,
-
-                              ))
-                                  .toList()),
-                              const SizedBox(height: Measures.vMarginMed+Measures.vMarginSmall),
+                              GridRow(
+                                  columnsCount: 3,
+                                  fill: true,
+                                  children: MasteryType
+                                      .strumentiMusicali.masteries
+                                      .map((e) => SheetItemCard(
+                                            text: e.title,
+                                            iconPath: e.masteryType.iconPath,
+                                          ))
+                                      .toList()),
+                              const SizedBox(
+                                  height: Measures.vMarginMed +
+                                      Measures.vMarginSmall),
                             ],
                           ),
                         ),
@@ -442,7 +456,8 @@ class _CharacterPageState extends State<CharacterPage>
                       controller: _tabController,
                       isScrollable: true,
                       indicatorSize: TabBarIndicatorSize.tab,
-                      padding: const EdgeInsets.only(right: Measures.hMarginMed),
+                      padding:
+                          const EdgeInsets.only(right: Measures.hMarginMed),
                       dividerHeight: 0,
                       tabs: {
                         'Scheda': 'png/sheet',
