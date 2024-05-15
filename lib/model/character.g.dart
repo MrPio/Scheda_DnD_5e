@@ -25,6 +25,9 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       (json['rollSkills'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), e as int),
       ),
+      (json['customSkills'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), e as int),
+      ),
       (json['subSkills'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry($enumDecode(_$SubSkillEnumMap, k), e as int),
       ),
@@ -57,6 +60,8 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
           instance._chosenSkills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
       'rollSkills':
           instance.rollSkills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
+      'customSkills':
+          instance.customSkills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
       'subSkills':
           instance.subSkills.map((k, e) => MapEntry(_$SubSkillEnumMap[k]!, e)),
       'masteries': instance.masteries.map((e) => _$MasteryEnumMap[e]!).toList(),

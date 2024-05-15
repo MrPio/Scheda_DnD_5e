@@ -38,8 +38,7 @@ class CharacterPage extends StatefulWidget {
   State<CharacterPage> createState() => _CharacterPageState();
 }
 
-class _CharacterPageState extends State<CharacterPage>
-    with TickerProviderStateMixin {
+class _CharacterPageState extends State<CharacterPage> with TickerProviderStateMixin {
   List<Widget>? _screens;
   TabController? _tabController;
   late ScrollController _bodyController;
@@ -50,16 +49,18 @@ class _CharacterPageState extends State<CharacterPage>
       _initiativeController,
       _hpController,
       _maxHpController;
+  final List<TextEditingController> _skillsControllers =
+      List.generate(Skill.values.length, (_) => TextEditingController());
+  final List<TextEditingController> _subSkillsControllers =
+      List.generate(SubSkill.values.length, (_) => TextEditingController());
   final String _speedSuffix = 'm';
   bool _isEditingHp = false, _isEditingMaxHp = false;
-  late final FocusNode _hpFocusNode;
+  Skill? _selectedSkill;
 
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
-      _isSkillsExpanded =
-          await IOManager().get<bool>('character_page_isSkillsExpanded') ??
-              true;
+      _isSkillsExpanded = await IOManager().get<bool>('character_page_isSkillsExpanded') ?? true;
       setState(() {});
     });
     _armorClassController = TextEditingController();
@@ -68,38 +69,34 @@ class _CharacterPageState extends State<CharacterPage>
     _hpController = TextEditingController();
     _maxHpController = TextEditingController();
     _bodyController = ScrollController();
-    _hpFocusNode = FocusNode();
     super.initState();
   }
 
   @override
   void dispose() {
-    _character!.armorClass =
-        int.tryParse(_armorClassController.text) ?? _character!.armorClass;
+    _character!.armorClass = int.tryParse(_armorClassController.text) ?? _character!.armorClass;
     _character!.speed =
-        double.tryParse(_speedController.text.replaceAll(_speedSuffix, '')) ??
-            _character!.speed;
-    _character!.initiative =
-        int.tryParse(_initiativeController.text) ?? _character!.initiative;
-    if (jsonEncode(_oldCharacter!.toJSON()) !=
-        jsonEncode(_character!.toJSON())) {
+        double.tryParse(_speedController.text.replaceAll(_speedSuffix, '')) ?? _character!.speed;
+    _character!.initiative = int.tryParse(_initiativeController.text) ?? _character!.initiative;
+    if (jsonEncode(_oldCharacter!.toJSON()) != jsonEncode(_character!.toJSON())) {
       Future.delayed(Duration.zero, () async {
         await DataManager().save(_character!);
         print('⬆️ Character Saved');
       });
     }
     for (var e in [
-      _armorClassController,
-      _speedController,
-      _initiativeController,
-      _hpController,
-      _maxHpController
-    ]) {
+          _armorClassController,
+          _speedController,
+          _initiativeController,
+          _hpController,
+          _maxHpController
+        ] +
+        _skillsControllers +
+        _subSkillsControllers) {
       e.dispose();
     }
     _tabController?.dispose();
     _bodyController.dispose();
-    _hpFocusNode.dispose();
     super.dispose();
   }
 
@@ -113,22 +110,19 @@ class _CharacterPageState extends State<CharacterPage>
         iconPath: 'png/shield',
         text: 'CA',
         value: character.armorClass.toString(),
-        numericInputArgs: NumericInputArgs(
-            min: 0, max: 99, controller: _armorClassController),
+        numericInputArgs: NumericInputArgs(min: 0, max: 99, controller: _armorClassController),
       ),
       SheetItemCard(
         iconPath: 'png/hp',
         text: _isEditingMaxHp ? 'Max HP' : 'HP',
         value: (_isEditingMaxHp ? character.maxHp : character.hp).toString(),
-        subValue:
-            _isEditingMaxHp || _isEditingHp ? null : character.maxHp.toString(),
+        subValue: _isEditingMaxHp || _isEditingHp ? null : character.maxHp.toString(),
         numericInputArgs: (_isEditingHp || _isEditingMaxHp)
             ? NumericInputArgs(
                 min: _isEditingHp ? -character.maxHp : 0,
                 max: _isEditingHp ? character.maxHp : 999,
                 controller: _isEditingHp ? _hpController : _maxHpController,
-                defaultValue:
-                    (_isEditingHp ? character.hp : character.maxHp).toDouble(),
+                defaultValue: (_isEditingHp ? character.hp : character.maxHp).toDouble(),
                 onSubmitted: (value) {
                   if (_isEditingHp) {
                     character.hp = value.toInt();
@@ -142,7 +136,8 @@ class _CharacterPageState extends State<CharacterPage>
                     _isEditingMaxHp = false;
                   });
                 },
-                focusNode: _hpFocusNode)
+                autofocus: true,
+              )
             : null,
         bottomSheetItems: [
           BottomSheetItem('png/hp', 'Modifica HP', () {
@@ -150,29 +145,23 @@ class _CharacterPageState extends State<CharacterPage>
               _isEditingHp = true;
               _isEditingMaxHp = false;
             });
-            _hpFocusNode.requestFocus();
           }),
           BottomSheetItem('png/max_hp', 'Modifica HP Massimi', () {
             setState(() {
               _isEditingHp = false;
               _isEditingMaxHp = true;
             });
-            _hpFocusNode.requestFocus();
           }),
           if (character.hp < character.maxHp)
             BottomSheetItem('png/rest', 'Riposa', () {
               setState(() {
                 character.hp = character.maxHp;
               });
-              context.snackbar('La vita è stata ripristinata',
-                  backgroundColor: Palette.primaryBlue);
+              context.snackbar('La vita è stata ripristinata', backgroundColor: Palette.primaryBlue);
             }),
         ],
       ),
-      SheetItemCard(
-          iconPath: 'png/bonus',
-          text: 'BC',
-          value: character.competenceBonus.toSignedString()),
+      SheetItemCard(iconPath: 'png/bonus', text: 'BC', value: character.competenceBonus.toSignedString()),
       SheetItemCard(
           iconPath: 'png/speed',
           text: 'Speed',
@@ -183,9 +172,8 @@ class _CharacterPageState extends State<CharacterPage>
             decimalPlaces: 1,
             defaultValue: character.defaultSpeed,
             suffix: _speedSuffix,
-            valueRestriction: (value) => value % 1.5 < 1.5 - value % 1.5
-                ? value - value % 1.5
-                : value + value % 1.5,
+            valueRestriction: (value) =>
+                value % 1.5 < 1.5 - value % 1.5 ? value - value % 1.5 : value + value % 1.5,
           ),
           value: '${character.speed.toStringAsFixed(1)}m'),
       SheetItemCard(
@@ -198,7 +186,10 @@ class _CharacterPageState extends State<CharacterPage>
                 .map((e) => AlignmentCard(
                       e,
                       onTap: (alignment) {
-                        character.alignment = alignment;
+                        setState(() {
+                          character.alignment = alignment;
+                        });
+
                         Navigator.of(context).pop();
                       },
                       isSmall: e == ch.Alignment.nessuno,
@@ -228,15 +219,39 @@ class _CharacterPageState extends State<CharacterPage>
               iconPath: skill.iconPath,
               text: skill.title,
               iconColor: skill.color,
-              value: character.skillModifier(skill).toSignedString(),
-              subValue: character.skillValue(skill).toString(),
+              value: _selectedSkill == skill
+                  ? character.skillValue(skill).toString()
+                  : character.skillModifier(skill).toSignedString(),
+              subValue: _selectedSkill == skill ? null : character.skillValue(skill).toString(),
+              numericInputArgs: _selectedSkill == skill
+                  ? NumericInputArgs(
+                      min: 3,
+                      max: 20,
+                      controller: _skillsControllers[Skill.values.indexOf(skill)],
+                      defaultValue: (character.skillValue(skill)).toDouble(),
+                      onSubmitted: (value) {
+                        character.customSkills[skill] = value.toInt();
+                      },
+                      finalize: () {
+                        setState(() {
+                          _selectedSkill = null;
+                        });
+                      },
+                      autofocus: true)
+                  : null,
+              onTap: _isSkillsExpanded
+                  ? null
+                  : () {
+                      setState(() {
+                        _selectedSkill = skill;
+                      });
+                    },
               child: _isSkillsExpanded
                   ? Column(
                       children: [
                             Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: Measures.hMarginMed,
-                                    vertical: Measures.vMarginMoreThin),
+                                    horizontal: Measures.hMarginMed, vertical: Measures.vMarginMoreThin),
                                 child: Row(children: [
                                   // SavingThrow title
                                   Flexible(
@@ -249,10 +264,7 @@ class _CharacterPageState extends State<CharacterPage>
                                     ),
                                   ),
                                   // SavingThrow value
-                                  Text(
-                                      character
-                                          .savingThrowValue(skill)
-                                          .toSignedString(),
+                                  Text(character.savingThrowValue(skill).toSignedString(),
                                       style: Fonts.black(size: 14)),
                                   const SizedBox(width: Measures.hMarginSmall),
                                   // Saving Throw
@@ -260,20 +272,15 @@ class _CharacterPageState extends State<CharacterPage>
                                       width: 12,
                                       height: 12,
                                       decoration: BoxDecoration(
-                                          color: character.class_.savingThrows
-                                                  .contains(skill)
+                                          color: character.class_.savingThrows.contains(skill)
                                               ? Palette.onBackground
                                               : Colors.transparent,
-                                          border: Border.all(
-                                              color: Palette.onBackground,
-                                              width: 0.65),
-                                          borderRadius:
-                                              BorderRadius.circular(999))),
+                                          border: Border.all(color: Palette.onBackground, width: 0.65),
+                                          borderRadius: BorderRadius.circular(999))),
                                 ])),
                             if (skill.subSkills.isNotEmpty)
                               const Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: Measures.vMarginMoreThin),
+                                padding: EdgeInsets.symmetric(vertical: Measures.vMarginMoreThin),
                                 child: Rule(),
                               ),
                           ].cast<Widget>() +
@@ -281,7 +288,12 @@ class _CharacterPageState extends State<CharacterPage>
                               .map((subSkill) => Material(
                                     color: Colors.transparent,
                                     child: InkWell(
-                                      onTap: () {},
+                                      onTap: () {
+                                        setState(() {
+                                          character.subSkills[subSkill] =
+                                              ((character.subSkills[subSkill] ?? 0) + 1) % 3;
+                                        });
+                                      },
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: Measures.hMarginMed,
@@ -299,51 +311,32 @@ class _CharacterPageState extends State<CharacterPage>
                                               ),
                                             ),
                                             // SubSkill value
-                                            Text(
-                                                character
-                                                    .subSkillValue(subSkill)
-                                                    .toSignedString(),
+                                            Text(character.subSkillValue(subSkill).toSignedString(),
                                                 style: Fonts.black(size: 14)),
-                                            const SizedBox(
-                                                width: Measures.hMarginSmall),
+                                            const SizedBox(width: Measures.hMarginSmall),
                                             // Competenza
                                             Container(
                                                 width: 12,
                                                 height: 12,
                                                 decoration: BoxDecoration(
-                                                    color: (character.subSkills[
-                                                                    subSkill] ??
-                                                                0) >=
-                                                            1
+                                                    color: (character.subSkills[subSkill] ?? 0) == 1
                                                         ? Palette.onBackground
                                                         : Colors.transparent,
                                                     border: Border.all(
-                                                        color: Palette
-                                                            .onBackground,
-                                                        width: 0.65),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            999))),
-                                            const SizedBox(
-                                                width: Measures.hMarginThin),
-                                            // Competenza
+                                                        color: Palette.onBackground, width: 0.65),
+                                                    borderRadius: BorderRadius.circular(999))),
+                                            const SizedBox(width: Measures.hMarginThin),
+                                            // Maestria
                                             Container(
                                                 width: 12,
                                                 height: 12,
                                                 decoration: BoxDecoration(
-                                                    color: (character.subSkills[
-                                                                    subSkill] ??
-                                                                0) >=
-                                                            2
+                                                    color: (character.subSkills[subSkill] ?? 0) >= 2
                                                         ? Palette.onBackground
                                                         : Colors.transparent,
                                                     border: Border.all(
-                                                        color: Palette
-                                                            .onBackground,
-                                                        width: 0.65),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            1.75)))
+                                                        color: Palette.onBackground, width: 0.65),
+                                                    borderRadius: BorderRadius.circular(1.75)))
                                           ],
                                         ),
                                       ),
@@ -377,17 +370,14 @@ class _CharacterPageState extends State<CharacterPage>
             behavior: HitTestBehavior.translucent,
             onTap: () => setState(() {
               _isSkillsExpanded = !_isSkillsExpanded;
-              IOManager()
-                  .set('character_page_isSkillsExpanded', _isSkillsExpanded);
+              IOManager().set('character_page_isSkillsExpanded', _isSkillsExpanded);
             }),
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(vertical: Measures.vMarginThin),
+              padding: const EdgeInsets.symmetric(vertical: Measures.vMarginThin),
               child: Row(children: [
                 Text('Caratteristiche', style: Fonts.black(size: 18)),
                 const SizedBox(width: Measures.hMarginMed),
-                'chevron_left'.toIcon(
-                    height: 16, rotation: _isSkillsExpanded ? pi / 2 : -pi / 2)
+                'chevron_left'.toIcon(height: 16, rotation: _isSkillsExpanded ? pi / 2 : -pi / 2)
               ]),
             ),
           ),
@@ -413,8 +403,7 @@ class _CharacterPageState extends State<CharacterPage>
                             iconPath: e.masteryType.iconPath,
                             onTap: () {
                               context.popup('Stai per rimuovere una competenza',
-                                  message:
-                                      'Sei sicuro di voler rimuovere **${e.title}**?',
+                                  message: 'Sei sicuro di voler rimuovere **${e.title}**?',
                                   positiveCallback: () {
                                 setState(() {
                                   character.masteries.remove(e);
@@ -423,8 +412,7 @@ class _CharacterPageState extends State<CharacterPage>
                                   negativeCallback: () {},
                                   positiveText: 'Si',
                                   negativeText: 'No',
-                                  backgroundColor:
-                                      Palette.background.withOpacity(0.5));
+                                  backgroundColor: Palette.background.withOpacity(0.5));
                             },
                           ))
                       .toList()
@@ -433,29 +421,50 @@ class _CharacterPageState extends State<CharacterPage>
                     GlassCard(
                         height: Measures.sheetCardSmallHeight,
                         isLight: true,
-                        bottomSheetHeader: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              const SizedBox(height: Measures.vMarginThin),
-                              Text('Aggiungi una competenza',
-                                  style: Fonts.bold(size: 18)),
-                              const SizedBox(height: Measures.vMarginMed),
-                              GridRow(
-                                  columnsCount: 3,
-                                  fill: true,
-                                  children: MasteryType
-                                      .strumentiMusicali.masteries
-                                      .map((e) => SheetItemCard(
-                                            text: e.title,
-                                            iconPath: e.masteryType.iconPath,
-                                          ))
-                                      .toList()),
-                              const SizedBox(
-                                  height: Measures.vMarginMed +
-                                      Measures.vMarginSmall),
-                            ],
-                          ),
-                        ),
+                        clickable: true,
+                        onTap: () {
+                          context.draggableBottomSheet(
+                            body: Column(
+                              children: [
+                                const SizedBox(height: Measures.vMarginThin),
+                                Text('Aggiungi una competenza', style: Fonts.bold(size: 18)),
+                                const SizedBox(height: Measures.vMarginThin),
+                                Column(
+                                    children: MasteryType.values
+                                        .map((masteryType) => Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: Measures.vMarginSmall),
+                                                  child: Rule(),
+                                                ),
+                                                Text(masteryType.title, style: Fonts.regular()),
+                                                const SizedBox(height: Measures.vMarginSmall),
+                                                GridRow(
+                                                    columnsCount: 3,
+                                                    fill: true,
+                                                    children: masteryType.masteries
+                                                        .where((e) => !character.masteries.contains(e))
+                                                        .map((mastery) => SheetItemCard(
+                                                              text: mastery.title,
+                                                              iconPath: masteryType.iconPath,
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  character.masteries.add(mastery);
+                                                                });
+                                                                Navigator.of(context).pop();
+                                                              },
+                                                            ))
+                                                        .toList()),
+                                              ],
+                                            ))
+                                        .toList()),
+                                const SizedBox(height: Measures.vMarginMed),
+                              ],
+                            ),
+                          );
+                        },
                         child: Center(child: 'add'.toIcon(height: 16)))
                   ]),
           const SizedBox(height: Measures.vMarginSmall),
@@ -472,8 +481,7 @@ class _CharacterPageState extends State<CharacterPage>
                             onTap: () {
                               // if(e!=Language.comune)
                               context.popup('Stai per rimuovere un linguaggio',
-                                  message:
-                                      'Sei sicuro di voler rimuovere **${e.title}**?',
+                                  message: 'Sei sicuro di voler rimuovere **${e.title}**?',
                                   positiveCallback: () {
                                 setState(() {
                                   character.languages.remove(e);
@@ -482,8 +490,7 @@ class _CharacterPageState extends State<CharacterPage>
                                   negativeCallback: () {},
                                   positiveText: 'Si',
                                   negativeText: 'No',
-                                  backgroundColor:
-                                      Palette.background.withOpacity(0.5));
+                                  backgroundColor: Palette.background.withOpacity(0.5));
                             },
                           ))
                       .toList()
@@ -492,6 +499,35 @@ class _CharacterPageState extends State<CharacterPage>
                     GlassCard(
                         height: Measures.sheetCardSmallHeight,
                         isLight: true,
+                        clickable: true,
+                        onTap: () {
+                          context.bottomSheet(
+                            header: Column(
+                              children: [
+                                const SizedBox(height: Measures.vMarginThin),
+                                Text('Aggiungi un linguaggio', style: Fonts.bold(size: 18)),
+                                const SizedBox(height: Measures.vMarginMed),
+                                GridRow(
+                                    columnsCount: 3,
+                                    fill: true,
+                                    children: Language.values
+                                        .where((e) => !character.languages.contains(e))
+                                        .map((e) => SheetItemCard(
+                                              text: e.title,
+                                              iconPath: 'png/language',
+                                              onTap: () {
+                                                setState(() {
+                                                  character.languages.add(e);
+                                                });
+                                                Navigator.of(context).pop();
+                                              },
+                                            ))
+                                        .toList()),
+                                const SizedBox(height: Measures.vMarginMed),
+                              ],
+                            ),
+                          );
+                        },
                         child: Center(child: 'add'.toIcon(height: 16)))
                   ]),
           const SizedBox(height: Measures.vMarginBig),
@@ -512,8 +548,7 @@ class _CharacterPageState extends State<CharacterPage>
           SafeArea(
             child: NestedScrollView(
               floatHeaderSlivers: true,
-              headerSliverBuilder:
-                  (BuildContext context, bool innerBoxIsScrolled) {
+              headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                 return [
                   SliverAppBar(
                     flexibleSpace: // Header
@@ -534,8 +569,7 @@ class _CharacterPageState extends State<CharacterPage>
                                 style: Fonts.light(size: 16))
                           ]),
                           Padding(
-                            padding:
-                                const EdgeInsets.only(right: Measures.hPadding),
+                            padding: const EdgeInsets.only(right: Measures.hPadding),
                             child: Level(level: character.level, maxLevel: 20),
                           ),
                         ],
@@ -558,8 +592,7 @@ class _CharacterPageState extends State<CharacterPage>
                       controller: _tabController,
                       isScrollable: true,
                       indicatorSize: TabBarIndicatorSize.tab,
-                      padding:
-                          const EdgeInsets.only(right: Measures.hMarginMed),
+                      padding: const EdgeInsets.only(right: Measures.hMarginMed),
                       dividerHeight: 0,
                       tabs: {
                         'Scheda': 'png/sheet',
@@ -572,13 +605,9 @@ class _CharacterPageState extends State<CharacterPage>
                           .map((e) => Tab(
                                 child: Row(
                                   children: [
-                                    (e.$2.value +
-                                            (_tabController!.index == e.$1
-                                                ? '_on'
-                                                : '_off'))
+                                    (e.$2.value + (_tabController!.index == e.$1 ? '_on' : '_off'))
                                         .toIcon(height: 20),
-                                    const SizedBox(
-                                        width: Measures.hMarginSmall),
+                                    const SizedBox(width: Measures.hMarginSmall),
                                     Text(
                                       e.$2.key,
                                       style: _tabController!.index == e.$1
@@ -597,8 +626,7 @@ class _CharacterPageState extends State<CharacterPage>
                       controller: _tabController,
                       children: _screens!
                           .map((e) => SingleChildScrollView(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: Measures.hPadding),
+                                padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
                                 child: e,
                               ))
                           .toList(),

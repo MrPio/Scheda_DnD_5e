@@ -76,6 +76,7 @@ class SheetItemCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Icon + title
             Row(
               mainAxisAlignment:
                   isSmall ? MainAxisAlignment.start : MainAxisAlignment.center,
@@ -100,7 +101,7 @@ class SheetItemCard extends StatelessWidget {
                 )
               ],
             ),
-            // Value and subValue
+            // Value + subValue
             if (value != null)
               Padding(
                 padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),

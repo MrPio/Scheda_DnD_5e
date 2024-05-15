@@ -49,7 +49,7 @@ extension ContextExtensions on BuildContext {
                 filter: ImageFilter.blur(sigmaX: 16.0, sigmaY: 16.0),
                 child: Container(
                   padding: EdgeInsets.symmetric(
-                      vertical: 26, horizontal: noContentHPadding ? 0 : 26),
+                      vertical: Measures.hPadding, horizontal: noContentHPadding ? 0 : Measures.hPadding),
                   color: backgroundColor,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -57,7 +57,7 @@ extension ContextExtensions on BuildContext {
                     children: [
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: noContentHPadding ? 26 : 0),
+                            horizontal: noContentHPadding ? Measures.hPadding : 0),
                         child: Text(title, style: Fonts.bold()),
                       ),
                       const SizedBox(height: Measures.vMarginSmall),
@@ -66,7 +66,7 @@ extension ContextExtensions on BuildContext {
                           child: SingleChildScrollView(
                             child: Padding(
                               padding: EdgeInsets.symmetric(
-                                      horizontal: noContentHPadding ? 26 : 0)
+                                      horizontal: noContentHPadding ? Measures.hPadding : 0)
                                   .copyWith(bottom: Measures.vMarginSmall),
                               child: MarkdownBody(
                                   data: message,
@@ -85,7 +85,7 @@ extension ContextExtensions on BuildContext {
                       const SizedBox(height: Measures.vMarginThin),
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: noContentHPadding ? 26 : 0),
+                            horizontal: noContentHPadding ? Measures.hPadding : 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -163,7 +163,7 @@ extension ContextExtensions on BuildContext {
                       child: InkWell(
                         onTap: () => setState(() => onChanged?.call(values[j])),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 26),
+                          padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
                           child: Row(
                             children: [
                               GlassCheckbox(
@@ -228,16 +228,20 @@ extension ContextExtensions on BuildContext {
       showModalBottomSheet(
           context: this,
           backgroundColor: Palette.background,
-          showDragHandle: true,
           enableDrag: true,
           builder: (BuildContext context) {
             return Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: Measures.vMarginSmall),
+                // Handle
+                Align(alignment: Alignment.center,child: Container(width: 32,height: 4,decoration: BoxDecoration(color: Palette.card,borderRadius: BorderRadius.circular(999)),)),
+                const SizedBox(height: Measures.vMarginSmall),
+
                 if (header != null)
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 26),
+                    padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
                     child: header,
                   ),
                 if (header != null && items != null)
@@ -261,7 +265,7 @@ extension ContextExtensions on BuildContext {
                                   },
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
-                                        horizontal: 26),
+                                        horizontal: Measures.hPadding),
                                     child: SizedBox(
                                       height: 60,
                                       child: Row(
@@ -286,6 +290,42 @@ extension ContextExtensions on BuildContext {
                   ),
                 const SizedBox(height: Measures.vMarginThin),
               ],
+            );
+          });
+
+  draggableBottomSheet({required Widget body}) =>
+      showModalBottomSheet(
+          context: this,
+          backgroundColor: Palette.background,
+          isScrollControlled: true,
+          useSafeArea: true,
+          builder: (_) {
+            return DraggableScrollableSheet(
+              initialChildSize: .35,
+              maxChildSize: 1,
+              expand: false,
+              snap: true,
+              snapSizes: const [.35,1],
+              builder: (BuildContext context, ScrollController scrollController) {
+                return SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: Measures.vMarginSmall),
+                      // Handle
+                      Align(alignment: Alignment.center,child: Container(width: 32,height: 4,decoration: BoxDecoration(color: Palette.card,borderRadius: BorderRadius.circular(999)),)),
+                      const SizedBox(height: Measures.vMarginSmall),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                          child: body,
+                        ),
+                      const SizedBox(height: Measures.vMarginThin),
+                    ],
+                  ),
+                );
+              },
             );
           });
 }

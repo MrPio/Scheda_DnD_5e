@@ -19,6 +19,7 @@ class NumericInputArgs {
   String? hint;
   TextStyle? style;
   FocusNode? focusNode;
+  bool autofocus;
 
   NumericInputArgs(
       {required this.min,
@@ -35,7 +36,8 @@ class NumericInputArgs {
       this.isDense = false,
       this.hint,
       this.style,
-      this.focusNode});
+      this.focusNode,
+      this.autofocus=false});
 }
 
 class NumericInput extends StatefulWidget {
@@ -116,6 +118,7 @@ class _NumericInputState extends State<NumericInput> {
           }
         },
         child: TextField(
+          autofocus: widget.args.autofocus,
             focusNode: widget.args.focusNode,
             onSubmitted: (_) {
               value = value;
