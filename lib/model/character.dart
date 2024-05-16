@@ -2301,7 +2301,7 @@ class Character with Comparable<Character> implements WithUID {
           (race.defaultSkills[skill] ?? 0) +
           (subRace?.defaultSkills[skill] ?? 0));
 
-  int skillModifier(Skill skill) => (skillValue(skill) - 10) ~/ 2;
+  int skillModifier(Skill skill) => (skillValue(skill)~/ 2 )-5 ;
 
   int subSkillValue(SubSkill subSkill) =>
       skillModifier(subSkill.skill) + (subSkills[subSkill] ?? 0) * competenceBonus;

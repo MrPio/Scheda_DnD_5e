@@ -41,10 +41,10 @@ class CharacterPage extends StatefulWidget {
 
 class _CharacterPageState extends State<CharacterPage> with TickerProviderStateMixin {
   List<Widget>? _screens;
-  late final TabController _tabController;
+  TabController? _tabController;
   late ScrollController _bodyController;
   bool _isSkillsExpanded = true;
-  late final Character _character, _oldCharacter;
+  Character? _character, _oldCharacter;
   late final TextEditingController _armorClassController,
       _speedController,
       _initiativeController,
@@ -60,12 +60,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
   @override
   void initState() {
-    _character = ModalRoute.of(context)!.settings.arguments as Character;
-    _oldCharacter = Character.fromJson(_character.toJSON());
-    _tabController = TabController(length: _screens!.length, vsync: this)
-      ..addListener(() {
-        setState(() {});
-      });
+
     Future.delayed(Duration.zero, () async {
       _isSkillsExpanded = await IOManager().get<bool>('character_page_isSkillsExpanded') ?? true;
       setState(() {});
@@ -81,13 +76,13 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
   @override
   void dispose() {
-    _character.armorClass = int.tryParse(_armorClassController.text) ?? _character.armorClass;
-    _character.speed =
-        double.tryParse(_speedController.text.replaceAll(_speedSuffix, '')) ?? _character.speed;
-    _character.initiative = int.tryParse(_initiativeController.text) ?? _character.initiative;
-    if (jsonEncode(_oldCharacter!.toJSON()) != jsonEncode(_character.toJSON())) {
+    _character!.armorClass = int.tryParse(_armorClassController.text) ?? _character!.armorClass;
+    _character!.speed =
+        double.tryParse(_speedController.text.replaceAll(_speedSuffix, '')) ?? _character!.speed;
+    _character!.initiative = int.tryParse(_initiativeController.text) ?? _character!.initiative;
+    if (jsonEncode(_oldCharacter!.toJSON()) != jsonEncode(_character!.toJSON())) {
       Future.delayed(Duration.zero, () async {
-        await DataManager().save(_character);
+        await DataManager().save(_character!);
         print('⬆️ Character Saved');
       });
     }
@@ -109,29 +104,33 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    _character ??= ModalRoute.of(context)!.settings.arguments as Character;
+    final character=_character!;
+    _oldCharacter ??= Character.fromJson(character.toJSON());
     var sheetAttributes = [
       SheetItemCard(
         iconPath: 'png/shield',
         text: 'CA',
-        value: _character.armorClass.toString(),
+        value: character.armorClass.toString(),
         numericInputArgs: NumericInputArgs(min: 0, max: 99, controller: _armorClassController),
       ),
+      // TODO HP  deve poter essere neg
       SheetItemCard(
         iconPath: 'png/hp',
         text: _isEditingMaxHp ? 'Max HP' : 'HP',
-        value: (_isEditingMaxHp ? _character.maxHp : _character.hp).toString(),
-        subValue: _isEditingMaxHp || _isEditingHp ? null : _character.maxHp.toString(),
+        value: (_isEditingMaxHp ? character.maxHp : character.hp).toString(),
+        subValue: _isEditingMaxHp || _isEditingHp ? null : character.maxHp.toString(),
         numericInputArgs: (_isEditingHp || _isEditingMaxHp)
             ? NumericInputArgs(
-                min: _isEditingHp ? -_character.maxHp : 0,
-                max: _isEditingHp ? _character.maxHp : 999,
+                min: _isEditingHp ? -character.maxHp : 0,
+                max: _isEditingHp ? character.maxHp : 999,
                 controller: _isEditingHp ? _hpController : _maxHpController,
-                defaultValue: (_isEditingHp ? _character.hp : _character.maxHp).toDouble(),
+                defaultValue: (_isEditingHp ? character.hp : character.maxHp).toDouble(),
                 onSubmitted: (value) {
                   if (_isEditingHp) {
-                    _character.hp = value.toInt();
+                    character.hp = value.toInt();
                   } else if (_isEditingMaxHp) {
-                    _character.maxHp = value.toInt();
+                    character.maxHp = value.toInt();
                   }
                 },
                 finalize: () {
@@ -156,17 +155,18 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
               _isEditingMaxHp = true;
             });
           }),
-          if (_character.hp < _character.maxHp)
+          if (character.hp < character.maxHp)
             BottomSheetItem('png/rest', 'Riposa', () {
               setState(() {
-                _character.hp = _character.maxHp;
+                character.hp = character.maxHp;
               });
               context.snackbar('La vita è stata ripristinata', backgroundColor: Palette.primaryBlue);
             }),
         ],
       ),
       SheetItemCard(
-          iconPath: 'png/bonus', text: 'BC', value: _character.competenceBonus.toSignedString()),
+          iconPath: 'png/bonus', text: 'BC', value: character.competenceBonus.toSignedString()),
+      // TODO torna a 9m
       SheetItemCard(
           iconPath: 'png/speed',
           text: 'Speed',
@@ -175,16 +175,16 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
             max: 99,
             controller: _speedController,
             decimalPlaces: 1,
-            defaultValue: _character.defaultSpeed,
+            defaultValue: character.defaultSpeed,
             suffix: _speedSuffix,
             valueRestriction: (value) =>
                 value % 1.5 < 1.5 - value % 1.5 ? value - value % 1.5 : value + value % 1.5,
           ),
-          value: '${_character.speed.toStringAsFixed(1)}m'),
+          value: '${character.speed.toStringAsFixed(1)}m'),
       SheetItemCard(
         iconPath: 'png/status',
         text: 'Allineamento',
-        value: _character.alignment.initials ?? '-',
+        value: character.alignment.initials ?? '-',
         bottomSheetHeader: GridRow(
             columnsCount: 3,
             children: ch.Alignment.values
@@ -192,7 +192,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       e,
                       onTap: (alignment) {
                         setState(() {
-                          _character.alignment = alignment;
+                          character.alignment = alignment;
                         });
 
                         Navigator.of(context).pop();
@@ -208,9 +208,9 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
             min: -20,
             max: 20,
             controller: _initiativeController,
-            defaultValue: _character.skillModifier(Skill.destrezza).toDouble(),
+            defaultValue: character.skillModifier(Skill.destrezza).toDouble(),
           ),
-          value: _character.initiative.toSignedString()),
+          value: character.initiative.toSignedString()),
     ];
     var sheetSkills = [
       Skill.forza,
@@ -225,17 +225,17 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
               text: skill.title,
               iconColor: skill.color,
               value: _selectedSkill == skill
-                  ? _character.skillValue(skill).toString()
-                  : _character.skillModifier(skill).toSignedString(),
-              subValue: _selectedSkill == skill ? null : _character.skillValue(skill).toString(),
+                  ? character.skillValue(skill).toString()
+                  : character.skillModifier(skill).toSignedString(),
+              subValue: _selectedSkill == skill ? null : character.skillValue(skill).toString(),
               numericInputArgs: _selectedSkill == skill
                   ? NumericInputArgs(
                       min: 3,
                       max: 20,
                       controller: _skillsControllers[Skill.values.indexOf(skill)],
-                      defaultValue: (_character.skillValue(skill)).toDouble(),
+                      defaultValue: (character.skillValue(skill)).toDouble(),
                       onSubmitted: (value) {
-                        _character.customSkills[skill] = value.toInt();
+                        character.customSkills[skill] = value.toInt();
                       },
                       finalize: () {
                         setState(() {
@@ -269,7 +269,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                     ),
                                   ),
                                   // SavingThrow value
-                                  Text(_character.savingThrowValue(skill).toSignedString(),
+                                  Text(character.savingThrowValue(skill).toSignedString(),
                                       style: Fonts.black(size: 14)),
                                   const SizedBox(width: Measures.hMarginSmall),
                                   // Saving Throw
@@ -277,7 +277,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                       width: 12,
                                       height: 12,
                                       decoration: BoxDecoration(
-                                          color: _character.class_.savingThrows.contains(skill)
+                                          color: character.class_.savingThrows.contains(skill)
                                               ? Palette.onBackground
                                               : Colors.transparent,
                                           border: Border.all(color: Palette.onBackground, width: 0.65),
@@ -295,8 +295,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                     child: InkWell(
                                       onTap: () {
                                         setState(() {
-                                          _character.subSkills[subSkill] =
-                                              ((_character.subSkills[subSkill] ?? 0) + 1) % 3;
+                                          character.subSkills[subSkill] =
+                                              ((character.subSkills[subSkill] ?? 0) + 1) % 3;
                                         });
                                       },
                                       child: Padding(
@@ -316,7 +316,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                               ),
                                             ),
                                             // SubSkill value
-                                            Text(_character.subSkillValue(subSkill).toSignedString(),
+                                            Text(character.subSkillValue(subSkill).toSignedString(),
                                                 style: Fonts.black(size: 14)),
                                             const SizedBox(width: Measures.hMarginSmall),
                                             // Competenza
@@ -324,7 +324,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                                 width: 12,
                                                 height: 12,
                                                 decoration: BoxDecoration(
-                                                    color: (_character.subSkills[subSkill] ?? 0) == 1
+                                                    color: (character.subSkills[subSkill] ?? 0) >= 1
                                                         ? Palette.onBackground
                                                         : Colors.transparent,
                                                     border: Border.all(
@@ -336,7 +336,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                                 width: 12,
                                                 height: 12,
                                                 decoration: BoxDecoration(
-                                                    color: (_character.subSkills[subSkill] ?? 0) >= 2
+                                                    color: (character.subSkills[subSkill] ?? 0) >= 2
                                                         ? Palette.onBackground
                                                         : Colors.transparent,
                                                     border: Border.all(
@@ -360,7 +360,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           const SizedBox(height: Measures.vMarginMed),
           // TODO here: class and multiclass
           // HP bar
-          HpBar(_character.hp, _character.maxHp),
+          HpBar(character.hp, character.maxHp),
           const SizedBox(height: Measures.vMarginSmall),
           // Attributes
           Text('Attributi', style: Fonts.black(size: 18)),
@@ -402,7 +402,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           GridRow(
               fill: true,
               columnsCount: 3,
-              children: _character.masteries
+              children: character.masteries
                       .map((e) => SheetItemCard(
                             text: e.title,
                             iconPath: e.masteryType.iconPath,
@@ -411,7 +411,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                   message: 'Sei sicuro di voler rimuovere **${e.title}**?',
                                   positiveCallback: () {
                                 setState(() {
-                                  _character.masteries.remove(e);
+                                  character.masteries.remove(e);
                                 });
                               },
                                   negativeCallback: () {},
@@ -450,13 +450,13 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                                     columnsCount: 3,
                                                     fill: true,
                                                     children: masteryType.masteries
-                                                        .where((e) => !_character.masteries.contains(e))
+                                                        .where((e) => !character.masteries.contains(e))
                                                         .map((mastery) => SheetItemCard(
                                                               text: mastery.title,
                                                               iconPath: masteryType.iconPath,
                                                               onTap: () {
                                                                 setState(() {
-                                                                  _character.masteries.add(mastery);
+                                                                  character.masteries.add(mastery);
                                                                 });
                                                                 Navigator.of(context).pop();
                                                               },
@@ -479,17 +479,16 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           GridRow(
               fill: true,
               columnsCount: 3,
-              children: _character.languages
+              children: character.languages
                       .map((e) => SheetItemCard(
                             text: e.title,
                             iconPath: 'png/language',
                             onTap: () {
-                              // if(e!=Language.comune)
                               context.popup('Stai per rimuovere un linguaggio',
                                   message: 'Sei sicuro di voler rimuovere **${e.title}**?',
                                   positiveCallback: () {
                                 setState(() {
-                                  _character.languages.remove(e);
+                                  character.languages.remove(e);
                                 });
                               },
                                   negativeCallback: () {},
@@ -516,13 +515,13 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                     columnsCount: 3,
                                     fill: true,
                                     children: Language.values
-                                        .where((e) => !_character.languages.contains(e))
+                                        .where((e) => !character.languages.contains(e))
                                         .map((e) => SheetItemCard(
                                               text: e.title,
                                               iconPath: 'png/language',
                                               onTap: () {
                                                 setState(() {
-                                                  _character.languages.add(e);
+                                                  character.languages.add(e);
                                                 });
                                                 Navigator.of(context).pop();
                                               },
@@ -541,6 +540,10 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
         ],
       ),
     ];
+    _tabController ??= TabController(length: _screens!.length, vsync: this)
+      ..addListener(() {
+        setState(() {});
+      });
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -565,16 +568,16 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                             inAppBar: true,
                           ),
                           Column(children: [
-                            Text(_character.name, style: Fonts.black(size: 18)),
+                            Text(character.name, style: Fonts.black(size: 18)),
                             Text(
-                                _character.subRace == null
-                                    ? _character.race.title
-                                    : '${_character.subRace!.title} (${_character.race.title})',
+                                character.subRace == null
+                                    ? character.race.title
+                                    : '${character.subRace!.title} (${character.race.title})',
                                 style: Fonts.light(size: 16))
                           ]),
                           Padding(
                             padding: const EdgeInsets.only(right: Measures.hPadding),
-                            child: Level(level: _character.level, maxLevel: 20),
+                            child: Level(level: character.level, maxLevel: 20),
                           ),
                         ],
                       ),

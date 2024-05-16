@@ -186,7 +186,7 @@ class _CharactersPageState extends State<CharactersPage> {
                 ],
               ),
               const SizedBox(width: Measures.hMarginBig*2),
-              Flexible(child: HpBar(character.hp, character.maxHp,showText: false,))
+              // Flexible(child: HpBar(character.hp, character.maxHp,showText: false,))
             ],
           ),
           bottomSheetItems: [

@@ -164,7 +164,7 @@ class DataManager {
       }
       newUID= await DatabaseManager().post(path, model.toJSON());
     }
-    if (model is WithUID) {
+    if (model is WithUID && mode == SaveMode.put) {
       await IOManager().serializeObjects(DatabaseManager.collections[model.runtimeType]!, caches[model.runtimeType]!);
       print('📙 Ho scritto su disco ${caches[model.runtimeType]!.length} ${model.runtimeType}s');
     }
