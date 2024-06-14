@@ -1,16 +1,23 @@
-# scheda_dnd_5e
+# Scheda D&D 5e
 
 "Scheda D&D 5e" è un’applicazione che consente a tutti i giocatori di Dungeons & Dragons di gestire i propri personaggi e le proprie campagne. Grazie alla nostra app si potranno creare e gestire i personaggi e le campagne condividendole con i propri gruppi di amici!
 
-## Getting Started
+## Screens
+### SignUp/SignIn
+<img height="600rem" src="https://github.com/MrPio/Scheda_DnD_5e/assets/22773005/2ebfe4d9-6e91-4232-9a07-ff18a743cbe8"></img>
 
-This project is a starting point for a Flutter application.
+### Dice roller
+<img height="600rem" src="https://github.com/MrPio/Scheda_DnD_5e/assets/22773005/5c6a0834-ac2b-4e49-ab5b-ec42e60e4065"></img>
 
-A few resources to get you started if this is your first Flutter project:
+### Characters management
+<img height="600rem" src="https://github.com/MrPio/Scheda_DnD_5e/assets/22773005/74e66a43-d1ac-4de5-a374-db2dfb0e6dbb"></img>
+<img height="600rem" src="https://github.com/MrPio/Scheda_DnD_5e/assets/22773005/b7bc7a1f-bd54-4d39-a260-6f1332bbc5a0"></img>
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Character creation
+<img height="600rem" src="https://github.com/MrPio/Scheda_DnD_5e/assets/22773005/9cd1bf51-2c60-4b88-a4bb-a0e21443c029"></img>
+<img height="600rem" src="https://github.com/MrPio/Scheda_DnD_5e/assets/22773005/ce5e72a9-7f6b-4395-8f8b-116e7e52ef9a"></img>
+
+
+### Enchantments
+<img height="600rem" src="https://github.com/MrPio/Scheda_DnD_5e/assets/22773005/d51e7867-ae78-4bae-8053-d88dd0d1f73c"></img>
