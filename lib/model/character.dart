@@ -2185,8 +2185,8 @@ class Character with Comparable<Character> implements WithUID {
   int get hp => _hp;
 
   set hp(int value) {
-    if (value < 0 || value > _maxHp) {
-      throw const FormatException('The HP must be non negative and less than max HP');
+    if (value < -_maxHp || value > _maxHp) {
+      throw const FormatException('The HP must be greater than -maxHp and less than maxHP');
     }
     _hp = value;
   }

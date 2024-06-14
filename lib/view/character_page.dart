@@ -122,7 +122,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
         subValue: _isEditingMaxHp || _isEditingHp ? null : character.maxHp.toString(),
         numericInputArgs: (_isEditingHp || _isEditingMaxHp)
             ? NumericInputArgs(
-                min: _isEditingHp ? -character.maxHp : 0,
+                min: _isEditingHp ? -character.maxHp : 1,
                 max: _isEditingHp ? character.maxHp : 999,
                 controller: _isEditingHp ? _hpController : _maxHpController,
                 defaultValue: (_isEditingHp ? character.hp : character.maxHp).toDouble(),

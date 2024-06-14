@@ -78,8 +78,7 @@ class _NumericInputState extends State<NumericInput> {
             .replaceAll(hasSign ? '--' : '-', hasSign ? '-' : '');
       }
       if (hasSign &&
-          widget.args.controller.text.contains('-') &&
-          widget.args.controller.text.indexOf('-') != 0) {
+          widget.args.controller.text.indexOf('-') > 0) {
         widget.args.controller.text =
             '-${widget.args.controller.text.replaceAll('-', '')}';
       }
@@ -96,6 +95,7 @@ class _NumericInputState extends State<NumericInput> {
         // value = 0;
       } else if (hasSign &&
           !widget.args.controller.text.contains('+') &&
+          !widget.args.controller.text.contains('-') &&
           value > 0) {
         widget.args.controller.text = '+$value';
       }

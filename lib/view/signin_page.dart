@@ -52,8 +52,6 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           isLoading=true;
         });
         Navigator.of(context).popAndPushNamed('/home');
-        // context.snackbar('Bentornato ${AccountManager().user.nickname}!',
-        //     backgroundColor: Palette.primaryBlue, bottomMargin: Measures.bottomBarHeight);
       }
 
         // 📘📘📘 FIREBASE FIRESTORE 📘📘📘
