@@ -16,6 +16,11 @@ class Clickable extends StatefulWidget {
   final Widget? child;
   final BottomSheetArgs? bottomSheetArgs;
 
+  /// Adds scale, opacity, and vibration effects to the tap of a widget.
+  ///
+  /// When [active], displays a bottom sheet on long press if [bottomSheetArgs] is provided,
+  /// calls [onDownChange] when the child's pressed state changes,
+  /// and invokes [onTap] callback on tap if provided or shows a bottom sheet if [bottomSheetArgs] is specified.
   const Clickable(
       {super.key, this.child, this.onTap, this.onDownChange, this.bottomSheetArgs, this.active = true});
 
