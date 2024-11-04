@@ -164,7 +164,7 @@ class Enchantment with Comparable<Enchantment> implements JSONSerializable {
   final List<Component> components;
   final String componentsDescription;
 
-  final Damage damage;
+  final Damage damage; // TODO: rename to "category"
 
   Enchantment(this.name,
       this.level,

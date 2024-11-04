@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
@@ -9,9 +7,9 @@ import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
-
 // import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/filter.dart';
+import 'package:scheda_dnd_5e/view/partial/clickable.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
@@ -33,14 +31,12 @@ class _CharactersPageState extends State<CharactersPage> {
   late final TextEditingController _searchController;
   late final List<Filter> _filters;
 
-  List<Character> get _characters =>
-      (AccountManager().user.characters.value ?? [])
-          .where((e) =>
-              _filters.every((filter) => filter.checkFilter(e)) &&
-              e.name.match(_searchController.text))
-          .toList()
-        ..sort()
-        ..reversed;
+  List<Character> get _characters => (AccountManager().user.characters.value ?? [])
+      .where((e) =>
+          _filters.every((filter) => filter.checkFilter(e)) && e.name.match(_searchController.text))
+      .toList()
+    ..sort()
+    ..reversed;
 
   bool get isDataReady => AccountManager().user.characters.value != null;
 
@@ -59,10 +55,7 @@ class _CharactersPageState extends State<CharactersPage> {
           (character, values) => values.contains(character.class_)),
       Filter<Character, Race>('Razza', Palette.primaryRed, Race.values,
           (character, values) => values.contains(character.race)),
-      Filter<Character, ch.Alignment>(
-          'Allineamento',
-          Palette.primaryBlue,
-          ch.Alignment.values,
+      Filter<Character, ch.Alignment>('Allineamento', Palette.primaryBlue, ch.Alignment.values,
           (character, values) => values.contains(character.alignment)),
     ];
     AccountManager().user.characters.addListener(() {
@@ -118,22 +111,15 @@ class _CharactersPageState extends State<CharactersPage> {
                             selected: _filters[i].selectedValues.isNotEmpty,
                             text: _filters[i].title,
                             color: _filters[i].color,
-                            onPressed: () => _filters[i]
-                                    .selectedValues
-                                    .isNotEmpty
-                                ? setState(
-                                    () => _filters[i].selectedValues.clear())
+                            onPressed: () => _filters[i].selectedValues.isNotEmpty
+                                ? setState(() => _filters[i].selectedValues.clear())
                                 : context.checkList(
                                     'Filtro su ${_filters[i].title.toLowerCase()}',
                                     values: _filters[i].values,
                                     color: _filters[i].color,
-                                    onChanged: (value) => setState(() =>
-                                        _filters[i]
-                                            .selectedValues
-                                            .toggle(value)),
-                                    value: (value) => _filters[i]
-                                        .selectedValues
-                                        .contains(value),
+                                    onChanged: (value) =>
+                                        setState(() => _filters[i].selectedValues.toggle(value)),
+                                    value: (value) => _filters[i].selectedValues.contains(value),
                                   )))),
               // Found enchantments
               const SizedBox(height: Measures.vMarginSmall),
@@ -141,8 +127,7 @@ class _CharactersPageState extends State<CharactersPage> {
               if (isDataReady && characters.isEmpty)
                 Padding(
                   padding: const EdgeInsets.only(top: Measures.vMarginSmall),
-                  child: Text('Niente da mostrare',
-                      style: Fonts.black(color: Palette.card2)),
+                  child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
                 ),
               Expanded(
                 child: ListView.builder(
@@ -161,56 +146,62 @@ class _CharactersPageState extends State<CharactersPage> {
   characterCard(Character character) => Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: GlassCard(
-          onTap: () => Navigator.of(context)
-              .pushNamed('/character', arguments: character),
-          bottomSheetHeader: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+          onTap: () => Navigator.of(context).pushNamed('/character', arguments: character),
+          bottomSheetArgs: BottomSheetArgs(
+              header: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      character.class_.iconPath.toIcon(),
-                      const SizedBox(width: Measures.hMarginBig),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: [
-                          Text(character.name, style: Fonts.bold()),
-                          Text(character.subRace?.title ?? character.race.title,
-                              style: Fonts.light()),
+                          character.class_.iconPath.toIcon(),
+                          const SizedBox(width: Measures.hMarginBig),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(character.name, style: Fonts.bold()),
+                              Text(character.subRace?.title ?? character.race.title,
+                                  style: Fonts.light()),
+                            ],
+                          )
                         ],
-                      )
+                      ),
                     ],
                   ),
+                  const SizedBox(width: Measures.hMarginBig * 2),
+                  // Flexible(child: HpBar(character.hp, character.maxHp,showText: false,))
                 ],
               ),
-              const SizedBox(width: Measures.hMarginBig*2),
-              // Flexible(child: HpBar(character.hp, character.maxHp,showText: false,))
-            ],
-          ),
-          bottomSheetItems: [
-            BottomSheetItem('png/open', 'Visualizza scheda', ()  =>
-              Navigator.of(context)
-                  .pushNamed('/character', arguments: character)
-            ),
-            BottomSheetItem('png/delete_2', 'Elimina', () async {
-              context.popup('Stai per eliminare un personaggio',message: 'Sei sicuro di voler eliminare **${character.name}**? (Potrai recuperarlo in seguito)',positiveCallback: ()async{
-                AccountManager().user.deleteCharacter(character.uid!);
-                setState(() {});
-                bool hasUndone = false;
-                await context.snackbar('Hai eliminato ${character.name}',
-                    backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight,undoCallback: () {
+              items: [
+                BottomSheetItem('png/open', 'Visualizza scheda',
+                    () => Navigator.of(context).pushNamed('/character', arguments: character)),
+                BottomSheetItem('png/delete_2', 'Elimina', () async {
+                  context.popup('Stai per eliminare un personaggio',
+                      message:
+                          'Sei sicuro di voler eliminare **${character.name}**? (Potrai recuperarlo in seguito)',
+                      positiveCallback: () async {
+                    AccountManager().user.deleteCharacter(character.uid!);
+                    setState(() {});
+                    bool hasUndone = false;
+                    await context.snackbar('Hai eliminato ${character.name}',
+                        backgroundColor: Palette.backgroundBlue,
+                        bottomMargin: Measures.bottomBarHeight, undoCallback: () {
                       hasUndone = true;
                       AccountManager().user.restoreCharacter(character.uid!);
                       setState(() {});
                     });
-                if (!hasUndone) {
-                  DataManager().save(AccountManager().user);
-                }
-              },negativeCallback: (){},positiveText: 'Si',negativeText: 'No',backgroundColor: Palette.background.withOpacity(0.5));
-            })
-          ],
+                    if (!hasUndone) {
+                      DataManager().save(AccountManager().user);
+                    }
+                  },
+                      negativeCallback: () {},
+                      positiveText: 'Si',
+                      negativeText: 'No',
+                      backgroundColor: Palette.background.withOpacity(0.5));
+                })
+              ]),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
             child: Column(
@@ -231,11 +222,8 @@ class _CharactersPageState extends State<CharactersPage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(character.name,
-                                      style: Fonts.bold()),
-                                  Text(
-                                      character.subRace?.title ??
-                                          character.race.title,
+                                  Text(character.name, style: Fonts.bold()),
+                                  Text(character.subRace?.title ?? character.race.title,
                                       style: Fonts.light()),
                                 ],
                               )
@@ -265,8 +253,7 @@ class _CharactersPageState extends State<CharactersPage> {
       final startTime = DateTime.now();
       await AccountManager().reloadUser();
       await DataManager().loadUserCharacters(AccountManager().user);
-      print(
-          'CharactersPage:refresh() --> ${DateTime.now().difference(startTime).inMilliseconds} millis');
+      print('CharactersPage:refresh() --> ${DateTime.now().difference(startTime).inMilliseconds} millis');
     });
   }
 }

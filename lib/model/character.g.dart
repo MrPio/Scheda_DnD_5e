@@ -74,6 +74,9 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'initiative': instance.initiative,
       '_inventory': instance._inventory,
       'speed': instance.speed,
+      'skills': instance.skills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
+      'skillsModifier': instance.skillsModifier
+          .map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
     };
 
 const _$ClassEnumMap = {

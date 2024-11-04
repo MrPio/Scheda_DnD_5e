@@ -11,6 +11,8 @@ import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 import 'package:scheda_dnd_5e/view/partial/rule.dart';
 
+import '../view/partial/clickable.dart';
+
 class BottomSheetItem {
   final String iconPath, text;
   final Function() onTap;
@@ -40,8 +42,7 @@ extension ContextExtensions on BuildContext {
             shadowColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.transparent,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             contentPadding: EdgeInsets.zero,
             content: ClipRRect(
               borderRadius: BorderRadius.circular(12),
@@ -56,8 +57,8 @@ extension ContextExtensions on BuildContext {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: noContentHPadding ? Measures.hPadding : 0),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: noContentHPadding ? Measures.hPadding : 0),
                         child: Text(title, style: Fonts.bold()),
                       ),
                       const SizedBox(height: Measures.vMarginSmall),
@@ -75,17 +76,15 @@ extension ContextExtensions on BuildContext {
                                       p: Fonts.light(size: 15),
                                       tableBody: Fonts.light(size: 12),
                                       listBullet: Fonts.light(size: 15),
-                                      tableCellsPadding:
-                                          const EdgeInsets.all(4))),
+                                      tableCellsPadding: const EdgeInsets.all(4))),
                             ),
                           ),
                         ),
-                      if (child != null)
-                        Flexible(child: SingleChildScrollView(child: child)),
+                      if (child != null) Flexible(child: SingleChildScrollView(child: child)),
                       const SizedBox(height: Measures.vMarginThin),
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: noContentHPadding ? Measures.hPadding : 0),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: noContentHPadding ? Measures.hPadding : 0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -97,8 +96,7 @@ extension ContextExtensions on BuildContext {
                                     Navigator.pop(this);
                                   }
                                 },
-                                child: Text(positiveText.toUpperCase(),
-                                    style: Fonts.bold(size: 15)),
+                                child: Text(positiveText.toUpperCase(), style: Fonts.bold(size: 15)),
                               ),
                             if (negativeText != null)
                               TextButton(
@@ -106,8 +104,7 @@ extension ContextExtensions on BuildContext {
                                   negativeCallback?.call();
                                   Navigator.pop(this);
                                 },
-                                child: Text(negativeText.toUpperCase(),
-                                    style: Fonts.bold(size: 15)),
+                                child: Text(negativeText.toUpperCase(), style: Fonts.bold(size: 15)),
                               ),
                           ],
                         ),
@@ -149,11 +146,7 @@ extension ContextExtensions on BuildContext {
         // positiveCallback: positiveCallback,
         canPopPositiveCallback: () =>
             selectionRequirement == null ||
-            selectionRequirement ==
-                values
-                    .map((e) => (value?.call(e) ?? false) ? 1 : 0)
-                    .toList()
-                    .sum(),
+            selectionRequirement == values.map((e) => (value?.call(e) ?? false) ? 1 : 0).toList().sum(),
         child: StatefulBuilder(
           builder: (context, setState) => Column(
             children: List.generate(
@@ -169,8 +162,7 @@ extension ContextExtensions on BuildContext {
                               GlassCheckbox(
                                 isRadio: isRadio,
                                 value: value?.call(values[j]),
-                                onChanged: () =>
-                                    setState(() => onChanged?.call(values[j])),
+                                onChanged: () => setState(() => onChanged?.call(values[j])),
                                 color: color,
                               ),
                               Flexible(
@@ -189,143 +181,149 @@ extension ContextExtensions on BuildContext {
         ));
   }
 
-  snackbar(String message,
-          {Color backgroundColor = Palette.background,
-          double bottomMargin = Measures.vMarginSmall,
-          Function()? undoCallback,})async =>
-      await ScaffoldMessenger.of(this).showSnackBar(
-        SnackBar(
-          duration: undoCallback==null?const Duration(seconds: 3):const Duration(seconds: 6),
-          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-          margin: EdgeInsets.only(
-              left: Measures.hPadding,
-              right: Measures.hPadding,
-              bottom: bottomMargin),
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(25))),
-          behavior: SnackBarBehavior.floating,
-          backgroundColor: backgroundColor,
-          elevation: 0,
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(message, style: Fonts.regular()),
-              if(undoCallback!=null)
-                TextButton(
-                  onPressed: (){
-                    ScaffoldMessenger.of(this).clearSnackBars();
-                    undoCallback();
-                  },
-                  child: Text('ANNULLA',
-                      style: Fonts.bold(size: 15)),
-                )
-            ],
-          ),
-        ),
-      ).closed;
+  snackbar(
+    String message, {
+    Color backgroundColor = Palette.background,
+    double bottomMargin = Measures.vMarginSmall,
+    Function()? undoCallback,
+  }) async =>
+      await ScaffoldMessenger.of(this)
+          .showSnackBar(
+            SnackBar(
+              duration: undoCallback == null ? const Duration(seconds: 3) : const Duration(seconds: 6),
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+              margin: EdgeInsets.only(
+                  left: Measures.hPadding, right: Measures.hPadding, bottom: bottomMargin),
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: backgroundColor,
+              elevation: 0,
+              content: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(message, style: Fonts.regular()),
+                  if (undoCallback != null)
+                    TextButton(
+                      onPressed: () {
+                        ScaffoldMessenger.of(this).clearSnackBars();
+                        undoCallback();
+                      },
+                      child: Text('ANNULLA', style: Fonts.bold(size: 15)),
+                    )
+                ],
+              ),
+            ),
+          )
+          .closed;
 
-  bottomSheet({Widget? header, List<BottomSheetItem>? items}) =>
-      showModalBottomSheet(
-          context: this,
-          backgroundColor: Palette.background,
-          enableDrag: true,
-          builder: (BuildContext context) {
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: Measures.vMarginSmall),
-                // Handle
-                Align(alignment: Alignment.center,child: Container(width: 32,height: 4,decoration: BoxDecoration(color: Palette.card,borderRadius: BorderRadius.circular(999)),)),
-                const SizedBox(height: Measures.vMarginSmall),
+  bottomSheet(BottomSheetArgs args) => showModalBottomSheet(
+      context: this,
+      backgroundColor: Palette.background,
+      enableDrag: true,
+      builder: (BuildContext context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: Measures.vMarginSmall),
+            // Handle
+            Align(
+                alignment: Alignment.center,
+                child: Container(
+                  width: 32,
+                  height: 4,
+                  decoration:
+                      BoxDecoration(color: Palette.card, borderRadius: BorderRadius.circular(999)),
+                )),
+            const SizedBox(height: Measures.vMarginSmall),
 
-                if (header != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-                    child: header,
-                  ),
-                if (header != null && items != null)
-                  const Padding(
-                    padding: EdgeInsets.only(top: Measures.vMarginSmall),
-                    child: Rule(),
-                  ),
-                if (items != null)
-                  Column(
-                    children: [
-                          const SizedBox(height: Measures.vMarginThin) as Widget
-                        ] +
-                        items
-                            .map(
-                              (e) => Material(
-                                color: Colors.transparent,
-                                child: InkWell(
-                                  onTap: (){
-                                    Navigator.of(context).pop();
-                                    e.onTap();
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: Measures.hPadding),
-                                    child: SizedBox(
-                                      height: 60,
-                                      child: Row(
-                                        children: [
-                                          e.iconPath.toIcon(),
-                                          const SizedBox(
-                                              width: Measures.hMarginBig),
-                                          Flexible(
-                                              child: Text(e.text,
-                                                  style: Fonts.bold(),
-                                                  overflow:
-                                                      TextOverflow.ellipsis)),
-                                        ],
-                                      ),
-                                    ),
+            if (args.header != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                child: args.header,
+              ),
+            if (args.header != null && args.items != null)
+              const Padding(
+                padding: EdgeInsets.only(top: Measures.vMarginSmall),
+                child: Rule(),
+              ),
+            if (args.items != null)
+              Column(
+                children: [const SizedBox(height: Measures.vMarginThin) as Widget] +
+                    args.items!
+                        .map(
+                          (e) => Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).pop();
+                                e.onTap();
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                                child: SizedBox(
+                                  height: 60,
+                                  child: Row(
+                                    children: [
+                                      e.iconPath.toIcon(),
+                                      const SizedBox(width: Measures.hMarginBig),
+                                      Flexible(
+                                          child: Text(e.text,
+                                              style: Fonts.bold(), overflow: TextOverflow.ellipsis)),
+                                    ],
                                   ),
                                 ),
                               ),
-                            )
-                            .toList()
-                            .cast<Widget>(),
-                  ),
-                const SizedBox(height: Measures.vMarginThin),
-              ],
-            );
-          });
+                            ),
+                          ),
+                        )
+                        .toList()
+                        .cast<Widget>(),
+              ),
+            const SizedBox(height: Measures.vMarginThin),
+          ],
+        );
+      });
 
-  draggableBottomSheet({required Widget body}) =>
-      showModalBottomSheet(
-          context: this,
-          backgroundColor: Palette.background,
-          isScrollControlled: true,
-          useSafeArea: true,
-          builder: (_) {
-            return DraggableScrollableSheet(
-              initialChildSize: .35,
-              maxChildSize: 1,
-              expand: false,
-              snap: true,
-              snapSizes: const [.35,1],
-              builder: (BuildContext context, ScrollController scrollController) {
-                return SingleChildScrollView(
-                  controller: scrollController,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: Measures.vMarginSmall),
-                      // Handle
-                      Align(alignment: Alignment.center,child: Container(width: 32,height: 4,decoration: BoxDecoration(color: Palette.card,borderRadius: BorderRadius.circular(999)),)),
-                      const SizedBox(height: Measures.vMarginSmall),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-                          child: body,
-                        ),
-                      const SizedBox(height: Measures.vMarginThin),
-                    ],
+  draggableBottomSheet({required Widget body}) => showModalBottomSheet(
+      context: this,
+      backgroundColor: Palette.background,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) {
+        return DraggableScrollableSheet(
+          initialChildSize: .35,
+          maxChildSize: 1,
+          expand: false,
+          snap: true,
+          snapSizes: const [.35, 1],
+          builder: (BuildContext context, ScrollController scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: Measures.vMarginSmall),
+                  // Handle
+                  Align(
+                      alignment: Alignment.center,
+                      child: Container(
+                        width: 32,
+                        height: 4,
+                        decoration:
+                            BoxDecoration(color: Palette.card, borderRadius: BorderRadius.circular(999)),
+                      )),
+                  const SizedBox(height: Measures.vMarginSmall),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                    child: body,
                   ),
-                );
-              },
+                  const SizedBox(height: Measures.vMarginThin),
+                ],
+              ),
             );
-          });
+          },
+        );
+      });
 }

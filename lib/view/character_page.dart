@@ -1,11 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
@@ -14,20 +10,19 @@ import 'package:scheda_dnd_5e/extension_function/int_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
+import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
-import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
-import 'package:scheda_dnd_5e/view/partial/grid_column.dart';
-import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
+import 'package:scheda_dnd_5e/view/partial/clickable.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
+import 'package:scheda_dnd_5e/view/partial/grid_column.dart';
+import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
 import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/partial/rule.dart';
-import 'package:scroll_to_hide/scroll_to_hide.dart';
-import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 
 import '../model/character.dart' hide Alignment;
 import 'partial/gradient_background.dart';
@@ -60,7 +55,6 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
   @override
   void initState() {
-
     Future.delayed(Duration.zero, () async {
       _isSkillsExpanded = await IOManager().get<bool>('character_page_isSkillsExpanded') ?? true;
       setState(() {});
@@ -105,8 +99,31 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     _character ??= ModalRoute.of(context)!.settings.arguments as Character;
-    final character=_character!;
+    final character = _character!;
     _oldCharacter ??= Character.fromJson(character.toJSON());
+    final hpBottomSheetArgs = BottomSheetArgs(
+      items: [
+        BottomSheetItem('png/hp', 'Modifica HP', () {
+          setState(() {
+            _isEditingHp = true;
+            _isEditingMaxHp = false;
+          });
+        }),
+        BottomSheetItem('png/max_hp', 'Modifica HP Massimi', () {
+          setState(() {
+            _isEditingHp = false;
+            _isEditingMaxHp = true;
+          });
+        }),
+        if (character.hp < character.maxHp)
+          BottomSheetItem('png/rest', 'Riposa', () {
+            setState(() {
+              character.hp = character.maxHp;
+            });
+            context.snackbar('La vita è stata ripristinata', backgroundColor: Palette.primaryBlue);
+          }),
+      ],
+    );
     var sheetAttributes = [
       SheetItemCard(
         iconPath: 'png/shield',
@@ -114,58 +131,35 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
         value: character.armorClass.toString(),
         numericInputArgs: NumericInputArgs(min: 0, max: 99, controller: _armorClassController),
       ),
-      // TODO HP  deve poter essere neg
       SheetItemCard(
-        iconPath: 'png/hp',
-        text: _isEditingMaxHp ? 'Max HP' : 'HP',
-        value: (_isEditingMaxHp ? character.maxHp : character.hp).toString(),
-        subValue: _isEditingMaxHp || _isEditingHp ? null : character.maxHp.toString(),
-        numericInputArgs: (_isEditingHp || _isEditingMaxHp)
-            ? NumericInputArgs(
-                min: _isEditingHp ? -character.maxHp : 1,
-                max: _isEditingHp ? character.maxHp : 999,
-                controller: _isEditingHp ? _hpController : _maxHpController,
-                defaultValue: (_isEditingHp ? character.hp : character.maxHp).toDouble(),
-                onSubmitted: (value) {
-                  if (_isEditingHp) {
-                    character.hp = value.toInt();
-                  } else if (_isEditingMaxHp) {
-                    character.maxHp = value.toInt();
-                  }
-                },
-                finalize: () {
-                  setState(() {
-                    _isEditingHp = false;
-                    _isEditingMaxHp = false;
-                  });
-                },
-                autofocus: true,
-              )
-            : null,
-        bottomSheetItems: [
-          BottomSheetItem('png/hp', 'Modifica HP', () {
-            setState(() {
-              _isEditingHp = true;
-              _isEditingMaxHp = false;
-            });
-          }),
-          BottomSheetItem('png/max_hp', 'Modifica HP Massimi', () {
-            setState(() {
-              _isEditingHp = false;
-              _isEditingMaxHp = true;
-            });
-          }),
-          if (character.hp < character.maxHp)
-            BottomSheetItem('png/rest', 'Riposa', () {
-              setState(() {
-                character.hp = character.maxHp;
-              });
-              context.snackbar('La vita è stata ripristinata', backgroundColor: Palette.primaryBlue);
-            }),
-        ],
-      ),
-      SheetItemCard(
-          iconPath: 'png/bonus', text: 'BC', value: character.competenceBonus.toSignedString()),
+          iconPath: 'png/hp',
+          text: _isEditingMaxHp ? 'Max HP' : 'HP',
+          value: (_isEditingMaxHp ? character.maxHp : character.hp).toString(),
+          subValue: _isEditingMaxHp || _isEditingHp ? null : character.maxHp.toString(),
+          numericInputArgs: (_isEditingHp || _isEditingMaxHp)
+              ? NumericInputArgs(
+                  min: _isEditingHp ? -character.maxHp : 1,
+                  max: _isEditingHp ? character.maxHp : 999,
+                  controller: _isEditingHp ? _hpController : _maxHpController,
+                  defaultValue: (_isEditingHp ? character.hp : character.maxHp).toDouble(),
+                  onSubmitted: (value) {
+                    if (_isEditingHp) {
+                      character.hp = value.toInt();
+                    } else if (_isEditingMaxHp) {
+                      character.maxHp = value.toInt();
+                    }
+                  },
+                  finalize: () {
+                    setState(() {
+                      _isEditingHp = false;
+                      _isEditingMaxHp = false;
+                    });
+                  },
+                  autofocus: true,
+                )
+              : null,
+          bottomSheetArgs: hpBottomSheetArgs),
+      SheetItemCard(iconPath: 'png/bonus', text: 'BC', value: character.competenceBonus.toSignedString()),
       // TODO torna a 9m
       SheetItemCard(
           iconPath: 'png/speed',
@@ -185,21 +179,23 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
         iconPath: 'png/status',
         text: 'Allineamento',
         value: character.alignment.initials ?? '-',
-        bottomSheetHeader: GridRow(
-            columnsCount: 3,
-            children: ch.Alignment.values
-                .map((e) => AlignmentCard(
-                      e,
-                      onTap: (alignment) {
-                        setState(() {
-                          character.alignment = alignment;
-                        });
+        bottomSheetArgs: BottomSheetArgs(
+          header: GridRow(
+              columnsCount: 3,
+              children: ch.Alignment.values
+                  .map((e) => AlignmentCard(
+                        e,
+                        onTap: (alignment) {
+                          setState(() {
+                            character.alignment = alignment;
+                          });
 
-                        Navigator.of(context).pop();
-                      },
-                      isSmall: e == ch.Alignment.nessuno,
-                    ))
-                .toList()),
+                          Navigator.of(context).pop();
+                        },
+                        isSmall: e == ch.Alignment.nessuno,
+                      ))
+                  .toList()),
+        ),
       ),
       SheetItemCard(
           iconPath: 'png/initiative',
@@ -360,7 +356,9 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           const SizedBox(height: Measures.vMarginMed),
           // TODO here: class and multiclass
           // HP bar
-          HpBar(character.hp, character.maxHp),
+          // TODO onTap on HPBAr open bottomsheet
+          // TODO when closing window and saving, update character list hps
+          HpBar(character.hp, character.maxHp, bottomSheetArgs: hpBottomSheetArgs),
           const SizedBox(height: Measures.vMarginSmall),
           // Attributes
           Text('Attributi', style: Fonts.black(size: 18)),
@@ -504,34 +502,31 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                         height: Measures.sheetCardSmallHeight,
                         isLight: true,
                         clickable: true,
-                        onTap: () {
-                          context.bottomSheet(
+                        bottomSheetArgs: BottomSheetArgs(
                             header: Column(
-                              children: [
-                                const SizedBox(height: Measures.vMarginThin),
-                                Text('Aggiungi un linguaggio', style: Fonts.bold(size: 18)),
-                                const SizedBox(height: Measures.vMarginMed),
-                                GridRow(
-                                    columnsCount: 3,
-                                    fill: true,
-                                    children: Language.values
-                                        .where((e) => !character.languages.contains(e))
-                                        .map((e) => SheetItemCard(
-                                              text: e.title,
-                                              iconPath: 'png/language',
-                                              onTap: () {
-                                                setState(() {
-                                                  character.languages.add(e);
-                                                });
-                                                Navigator.of(context).pop();
-                                              },
-                                            ))
-                                        .toList()),
-                                const SizedBox(height: Measures.vMarginMed),
-                              ],
-                            ),
-                          );
-                        },
+                          children: [
+                            const SizedBox(height: Measures.vMarginThin),
+                            Text('Aggiungi un linguaggio', style: Fonts.bold(size: 18)),
+                            const SizedBox(height: Measures.vMarginMed),
+                            GridRow(
+                                columnsCount: 3,
+                                fill: true,
+                                children: Language.values
+                                    .where((e) => !character.languages.contains(e))
+                                    .map((e) => SheetItemCard(
+                                          text: e.title,
+                                          iconPath: 'png/language',
+                                          onTap: () {
+                                            setState(() {
+                                              character.languages.add(e);
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        ))
+                                    .toList()),
+                            const SizedBox(height: Measures.vMarginMed),
+                          ],
+                        )),
                         child: Center(child: 'add'.toIcon(height: 16)))
                   ]),
           // const SizedBox(height: Measures.vMarginSmall),
