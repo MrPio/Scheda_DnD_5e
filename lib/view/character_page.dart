@@ -11,6 +11,7 @@ import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
+import 'package:scheda_dnd_5e/view/characters_page.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
@@ -53,6 +54,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
   bool _isEditingHp = false, _isEditingMaxHp = false;
   Skill? _selectedSkill;
 
+  bool get hasChanges => jsonEncode(_oldCharacter!.toJSON()) != jsonEncode(_character!.toJSON());
+
   @override
   void initState() {
     Future.delayed(Duration.zero, () async {
@@ -70,29 +73,34 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
   @override
   void dispose() {
+    // Assign the EditTexts values to the character object fields
     _character!.armorClass = int.tryParse(_armorClassController.text) ?? _character!.armorClass;
     _character!.speed =
         double.tryParse(_speedController.text.replaceAll(_speedSuffix, '')) ?? _character!.speed;
     _character!.initiative = int.tryParse(_initiativeController.text) ?? _character!.initiative;
-    if (jsonEncode(_oldCharacter!.toJSON()) != jsonEncode(_character!.toJSON())) {
+
+    // If the character is any different from `initState`, save it.
+    if (hasChanges) {
       Future.delayed(Duration.zero, () async {
         await DataManager().save(_character!);
         print('⬆️ Character Saved');
       });
     }
+
+    // Dispose the controllers
     for (var e in [
           _armorClassController,
           _speedController,
           _initiativeController,
           _hpController,
-          _maxHpController
+          _maxHpController,
+          _tabController,
+          _bodyController
         ] +
         _skillsControllers +
         _subSkillsControllers) {
-      e.dispose();
+      e?.dispose();
     }
-    _tabController?.dispose();
-    _bodyController.dispose();
     super.dispose();
   }
 
@@ -355,9 +363,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
         children: [
           const SizedBox(height: Measures.vMarginMed),
           // TODO here: class and multiclass
-          // HP bar
-          // TODO onTap on HPBAr open bottomsheet
           // TODO when closing window and saving, update character list hps
+          // HP bar
           HpBar(character.hp, character.maxHp, bottomSheetArgs: hpBottomSheetArgs),
           const SizedBox(height: Measures.vMarginSmall),
           // Attributes
@@ -559,8 +566,9 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Chevron(
+                          Chevron(
                             inAppBar: true,
+                            popArgs: CharacterPageToCharactersPageArgs(noChanges: hasChanges),
                           ),
                           Column(children: [
                             Text(character.name, style: Fonts.black(size: 18)),
@@ -644,16 +652,4 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       ),
     );
   }
-
-  descriptionEntry({required String key, required String value}) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5),
-        child: RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(text: '$key: ', style: Fonts.bold(size: 18)),
-              TextSpan(text: value, style: Fonts.light(size: 18)),
-            ],
-          ),
-        ),
-      );
 }

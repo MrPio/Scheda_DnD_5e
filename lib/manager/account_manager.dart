@@ -39,21 +39,19 @@ class AccountManager {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   late User user;
 
-  // Check if a user auth exists, and if so, load the object from the db
+  /// Check if a user auth exists, and if so, load the object from the db
   Future<bool> cacheSignIn() async {
     if (_auth.currentUser != null) {
-      user =
-          await DataManager().load(_auth.currentUser!.uid, useCache: true);
+      user = await DataManager().load(_auth.currentUser!.uid, useCache: true);
     }
     return _auth.currentUser != null;
   }
 
   Future<SignInStatus> signIn(String emailAddress, String password) async {
     try {
-      final userCredential = await _auth.signInWithEmailAndPassword(
-          email: emailAddress, password: password);
-      user = await DataManager()
-          .load(userCredential.user!.uid, useCache: false);
+      final userCredential =
+          await _auth.signInWithEmailAndPassword(email: emailAddress, password: password);
+      user = await DataManager().load(userCredential.user!.uid, useCache: false);
     } catch (e) {
       if (e.toString().contains("type 'Null' is not a subtype")) {
         return SignInStatus.userNotInDatabase;
@@ -92,8 +90,7 @@ class AccountManager {
     if (await GoogleSignIn().isSignedIn()) {
       await GoogleSignIn().disconnect();
     }
-    final GoogleSignInAccount? googleSignInAccount =
-        await googleSignIn.signIn();
+    final GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
 
     if (googleSignInAccount != null) {
       final GoogleSignInAuthentication googleSignInAuthentication =
@@ -113,17 +110,14 @@ class AccountManager {
       if (userCredential != null) {
         if (userCredential.additionalUserInfo!.isNewUser) {
           print('👤 SignUp with Google');
-          user = User(
-              email: userCredential.user!.email!,
-              nickname: userCredential.user!.displayName!);
+          user = User(email: userCredential.user!.email!, nickname: userCredential.user!.displayName!);
           user.uid = userCredential.user!.uid;
           DataManager().save(user);
           return SignInStatus.successNewAccount;
         } else {
           print('👤 SignIn with Google');
           print('📘${userCredential.additionalUserInfo!.profile}');
-          user = await DataManager()
-              .load(userCredential.user!.uid, useCache: false);
+          user = await DataManager().load(userCredential.user!.uid, useCache: false);
           return SignInStatus.success;
         }
       } else {
@@ -147,12 +141,14 @@ class AccountManager {
     }
   }
 
-  reloadUser()async {
-    User newUser=await DataManager().load(user.uid!,useCache: false);
-    user.charactersUIDs=newUser.charactersUIDs;
-    user.campaignsUIDs=newUser.campaignsUIDs;
+  /// Reload the user from the database skipping the cache
+  reloadUser() async {
+    User newUser = await DataManager().load(user.uid!, useCache: false);
+    user.charactersUIDs = newUser.charactersUIDs;
+    user.campaignsUIDs = newUser.campaignsUIDs;
+    // ...
     // All other fields that may have changed
-    // Note: I intentionally do not reassign the user with the new instance
-    // in order to maintain any listener to the ValueListener fields
+    // Note: I intentionally avoid reassigning the new instance
+    // in order to preserve any listener to the `ValueListener` fields
   }
 }

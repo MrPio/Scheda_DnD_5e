@@ -326,4 +326,7 @@ extension ContextExtensions on BuildContext {
           },
         );
       });
+
+  goto(String routeName, {Object? arguments, Function(Object?)? then}) =>
+      Navigator.of(this).pushNamed(routeName, arguments: arguments).then((value) => then?.call(value));
 }

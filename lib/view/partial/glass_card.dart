@@ -1,15 +1,7 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
-import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
-import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../constant/fonts.dart';
-import '../../constant/measures.dart';
 
 class GlassCard extends StatefulWidget {
   final double? width, height, shimmerHeight;
@@ -46,23 +38,47 @@ class _GlassCardState extends State<GlassCard> {
   @override
   Widget build(BuildContext context) {
     return Clickable(
-      active: widget.clickable,
+      active: widget.clickable && !widget.isShimmer,
       onTap: widget.onTap,
       bottomSheetArgs: widget.bottomSheetArgs,
       onDownChange: (value) => setState(() => _down = value),
-      child: SizedBox(
-        width: widget.width,
-        height: widget.height,
-        child: AnimatedContainer(
-          curve: Curves.easeOut,
-          duration: const Duration(milliseconds: 120),
-          decoration: BoxDecoration(
-              color:
-                  Palette.card.withOpacity(Palette.card.opacity * _opacity * (widget.isLight ? 0.35 : 1)),
-              borderRadius: BorderRadius.circular(_borderRadius)),
-          child: widget.child,
-        ),
-      ),
+      child: widget.isShimmer
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(_borderRadius),
+                child: Shimmer(
+                  gradient: LinearGradient(
+                    begin: const Alignment(1, 1),
+                    end: const Alignment(-1, -1),
+                    colors: [
+                      Palette.card,
+                      Palette.card.withOpacity(Palette.card.opacity * 2),
+                      Palette.card
+                    ],
+                    stops: const [0.43, 0.5, 0.57],
+                  ),
+                  child: Container(
+                    width: double.infinity,
+                    height: widget.shimmerHeight,
+                    color: Colors.grey[800],
+                  ),
+                ),
+              ),
+            )
+          : SizedBox(
+              width: widget.width,
+              height: widget.height,
+              child: AnimatedContainer(
+                curve: Curves.easeOut,
+                duration: const Duration(milliseconds: 120),
+                decoration: BoxDecoration(
+                    color: Palette.card
+                        .withOpacity(Palette.card.opacity * _opacity * (widget.isLight ? 0.35 : 1)),
+                    borderRadius: BorderRadius.circular(_borderRadius)),
+                child: widget.child,
+              ),
+            ),
     );
   }
 }

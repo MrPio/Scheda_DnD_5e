@@ -43,7 +43,7 @@ class DataManager {
     Character: ()=>IOManager().deserializeObjects<Character>(DatabaseManager.collections[Character]!),
   };
 
-  // This should be called after obtaining the auth
+  /// This should be called after obtaining the auth
   fetchData() async {
     print('========================================');
     // Loading enchantments ============================================
@@ -81,7 +81,7 @@ class DataManager {
     print('========================================');
   }
 
-  // Load a single object from a given UID
+  /// Load a single object from a given UID
   Future<T> load<T extends WithUID>(String uid, {bool useCache = true}) async {
     if (useCache) {
       if (T.runtimeType == User) {
@@ -103,7 +103,7 @@ class DataManager {
     return obj;
   }
 
-  // Load a multiple objects from a given list of UIDs
+  /// Load a multiple objects from a given list of UIDs
   Future<List<T>> loadList<T extends WithUID>(List<String> uids,
       {bool useCache = true}) async {
     List<T> objects = [];
@@ -138,11 +138,11 @@ class DataManager {
     return objects;
   }
 
-  // Load the characters of a given user
+  /// Load the characters of a given user
   loadUserCharacters(User user) async =>
       user.characters.value = await loadList(user.charactersUIDs);
 
-  // Save Model objects
+  /// Save Model objects
   Future<String?> save(JSONSerializable model,
       [SaveMode mode = SaveMode.put]) async {
     String path = DatabaseManager.collections[model.runtimeType] ?? '';

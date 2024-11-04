@@ -7,6 +7,7 @@ import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
+
 // import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/filter.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
@@ -17,8 +18,16 @@ import 'package:scheda_dnd_5e/view/partial/level.dart';
 
 import '../constant/fonts.dart';
 import '../constant/measures.dart';
+import 'character_page.dart';
 import 'home_page.dart';
 import 'partial/radio_button.dart';
+
+/// The arguments to receive when CharacterPage navigates to this page
+class CharacterPageToCharactersPageArgs {
+  final bool noChanges;
+
+  CharacterPageToCharactersPageArgs({this.noChanges = false});
+}
 
 class CharactersPage extends StatefulWidget {
   const CharactersPage({super.key});
@@ -42,14 +51,9 @@ class _CharactersPageState extends State<CharactersPage> {
 
   @override
   void initState() {
-    HomePage.onFabTaps[widget.runtimeType] = () async {
-      await Navigator.of(context).pushNamed('/create_character');
-      refresh();
-    };
-    _searchController = TextEditingController()
-      ..addListener(() {
-        setState(() {});
-      });
+    HomePage.onFabTaps[widget.runtimeType] =
+        () => context.goto('/create_character', then: (_) => refresh());
+
     _filters = [
       Filter<Character, Class>('Classe', Palette.primaryGreen, Class.values,
           (character, values) => values.contains(character.class_)),
@@ -58,6 +62,14 @@ class _CharactersPageState extends State<CharactersPage> {
       Filter<Character, ch.Alignment>('Allineamento', Palette.primaryBlue, ch.Alignment.values,
           (character, values) => values.contains(character.alignment)),
     ];
+
+    // Refresh UI when the search string changes
+    _searchController = TextEditingController()
+      ..addListener(() {
+        setState(() {});
+      });
+
+    // Refresh UI when the user's characters list changes
     AccountManager().user.characters.addListener(() {
       if (mounted) {
         setState(() {});
@@ -143,10 +155,11 @@ class _CharactersPageState extends State<CharactersPage> {
     );
   }
 
+  /// The card for a character, made of name, race icon, hp bar and level.
   characterCard(Character character) => Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: GlassCard(
-          onTap: () => Navigator.of(context).pushNamed('/character', arguments: character),
+          onTap: () => gotoCharacter(character),
           bottomSheetArgs: BottomSheetArgs(
               header: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -175,8 +188,7 @@ class _CharactersPageState extends State<CharactersPage> {
                 ],
               ),
               items: [
-                BottomSheetItem('png/open', 'Visualizza scheda',
-                    () => Navigator.of(context).pushNamed('/character', arguments: character)),
+                BottomSheetItem('png/open', 'Visualizza scheda', () => gotoCharacter(character)),
                 BottomSheetItem('png/delete_2', 'Elimina', () async {
                   context.popup('Stai per eliminare un personaggio',
                       message:
@@ -246,7 +258,12 @@ class _CharactersPageState extends State<CharactersPage> {
         ),
       );
 
-  // Refreshing the characters UIDs
+  /// When returning from the character page, reload if any changes have been applied
+  gotoCharacter(Character character) => context.goto('/character',
+      arguments: character,
+      then: (args) => args is CharacterPageToCharactersPageArgs && !args.noChanges ? null : refresh());
+
+  /// Refresh the characters UIDs
   refresh() {
     AccountManager().user.characters.value = null;
     Future.delayed(Durations.medium1, () async {
