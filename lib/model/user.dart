@@ -47,7 +47,7 @@ class User implements  WithUID {
   @override
   Map<String, dynamic> toJSON() => _$UserToJson(this);
 
-  // Move a character from characters list to deletedCharacters list
+  /// Move a character from characters list to deletedCharacters list
   deleteCharacter(String uid) {
     deletedCharactersUIDs.add(uid);
     charactersUIDs.remove(uid);
@@ -61,7 +61,7 @@ class User implements  WithUID {
       characters.value!.removeWhere((e) => e.uid == uid);
     }
   }
-  // Move a deleted character from deletedCharacters list to characters list
+  /// Move a deleted character from deletedCharacters list to characters list
   restoreCharacter(String uid) {
     charactersUIDs.add(uid);
     deletedCharactersUIDs.remove(uid);

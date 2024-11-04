@@ -205,6 +205,7 @@ class _CharactersPageState extends State<CharactersPage> {
                       setState(() {});
                     });
                     if (!hasUndone) {
+                      print('⬆️ Ho salvato la rimozione del\'personaggio ${character.name}');
                       DataManager().save(AccountManager().user);
                     }
                   },
@@ -265,7 +266,10 @@ class _CharactersPageState extends State<CharactersPage> {
 
   /// Refresh the characters UIDs
   refresh() {
+    // Trigger the shimmer effect through to the listener defined above
     AccountManager().user.characters.value = null;
+
+    // Reload user without cache and characters with cache
     Future.delayed(Durations.medium1, () async {
       final startTime = DateTime.now();
       await AccountManager().reloadUser();

@@ -2714,5 +2714,5 @@ class Character with Comparable<Character> implements WithUID {
 
   @override
   // Compare first by creation date
-  int compareTo(Character other) => level.compareTo(other.regDateTimestamp);
+  int compareTo(Character other) => regDateTimestamp.compareTo(other.regDateTimestamp);
 }

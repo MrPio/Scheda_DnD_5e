@@ -363,7 +363,6 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
         children: [
           const SizedBox(height: Measures.vMarginMed),
           // TODO here: class and multiclass
-          // TODO when closing window and saving, update character list hps
           // HP bar
           HpBar(character.hp, character.maxHp, bottomSheetArgs: hpBottomSheetArgs),
           const SizedBox(height: Measures.vMarginSmall),
@@ -541,6 +540,9 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           const SizedBox(height: Measures.vMarginBig),
         ],
       ),
+      const Placeholder(),
+      const Placeholder(),
+      const Placeholder(),
     ];
     _tabController ??= TabController(length: _screens!.length, vsync: this)
       ..addListener(() {

@@ -36,32 +36,32 @@ class _GlassButtonState extends State<Clickable> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.active
-          ? () {
+    return widget.active
+        ? GestureDetector(
+            onTap: () {
               if (widget.onTap != null) {
                 widget.onTap!();
               } else if (widget.bottomSheetArgs != null) {
                 context.bottomSheet(widget.bottomSheetArgs!);
               }
-            }
-          : null,
-      onTapDown: (_) => setDown(true),
-      onTapUp: (_) => setDown(false),
-      onLongPress: () {
-        HapticFeedback.mediumImpact();
-        if (widget.active && widget.bottomSheetArgs != null) {
-          context.bottomSheet(widget.bottomSheetArgs!);
-        }
-      },
-      onTapCancel: () => setDown(false),
-      child: AnimatedScale(
-        scale: widget.active ? _scale : 1.0,
-        duration: const Duration(milliseconds: 120),
-        curve: Curves.easeOut,
-        child: Opacity(opacity: _opacity, child: widget.child),
-      ),
-    );
+            },
+            onTapDown: (_) => setDown(true),
+            onTapUp: (_) => setDown(false),
+            onLongPress: () {
+              HapticFeedback.mediumImpact();
+              if (widget.bottomSheetArgs != null) {
+                context.bottomSheet(widget.bottomSheetArgs!);
+              }
+            },
+            onTapCancel: () => setDown(false),
+            child: AnimatedScale(
+              scale: _scale,
+              duration: const Duration(milliseconds: 120),
+              curve: Curves.easeOut,
+              child: Opacity(opacity: _opacity, child: widget.child),
+            ),
+          )
+        : widget.child ?? Container();
   }
 
   setDown(bool isDown) {

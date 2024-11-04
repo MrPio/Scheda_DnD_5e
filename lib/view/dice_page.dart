@@ -23,13 +23,6 @@ import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';
 import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 
-class DicePage extends StatefulWidget {
-  const DicePage({super.key});
-
-  @override
-  State<DicePage> createState() => _DicePageState();
-}
-
 class DiceArgs {
   final String? title;
   final List<Dice>? dices;
@@ -39,8 +32,14 @@ class DiceArgs {
   DiceArgs({this.title, this.dices, this.modifier, this.oneShot = false});
 }
 
-class _DicePageState extends State<DicePage>
-    with SingleTickerProviderStateMixin {
+class DicePage extends StatefulWidget {
+  const DicePage({super.key});
+
+  @override
+  State<DicePage> createState() => _DicePageState();
+}
+
+class _DicePageState extends State<DicePage> with SingleTickerProviderStateMixin {
   DiceArgs? args;
   List<Dice> _selectedDice = [];
   List<int> _diceValues = List<int>.filled(maxSelection, 0);
@@ -51,14 +50,12 @@ class _DicePageState extends State<DicePage>
       minModifier = -20,
       maxModifier = 20;
   late final AnimationController _diceRotationController;
-  final TextEditingController _modifierController =
-      TextEditingController(text: '0');
+  final TextEditingController _modifierController = TextEditingController(text: '0');
 
   /// The integer value of the modifier
   int get modifier => int.parse(_modifierController.text);
 
-  set modifier(int value) =>
-      setState(() => _modifierController.text = value.toString());
+  set modifier(int value) => setState(() => _modifierController.text = value.toString());
 
   /// The number of columns of the selected dice grid is calculated according to the number of the dice
   int get numberOfCols {
@@ -94,8 +91,8 @@ class _DicePageState extends State<DicePage>
   @override
   void initState() {
     HomePage.onFabTaps[widget.runtimeType] = roll;
-    _diceRotationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: rollDuration));
+    _diceRotationController =
+        AnimationController(vsync: this, duration: const Duration(milliseconds: rollDuration));
     super.initState();
   }
 
@@ -110,208 +107,203 @@ class _DicePageState extends State<DicePage>
   Widget build(BuildContext context) {
     args = (ModalRoute.of(context)!.settings.arguments) as DiceArgs?;
     _selectedDice = args?.dices ?? _selectedDice;
-    var page = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-      child: Column(
-        children: [
-          // Header
-          Padding(
-            padding: const EdgeInsets.only(
-                top: Measures.vMarginBig - Measures.vMarginThin,
-                bottom: Measures.vMarginSmall - Measures.vMarginThin,
-                left: 10,
-                right: 10),
-            child: Stack(alignment: Alignment.center, children: [
+    var page = Column(
+      children: [
+        // Header
+        Padding(
+          padding: EdgeInsets.only(
+              top: Measures.vMarginBig + (args == null ? Measures.vMarginMed : -Measures.vMarginThin),
+              bottom: Measures.vMarginSmall - Measures.vMarginThin,
+              left: args == null ? Measures.hPadding : 0,
+              right: args == null ? Measures.hPadding : 0),
+          child: Stack(alignment: Alignment.center, children: [
+            if (args != null)
               Align(
                   child: Padding(
                 padding: const EdgeInsets.only(
                   top: Measures.vMarginThin,
                   bottom: Measures.vMarginThin,
                 ),
-                child: Text(args?.title ?? 'Lanciatore dadi',
-                    style: Fonts.black(size: 18)),
-              )),
-              if ((args?.dices == null && _selectedDice.isNotEmpty) ||
-                  (args?.modifier == null && modifier != 0))
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: 'close'.toIcon(
-                      height: 20,
-                      onTap: () {
-                        _selectedDice = [];
-                        modifier = 0;
-                        setState(() {});
-                      }),
+                child: Text(args?.title ?? 'Lanciatore dadi', style: Fonts.black(size: 18)),
+              ))
+            else
+              Align(
+                  alignment: Alignment.centerLeft, child: Text('Lanciatore dadi', style: Fonts.black())),
+            if ((args?.dices == null && _selectedDice.isNotEmpty) ||
+                (args?.modifier == null && modifier != 0))
+              Align(
+                alignment: Alignment.centerRight,
+                child: 'close'.toIcon(
+                    height: 18,
+                    padding: const EdgeInsets.all(6),
+                    onTap: () {
+                      _selectedDice = [];
+                      modifier = 0;
+                      setState(() {});
+                    }),
+              ),
+            if (args != null)
+              const Align(
+                alignment: Alignment.centerLeft,
+                child: Chevron(
+                  inAppBar: true,
                 ),
-            ]),
-          ),
-          // Body
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // Selected dice ===============================
-                  const SizedBox(height: Measures.vMarginSmall),
-                  GlassCard(
-                      height: 224,
-                      clickable: false,
-                      child: Align(
-                        child: _selectedDice.isEmpty
-                            ? Text('Seleziona i dadi da lanciare',
-                                style: Fonts.regular(color: Palette.hint))
-                            : Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0),
-                                child: GridView.count(
-                                  shrinkWrap: true,
-                                  crossAxisCount: numberOfCols,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  mainAxisSpacing: Measures.vMarginSmall,
-                                  crossAxisSpacing: Measures.vMarginSmall,
-                                  padding: const EdgeInsets.all(10.0),
-                                  childAspectRatio: ratio,
-                                  children:
-                                      List.generate(_selectedDice.length, dice),
-                                ),
+              )
+          ]),
+        ),
+        // Body
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+            child: Column(
+              children: [
+                // Selected dice ===============================
+                const SizedBox(height: Measures.vMarginSmall),
+                GlassCard(
+                    height: 224,
+                    clickable: false,
+                    child: Align(
+                      child: _selectedDice.isEmpty
+                          ? Text('Seleziona i dadi da lanciare',
+                              style: Fonts.regular(color: Palette.hint))
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                              child: GridView.count(
+                                shrinkWrap: true,
+                                crossAxisCount: numberOfCols,
+                                physics: const NeverScrollableScrollPhysics(),
+                                mainAxisSpacing: Measures.vMarginSmall,
+                                crossAxisSpacing: Measures.vMarginSmall,
+                                padding: const EdgeInsets.all(10.0),
+                                childAspectRatio: ratio,
+                                children: List.generate(_selectedDice.length, dice),
                               ),
-                      )),
-                  const SizedBox(height: Measures.vMarginSmall),
-                  GridRow(
-                    crossAxisSpacing: Measures.vMarginThin,
-                    mainAxisSpacing: Measures.vMarginThin,
-                    columnsCount: 3,
-                    children: Dice.values
-                        .map((e) => DiceCard(
-                              e,
-                              onTap: selectDice,
-                              clickable: args?.dices == null,
-                            ))
-                        .toList(),
-                  ),
-                  const SizedBox(height: Measures.vMarginSmall),
-                  // Modifier
-                  args?.modifier == null
-                      ? GlassCard(
-                          clickable: false,
-                          child: Padding(
-                            padding: const EdgeInsets.all(14.0),
-                            child: Column(
-                              children: [
-                                Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text('Modificatore',
-                                        style: Fonts.regular())),
-                                const SizedBox(height: Measures.vMarginSmall),
-                                Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: const BoxDecoration(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(999)),
-                                      color: Palette.card2),
-                                  child: Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      SizedBox(
-                                        height: 48,
-                                        width: 48,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            if (modifier > minModifier) {
-                                              setState(() {
-                                                modifier--;
-                                              });
-                                            }
-                                          },
-                                          onLongPress: () {
-                                            if (modifier > minModifier + 4) {
-                                              setState(() {
-                                                modifier -= 5;
-                                              });
-                                            }
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Palette.background,
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 13),
-                                            elevation: 0,
-                                          ),
-                                          child: const Icon(Icons.remove,
-                                              color: Palette.onBackground,
-                                              size: 26),
+                            ),
+                    )),
+                const SizedBox(height: Measures.vMarginSmall),
+                GridRow(
+                  crossAxisSpacing: Measures.vMarginThin,
+                  mainAxisSpacing: Measures.vMarginThin,
+                  columnsCount: 3,
+                  children: Dice.values
+                      .map((e) => DiceCard(
+                            e,
+                            onTap: selectDice,
+                            clickable: args?.dices == null,
+                          ))
+                      .toList(),
+                ),
+                const SizedBox(height: Measures.vMarginSmall),
+                // Modifier
+                args?.modifier == null
+                    ? GlassCard(
+                        clickable: false,
+                        child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Column(
+                            children: [
+                              Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text('Modificatore', style: Fonts.regular())),
+                              const SizedBox(height: Measures.vMarginSmall),
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: const BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(999)),
+                                    color: Palette.card2),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(
+                                      height: 48,
+                                      width: 48,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          if (modifier > minModifier) {
+                                            setState(() {
+                                              modifier--;
+                                            });
+                                          }
+                                        },
+                                        onLongPress: () {
+                                          if (modifier > minModifier + 4) {
+                                            setState(() {
+                                              modifier -= 5;
+                                            });
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Palette.background,
+                                          padding: const EdgeInsets.symmetric(vertical: 13),
+                                          elevation: 0,
                                         ),
+                                        child: const Icon(Icons.remove,
+                                            color: Palette.onBackground, size: 26),
                                       ),
-                                      const SizedBox(
-                                          width: Measures.hMarginMed),
-                                      NumericInput(NumericInputArgs(
-                                        min: minModifier,
-                                        max: maxModifier,
-                                        controller: _modifierController,
-                                        width: 60,
-                                        contentPadding:
-                                            const EdgeInsets.fromLTRB(
-                                                4, 8, 4, 8),
-                                        style: Fonts.black(),
-                                      )),
-                                      const SizedBox(
-                                          width: Measures.hMarginMed),
-                                      SizedBox(
-                                        height: 48,
-                                        width: 48,
-                                        child: ElevatedButton(
-                                          onPressed: () {
-                                            if (modifier < maxModifier) {
-                                              setState(() {
-                                                modifier++;
-                                              });
-                                            }
-                                          },
-                                          onLongPress: () {
-                                            if (modifier < maxModifier - 4) {
-                                              setState(() {
-                                                modifier += 5;
-                                              });
-                                            }
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Palette.background,
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 13),
-                                            elevation: 0,
-                                          ),
-                                          child: const Icon(Icons.add,
-                                              color: Palette.onBackground,
-                                              size: 26),
+                                    ),
+                                    const SizedBox(width: Measures.hMarginMed),
+                                    NumericInput(NumericInputArgs(
+                                      min: minModifier,
+                                      max: maxModifier,
+                                      controller: _modifierController,
+                                      width: 60,
+                                      contentPadding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
+                                      style: Fonts.black(),
+                                    )),
+                                    const SizedBox(width: Measures.hMarginMed),
+                                    SizedBox(
+                                      height: 48,
+                                      width: 48,
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          if (modifier < maxModifier) {
+                                            setState(() {
+                                              modifier++;
+                                            });
+                                          }
+                                        },
+                                        onLongPress: () {
+                                          if (modifier < maxModifier - 4) {
+                                            setState(() {
+                                              modifier += 5;
+                                            });
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Palette.background,
+                                          padding: const EdgeInsets.symmetric(vertical: 13),
+                                          elevation: 0,
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                        )
-                      : GlassCard(
-                          clickable: false,
-                          child: Padding(
-                            padding: const EdgeInsets.all(14.0),
-                            child: Row(
-                              children: [
-                                Text('Modificatore:', style: Fonts.regular()),
-                                const SizedBox(width: Measures.hMarginMed),
-                                Text(modifier.toSignedString(),
-                                    style: Fonts.black()),
-                              ],
-                            ),
+                                        child:
+                                            const Icon(Icons.add, color: Palette.onBackground, size: 26),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              )
+                            ],
                           ),
                         ),
-                  const SizedBox(
-                      height: Measures.vMarginBig + Measures.vMarginBig),
-                ],
-              ),
+                      )
+                    : GlassCard(
+                        clickable: false,
+                        child: Padding(
+                          padding: const EdgeInsets.all(14.0),
+                          child: Row(
+                            children: [
+                              Text('Modificatore:', style: Fonts.regular()),
+                              const SizedBox(width: Measures.hMarginMed),
+                              Text(modifier.toSignedString(), style: Fonts.black()),
+                            ],
+                          ),
+                        ),
+                      ),
+                const SizedBox(height: Measures.vMarginBig + Measures.vMarginBig),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
     if (args == null) {
       return page;
@@ -322,21 +314,18 @@ class _DicePageState extends State<DicePage>
           children: [
             const GradientBackground(topColor: Palette.backgroundGreen),
             page,
-            const Chevron(),
             // FAB
             Align(
                 alignment: Alignment.bottomRight,
                 child: Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: Measures.fABBottomMargin,
-                      right: Measures.hPadding),
+                  padding:
+                      const EdgeInsets.only(bottom: Measures.fABBottomMargin, right: Measures.hPadding),
                   child: FloatingActionButton(
                     onPressed: roll,
                     elevation: 0,
                     foregroundColor: Palette.primaryGreen,
                     backgroundColor: Palette.primaryGreen,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(999)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
                     child: 'refresh'.toIcon(height: 20),
                   ),
                 )),
@@ -353,8 +342,7 @@ class _DicePageState extends State<DicePage>
     } else {
       context.snackbar('Non puoi aggiungere altri dadi',
           backgroundColor: Palette.backgroundGreen,
-          bottomMargin:
-              args == null ? Measures.bottomBarHeight : Measures.vMarginSmall);
+          bottomMargin: args == null ? Measures.bottomBarHeight : Measures.vMarginSmall);
     }
   }
 
@@ -367,18 +355,14 @@ class _DicePageState extends State<DicePage>
           children: [
             // Dice svg
             RotationTransition(
-                turns: Tween(begin: 0.0, end: rollsCount.toDouble()).animate(
-                    CurvedAnimation(
-                        parent: _diceRotationController,
-                        curve: Curves.easeOut)),
-                child: SvgPicture.asset(_selectedDice[i].svgPath,
-                    height: double.infinity)),
+                turns: Tween(begin: 0.0, end: rollsCount.toDouble())
+                    .animate(CurvedAnimation(parent: _diceRotationController, curve: Curves.easeOut)),
+                child: SvgPicture.asset(_selectedDice[i].svgPath, height: double.infinity)),
             // Dice number
             if (_diceValues[i] > 0)
               Align(
                 alignment: Alignment(0, _selectedDice[i].yTextAlignment),
-                child: Text(_diceValues[i].toString(),
-                    style: Fonts.bold(size: 18)),
+                child: Text(_diceValues[i].toString(), style: Fonts.bold(size: 18)),
               )
           ],
         ),
@@ -410,8 +394,7 @@ class _DicePageState extends State<DicePage>
                   Text(
                       '(${_diceValues.where((e) => e > 0).join(' + ')})${modifier != 0 ? ' ${modifier.toSignedString()}' : ''} =',
                       style: Fonts.regular(size: 24)),
-                  Text((_diceValues.sum() + modifier).toString(),
-                      style: Fonts.black(size: 42))
+                  Text((_diceValues.sum() + modifier).toString(), style: Fonts.black(size: 42))
                 ],
               ),
             ));
@@ -422,8 +405,7 @@ class _DicePageState extends State<DicePage>
     } else if (_selectedDice.isEmpty) {
       context.snackbar('Seleziona almeno un dado',
           backgroundColor: Palette.backgroundGreen,
-          bottomMargin:
-              args == null ? Measures.bottomBarHeight : Measures.vMarginSmall);
+          bottomMargin: args == null ? Measures.bottomBarHeight : Measures.vMarginSmall);
     }
   }
 }

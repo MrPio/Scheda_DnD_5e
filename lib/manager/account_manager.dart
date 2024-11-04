@@ -145,6 +145,7 @@ class AccountManager {
   reloadUser() async {
     User newUser = await DataManager().load(user.uid!, useCache: false);
     user.charactersUIDs = newUser.charactersUIDs;
+    user.deletedCharactersUIDs = newUser.deletedCharactersUIDs;
     user.campaignsUIDs = newUser.campaignsUIDs;
     // ...
     // All other fields that may have changed

@@ -12,7 +12,7 @@ class Chevron extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return 'chevron_left'.toIcon(
-        height: 24,
+        height: 22,
         onTap: onTap??()=>Navigator.of(context).pop(popArgs),
         margin: inAppBar?const EdgeInsets.only( left: Measures.hMarginMed):Measures.chevronMargin,
         padding:Measures.chevronPadding);
