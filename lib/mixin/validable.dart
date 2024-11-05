@@ -3,6 +3,8 @@ import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 
 import '../constant/palette.dart';
 
+/// If editing model objects fields through setters throws any FormatExceptions,
+/// display a snackbar with the error details
 mixin Validable<T extends StatefulWidget> on State<T> {
   bool validate(Function() task) {
     try {

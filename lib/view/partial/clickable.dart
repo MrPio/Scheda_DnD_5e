@@ -38,6 +38,7 @@ class _GlassButtonState extends State<Clickable> {
   Widget build(BuildContext context) {
     return widget.active
         ? GestureDetector(
+      behavior: HitTestBehavior.translucent,
             onTap: () {
               if (widget.onTap != null) {
                 widget.onTap!();

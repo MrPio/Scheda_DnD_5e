@@ -168,7 +168,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
               : null,
           bottomSheetArgs: hpBottomSheetArgs),
       SheetItemCard(iconPath: 'png/bonus', text: 'BC', value: character.competenceBonus.toSignedString()),
-      // TODO torna a 9m
+      // Note: the speed goes back to the default value on purpose
       SheetItemCard(
           iconPath: 'png/speed',
           text: 'Speed',

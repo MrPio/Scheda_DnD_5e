@@ -22,9 +22,9 @@ extension StringExtensions on String {
   /// 'home' ==> 'assets/images/icons/home.svg'
   /// 'png/home' ==> 'assets/images/icons/png/home.png'
   Widget toIcon(
-      {double height = 22,
+      {double height = 24,
       Function()? onTap,
-      padding = const EdgeInsets.all(12.0),
+      padding = const EdgeInsets.all(8.0),
       margin = EdgeInsets.zero,
       color = Palette.onBackground,
       double rotation =0}) {
@@ -34,7 +34,10 @@ extension StringExtensions on String {
         : SvgPicture.asset('assets/images/icons/$this.svg',
             height: height, color: color);
     if (onTap == null) {
-      return Transform.rotate(angle: rotation,child: icon);
+      return Padding(
+        padding: margin,
+        child: Transform.rotate(angle: rotation,child: icon),
+      );
     } else {
       return Padding(
         padding: margin,

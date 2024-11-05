@@ -99,9 +99,10 @@ class _CharactersPageState extends State<CharactersPage> {
             child: Column(children: [
               const SizedBox(height: Measures.vMarginMed),
               // Page Title
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('I tuoi personaggi', style: Fonts.black())),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Text('I tuoi personaggi', style: Fonts.black()),
+                'png/settings'.toIcon(padding: const EdgeInsets.all(6),onTap: () => context.goto('/settings')),
+              ]),
               const SizedBox(height: Measures.vMarginMed),
               // Search TextField
               GlassTextField(
@@ -230,7 +231,7 @@ class _CharactersPageState extends State<CharactersPage> {
                         children: [
                           Row(
                             children: [
-                              character.class_.iconPath.toIcon(height: 24),
+                              character.class_.iconPath.toIcon(),
                               const SizedBox(width: Measures.hMarginBig),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

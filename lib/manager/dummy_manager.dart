@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/manager/database_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart';
 import 'package:scheda_dnd_5e/model/enchantment.dart';
+import 'package:scheda_dnd_5e/model/setting.dart';
 
-// This singleton is for debug purpose only
+/// This singleton is for debug purpose only
 class DummyManager {
   static final DummyManager _instance = DummyManager._();
 
@@ -11,11 +13,19 @@ class DummyManager {
 
   DummyManager._();
 
+  List<SettingMenu> getSettings() => [
+        SettingMenu('png/background_off', 'Setting Menu',
+            subtitle: 'Questo è un setting menu di prova', settings: [Setting.test, Setting.test]),
+        SettingMenu('png/background_off', 'Setting Menu',
+            subtitle: 'Questo è un setting menu di prova', settings: [Setting.test, Setting.test]),
+        SettingMenu('png/background_off', 'Setting Menu',
+            subtitle: 'Questo è un setting menu di prova', settings: [Setting.test, Setting.test]),
+      ];
+
   populateEnchantments() async {
     final enchantments = [
       Enchantment(
-          "Amicizia"
-          ,
+          "Amicizia",
           Level.level0,
           Type.ammaliamento,
           [Class.bardo, Class.mago, Class.stregone, Class.warlock],
@@ -370,13 +380,7 @@ class DummyManager {
           "Riparare",
           Level.level0,
           Type.trasmutazione,
-          [
-            Class.bardo,
-            Class.mago,
-            Class.chierico,
-            Class.druido,
-            Class.stregone
-          ],
+          [Class.bardo, Class.mago, Class.chierico, Class.druido, Class.stregone],
           Range.contatto,
           RangeType.punto,
           false,
@@ -632,13 +636,7 @@ class DummyManager {
           "Charme su persone",
           Level.level1,
           Type.ammaliamento,
-          [
-            Class.bardo,
-            Class.mago,
-            Class.druido,
-            Class.stregone,
-            Class.warlock
-          ],
+          [Class.bardo, Class.mago, Class.druido, Class.stregone, Class.warlock],
           Range.metri9,
           RangeType.punto,
           false,
@@ -718,13 +716,7 @@ class DummyManager {
           "Cura ferite",
           Level.level1,
           Type.invocazione,
-          [
-            Class.bardo,
-            Class.chierico,
-            Class.druido,
-            Class.paladino,
-            Class.ranger
-          ],
+          [Class.bardo, Class.chierico, Class.druido, Class.paladino, Class.ranger],
           Range.contatto,
           RangeType.punto,
           false,
@@ -737,7 +729,8 @@ class DummyManager {
           Damage.descrittivo,
           "Una **creatura** toccata dall'**incantatore** recupera un **numero** di punti ferita pari a 1d8 + il **modificatore** di **caratteristica** da incantatore.\n\nQuesto **incantesimo** non ha effetto sui **costrutti** o sui **non morti**.\n\n**AI LIVELLI SUPERIORI:** Quando l'incantatore lancia questo **incantesimo** usando uno slot incantesimo di 2° livello o superiore, la **guarigione** aumenta di 1d8 per ogni slot di livello superiore al 1°."),
       Enchantment(
-          "Dardo incantanto", //va sempre a segno
+          "Dardo incantanto",
+          //va sempre a segno
           Level.level1,
           Type.invocazione,
           [Class.mago, Class.stregone],
@@ -985,9 +978,9 @@ class DummyManager {
           Damage.tiroSalvezza,
           "L'incantatore punta l'indice contro la creatura che gli ha inferto danni e quella creatura è momentaneamente avviluppata da una cortina di fiamme infernali.\n\nLa creatura deve effettuare un tiro salvezza su Destrezza.\n\nSe lo fallisce, subisce 2d10 danni da fuoco, mentre se lo supera, subisce soltanto la metà di quei danni.\n\n" +
               "Ai **Livelli Superiori**: Quando l'incantatore lancia questo incantesimo usando uno **slot incantesimo** di 2° livello o superiore, i **danni** aumentano di 1d10 per ogni **slot di livello superiore al 1°**."),
-
       Enchantment(
-          "Intralciare", //richiede un tiro salvezza, usata in combattimento, ma non fa danno
+          "Intralciare",
+          //richiede un tiro salvezza, usata in combattimento, ma non fa danno
           Level.level1,
           Type.evocazione,
           [Class.druido],
@@ -1387,7 +1380,8 @@ class DummyManager {
           Damage.descrittivo,
           "Questo incantesimo **fa in modo che le creature siano vittime di un sonno magico.**\n\nL'incantatore tira **5d8**; il totale ottenuto è l'ammontare di **creature in punti ferita** che questo incantesimo può influenzare.\n\nLe creature entro 6 metri da **un punto a scelta dell'incantatore situato entro gittata** sono influenzate in ordine crescente dei loro punti ferita (**ignorando le creature prive di sensi**).\n\nA partire dalla creatura che possiede meno punti ferita attuali, ogni creatura influenzata da questo incantesimo cade **priva di sensi finché l'incantesimo non termina, il dormiente non subisce danni o qualcuno non usa un'azione per scuotere o schiaffeggiare il dormiente per svegliarlo.**\n\nSi **sottraggono i punti ferita di ogni creatura dal totale prima di passare alla creatura con l'ammontare immediatamente superiore di punti ferita.** I punti ferita di una creatura devono essere pari o inferiori al totale rimanente affinché quella creatura possa essere influenzata.\n\nLe **creature non morte e quelle immuni all'essere affascinate non sono influenzate da questo incantesimo.**\n\n**AI LIVELLI SUPERIORI:** Quando l'incantatore lancia questo incantesimo usando uno slot incantesimo di 2° livello o superiore, tira **2d8 aggiuntivi** per ogni slot di livello superiore al 1°."),
       Enchantment(
-          "Sortilegio", //particolare
+          "Sortilegio",
+          //particolare
           Level.level1,
           Type.ammaliamento,
           [Class.warlock],
@@ -1611,17 +1605,11 @@ class DummyManager {
           Damage.tiroSalvezza,
           "Un **bagliore argentato** di luce pallida forma un **cilindro** del raggio di 1,5 metri e alto 12 metri, centrato su un punto entro gittata.\n\nFinché l'incantesimo non termina, il cilindro è pervaso di luce **fioca**.\n\nQuando una creatura entra nell'area dell'incantesimo per la prima volta in un turno o vi inizia il proprio turno, viene avvolta da una **cortina di fiamme spettrali** che le provocano un dolore lancinante e la obbligano a effettuare un tiro salvezza su Costituzione. Se lo fallisce, subisce 2d10 danni radiosi, mentre se lo supera, subisce soltanto la metà di quei danni.\n\nUn **mutaforma** subisce **svantaggio** a questo tiro salvezza.\n\nInoltre, se lo fallisce, riassume instantaneamente la sua forma originale e non può assumere una forma diversa finché non esce dalla luce dell'incantesimo.\n\nNei suoi turni successivi, dopo avere lanciato questo incantesimo, l'incantatore può usare un'azione per muovere il bagliore di un massimo di 18 metri in qualsiasi direzione.\n\n**Ai Livelli Superiori:** Quando l'incantatore lancia questo incantesimo usando uno slot incantesimo di 3° livello o superiore, i danni aumentano di 1d10 per ogni slot di livello superiore al 2°."),
       Enchantment(
-          "Blocca persone", //idem. tiro salvezza manon fa danno
+          "Blocca persone",
+          //idem. tiro salvezza manon fa danno
           Level.level2,
           Type.ammaliamento,
-          [
-            Class.bardo,
-            Class.mago,
-            Class.chierico,
-            Class.druido,
-            Class.stregone,
-            Class.warlock
-          ],
+          [Class.bardo, Class.mago, Class.chierico, Class.druido, Class.stregone, Class.warlock],
           Range.metri18,
           RangeType.punto,
           false,
@@ -1650,7 +1638,8 @@ class DummyManager {
           Damage.descrittivo,
           "L'**incantatore** inserisce un messaggio in un oggetto entro **gittata**, che sarà **enunciato** quando una condizione di innesco sarà **soddisfatta**.\n\nL'**incantatore** sceglie un oggetto che egli è in grado di vedere e che non sia indossato o trasportato da un'altra creatura.\n\nQuindi pronuncia il **messaggio**, che non deve essere più lungo di 25 parole, e che può tuttavia essere ripetuto entro un periodo massimo di 10 minuti.\n\nInfine, l'**incantatore** determina la **circostanza** che innescherà l'**incantesimo** e l'enunciazione del messaggio.\n\nQuando quella **circostanza** si verifica, una bocca magica appare sull'oggetto e recita il **messaggio** con la voce dell'incantatore, allo stesso volume in cui egli l'ha pronunciato.\n\nSe l'oggetto scelto dall'**incantatore** ha una bocca o qualcosa di simile a una bocca (per esempio, la bocca di una statua), la bocca magica appare in modo che le parole sembrino pronunciate dalla bocca dell'oggetto.\n\nAl momento del lancio, l'**incantatore** può stabilire se l'**incantesimo** termina nel momento in cui il messaggio viene enunciato o se esso viene ripetuto qualora le circostanze di innesco si verifichino di nuovo.\n\nLa **circostanza** di innesco può essere generale o dettagliata, ma deve essere basata su **condizioni** visibili o udibili che si verifichino entro 9 metri dall'oggetto.\n\nPer esempio, l'**incantatore** potrebbe ordinare alla bocca di parlare quando una qualsiasi creatura **giunge** entro 9 metri dall'oggetto o quando una campana d'argento suona entro 9 metri da esso."),
       Enchantment(
-          "Calmare emozioni", //idem sopra
+          "Calmare emozioni",
+          //idem sopra
           Level.level2,
           Type.ammaliamento,
           [Class.bardo, Class.chierico],
@@ -1682,7 +1671,8 @@ class DummyManager {
           Damage.descrittivo,
           "L'**incantatore** tocca una **creatura** e le conferisce un **potenziamento magico**, scegliendo uno degli effetti seguenti che permane finché l'**incantesimo** non termina.\n\n\- **Astuzia della Volpe**: Il bersaglio dispone di **vantaggio** alle prove di **Intelligenza**.\n\n\- **Forza del Toro**: Il bersaglio dispone di **vantaggio** alle prove di **Forza** e la sua **capacità di trasporto** raddoppia.\n\n\- **Grazia del Gatto**: Il bersaglio dispone di **vantaggio** alle prove di **Destrezza**.\n\nInoltre non subisce danni se cade da 6 metri o meno, purché non sia **incapacitato**.\n\n\- **Resistenza dell'Orso:** Il bersaglio dispone di vantaggio alle prove di **Costituzione.**\n\nOttiene anche 2d6 **punti ferita temporanei**, che vanno perduti quando l'**incantesimo** termina.\n\n\- **Saggezza del Gufo**: Il bersaglio dispone di vantaggio alle prove di **Saggezza**.\n\n\- **Splendore dell'Aquila**: Il bersaglio dispone di vantaggio alle prove di **Carisma**.\n\n**AI LIVELLI SUPERIORI:** Quando l'**incantatore** lancia questo incantesimo usando uno **slot incantesimo** di 3° livello o superiore, può **bersagliare** una **creatura** aggiuntiva per ogni **slot** di livello superiore al 2°."),
       Enchantment(
-          "Cecità/sordità", //idem
+          "Cecità/sordità",
+          //idem
           Level.level2,
           Type.necromanzia,
           [Class.bardo, Class.mago, Class.chierico, Class.stregone],
@@ -1698,7 +1688,8 @@ class DummyManager {
           Damage.tiroSalvezza,
           "L'**incantatore** può accecare o **assordare** un nemico, scegliendo una **creatura** entro gittata e che egli sia in grado di vedere.\n\nQuella **creatura** deve effettuare un tiro salvezza su **Costituzione**.\n\nSe lo fallisce, è **accecata** o **assordata** (a scelta dell'incantatore) per la durata dell'incantesimo.\n\nAlla fine di ogni suo turno può effettuare un nuovo tiro salvezza su **Costituzione**.\n\nSe lo supera, l'incantesimo termina.\n\nAI **LIVELLI SUPERIORI**: Quando l'incantatore lancia questo incantesimo usando uno **slot incantesimo** di 3° livello o superiore, può bersagliare una **creatura aggiuntiva** per ogni slot superiore al 2°."),
       Enchantment(
-          "Cordone di frecce", //questa varia nel tempo
+          "Cordone di frecce",
+          //questa varia nel tempo
           Level.level2,
           Type.trasmutazione,
           [Class.ranger],
@@ -1714,7 +1705,8 @@ class DummyManager {
           Damage.descrittivo,
           "L'**incantatore** colloca **quattro munizioni non magiche** (frecce o quadrelli) nel terreno entro gittata e le rende **magiche** al fine di proteggere l'area.\n\nFinché l'incantesimo non termina, ogni volta che una **creatura diversa dall'incantatore** giunge entro 9 metri dalle munizioni per la prima volta in un turno o vi termina il proprio turno, una delle munizioni **sfreccia in volo** per colpirla.\n\nLa **creatura** deve superare un tiro salvezza su **Destrezza** altrimenti subirà 1d6 danni perforanti.\n\nLa **munizione** viene distrutta.\n\nL'incantesimo termina quando non rimangono più munizioni.\n\nQuando l'incantatore lancia questo incantesimo, può designare un qualsiasi numero di **creature a sua scelta** che saranno ignorate dall'incantesimo.\n\nAI **Livelli Superiori**: Quando l'incantatore lancia questo incantesimo usando uno **slot incantesimo** di 3° livello o superiore, l'ammontare di munizioni che può essere influenzato aumenta di **due** per ogni slot di livello superiore al 2°."),
       Enchantment(
-          "Corona di follia", //richiesto tiro salvezza ma non fa danni
+          "Corona di follia",
+          //richiesto tiro salvezza ma non fa danni
           Level.level2,
           Type.ammaliamento,
           [Class.bardo, Class.mago, Class.stregone, Class.warlock],
@@ -1730,7 +1722,8 @@ class DummyManager {
           Damage.tiroSalvezza,
           "Un **umanoide a scelta dell'incantatore**, situato entro gittata e che l'incantatore sia in grado di vedere, deve superare un tiro salvezza su **Saggezza**, altrimenti diventa **affascinato** dall'incantatore per la durata dell'incantesimo.\n\nFinché il **bersaglio** è affascinato in questo modo, una **corona di ferro deforme e tagliente** compare sulla sua testa e nei suoi occhi risplende un bagliore di **follia.**\n\nIl **bersaglio affascinato** deve usare la sua azione prima di muoversi in ognuno dei suoi turni per effettuare un **attacco**."),
       Enchantment(
-          "Crescita di spine", //richiede il tiro salvezza, ma modifica il terreno e fa danno nel tempo
+          "Crescita di spine",
+          //richiede il tiro salvezza, ma modifica il terreno e fa danno nel tempo
           Level.level2,
           Type.trasmutazione,
           [Class.druido, Class.ranger],
@@ -1941,14 +1934,7 @@ class DummyManager {
           "Localizza oggetto",
           Level.level2,
           Type.divinazione,
-          [
-            Class.bardo,
-            Class.mago,
-            Class.chierico,
-            Class.druido,
-            Class.paladino,
-            Class.ranger
-          ],
+          [Class.bardo, Class.mago, Class.chierico, Class.druido, Class.paladino, Class.ranger],
           Range.illimitata,
           RangeType.punto,
           true,
@@ -1977,7 +1963,8 @@ class DummyManager {
           Damage.descrittivo,
           "Finché l'**incantesimo non termina**, **una creatura consenziente toccata dall'incantatore** ottiene la capacità di muoversi verticalmente e orizzontalmente sulle pareti e a testa in giù sui soffitti, mantenendo le mani libere.\n\nIl bersaglio ottiene inoltre **una velocità di scalare pari alla sua velocità base sul terreno.**"),
       Enchantment(
-          "Nube di pugnali", //modifica il terreno
+          "Nube di pugnali",
+          //modifica il terreno
           Level.level2,
           Type.evocazione,
           [Class.bardo, Class.mago, Class.stregone, Class.warlock],
@@ -2121,7 +2108,8 @@ class DummyManager {
           Damage.descrittivo,
           "L'\**incantatore** tocca una creatura, se quella creatura è avvelenata il veleno è neutralizzato.\n\nSe il bersaglio è afflitto da più veleni, l'\**incantatore** \neutralizza un veleno di cui conosce la presenza\, oppure ne neutralizza uno a caso.\n\nPer la durata dell'\**incantesimo**, il bersaglio dispone di vantaggio ai tiri salvezza per non essere avvelenato e di resistenza ai danni da veleno."),
       Enchantment(
-          "Punizione marchiante", //potenzia l'arma per il prossimo attacco
+          "Punizione marchiante",
+          //potenzia l'arma per il prossimo attacco
           Level.level2,
           Type.invocazione,
           [Class.paladino],
@@ -2220,13 +2208,7 @@ class DummyManager {
           "Ristorare inferiore",
           Level.level2,
           Type.abiurazione,
-          [
-            Class.bardo,
-            Class.chierico,
-            Class.druido,
-            Class.paladino,
-            Class.ranger
-          ],
+          [Class.bardo, Class.chierico, Class.druido, Class.paladino, Class.ranger],
           Range.contatto,
           RangeType.punto,
           false,
@@ -2695,7 +2677,8 @@ class DummyManager {
           Damage.tiroSalvezza,
           "L'**incantatore** lancia in aria un'arma non magica o scaglia una munizione non magica per creare un **cono** di armi identiche che sfrecciano in avanti e poi scompaiono.**\n\n Ogni **creatura** entro un **cono** di 18 metri deve effettuare un tiro salvezza su **Destrezza**.**\n\n Se lo **fallisce**, subisce 3d8 danni, mentre se lo **supera**, subisce soltanto la metà di quei danni.**\n\n Il **tipo** di danno è lo stesso dell'arma o della munizione usata come componente.**"),
       Enchantment(
-          "Fame di Hadar", //modifica l'area ma non fa subito danno
+          "Fame di Hadar",
+          //modifica l'area ma non fa subito danno
           Level.level3,
           Type.evocazione,
           [Class.warlock],
@@ -2759,7 +2742,8 @@ class DummyManager {
           Damage.descrittivo,
           "L'**incantatore trasforma** una creatura consenziente da lui toccata (assieme a tutto ciò che essa indossa e trasporta) in una nube di foschia per la durata dell'incantesimo.\n\nL'incantesimo termina se la creatura scende a **0 punti ferita.**\n\n Una creatura **incorporea non è influenzata dall'incantesimo.**\n\n Finché il bersaglio si trova in questa forma, il suo unico metodo di movimento è una velocità di **volare pari a 3 metri.**\n\n Il bersaglio può **entrare nello spazio di un'altra creatura e occuparlo**, dispone di **resistenza ai danni non magici** e di **vantaggio ai tiri salvezza su Forza, Destrezza e Costituzione.**\n\n Il bersaglio può passare attraverso piccoli fori, aperturestrette e perfino semplici crepe, ma considera i liquidi come se fossero superfici solide.\n\n Il bersaglio non può cadere e continua a fluttuare nell'area anche quando è stordito o incapacitato in altri modi.\n\n Finché è in forma gassosa, il bersaglio non può **parlare o manipolare oggetti**, e quelli che trasporta o impugna non possono essere usati, lasciati cadere o manipolati in alcun modo.\n\n Il bersaglio non può attaccare o lanciare incantesimi."),
       Enchantment(
-          "Freccia folgorante", //potenzia solo il prossimo attacco
+          "Freccia folgorante",
+          //potenzia solo il prossimo attacco
           Level.level3,
           Type.trasmutazione,
           [Class.ranger],
@@ -2906,13 +2890,7 @@ class DummyManager {
           "Linguaggi",
           Level.level3,
           Type.divinazione,
-          [
-            Class.bardo,
-            Class.mago,
-            Class.chierico,
-            Class.stregone,
-            Class.warlock
-          ],
+          [Class.bardo, Class.mago, Class.chierico, Class.stregone, Class.warlock],
           Range.contatto,
           RangeType.punto,
           false,
@@ -2928,13 +2906,7 @@ class DummyManager {
           "Luce diurna",
           Level.level3,
           Type.invocazione,
-          [
-            Class.chierico,
-            Class.druido,
-            Class.paladino,
-            Class.ranger,
-            Class.stregone
-          ],
+          [Class.chierico, Class.druido, Class.paladino, Class.ranger, Class.stregone],
           Range.metri18,
           RangeType.punto,
           false,
@@ -3094,13 +3066,7 @@ class DummyManager {
           "Protezione dall'energia",
           Level.level3,
           Type.abiurazione,
-          [
-            Class.mago,
-            Class.chierico,
-            Class.druido,
-            Class.ranger,
-            Class.stregone
-          ],
+          [Class.mago, Class.chierico, Class.druido, Class.ranger, Class.stregone],
           Range.contatto,
           RangeType.punto,
           false,
@@ -3273,7 +3239,8 @@ class DummyManager {
           Damage.descrittivo,
           "**L'incantatore** tocca una **creatura consenziente**.\n\nIl **bersaglio** ottiene una velocità di volare di 18 m per la **durata dell'incantesimo.**\n\nQuando l'incantesimo termina, il **bersaglio** cade se era ancora sospeso in aria, a meno che non abbia modo di impedire la caduta.\n\n**AI LIVELLI SUPERIORI**: L'incantatore può bersagliare una creatura aggiuntiva per ogni slot incantesimo di livello superiore al 3°."),
       Enchantment(
-          "Allucinazione mortale", //danni subiti dopo
+          "Allucinazione mortale",
+          //danni subiti dopo
           Level.level4,
           Type.illusione,
           [Class.mago],
@@ -3404,13 +3371,7 @@ class DummyManager {
           "Esilio",
           Level.level4,
           Type.abiurazione,
-          [
-            Class.mago,
-            Class.chierico,
-            Class.paladino,
-            Class.stregone,
-            Class.warlock
-          ],
+          [Class.mago, Class.chierico, Class.paladino, Class.stregone, Class.warlock],
           Range.metri18,
           RangeType.punto,
           false,
@@ -3570,14 +3531,7 @@ class DummyManager {
           "Localizza creatura",
           Level.level4,
           Type.divinazione,
-          [
-            Class.bardo,
-            Class.mago,
-            Class.chierico,
-            Class.druido,
-            Class.paladino,
-            Class.ranger
-          ],
+          [Class.bardo, Class.mago, Class.chierico, Class.druido, Class.paladino, Class.ranger],
           Range.illimitata,
           RangeType.punto,
           true,
@@ -4025,13 +3979,7 @@ class DummyManager {
           "Costrizione",
           Level.level5,
           Type.ammaliamento,
-          [
-            Class.bardo,
-            Class.mago,
-            Class.chierico,
-            Class.druido,
-            Class.paladino
-          ],
+          [Class.bardo, Class.mago, Class.chierico, Class.druido, Class.paladino],
           Range.metri18,
           RangeType.punto,
           false,
@@ -4447,13 +4395,7 @@ class DummyManager {
           "Scrutare",
           Level.level5,
           Type.divinazione,
-          [
-            Class.bardo,
-            Class.mago,
-            Class.chierico,
-            Class.druido,
-            Class.warlock
-          ],
+          [Class.bardo, Class.mago, Class.chierico, Class.druido, Class.warlock],
           Range.illimitata,
           RangeType.punto,
           true,
@@ -5029,13 +4971,7 @@ class DummyManager {
           "Visione del vero",
           Level.level6,
           Type.divinazione,
-          [
-            Class.bardo,
-            Class.mago,
-            Class.chierico,
-            Class.stregone,
-            Class.warlock
-          ],
+          [Class.bardo, Class.mago, Class.chierico, Class.stregone, Class.warlock],
           Range.contatto,
           RangeType.punto,
           false,
@@ -5099,13 +5035,7 @@ class DummyManager {
           "Forma eterea",
           Level.level7,
           Type.trasmutazione,
-          [
-            Class.bardo,
-            Class.mago,
-            Class.chierico,
-            Class.stregone,
-            Class.warlock
-          ],
+          [Class.bardo, Class.mago, Class.chierico, Class.stregone, Class.warlock],
           Range.illimitata,
           RangeType.punto,
           true,
@@ -5313,13 +5243,7 @@ class DummyManager {
           "Spostamento planare",
           Level.level7,
           Type.invocazione,
-          [
-            Class.mago,
-            Class.chierico,
-            Class.druido,
-            Class.stregone,
-            Class.warlock
-          ],
+          [Class.mago, Class.chierico, Class.druido, Class.stregone, Class.warlock],
           Range.contatto,
           RangeType.punto,
           false,

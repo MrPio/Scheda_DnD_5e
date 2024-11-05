@@ -20,8 +20,7 @@ class IOManager {
   static const String accountUID = 'accountUID';
 
   late final SharedPreferences prefs;
-  final Map<Type, Future<bool> Function(SharedPreferences, String, dynamic)>
-      _setMethods = {
+  final Map<Type, Future<bool> Function(SharedPreferences, String, dynamic)> _setMethods = {
     String: (sp, key, value) => sp.setString(key, value),
     int: (sp, key, value) => sp.setInt(key, value),
     bool: (sp, key, value) => sp.setBool(key, value),
@@ -40,31 +39,29 @@ class IOManager {
 
   set<T>(String key, T value) async => _setMethods[T]!(prefs, key, value);
 
-  Future<T?> get<T>(String key) async => _getMethods[T]!(prefs, key);
+  Future<T?> get<T>(String key) async => (_getMethods[T] ?? (sp, key) => sp.get(key))(prefs, key);
 
   remove(String key) async => prefs.remove(key);
 
   serializeObjects<T extends JSONSerializable>(String key, List<T> objects) async {
-    key=key.replaceAll('/', '');
+    key = key.replaceAll('/', '');
     await set(key, jsonEncode(objects.map((e) => e.toJSON()).toList()));
     await set('${key}_timestamp', DateTime.now().millisecondsSinceEpoch);
-    if(<T>[] is List<WithUID>) {
-      await set(
-          '${key}_uids', objects.map((e) => (e as WithUID).uid!).toList());
+    if (<T>[] is List<WithUID>) {
+      await set('${key}_uids', objects.map((e) => (e as WithUID).uid!).toList());
     }
   }
 
-  Future<List<T>> deserializeObjects<T extends JSONSerializable>(
-          String key) async {
-    key=key.replaceAll('/', '');
-    final List<T> objs=jsonDecode(await get<String>(key) ?? '')
-          .map((e) => JSONSerializable.modelFactories[T]!(e) as T)
-          .toList()
-          .cast<T>();
-    if(<T>[] is List<WithUID>) {
-      final uids=(await get<List<String>>('${key}_uids'))??[];
-      for(var(i,e) in objs.indexed) {
-        (e as WithUID).uid=uids[i];
+  Future<List<T>> deserializeObjects<T extends JSONSerializable>(String key) async {
+    key = key.replaceAll('/', '');
+    final List<T> objs = jsonDecode(await get<String>(key) ?? '')
+        .map((e) => JSONSerializable.modelFactories[T]!(e) as T)
+        .toList()
+        .cast<T>();
+    if (<T>[] is List<WithUID>) {
+      final uids = (await get<List<String>>('${key}_uids')) ?? [];
+      for (var (i, e) in objs.indexed) {
+        (e as WithUID).uid = uids[i];
       }
     }
     return objs;
@@ -78,8 +75,7 @@ class IOManager {
         return true;
       }
     } on SocketException catch (_) {}
-    context.snackbar('Connessione internet assente!',
-        backgroundColor: Palette.primaryRed);
+    context.snackbar('Connessione internet assente!', backgroundColor: Palette.primaryRed);
     return false;
   }
 }

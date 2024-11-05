@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scheda_dnd_5e/view/character_page.dart';
@@ -6,6 +7,7 @@ import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantment_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
 import 'package:scheda_dnd_5e/view/home_page.dart';
+import 'package:scheda_dnd_5e/view/settings_page.dart';
 import 'package:scheda_dnd_5e/view/signin_page.dart';
 import 'package:scheda_dnd_5e/view/signup_page.dart';
 import 'package:tuple/tuple.dart';
@@ -65,6 +67,7 @@ class MyApp extends StatelessWidget {
         '/enchantment': (context) => const EnchantmentPage(),
         '/create_character':(context) => const CreateCharacterPage(),
         '/character':(context) => const CharacterPage(),
+        '/settings':(context) => const SettingsPage(),
       },
     );
   }
