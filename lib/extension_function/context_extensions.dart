@@ -73,6 +73,7 @@ extension ContextExtensions on BuildContext {
                                   data: message,
                                   shrinkWrap: true,
                                   styleSheet: MarkdownStyleSheet(
+                                    // TODO in mago c'è un pezzo nero
                                       p: Fonts.light(size: 15),
                                       tableBody: Fonts.light(size: 12),
                                       listBullet: Fonts.light(size: 15),

@@ -29,69 +29,49 @@ abstract class InventoryItem extends EnumWithTitle {
 
 enum Weapon implements InventoryItem {
   // Armi da Mischia Semplici
-  ascia(
-      'Ascia', [Dice.d6], 0, 'Danni taglienti, Lancio (gittata 6/18), Leggera'),
-  bastoneFerrato(
-      'Bastone Ferrato', [Dice.d6], 0, 'Danni contundenti, Versatile (1d8)'),
+  ascia('Ascia', [Dice.d6], 0, 'Danni taglienti, Lancio (gittata 6/18), Leggera'),
+  bastoneFerrato('Bastone Ferrato', [Dice.d6], 0, 'Danni contundenti, Versatile (1d8)'),
   falcetto('Falcetto', [Dice.d4], 0, 'Danni taglienti, Leggera'),
-  giavellotto(
-      'Giavellotto', [Dice.d6], 0, 'Danni perforantiLancio (gittata 9/36)'),
-  lancia('Lancia', [Dice.d6], 0,
-      'Danni perforanti, Lancio (gittata 6/18), Versatile (1d8)'),
-  martelloLeggero('Martello Leggero', [Dice.d4], 0,
-      'Danni contundenti, Lancio (gittata 6/18), Leggera'),
+  giavellotto('Giavellotto', [Dice.d6], 0, 'Danni perforantiLancio (gittata 9/36)'),
+  lancia('Lancia', [Dice.d6], 0, 'Danni perforanti, Lancio (gittata 6/18), Versatile (1d8)'),
+  martelloLeggero('Martello Leggero', [Dice.d4], 0, 'Danni contundenti, Lancio (gittata 6/18), Leggera'),
   mazza('Mazza', [Dice.d6], 0, 'Danni contundenti'),
-  pugnale('Pugnale', [Dice.d4], 0,
-      'Danni perforanti, Accurata, Lancio (gittata 6/18), Leggera'),
+  pugnale('Pugnale', [Dice.d4], 0, 'Danni perforanti, Accurata, Lancio (gittata 6/18), Leggera'),
   randello('Randello', [Dice.d4], 0, 'Danni contundenti, Leggera'),
-  randelloPesante(
-      'Randello Pesante', [Dice.d8], 0, 'Danni contundenti, Due Mani'),
+  randelloPesante('Randello Pesante', [Dice.d8], 0, 'Danni contundenti, Due Mani'),
   // Armi a Distanza Semplici
-  arcoCorto('Arco Corto', [Dice.d6], 0,
-      'Danni perforanti, Due Mani, Munizioni (gittata 24/96)'),
+  arcoCorto('Arco Corto', [Dice.d6], 0, 'Danni perforanti, Due Mani, Munizioni (gittata 24/96)'),
   balestraLeggera('Balestra Leggera', [Dice.d8], 0,
       'Danni perforanti, Due Mani, Munizioni (gittata 24/96), Ricarica'),
-  dardo('Dardo', [Dice.d4], 0,
-      'Danni perforanti, Accurata, Lancio (gittata 6/18)'),
+  dardo('Dardo', [Dice.d4], 0, 'Danni perforanti, Accurata, Lancio (gittata 6/18)'),
   fionda('Fionda', [Dice.d4], 0, 'Danni contundenti, Munizioni (gittata 9/36)'),
   // Armi da Mischia da Guerra
-  alabarda(
-      'Alabarda', [Dice.d10], 0, 'Danni taglienti, Due Mani, Pesante, Portata'),
-  asciaBipenne(
-      'Ascia Bipenne', [Dice.d12], 0, 'Danni taglienti, Due Mani, Pesante'),
-  asciaDaBattaglia(
-      'Ascia da Battaglia', [Dice.d8], 0, 'Danni taglienti, Versatile (1d1O)'),
-  falcione(
-      'Falcione', [Dice.d10], 0, 'Danni taglienti, Due Mani, Pesante, Portata'),
+  alabarda('Alabarda', [Dice.d10], 0, 'Danni taglienti, Due Mani, Pesante, Portata'),
+  asciaBipenne('Ascia Bipenne', [Dice.d12], 0, 'Danni taglienti, Due Mani, Pesante'),
+  asciaDaBattaglia('Ascia da Battaglia', [Dice.d8], 0, 'Danni taglienti, Versatile (1d1O)'),
+  falcione('Falcione', [Dice.d10], 0, 'Danni taglienti, Due Mani, Pesante, Portata'),
   frusta('Frusta', [Dice.d4], 0, 'Danni taglienti, Accurata, Portata'),
-  lanciaDaCavaliere('Lancia da Cavaliere', [Dice.d12], 0,
-      'Danni perforanti, Portata, Speciale'),
-  maglio(
-      'Maglio', [Dice.d6, Dice.d6], 0, 'Danni contundenti, Due Mani, Pesante'),
-  martelloDaGuerra('Martello da Guerra', [Dice.d8], 0,
-      'Danni contundenti, Versatile (1d10)'),
+  lanciaDaCavaliere('Lancia da Cavaliere', [Dice.d12], 0, 'Danni perforanti, Portata, Speciale'),
+  maglio('Maglio', [Dice.d6, Dice.d6], 0, 'Danni contundenti, Due Mani, Pesante'),
+  martelloDaGuerra('Martello da Guerra', [Dice.d8], 0, 'Danni contundenti, Versatile (1d10)'),
   mazzafrusto('Mazzafrusto', [Dice.d8], 0, 'Danni contundenti'),
   morningStar('Morning Star', [Dice.d8], 0, 'Danni perforanti'),
   picca('Picca', [Dice.d10], 0, 'Danni perforanti, Due Mani, Pesante, Portata'),
   picconeDaGuerra('Piccone da Guerra', [Dice.d8], 0, 'Danni perforanti'),
   scimitarra('Scimitarra', [Dice.d6], 0, 'Danni taglienti, Accurata, leggera'),
-  spadaCorta(
-      'Spada Corta', [Dice.d6], 0, 'Danni perforanti, Accurata, leggera'),
+  spadaCorta('Spada Corta', [Dice.d6], 0, 'Danni perforanti, Accurata, leggera'),
   spadaLunga('Spada Lunga', [Dice.d8], 0, 'Danni taglienti, Versatile (1d10)'),
-  spadone(
-      'Spadone', [Dice.d6, Dice.d6], 0, 'Danni taglienti, Due Mani, Pesante'),
+  spadone('Spadone', [Dice.d6, Dice.d6], 0, 'Danni taglienti, Due Mani, Pesante'),
   stocco('Stocco', [Dice.d8], 0, 'Danni perforanti, Accurata'),
-  tridente('Tridente', [Dice.d6], 0,
-      'Danni perforanti, Lancio (gittata 6/18), Versatile (1d8)'),
+  tridente('Tridente', [Dice.d6], 0, 'Danni perforanti, Lancio (gittata 6/18), Versatile (1d8)'),
   // Armi o Distanza da Guerra
-  arcoLungo('Arco Lungo', [Dice.d8], 0,
-      'Danni perforanti, Due Mani, Munizioni (gittata 45/180), Pesante'),
-  balestraAMano('Balestra a Mano', [Dice.d6], 0,
-      'Danni perforanti, Leggera, Munizioni (gittata 9/36), Ricarica'),
+  arcoLungo(
+      'Arco Lungo', [Dice.d8], 0, 'Danni perforanti, Due Mani, Munizioni (gittata 45/180), Pesante'),
+  balestraAMano(
+      'Balestra a Mano', [Dice.d6], 0, 'Danni perforanti, Leggera, Munizioni (gittata 9/36), Ricarica'),
   balestraPesante('Balestra Pesante', [Dice.d10], 0,
       'Danni perforanti, Due Mani, Munizioni (gittata 30/120), Pesante, Ricarica'),
-  cerbottana('Cerbottana', [], 1,
-      'Danni perforanti, Munizioni (gittata 7,5/30), Ricarica'),
+  cerbottana('Cerbottana', [], 1, 'Danni perforanti, Munizioni (gittata 7,5/30), Ricarica'),
   rete('Rete', [], 0, 'Lancio (gittata 1,5/4,5), Speciale');
 
   @override
@@ -106,21 +86,14 @@ enum Weapon implements InventoryItem {
 enum Armor implements InventoryItem {
   // Leggere
   imbottita('Imbottita', '11 + modificatore di Destrezza', 0, true),
-  armaturaDiCuoio(
-      'Armatura di cuoio', '11 + modificatore di Destrezza', 0, false),
-  armaturaDiCuoioBorchiato('Armatura di cuoio borchiato',
-      '12 + modificatore di Destrezza', 0, false),
+  armaturaDiCuoio('Armatura di cuoio', '11 + modificatore di Destrezza', 0, false),
+  armaturaDiCuoioBorchiato('Armatura di cuoio borchiato', '12 + modificatore di Destrezza', 0, false),
   // Medie
-  armaturaDiPelle(
-      'Armatura di pelle', '12 + modificatore di Destrezza (max 2)', 0, false),
-  giacoDiMaglia(
-      'Giaco di maglia', '13 + modificatore di Destrezza (max 2)', 0, false),
-  corazzaDiScaglie(
-      'Corazza di scaglie', '14 + modificatore di Destrezza (max 2)', 0, true),
-  corazzaDiPiastre(
-      'Corazza di piastre', '14 + modificatore di Destrezza (max 2)', 0, false),
-  mezzaArmatura(
-      'Mezza armatura', '15 + modificatore di Destrezza (max 2)', 0, true),
+  armaturaDiPelle('Armatura di pelle', '12 + modificatore di Destrezza (max 2)', 0, false),
+  giacoDiMaglia('Giaco di maglia', '13 + modificatore di Destrezza (max 2)', 0, false),
+  corazzaDiScaglie('Corazza di scaglie', '14 + modificatore di Destrezza (max 2)', 0, true),
+  corazzaDiPiastre('Corazza di piastre', '14 + modificatore di Destrezza (max 2)', 0, false),
+  mezzaArmatura('Mezza armatura', '15 + modificatore di Destrezza (max 2)', 0, true),
   // Pesanti
   cottaDiMaglia('Cotta di maglia', '14', 0, true),
   corazzaAdAnelli('Corazza ad anelli', '16', 13, true),
@@ -128,12 +101,7 @@ enum Armor implements InventoryItem {
   armaturaCompleta('Armatura completa', '18', 15, true),
   // Scudi
   scudo('Scudo', '+2', 0, false),
-  scudoDiLegno(
-    'Scudo di legno',
-    '+2',
-    0,
-    false,
-  );
+  scudoDiLegno('Scudo di legno', '+2', 0, false);
 
   @override
   final String title;
@@ -324,26 +292,23 @@ enum Equipment implements InventoryItem {
     Item.coltellino: 1
   }),
   // Oggetti Composti
-  unaBalestraLeggeraE20Quadrelli('Una balestra leggera e 20 Quadrelli',
-      {Weapon.balestraLeggera: 1, Item.quadrelloDaBalestra: 20}),
+  unaBalestraLeggeraE20Quadrelli(
+      'Una balestra leggera e 20 Quadrelli', {Weapon.balestraLeggera: 1, Item.quadrelloDaBalestra: 20}),
   arcoLungoEFaretraCon20Frecce('Arco lungo e faretra con 20 frecce', {
     Weapon.arcoLungo: 1,
     Item.freccia: 20,
   }),
-  unArmaturaDiCuoioUnArcoLungoE20Frecce(
-      'Un\'armatura di cuoio, un arco lungo e 20 frecce', {
+  unArmaturaDiCuoioUnArcoLungoE20Frecce('Un\'armatura di cuoio, un arco lungo e 20 frecce', {
     Armor.armaturaDiCuoio: 1,
     Weapon.arcoLungo: 1,
     Item.freccia: 20,
   }),
-  unArcoCortoE20Frecce(
-      'Un arco corto e 20 frecce', {Weapon.arcoCorto: 1, Item.freccia: 20}),
+  unArcoCortoE20Frecce('Un arco corto e 20 frecce', {Weapon.arcoCorto: 1, Item.freccia: 20}),
   unArmaturaDiCuoioEUnPugnale('Un\'armatura di cuoio e un pugnale', {
     Armor.armaturaDiCuoio: 1,
     Weapon.pugnale: 1,
   }),
-  unArmaturaDiCuoio2PugnaliEArnesiDaScasso(
-      'Un\'armatura di cuoio, 2 pugnali e arnesi da scasso', {
+  unArmaturaDiCuoio2PugnaliEArnesiDaScasso('Un\'armatura di cuoio, 2 pugnali e arnesi da scasso', {
     Armor.armaturaDiCuoio: 1,
     Weapon.pugnale: 2,
     Item.arnesiDaScasso: 1,

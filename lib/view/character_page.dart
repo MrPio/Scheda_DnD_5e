@@ -362,7 +362,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: Measures.vMarginMed),
-          // TODO here: class and multiclass
+          // TODO here: class and multiclass +
+          // TODO: info race,
           // HP bar
           HpBar(character.hp, character.maxHp, bottomSheetArgs: hpBottomSheetArgs),
           const SizedBox(height: Measures.vMarginSmall),
@@ -611,6 +612,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                         'Inventario': 'png/inventory',
                         'Incantesimi': 'png/scepter',
                         'Background': 'png/background',
+                        'Abilità': 'TODO',
                       }
                           .entries
                           .indexed
