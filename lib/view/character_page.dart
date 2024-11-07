@@ -383,8 +383,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           ),
           const SizedBox(height: Measures.vMarginThin),
           // Skills and subSkills
-          GestureDetector(
-            behavior: HitTestBehavior.translucent,
+          Clickable(
             onTap: () => setState(() => _isSkillsExpanded = !_isSkillsExpanded),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: Measures.vMarginThin),
@@ -553,8 +552,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           // Inventory sections
           ...InventoryItem.types.map((type) => Column(
                 children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
+                  // Header
+                  Clickable(
                     onTap: () => setState(
                         () => _setIsInventoryItemExpanded(type, !_getIsInventoryItemExpanded(type))),
                     child: Padding(
@@ -567,6 +566,12 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       ]),
                     ),
                   ),
+                  // List of inventory items
+                  if (_getIsInventoryItemExpanded(type))
+                    ...character.inventory.entries
+                        .where((e) => e.runtimeType == type)
+                        .map((e) => inventoryItemCard(e.key, e.value)),
+                  const SizedBox(height: Measures.vMarginSmall),
                 ],
               ))
         ],
@@ -689,4 +694,6 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       ),
     );
   }
+
+  Widget inventoryItemCard(InventoryItem item, int amount) => Container();
 }

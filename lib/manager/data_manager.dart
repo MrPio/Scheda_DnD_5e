@@ -31,6 +31,7 @@ class DataManager {
   List<Character> cachedCharacters = [];
   List<Character> cachedCampaigns = [];
   ValueNotifier<List<Enchantment>?> enchantments = ValueNotifier(null);
+  // TODO here: inventory 5 types of objects
 
   Map<core.Type, List<WithUID>> get caches =>
       {
