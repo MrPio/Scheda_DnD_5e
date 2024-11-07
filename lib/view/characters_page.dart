@@ -7,7 +7,6 @@ import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
-
 // import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/filter.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
@@ -19,7 +18,6 @@ import 'package:scheda_dnd_5e/view/partial/recycler_view.dart';
 
 import '../constant/fonts.dart';
 import '../constant/measures.dart';
-import 'character_page.dart';
 import 'home_page.dart';
 import 'partial/radio_button.dart';
 

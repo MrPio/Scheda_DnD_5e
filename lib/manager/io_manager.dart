@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
-import 'package:scheda_dnd_5e/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../interface/json_serializable.dart';
@@ -34,15 +33,28 @@ class IOManager {
     double: (sp, key) => sp.getDouble(key),
     List<String>: (sp, key) => sp.getStringList(key),
   };
+  final Map<String, Object?> _cache = {};
 
+  /// This must be called when the application starts
   init() async => prefs = await SharedPreferences.getInstance();
 
-  set<T>(String key, T value) async => _setMethods[T]!(prefs, key, value);
+  // Simple Key/Value entries ==============================================================================
+  /// Set/Update an entry both on disc and in the cache
+  set<T>(String key, T value) {
+    _cache[key] = value;
+    _setMethods[T]!(prefs, key, value);
+  }
 
-  Future<T?> get<T>(String key) async => (_getMethods[T] ?? (sp, key) => sp.get(key))(prefs, key);
+  /// Retrieve an entry from disk. This can be called intensively, as a cache is used.
+  T? get<T>(String key) =>
+      _cache[key] ?? (_getMethods[T] ?? (sp, key) => sp.get(key))(prefs, key);
 
-  remove(String key) async => prefs.remove(key);
+  remove(String key) async {
+    _cache.remove(key);
+    prefs.remove(key);
+  }
 
+  // Object Serialization/Deserialization ==================================================================
   serializeObjects<T extends JSONSerializable>(String key, List<T> objects) async {
     key = key.replaceAll('/', '');
     await set(key, jsonEncode(objects.map((e) => e.toJSON()).toList()));
@@ -67,7 +79,7 @@ class IOManager {
     return objs;
   }
 
-  // Check whenever the device has an available internet connection
+  /// Check that the device is connected to the Internet
   Future<bool> hasInternetConnection(BuildContext context) async {
     try {
       final result = await InternetAddress.lookup('www.google.com');

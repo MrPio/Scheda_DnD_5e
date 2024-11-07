@@ -6,24 +6,37 @@ import '../enum/dice.dart';
 
 part 'part/loot.g.dart';
 
+/// Any item that can be part of a character's inventory
 abstract class InventoryItem extends EnumWithTitle {
-  static const List<List<InventoryItem>> implementations = [
+  static const List<List<InventoryItem>> _implementations = [
     Weapon.values,
     Armor.values,
     Item.values,
     Coin.values,
     Equipment.values,
   ];
+  static const Map<Type, String> icons = {
+    Weapon: 'png/weapon',
+    Armor: 'png/armor',
+    Item: 'png/item',
+    Coin: 'png/coin',
+    Equipment: 'png/equipment',
+  };
+  static const Map<Type, String> names = {
+    Weapon: 'Armi',
+    Armor: 'Armature',
+    Item: 'Oggetti',
+    Coin: 'Monete',
+    Equipment: 'Dotazioni',
+  };
+
+  static List<Type> get types => icons.keys.toList();
 
   factory InventoryItem.fromName(String name) {
-    for (var impl in implementations) {
-      for (var val in impl) {
-        if (val.toString() == name) {
-          return val;
-        }
-      }
-    }
-    throw Exception;
+    return _implementations.expand((impl) => impl).firstWhere(
+          (val) => val.toString() == name,
+          orElse: () => throw Exception(),
+        );
   }
 }
 

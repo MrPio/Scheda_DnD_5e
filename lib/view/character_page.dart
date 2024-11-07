@@ -11,6 +11,7 @@ import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
+import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/view/characters_page.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
@@ -39,7 +40,16 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
   List<Widget>? _screens;
   TabController? _tabController;
   late ScrollController _bodyController;
-  bool _isSkillsExpanded = true;
+
+  bool get _isSkillsExpanded => IOManager().get<bool>('character_page_isSkillsExpanded') ?? false;
+
+  set _isSkillsExpanded(bool value) => IOManager().set('character_page_isSkillsExpanded', value);
+
+  bool _getIsInventoryItemExpanded(Type type) =>
+      IOManager().get<bool>('character_page_isInventoryItemExpanded_$type') ?? true;
+
+  _setIsInventoryItemExpanded(Type type, bool value) =>
+      IOManager().set('character_page_isInventoryItemExpanded_$type', value);
   Character? _character, _oldCharacter;
   late final TextEditingController _armorClassController,
       _speedController,
@@ -58,10 +68,6 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
   @override
   void initState() {
-    Future.delayed(Duration.zero, () async {
-      _isSkillsExpanded = await IOManager().get<bool>('character_page_isSkillsExpanded') ?? true;
-      setState(() {});
-    });
     _armorClassController = TextEditingController();
     _speedController = TextEditingController();
     _initiativeController = TextEditingController();
@@ -358,6 +364,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
             ))
         .toList();
     _screens = [
+      // Sheet
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -378,10 +385,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           // Skills and subSkills
           GestureDetector(
             behavior: HitTestBehavior.translucent,
-            onTap: () => setState(() {
-              _isSkillsExpanded = !_isSkillsExpanded;
-              IOManager().set('character_page_isSkillsExpanded', _isSkillsExpanded);
-            }),
+            onTap: () => setState(() => _isSkillsExpanded = !_isSkillsExpanded),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: Measures.vMarginThin),
               child: Row(children: [
@@ -541,8 +545,37 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           const SizedBox(height: Measures.vMarginBig),
         ],
       ),
+      // Inventory
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: Measures.vMarginMed),
+          // Inventory sections
+          ...InventoryItem.types.map((type) => Column(
+                children: [
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () => setState(
+                        () => _setIsInventoryItemExpanded(type, !_getIsInventoryItemExpanded(type))),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: Measures.vMarginThin),
+                      child: Row(children: [
+                        Text(InventoryItem.names[type]!, style: Fonts.black(size: 18)),
+                        const SizedBox(width: Measures.hMarginMed),
+                        'chevron_left'.toIcon(
+                            height: 16, rotation: _getIsInventoryItemExpanded(type) ? pi / 2 : -pi / 2)
+                      ]),
+                    ),
+                  ),
+                ],
+              ))
+        ],
+      ),
+      // Enchantments
       const Placeholder(),
+      // Background
       const Placeholder(),
+      // Ability
       const Placeholder(),
     ];
     _tabController ??= TabController(length: _screens!.length, vsync: this)
@@ -612,7 +645,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                         'Inventario': 'png/inventory',
                         'Incantesimi': 'png/scepter',
                         'Background': 'png/background',
-                        'Abilità': 'TODO',
+                        'Abilità': 'png/ability',
                       }
                           .entries
                           .indexed
