@@ -6,7 +6,7 @@ import 'package:shimmer/shimmer.dart';
 class GlassCard extends StatefulWidget {
   final double? width, height, shimmerHeight;
   final Widget? child;
-  final bool clickable, isShimmer, isLight;
+  final bool clickable, isShimmer, isLight, isFlat;
   final void Function()? onTap;
   final BottomSheetArgs? bottomSheetArgs;
 
@@ -20,7 +20,8 @@ class GlassCard extends StatefulWidget {
       this.shimmerHeight,
       this.onTap,
       this.bottomSheetArgs,
-      this.isLight = false});
+      this.isLight = false,
+      this.isFlat = false});
 
   @override
   State<GlassCard> createState() => _GlassCardState();
@@ -29,7 +30,11 @@ class GlassCard extends StatefulWidget {
 class _GlassCardState extends State<GlassCard> {
   final double borderRadiusUp = 14;
 
-  get _borderRadius => _down ? 12.0 : 16.0;
+  get _borderRadius => widget.isFlat
+      ? 0.0
+      : _down
+          ? 10.0
+          : 14.0;
 
   get _opacity => _down ? 0.55 : 1.0;
 

@@ -717,9 +717,7 @@ enum Class implements EnumWithTitle {
         {Equipment.dotazioneDaEsploratore: 1},
       ],
       Dice.d12,
-      {
-        Skill.forza:13
-      },
+      {Skill.forza: 13},
       [
         Tuple3(1, 'Tabella Barbaro',
             'TABELLA BARBARO\n| Livello |     Ira    | Danni dell\'ira |\n|:-------:|:----------:|:--------------:| |    1°   |      2     |       +2       | |    2°   |      2     |       +2       | |    3°   |      3     |       +2       | |    4°   |      3     |       +2       | |    5°   |      3     |       +2       | |    6°   |      4     |       +2       | |    7°   |      4     |       +2       | |    8°   |      4     |       +2       | |    9°   |      4     |       +3       | |   10°   |      4     |       +3       | |   11°   |      4     |       +3       | |   12°   |      5     |       +3       | |   13°   |      5     |       +3       | |   14°   |      5     |       +3       | |   15°   |      5     |       +3       | |   16°   |      5     |       +4       | |   17°   |      6     |       +4       | |   18°   |      6     |       +4       | |   19°   |      6     |       +4       | |   20°   | Illimitata |       +4       |'),
@@ -830,9 +828,7 @@ enum Class implements EnumWithTitle {
         {Equipment.dotazioneDaDiplomatico: 1, Equipment.dotazioneDaIntrattenitore: 1},
       ],
       Dice.d8,
-      {
-        Skill.carisma:13
-      },
+      {Skill.carisma: 13},
       [
         Tuple3(1, 'Tabella Bardo',
             'TABELLA BARDO\n| Livello | Trucchetti Conosciuti | Incantesimi Conosciuti | Slot 1 | Slot 2 | Slot 3 | Slot 4 | Slot 5 | Slot 6 | Slot 7 | Slot 8 | Slot 9 |\n|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:| | 1° | 2 | 4 | 2 | - | - | - | - | - | - | - | - |\n| 2° | 2 | 5 | 3 | - | - | - | - | - | - | - | - |\n| 3° | 2 | 6 | 4 | 2 | - | - | - | - | - | - | - |\n| 4° | 3 | 7 | 4 | 3 | - | - | - | - | - | - | - |\n| 5° | 3 | 8 | 4 | 3 | 2 | - | - | - | - | - | - |\n| 6° | 3 | 9 | 4 | 3 | 3 | - | - | - | - | - | - |\n| 7° | 3 | 10 | 4 | 3 | 3 | 1 | - | - | - | - | - |\n| 8° | 3 | 11 | 4 | 3 | 3 | 2 | - | - | - | - | - |\n| 9° | 3 | 12 | 4 | 3 | 3 | 3 | 1 | - | - | - | - |\n| 10° | 4 | 14 | 4 | 3 | 3 | 3 | 2 | - | - | - | - |\n| 11° | 4 | 15 | 4 | 3 | 3 | 3 | 2 | 1 | - | - | - |\n| 12° | 4 | 15 | 4 | 3 | 3 | 3 | 2 | 1 | - | - | - |\n| 13° | 4 | 16 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | - | - |\n| 14° | 4 | 18 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | - | - |\n| 15° | 4 | 19 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | - |\n| 16° | 4 | 19 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | - |\n| 17° | 4 | 20 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | 1 |\n| 18° | 4 | 22 | 4 | 3 | 3 | 3 | 3 | 1 | 1 | 1 | 1 |\n| 19° | 4 | 22 | 4 | 3 | 3 | 3 | 3 | 2 | 1 | 1 | 1 |\n| 20° | 4 | 22 | 4 | 3 | 3 | 3 | 3 | 2 | 2 | 1 | 1 |'),
@@ -919,9 +915,7 @@ enum Class implements EnumWithTitle {
         {Equipment.dotazioneDaSacerdote: 1, Equipment.dotazioneDaEsploratore: 1},
       ],
       Dice.d8,
-      {
-        Skill.saggezza:13
-      },
+      {Skill.saggezza: 13},
       [
         Tuple3(1, 'Tabella Chierico',
             'TABELLA CHIERICO\n| Livello | Trucchetti Conosciuti | Slot 1 | Slot 2 | Slot 3 | Slot 4 | Slot 5 | Slot 6 | Slot 7 | Slot 8 | Slot 9 |\n|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|\n| 1° | 3 | 2 | - | - | - | - | - | - | - | - |\n| 2° | 3 | 3 | - | - | - | - | - | - | - | - |\n| 3° | 3 | 4 | 2 | - | - | - | - | - | - | - |\n| 4° | 4 | 4 | 3 | - | - | - | - | - | - | - |\n| 5° | 4 | 4 | 3 | 2 | - | - | - | - | - | - |\n| 6° | 4 | 4 | 3 | 3 | - | - | - | - | - | - |\n| 7° | 4 | 4 | 3 | 3 | 1 | - | - | - | - | - |\n| 8° | 4 | 4 | 3 | 3 | 2 | - | - | - | - | - |\n| 9° | 4 | 4 | 3 | 3 | 3 | 1 | - | - | - | - |\n| 10° | 5 | 4 | 3 | 3 | 3 | 2 | - | - | - | - |\n| 11° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | - | - | - |\n| 12° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | - | - | - |\n| 13° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | - | - |\n| 14° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | - | - |\n| 15° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | - |\n| 16° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | - |\n| 17° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | 1 |\n| 18° | 5 | 4 | 3 | 3 | 3 | 3 | 1 | 1 | 1 | 1 |\n| 19° | 5 | 4 | 3 | 3 | 3 | 3 | 2 | 1 | 1 | 1 |\n| 20° | 5 | 4 | 3 | 3 | 3 | 3 | 2 | 2 | 1 | 1 |'),
@@ -1016,9 +1010,7 @@ enum Class implements EnumWithTitle {
         {Equipment.dotazioneDaEsploratore: 1},
       ],
       Dice.d8,
-      {
-        Skill.saggezza:13
-      },
+      {Skill.saggezza: 13},
       [
         Tuple3(1, 'Tabella Druido',
             'TABELLA DRUIDO\n| Livello | Trucchetti Conosciuti | Slot 1 | Slot 2 | Slot 3 | Slot 4 | Slot 5 | Slot 6 | Slot 7 | Slot 8 | Slot 9 |\n|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:| | 1° | 2 | 2 | - | - | - | - | - | - | - | - | | 2° | 2 | 3 | - | - | - | - | - | - | - | - | | 3° | 2 | 4 | 2 | - | - | - | - | - | - | - | | 4° | 3 | 4 | 3 | - | - | - | - | - | - | - | | 5° | 3 | 4 | 3 | 2 | - | - | - | - | - | - | | 6° | 3 | 4 | 3 | 3 | - | - | - | - | - | - | | 7° | 3 | 4 | 3 | 3 | 1 | - | - | - | - | - | | 8° | 3 | 4 | 3 | 3 | 2 | - | - | - | - | - | | 9° | 3 | 4 | 3 | 3 | 3 | 1 | - | - | - | - | | 10° | 4 | 4 | 3 | 3 | 3 | 2 | - | - | - | - | | 11° | 4 | 4 | 3 | 3 | 3 | 2 | 1 | - | - | - | | 12° | 4 | 4 | 3 | 3 | 3 | 2 | 1 | - | - | - | | 13° | 4 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | - | - | | 14° | 4 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | - | - | | 15° | 4 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | - | | 16° | 4 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | - | | 17° | 4 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | 1 | | 18° | 4 | 4 | 3 | 3 | 3 | 3 | 1 | 1 | 1 | 1 | | 19° | 4 | 4 | 3 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | | 20° | 4 | 4 | 3 | 3 | 3 | 3 | 2 | 2 | 1 | 1 |'),
@@ -1129,10 +1121,7 @@ enum Class implements EnumWithTitle {
         {Equipment.dotazioneDaAvventuriero: 1, Equipment.dotazioneDaEsploratore: 1},
       ],
       Dice.d10,
-      {
-        Skill.forza:13,
-        Skill.destrezza:13
-      },
+      {Skill.forza: 13, Skill.destrezza: 13},
       [
         Tuple3(1, 'Punti ferita',
             'PUNTI FERITA\nDado Vita: 1d10 per livello da guerriero\nPunti Ferita al 1° livello: 10 + il tuo modificatore di Costituzione\nPunti Ferita ai Livelli Più Alti: 1d10 (o 6) + il tuo modificatore di Costituzione per livello da guerriero oltre il 1°.'),
@@ -1199,9 +1188,7 @@ enum Class implements EnumWithTitle {
         },
       ],
       Dice.d8,
-      {
-        Skill.destrezza:13
-      },
+      {Skill.destrezza: 13},
       [
         Tuple3(1, 'Tabella Ladro',
             'TABELLA LADRO\n| Livello | Attacco Furtivo |\n|:---:|:---:|\n| 1° | 1d6 |\n| 2° | 1d6 |\n| 3° | 2d6 |\n| 4° | 2d6 |\n| 5° | 3d6 |\n| 6° | 3d6 |\n| 7° | 4d6 |\n| 8° | 4d6 |\n| 9° | 5d6 |\n| 10° | 5d6 |\n| 11° | 6d6 |\n| 12° | 6d6 |\n| 13° | 7d6 |\n| 14° | 7d6 |\n| 15° | 8d6 |\n| 16° | 8d6 |\n| 17° | 9d6 |\n| 18° | 9d6 |\n| 19° | 10d6 |\n| 20° | 10d6 |'),
@@ -1275,9 +1262,7 @@ enum Class implements EnumWithTitle {
         {Equipment.dotazioneDaStudioso: 1, Equipment.dotazioneDaEsploratore: 1},
       ],
       Dice.d6,
-      {
-        Skill.intelligenza:13
-      },
+      {Skill.intelligenza: 13},
       [
         Tuple3(1, 'Tabella Mago',
             'TABELLA MAGO\n| Livello | Trucchetti Conosciuti | Slot 1 | Slot 2 | Slot 3 | Slot 4 | Slot 5 | Slot 6 | Slot 7 | Slot 8 | Slot 9 |\n|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:| | 1° | 3 | 2 | - | - | - | - | - | - | - | - |\n| 2° | 3 | 3 | - | - | - | - | - | - | - | - | | 3° | 3 | 4 | 2 | - | - | - | - | - | - | - | | 4° | 4 | 4 | 3 | - | - | - | - | - | - | - | | 5° | 4 | 4 | 3 | 2 | - | - | - | - | - | - | | 6° | 4 | 4 | 3 | 3 | - | - | - | - | - | - | | 7° | 4 | 4 | 3 | 3 | 1 | - | - | - | - | - | | 8° | 4 | 4 | 3 | 3 | 2 | - | - | - | - | - | | 9° | 4 | 4 | 3 | 3 | 3 | 1 | - | - | - | - | | 10° | 5 | 4 | 3 | 3 | 3 | 2 | - | - | - | - | | 11° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | - | - | - | | 12° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | - | - | - | | 13° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | - | - | | 14° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | - | - | | 15° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | - | | 16° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | - | | 17° | 5 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | 1 | | 18° | 5 | 4 | 3 | 3 | 3 | 3 | 1 | 1 | 1 | 1 | | 19° | 5 | 4 | 3 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | | 20° | 5 | 4 | 3 | 3 | 3 | 3 | 2 | 2 | 1 | 1 |'),
@@ -1346,10 +1331,7 @@ enum Class implements EnumWithTitle {
         {Equipment.dotazioneDaAvventuriero: 1, Equipment.dotazioneDaEsploratore: 1},
       ],
       Dice.d8,
-      {
-        Skill.destrezza:13,
-        Skill.saggezza:13
-      },
+      {Skill.destrezza: 13, Skill.saggezza: 13},
       [
         Tuple3(1, 'Tabella Monaco',
             'TABELLA MONACO\n| Livello | Attacco Furtivo | Punti Ki | Movimento senza armatura |\n|:---:|:---:|:---:|:---:| | 1° | 1d4 | - | - |\n| 2° | 1d4 | 2 | +3 m |\n| 3° | 1d4 | 3 | +3 m | | 4° | 1d4 | 4 | +3 m | | 5° | 1d6 | 5 | +3 m | | 6° | 1d6 | 6 | +4,5 m | | 7° | 1d6 | 7 | +4,5 m | | 8° | 1d6 | 8 | +4,5 m | | 9° | 1d6 | 9 | +4,5 m | | 10° | 1d6 | 10 | +6 m | | 11° | 1d8 | 11 | +6 m | | 12° | 1d8 | 12 | +6 m | | 13° | 1d8 | 13 | +6 m | | 14° | 1d8 | 14 | +7,5 m | | 15° | 1d8 | 15 | +7,5 m | | 16° | 1d8 | 16 | +7,5 m | | 17° | 1d10 | 17 | +7,5 m | | 18° | 1d10 | 18 | +9 m | | 19° | 1d10 | 19 | +9 m | | 20° | 1d10 | 20 | +9 m |'),
@@ -1491,10 +1473,7 @@ enum Class implements EnumWithTitle {
         {Equipment.dotazioneDaSacerdote: 1, Equipment.dotazioneDaEsploratore: 1},
       ],
       Dice.d10,
-      {
-        Skill.forza:13,
-        Skill.carisma:13
-      },
+      {Skill.forza: 13, Skill.carisma: 13},
       [
         Tuple3(1, 'Tabella Paladino',
             'TABELLA PALADINO\n| Livello | Slot 1 | Slot 2 | Slot 3 | Slot 4 | Slot 5 |\n|:---:|:---:|:---:|:---:|:---:|:---:| | 1° | - | - | - | - | - | | 2° | 2 | - | - | - | - | | 3° | 3 | - | - | - | - | | 4° | 3 | - | - | - | - | | 5° | 4 | 2 | - | - | - | | 6° | 4 | 2 | - | - | - | | 7° | 4 | 3 | - | - | - | | 8° | 4 | 3 | - | - | - | | 9° | 4 | 3 | 2 | - | - | | 10° | 4 | 3 | 2 | - | - | | 11° | 4 | 3 | 3 | - | - | | 12° | 4 | 3 | 3 | - | - | | 13° | 4 | 3 | 3 | 1 | - | | 14° | 4 | 3 | 3 | 1 | - | | 15° | 4 | 3 | 3 | 2 | - | | 16° | 4 | 3 | 3 | 2 | - | | 17° | 4 | 3 | 3 | 3 | 1 | | 18° | 4 | 3 | 3 | 3 | 1 | | 19° | 4 | 3 | 3 | 3 | 2 | | 20° | 4 | 3 | 3 | 3 | 2 |'),
@@ -1591,10 +1570,7 @@ enum Class implements EnumWithTitle {
         {Equipment.dotazioneDaAvventuriero: 1, Equipment.dotazioneDaEsploratore: 1},
       ],
       Dice.d10,
-      {
-        Skill.destrezza:13,
-        Skill.saggezza:13
-      },
+      {Skill.destrezza: 13, Skill.saggezza: 13},
       [
         Tuple3(1, 'Tabella Ranger',
             'TABELLA RANGER\n| Livello | Incantesimi Conosciuti | Slot 1 | Slot 2 | Slot 3 | Slot 4 | Slot 5 |\n|:---:|:---:|:---:|:---:|:---:|:---:|:---:| | 1° | - | - | - | - | - | - | | 2° | 2 | 2 | - | - | - | - | | 3° | 3 | 3 | - | - | - | - | | 4° | 3 | 3 | - | - | - | - | | 5° | 4 | 4 | 2 | - | - | - | | 6° | 4 | 4 | 2 | - | - | - | | 7° | 5 | 4 | 3 | - | - | - | | 8° | 5 | 4 | 3 | - | - | - | | 9° | 6 | 4 | 3 | 2 | - | - | | 10° | 6 | 4 | 3 | 2 | - | - | | 11° | 7 | 4 | 3 | 3 | - | - | | 12° | 7 | 4 | 3 | 3 | - | - | | 13° | 8 | 4 | 3 | 3 | 1 | - | | 14° | 8 | 4 | 3 | 3 | 1 | - | | 15° | 9 | 4 | 3 | 3 | 2 | - | | 16° | 9 | 4 | 3 | 3 | 2 | - | | 17° | 10 | 4 | 3 | 3 | 3 | 1 | | 18° | 10 | 4 | 3 | 3 | 3 | 1 | | 19° | 11 | 4 | 3 | 3 | 3 | 2 | | 20° | 11 | 4 | 3 | 3 | 3 | 2 |'),
@@ -1678,9 +1654,7 @@ enum Class implements EnumWithTitle {
         {Equipment.dotazioneDaAvventuriero: 1, Equipment.dotazioneDaEsploratore: 1},
       ],
       Dice.d6,
-      {
-        Skill.carisma:13
-      },
+      {Skill.carisma: 13},
       [
         Tuple3(1, 'Tabella Stregone',
             'TABELLA STREGONE\n| Livello | Punti stregoneria | Trucchetti Conosciuti | Incantesimi Conosciuti | Slot 1 | Slot 2 | Slot 3 | Slot 4 | Slot 5 | Slot 6 | Slot 7 | Slot 8 | Slot 9 |\n|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:| | 1° | - | 4 | 2 | 2 | - | - | - | - | - | - | - | - | | 2° | 2 | 4 | 3 | 3 | - | - | - | - | - | - | - | - | | 3° | 3 | 4 | 4 | 4 | 2 | - | - | - | - | - | - | - | | 4° | 4 | 5 | 5 | 4 | 3 | - | - | - | - | - | - | - | | 5° | 5 | 5 | 6 | 4 | 3 | 2 | - | - | - | - | - | - | | 6° | 6 | 5 | 7 | 4 | 3 | 3 | - | - | - | - | - | - | | 7° | 7 | 5 | 8 | 4 | 3 | 3 | 1 | - | - | - | - | - | | 8° | 8 | 5 | 9 | 4 | 3 | 3 | 2 | - | - | - | - | - | | 9° | 9 | 5 | 10 | 4 | 3 | 3 | 3 | 1 | - | - | - | - | | 10° | 10 | 6 | 11 | 4 | 3 | 3 | 3 | 2 | - | - | - | - | | 11° | 11 | 6 | 12 | 4 | 3 | 3 | 3 | 2 | 1 | - | - | - | | 12° | 12 | 6 | 12 | 4 | 3 | 3 | 3 | 2 | 1 | - | - | - | | 13° | 13 | 6 | 13 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | - | - | | 14° | 14 | 6 | 13 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | - | - | | 15° | 15 | 6 | 14 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | - | | 16° | 16 | 6 | 14 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | - | | 17° | 17 | 6 | 15 | 4 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | 1 | | 18° | 18 | 6 | 15 | 4 | 3 | 3 | 3 | 3 | 1 | 1 | 1 | 1 | | 19° | 19 | 6 | 15 | 4 | 3 | 3 | 3 | 3 | 2 | 1 | 1 | 1 | | 20° | 20 | 6 | 15 | 4 | 3 | 3 | 3 | 3 | 2 | 2 | 1 | 1 |'),
@@ -1764,9 +1738,8 @@ enum Class implements EnumWithTitle {
         {Equipment.dotazioneDaAvventuriero: 1, Equipment.dotazioneDaStudioso: 1},
       ],
       Dice.d8,
-      {
-        Skill.carisma:13
-      },      [
+      {Skill.carisma: 13},
+      [
         Tuple3(1, 'Tabella Warlock',
             'TABELLA WARLOCK\n| Livello | Trucchetti conosciuti | Incantesimi Conosciuti | Slot incantesimo | Livello di slot | Suppliche conosciute |\n|:---:|:---:|:---:|:---:|:---:|:---:| | 1° | 2 | 2 | 1 | 1° | - | | 2° | 2 | 3 | 2 | 1° | 2 | | 3° | 2 | 4 | 2 | 2° | 2 | | 4° | 3 | 5 | 2 | 2° | 2 | | 5° | 3 | 6 | 2 | 3° | 3 | | 6° | 3 | 7 | 2 | 3° | 3 | | 7° | 3 | 8 | 2 | 4° | 4 | | 8° | 3 | 9 | 2 | 4° | 4 | | 9° | 3 | 10 | 2 | 5° | 5 | | 10° | 4 | 10 | 2 | 5° | 5 | | 11° | 4 | 11 | 3 | 5° | 5 | | 12° | 4 | 11 | 3 | 5° | 6 |\n| 13° | 4 | 12 | 3 | 5° | 6 |\n| 14° | 4 | 12 | 3 | 5° | 6 |\n| 15° | 4 | 13 | 3 | 5° | 7 |\n| 16° | 4 | 13 | 3 | 5° | 7 | | 17° | 4 | 14 | 4 | 5° | 7 | | 18° | 4 | 14 | 4 | 5° | 8 | | 19° | 4 | 15 | 4 | 5° | 8 | | 20° | 4 | 15 | 4 | 5° | 8 |'),
         Tuple3(1, 'Punti ferita',
@@ -1803,7 +1776,7 @@ enum Class implements EnumWithTitle {
   final List<Map<InventoryItem, int>> choiceableItems;
   final List<Tuple3<int, String, String>> abilities; //level, name, info pop-up
   final Map<Skill, int> requirements; // Necessario in fase di livellamento
-  final Dice life;
+  final Dice maxHpDice;
 
   const Class(
       this.title,
@@ -1817,7 +1790,7 @@ enum Class implements EnumWithTitle {
       this.choiceableMasteryTypes,
       this.savingThrows,
       this.choiceableItems,
-      this.life,
+      this.maxHpDice,
       this.requirements,
       this.abilities,
       this.description);
@@ -2664,6 +2637,7 @@ class Character with Comparable<Character> implements WithUID {
         languages = languages ?? {},
         _hp = _hp ?? 10,
         _maxHp = _maxHp ?? 10 {
+    // Assert that each inventory entry has at least 1 amount. Non owned items should not be in the inventory map.
     for (var qta in _inventory.values) {
       assert(qta > 0);
     }

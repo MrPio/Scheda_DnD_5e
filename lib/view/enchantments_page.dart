@@ -83,7 +83,7 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
         child: RecyclerView(
             header: Column(
               children: [
-                const SizedBox(height: Measures.vMarginBig),
+                const SizedBox(height: Measures.vMarginBig+Measures.vMarginMed),
                 // Page Title
                 Align(
                     alignment: Alignment.centerLeft,

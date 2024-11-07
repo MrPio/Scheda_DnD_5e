@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
-import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
@@ -55,34 +53,33 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                   child: Column(
                     children: [
                       const SizedBox(height: Measures.vMarginSmall),
+
                       // Description card
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: Measures.hPadding),
-                        child: GlassCard(
-                            width: double.infinity,
-                            clickable: false,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  descriptionEntry(
-                                      key: 'Tempo di lancio',
-                                      value: enchantment.launchTimeStr),
-                                  descriptionEntry(
-                                      key: 'Gittata',
-                                      value: enchantment.rangeStr),
-                                  descriptionEntry(
-                                      key: 'Componenti',
-                                      value: enchantment.componentsStr),
-                                  descriptionEntry(
-                                      key: 'Durata',
-                                      value: enchantment.durationStr),
-                                ],
-                              ),
-                            )),
+                      GlassCard(
+                        isFlat: true,
+                        width: double.infinity,
+                        clickable: false,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: Measures.hPadding,vertical: Measures.vMarginSmall),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              descriptionEntry(
+                                  key: 'Tempo di lancio',
+                                  value: enchantment.launchTimeStr),
+                              descriptionEntry(
+                                  key: 'Gittata',
+                                  value: enchantment.rangeStr),
+                              descriptionEntry(
+                                  key: 'Componenti',
+                                  value: enchantment.componentsStr),
+                              descriptionEntry(
+                                  key: 'Durata',
+                                  value: enchantment.durationStr),
+                            ],
+                          ),
+                        ),
                       ),
                       const SizedBox(height: Measures.vMarginSmall),
                       // Classes

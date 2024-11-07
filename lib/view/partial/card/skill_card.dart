@@ -73,7 +73,7 @@ class SkillCard extends StatelessWidget {
                           positiveText: 'Ok',
                           backgroundColor: Palette.background.withOpacity(0.5));
                     },
-                    padding: const EdgeInsets.all(12)),
+                    padding: const EdgeInsets.all(8)),
                 'png/dice_on'.toIcon(
                     onTap: () async {
                       int? result = await Navigator.of(context).pushNamed(
@@ -87,7 +87,7 @@ class SkillCard extends StatelessWidget {
                         skillInputController.text = result.toString();
                       }
                     },
-                    padding: const EdgeInsets.all(12))
+                    padding: const EdgeInsets.all(8))
               ],
             ),
           )

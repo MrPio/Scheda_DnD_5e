@@ -45,8 +45,7 @@ class CreateCharacterPage extends StatefulWidget {
   State<CreateCharacterPage> createState() => _CreateCharacterPageState();
 }
 
-class _CreateCharacterPageState extends State<CreateCharacterPage>
-    with Validable, Loadable {
+class _CreateCharacterPageState extends State<CreateCharacterPage> with Validable, Loadable {
   List<Character?> characters = [Character(), null, null, null, null, null];
 
   Character get character => characters[_index]!;
@@ -58,8 +57,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
   List<Function()?>? _bottomButtons;
 
   int _index = 0;
-  final List<TextEditingController> _skillControllers = List.generate(
-      Skill.values.length, (_) => TextEditingController(text: '3'));
+  final List<TextEditingController> _skillControllers =
+      List.generate(Skill.values.length, (_) => TextEditingController(text: '3'));
 
   @override
   void initState() {
@@ -88,16 +87,13 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
     _screens = [
       // Choose name
       Column(children: [
-        // Page Title
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Assegna un nome', style: Fonts.black())),
+        // Title
+        Align(alignment: Alignment.centerLeft, child: Text('Assegna un nome', style: Fonts.black())),
         const SizedBox(height: Measures.vMarginThin),
         // Subtitle
         Align(
           alignment: Alignment.centerLeft,
-          child: Text('Come vuoi chiamare il tuo nuovo personaggio?',
-              style: Fonts.light()),
+          child: Text('Come vuoi chiamare il tuo nuovo personaggio?', style: Fonts.light()),
         ),
         const SizedBox(height: Measures.vMarginMed),
         // Search TextField
@@ -121,31 +117,25 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
       ]),
       // Select race
       Column(children: [
-        // Page Title
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Seleziona la razza', style: Fonts.black())),
+        // Title
+        Align(alignment: Alignment.centerLeft, child: Text('Seleziona la razza', style: Fonts.black())),
         const SizedBox(height: Measures.vMarginThin),
         // Subtitle
         Align(
           alignment: Alignment.centerLeft,
-          child: Text(
-              'La Razza rappresenta il popolo e l’etnia di cui farà parte il personaggio.',
+          child: Text('La Razza rappresenta il popolo e l’etnia di cui farà parte il personaggio.',
               style: Fonts.light()),
         ),
         const SizedBox(height: Measures.vMarginMed),
         // Legend
-        const Legend(items: {
-          'Linguaggi': Palette.primaryGreen,
-          'Punti caratteristica': Palette.primaryYellow
-        }),
+        const Legend(
+            items: {'Linguaggi': Palette.primaryGreen, 'Punti caratteristica': Palette.primaryYellow}),
         const SizedBox(height: Measures.vMarginMed),
         // Races cards
         Column(
             children: Race.values
                     .map((e) => Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: Measures.vMarginThin),
+                          padding: const EdgeInsets.only(bottom: Measures.vMarginThin),
                           child: GlassCard(
                             onTap: () async {
                               // Set race fields
@@ -157,8 +147,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                               // Ask the possible choices before continuing
                               if (e.canChoiceLanguage) {
                                 final languages = Language.values
-                                    .where((language) =>
-                                        !e.defaultLanguages.contains(language))
+                                    .where((language) => !e.defaultLanguages.contains(language))
                                     .toList()
                                   ..sort((a, b) => a.title.compareTo(b.title));
                                 character.languages.add(languages[0]);
@@ -169,16 +158,13 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   values: languages,
                                   color: Palette.primaryGreen,
                                   selectionRequirement: 1,
-                                  onChanged: (value) => character.languages =
-                                      (e.defaultLanguages + [value]).toSet(),
-                                  value: (value) =>
-                                      character.languages.contains(value),
+                                  onChanged: (value) =>
+                                      character.languages = (e.defaultLanguages + [value]).toSet(),
+                                  value: (value) => character.languages.contains(value),
                                 );
                               }
                               if (e.choiceableMasteries.isNotEmpty) {
-                                character.masteries = {
-                                  e.choiceableMasteries[0]
-                                };
+                                character.masteries = {e.choiceableMasteries[0]};
                                 await context.checkList<Mastery>(
                                   'Scegli una competenza',
                                   dismissible: false,
@@ -186,17 +172,14 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   values: e.choiceableMasteries,
                                   color: Palette.primaryBlue,
                                   selectionRequirement: 1,
-                                  onChanged: (value) =>
-                                      character.masteries = {value},
-                                  value: (value) =>
-                                      character.masteries.contains(value),
+                                  onChanged: (value) => character.masteries = {value},
+                                  value: (value) => character.masteries.contains(value),
                                 );
                               }
                               if (e.numChoiceableSkills > 0) {
                                 Skill.values
                                     .sublist(0, e.numChoiceableSkills)
-                                    .forEach((skill) =>
-                                        character.chosenSkills += {skill: 1});
+                                    .forEach((skill) => character.chosenSkills += {skill: 1});
                                 await context.checkList<Skill>(
                                   'Scegli ${e.numChoiceableSkills} competenza/e a cui assegnare +1',
                                   dismissible: false,
@@ -209,8 +192,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                     if (selected.containsKey(value)) {
                                       character.chosenSkills -= {value: 1};
                                     } else if (selected.isEmpty ||
-                                        selected.values.toList().sum() <
-                                            e.numChoiceableSkills) {
+                                        selected.values.toList().sum() < e.numChoiceableSkills) {
                                       character.chosenSkills += {value: 1};
                                     } else if (e.numChoiceableSkills == 1 &&
                                         !selected.containsKey(value)) {
@@ -218,42 +200,34 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                       character.chosenSkills.addAll({value: 1});
                                     }
                                   },
-                                  value: (value) =>
-                                      character.chosenSkills[value] == 1,
+                                  value: (value) => character.chosenSkills[value] == 1,
                                 );
                               }
                               if (e.numChoiceableSubSkills > 0) {
                                 SubSkill.values
                                     .sublist(0, e.numChoiceableSkills)
-                                    .forEach((subSkill) =>
-                                        character.subSkills += {subSkill: 1});
+                                    .forEach((subSkill) => character.subSkills += {subSkill: 1});
                                 await context.checkList<SubSkill>(
                                   'Scegli ${e.numChoiceableSubSkills} sottocompetenza/e',
                                   dismissible: false,
                                   isRadio: e.numChoiceableSubSkills == 1,
                                   values: SubSkill.values,
                                   color: Palette.primaryYellow,
-                                  selectionRequirement:
-                                      e.numChoiceableSubSkills,
+                                  selectionRequirement: e.numChoiceableSubSkills,
                                   onChanged: (value) {
-                                    if (character.subSkills
-                                        .containsKey(value)) {
+                                    if (character.subSkills.containsKey(value)) {
                                       character.subSkills -= {value: 1};
                                     } else if (character.subSkills.isEmpty ||
-                                        character.subSkills.values
-                                                .toList()
-                                                .sum() <
+                                        character.subSkills.values.toList().sum() <
                                             e.numChoiceableSubSkills) {
                                       character.subSkills += {value: 1};
                                     } else if (e.numChoiceableSubSkills == 1 &&
-                                        !character.subSkills
-                                            .containsKey(value)) {
+                                        !character.subSkills.containsKey(value)) {
                                       character.subSkills.clear();
                                       character.subSkills.addAll({value: 1});
                                     }
                                   },
-                                  value: (value) =>
-                                      character.subSkills[value] == 1,
+                                  value: (value) => character.subSkills[value] == 1,
                                 );
                               }
                               next(step: e.subRaces.isEmpty ? 2 : 1);
@@ -261,77 +235,58 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                             child: Stack(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: Measures.hMarginMed),
+                                  padding: const EdgeInsets.symmetric(vertical: Measures.hMarginMed),
                                   child: Column(
                                     children: [
                                       // Title, description and info button
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: Measures.hMarginBig),
+                                        padding:
+                                            const EdgeInsets.symmetric(horizontal: Measures.hMarginBig),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Expanded(
                                               child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(e.title,
-                                                      style: Fonts.bold()),
+                                                  Text(e.title, style: Fonts.bold()),
                                                   SingleChildScrollView(
-                                                    scrollDirection:
-                                                        Axis.horizontal,
+                                                    scrollDirection: Axis.horizontal,
                                                     child: Text(e.subRacesInfo,
-                                                        style: Fonts.light(
-                                                            size: 14)),
+                                                        style: Fonts.light(size: 14)),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            const SizedBox(
-                                                width: Measures.hMarginBig),
+                                            const SizedBox(width: Measures.hMarginBig),
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(
-                                          height: Measures.vMarginThin),
+                                      const SizedBox(height: Measures.vMarginThin),
                                       // Languages
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: SingleChildScrollView(
                                           scrollDirection: Axis.horizontal,
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                                  const SizedBox(
-                                                      width:
-                                                          Measures.hMarginBig)
-                                                ].cast<Widget>() +
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [const SizedBox(width: Measures.hMarginBig)]
+                                                    .cast<Widget>() +
                                                 (e.defaultLanguages.isEmpty
                                                     ? [
                                                         const RadioButton(
                                                           text: 'Nessuna',
-                                                          color: Palette
-                                                              .primaryGreen,
+                                                          color: Palette.primaryGreen,
                                                           isSmall: true,
                                                           width: 100,
                                                         )
                                                       ]
                                                     : e.defaultLanguages
                                                         .map((e) => Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      right:
-                                                                          6.0),
-                                                              child:
-                                                                  RadioButton(
+                                                              padding: const EdgeInsets.only(right: 6.0),
+                                                              child: RadioButton(
                                                                 text: e.title,
-                                                                color: Palette
-                                                                    .primaryGreen,
+                                                                color: Palette.primaryGreen,
                                                                 isSmall: true,
                                                                 width: 100,
                                                               ),
@@ -340,14 +295,10 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                 (e.canChoiceLanguage
                                                     ? [
                                                         const Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  right: 6.0),
+                                                          padding: EdgeInsets.only(right: 6.0),
                                                           child: RadioButton(
-                                                            text:
-                                                                '+ 1 a scelta',
-                                                            color: Palette
-                                                                .primaryGreen,
+                                                            text: '+ 1 a scelta',
+                                                            color: Palette.primaryGreen,
                                                             isSmall: true,
                                                             width: 100,
                                                           ),
@@ -357,44 +308,31 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(
-                                          height: Measures.vMarginThin),
+                                      const SizedBox(height: Measures.vMarginThin),
                                       // Skills
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: SingleChildScrollView(
                                           scrollDirection: Axis.horizontal,
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                                  const SizedBox(
-                                                      width:
-                                                          Measures.hMarginBig)
-                                                ].cast<Widget>() +
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [const SizedBox(width: Measures.hMarginBig)]
+                                                    .cast<Widget>() +
                                                 (e.defaultSkills.isEmpty
                                                     ? [
                                                         const RadioButton(
                                                           text: 'Nessuna',
-                                                          color: Palette
-                                                              .primaryYellow,
+                                                          color: Palette.primaryYellow,
                                                           isSmall: true,
                                                           width: 100,
                                                         )
                                                       ]
                                                     : e.defaultSkills.entries
                                                         .map((e) => Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      right:
-                                                                          6.0),
-                                                              child:
-                                                                  RadioButton(
-                                                                text:
-                                                                    '${e.key.title} +${e.value}',
-                                                                color: Palette
-                                                                    .primaryYellow,
+                                                              padding: const EdgeInsets.only(right: 6.0),
+                                                              child: RadioButton(
+                                                                text: '${e.key.title} +${e.value}',
+                                                                color: Palette.primaryYellow,
                                                                 isSmall: true,
                                                                 width: 100,
                                                               ),
@@ -411,16 +349,13 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   alignment: Alignment.topRight,
                                   child: Padding(
                                     padding: const EdgeInsets.only(
-                                        top: Measures.hMarginSmall,
-                                        right: Measures.hMarginSmall),
+                                        top: Measures.hMarginSmall, right: Measures.hMarginSmall),
                                     child: 'info'.toIcon(
                                         onTap: () {
                                           context.popup(e.title,
                                               message: e.description,
                                               positiveText: 'Ok',
-                                              backgroundColor: Palette
-                                                  .background
-                                                  .withOpacity(0.5));
+                                              backgroundColor: Palette.background.withOpacity(0.5));
                                         },
                                         padding: const EdgeInsets.all(12)),
                                   ),
@@ -435,7 +370,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
       ]),
       // Select subRace
       Column(children: [
-        // Page Title
+        // Title
         Align(
             alignment: Alignment.centerLeft,
             child: Text('Seleziona la sottorazza', style: Fonts.black())),
@@ -449,73 +384,56 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
         ),
         const SizedBox(height: Measures.vMarginMed),
         // Legend
-        const Legend(items: {
-          'Punti caratteristica': Palette.primaryYellow,
-          'Maestrie': Palette.primaryBlue
-        }),
+        const Legend(
+            items: {'Punti caratteristica': Palette.primaryYellow, 'Maestrie': Palette.primaryBlue}),
         const SizedBox(height: Measures.vMarginMed),
         // SubRaces cards
         Column(
             children: character.race.subRaces.isEmpty
                 ? [
                     Padding(
-                      padding:
-                          const EdgeInsets.only(top: Measures.vMarginSmall),
-                      child: Text('Niente da mostrare',
-                          style: Fonts.black(color: Palette.card2)),
+                      padding: const EdgeInsets.only(top: Measures.vMarginSmall),
+                      child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
                     )
                   ]
                 : character.race.subRaces
                         .map((e) => Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: Measures.vMarginThin),
+                              padding: const EdgeInsets.only(bottom: Measures.vMarginThin),
                               child: GlassCard(
                                 onTap: () async {
                                   // Set subRace fields
                                   character.subRace = e;
-                                  character.masteries
-                                      .addAll(e.defaultMasteries);
-                                  Set<Language> backupLanguages =
-                                      Set.from(character.languages);
+                                  character.masteries.addAll(e.defaultMasteries);
+                                  Set<Language> backupLanguages = Set.from(character.languages);
                                   // Ask the possible choices before continuing
                                   if (e.numChoiceableLanguages > 0) {
                                     final languages = Language.values
-                                        .where((language) => !character
-                                            .languages
-                                            .contains(language))
+                                        .where((language) => !character.languages.contains(language))
                                         .toList()
-                                      ..sort(
-                                          (a, b) => a.title.compareTo(b.title));
-                                    character.languages.addAll(languages
-                                        .sublist(0, e.numChoiceableLanguages));
+                                      ..sort((a, b) => a.title.compareTo(b.title));
+                                    character.languages
+                                        .addAll(languages.sublist(0, e.numChoiceableLanguages));
                                     await context.checkList<Language>(
                                       'Scegli ${e.numChoiceableLanguages} linguaggio/i',
                                       dismissible: false,
                                       isRadio: e.numChoiceableLanguages == 1,
                                       values: languages,
                                       color: Palette.primaryGreen,
-                                      selectionRequirement:
-                                          e.numChoiceableLanguages,
+                                      selectionRequirement: e.numChoiceableLanguages,
                                       onChanged: (value) {
                                         if (e.numChoiceableLanguages > 1 &&
-                                            character.languages
-                                                .contains(value)) {
+                                            character.languages.contains(value)) {
                                           character.languages.remove(value);
-                                        } else if (e.numChoiceableLanguages ==
-                                                1 &&
-                                            !character.languages
-                                                .contains(value)) {
+                                        } else if (e.numChoiceableLanguages == 1 &&
+                                            !character.languages.contains(value)) {
                                           character.languages.clear();
-                                          character.languages.addAll(
-                                              backupLanguages + {value});
-                                        } else if (character.languages.length -
-                                                backupLanguages.length <
+                                          character.languages.addAll(backupLanguages + {value});
+                                        } else if (character.languages.length - backupLanguages.length <
                                             e.numChoiceableLanguages) {
                                           character.languages.add(value);
                                         }
                                       },
-                                      value: (value) =>
-                                          character.languages.contains(value),
+                                      value: (value) => character.languages.contains(value),
                                     );
                                   }
                                   next();
@@ -523,86 +441,60 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                 child: Stack(
                                   children: [
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: Measures.hMarginMed),
+                                      padding: const EdgeInsets.symmetric(vertical: Measures.hMarginMed),
                                       child: Column(
                                         children: [
                                           // Title, description and info button
                                           Padding(
                                             padding: const EdgeInsets.symmetric(
-                                                horizontal:
-                                                    Measures.hMarginBig),
+                                                horizontal: Measures.hMarginBig),
                                             child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                               children: [
                                                 Expanded(
                                                   child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Text(e.title,
-                                                          style: Fonts.bold(
-                                                              size: 16)),
+                                                      Text(e.title, style: Fonts.bold(size: 16)),
                                                       SingleChildScrollView(
-                                                        scrollDirection:
-                                                            Axis.horizontal,
-                                                        child: Text(
-                                                            e.race.title,
-                                                            style: Fonts.light(
-                                                                size: 14)),
+                                                        scrollDirection: Axis.horizontal,
+                                                        child: Text(e.race.title,
+                                                            style: Fonts.light(size: 14)),
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                                const SizedBox(
-                                                    width: Measures.hMarginBig),
+                                                const SizedBox(width: Measures.hMarginBig),
                                               ],
                                             ),
                                           ),
-                                          const SizedBox(
-                                              height: Measures.vMarginThin),
+                                          const SizedBox(height: Measures.vMarginThin),
                                           // Skills
                                           Align(
                                             alignment: Alignment.centerLeft,
                                             child: SingleChildScrollView(
                                               scrollDirection: Axis.horizontal,
                                               child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                      const SizedBox(
-                                                          width: Measures
-                                                              .hMarginBig)
-                                                    ].cast<Widget>() +
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [const SizedBox(width: Measures.hMarginBig)]
+                                                        .cast<Widget>() +
                                                     (e.defaultSkills.isEmpty
                                                         ? [
                                                             const RadioButton(
                                                               text: 'Nessuna',
-                                                              color: Palette
-                                                                  .primaryBlue,
+                                                              color: Palette.primaryBlue,
                                                               isSmall: true,
                                                               width: 100,
                                                             )
                                                           ]
-                                                        : e.defaultSkills
-                                                            .entries
+                                                        : e.defaultSkills.entries
                                                             .map((e) => Padding(
                                                                   padding:
-                                                                      const EdgeInsets
-                                                                          .only(
-                                                                          right:
-                                                                              6.0),
-                                                                  child:
-                                                                      RadioButton(
-                                                                    text:
-                                                                        '${e.key.title} +${e.value}',
-                                                                    color: Palette
-                                                                        .primaryYellow,
-                                                                    isSmall:
-                                                                        true,
+                                                                      const EdgeInsets.only(right: 6.0),
+                                                                  child: RadioButton(
+                                                                    text: '${e.key.title} +${e.value}',
+                                                                    color: Palette.primaryYellow,
+                                                                    isSmall: true,
                                                                     width: 100,
                                                                   ),
                                                                 ))
@@ -610,27 +502,21 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                               ),
                                             ),
                                           ),
-                                          const SizedBox(
-                                              height: Measures.vMarginThin),
+                                          const SizedBox(height: Measures.vMarginThin),
                                           // Masteries
                                           Align(
                                             alignment: Alignment.centerLeft,
                                             child: SingleChildScrollView(
                                               scrollDirection: Axis.horizontal,
                                               child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.start,
-                                                children: [
-                                                      const SizedBox(
-                                                          width: Measures
-                                                              .hMarginBig)
-                                                    ].cast<Widget>() +
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                children: [const SizedBox(width: Measures.hMarginBig)]
+                                                        .cast<Widget>() +
                                                     (e.defaultMasteries.isEmpty
                                                         ? [
                                                             const RadioButton(
                                                               text: 'Nessuna',
-                                                              color: Palette
-                                                                  .primaryBlue,
+                                                              color: Palette.primaryBlue,
                                                               isSmall: true,
                                                               width: 100,
                                                             )
@@ -638,18 +524,11 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                                         : e.defaultMasteries
                                                             .map((e) => Padding(
                                                                   padding:
-                                                                      const EdgeInsets
-                                                                          .only(
-                                                                          right:
-                                                                              6.0),
-                                                                  child:
-                                                                      RadioButton(
-                                                                    text:
-                                                                        e.title,
-                                                                    color: Palette
-                                                                        .primaryBlue,
-                                                                    isSmall:
-                                                                        true,
+                                                                      const EdgeInsets.only(right: 6.0),
+                                                                  child: RadioButton(
+                                                                    text: e.title,
+                                                                    color: Palette.primaryBlue,
+                                                                    isSmall: true,
                                                                     width: 100,
                                                                   ),
                                                                 ))
@@ -665,16 +544,13 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                       alignment: Alignment.topRight,
                                       child: Padding(
                                         padding: const EdgeInsets.only(
-                                            top: Measures.hMarginSmall,
-                                            right: Measures.hMarginSmall),
+                                            top: Measures.hMarginSmall, right: Measures.hMarginSmall),
                                         child: 'info'.toIcon(
                                             onTap: () {
                                               context.popup(e.title,
                                                   message: e.description,
                                                   positiveText: 'Ok',
-                                                  backgroundColor: Palette
-                                                      .background
-                                                      .withOpacity(0.5));
+                                                  backgroundColor: Palette.background.withOpacity(0.5));
                                             },
                                             padding: const EdgeInsets.all(12)),
                                       ),
@@ -689,10 +565,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
       ]),
       // Select class
       Column(children: [
-        // Page Title
-        Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Seleziona la classe', style: Fonts.black())),
+        // Title
+        Align(alignment: Alignment.centerLeft, child: Text('Seleziona la classe', style: Fonts.black())),
         const SizedBox(height: Measures.vMarginThin),
         // Subtitle
         Align(
@@ -703,105 +577,83 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
         ),
         const SizedBox(height: Measures.vMarginMed),
         // Legend
-        const Legend(items: {
-          'Tiri salvezza': Palette.primaryYellow,
-          'Maestrie': Palette.primaryBlue
-        }),
+        const Legend(items: {'Tiri salvezza': Palette.primaryYellow, 'Maestrie': Palette.primaryBlue}),
         const SizedBox(height: Measures.vMarginMed),
         // Classes cards
         Column(
             children: Class.values
                     .map((e) => Padding(
-                          padding: const EdgeInsets.only(
-                              bottom: Measures.vMarginThin),
+                          padding: const EdgeInsets.only(bottom: Measures.vMarginThin),
                           child: GlassCard(
                             onTap: () async {
                               // Set class fields
                               character.class_ = e;
                               character.masteries.addAll(e.defaultMasteries);
-                              Map<SubSkill, int> backupSubSkills =
-                                  Map.from(character.subSkills);
-                              Set<Mastery> backupMasteries =
-                                  Set.from(character.masteries);
+                              Map<SubSkill, int> backupSubSkills = Map.from(character.subSkills);
+                              Set<Mastery> backupMasteries = Set.from(character.masteries);
                               // Ask the possible choices before continuing
                               if (e.numChoiceableSubSkills > 0) {
                                 character.subSkills += e.choiceableSubSkills
                                     .sublist(0, e.numChoiceableSubSkills)
                                     .map((e) => {e: 1})
-                                    .reduce(
-                                        (value, element) => value + element);
+                                    .reduce((value, element) => value + element);
                                 await context.checkList<SubSkill>(
                                   'Scegli ${e.numChoiceableSubSkills} sottocompetenza/e',
                                   dismissible: false,
                                   isRadio: e.numChoiceableSubSkills == 1,
                                   values: e.choiceableSubSkills,
                                   color: Palette.primaryYellow,
-                                  selectionRequirement:
-                                      e.numChoiceableSubSkills,
+                                  selectionRequirement: e.numChoiceableSubSkills,
                                   onChanged: (value) {
-                                    var selected =
-                                        character.subSkills - backupSubSkills;
+                                    var selected = character.subSkills - backupSubSkills;
                                     if (selected.containsKey(value)) {
                                       character.subSkills -= {value: 1};
                                     } else if (selected.isEmpty ||
-                                        selected.values.toList().sum() <
-                                            e.numChoiceableSubSkills) {
+                                        selected.values.toList().sum() < e.numChoiceableSubSkills) {
                                       character.subSkills += {value: 1};
                                     } else if (e.numChoiceableSubSkills == 1 &&
                                         !selected.containsKey(value)) {
                                       character.subSkills.clear();
-                                      character.subSkills
-                                          .addAll(backupSubSkills + {value: 1});
+                                      character.subSkills.addAll(backupSubSkills + {value: 1});
                                     }
                                   },
                                   value: (value) =>
-                                      character.subSkills[value] ==
-                                      (backupSubSkills[value] ?? 0) + 1,
+                                      character.subSkills[value] == (backupSubSkills[value] ?? 0) + 1,
                                 );
                               }
                               if (e.numChoiceableMasteries > 0) {
-                                final masteries = e.choiceableMasteryTypes
-                                    .map((e) => e.masteries)
-                                    .flatten;
-                                character.masteries += masteries
-                                    .sublist(0, e.numChoiceableMasteries)
-                                    .toSet();
+                                final masteries =
+                                    e.choiceableMasteryTypes.map((e) => e.masteries).flatten;
+                                character.masteries +=
+                                    masteries.sublist(0, e.numChoiceableMasteries).toSet();
                                 await context.checkList<Mastery>(
                                   'Scegli ${e.numChoiceableMasteries} competenza/e',
                                   dismissible: false,
                                   isRadio: e.numChoiceableMasteries == 1,
                                   values: masteries,
                                   color: Palette.primaryBlue,
-                                  selectionRequirement:
-                                      e.numChoiceableMasteries,
+                                  selectionRequirement: e.numChoiceableMasteries,
                                   onChanged: (value) {
-                                    var selected =
-                                        character.masteries - backupMasteries;
+                                    var selected = character.masteries - backupMasteries;
                                     if (selected.contains(value)) {
                                       character.masteries -= {value};
-                                    } else if (selected.length <
-                                        e.numChoiceableMasteries) {
+                                    } else if (selected.length < e.numChoiceableMasteries) {
                                       character.masteries += {value};
                                     } else if (e.numChoiceableMasteries == 1 &&
                                         !selected.contains(value)) {
                                       character.masteries.clear();
-                                      character.masteries
-                                          .addAll(backupMasteries + {value});
+                                      character.masteries.addAll(backupMasteries + {value});
                                     }
                                   },
-                                  value: (value) =>
-                                      character.masteries.contains(value),
+                                  value: (value) => character.masteries.contains(value),
                                 );
                               }
                               if (e.choiceableItems.isNotEmpty) {
                                 var count = 0;
-                                for (var (i, items)
-                                    in e.choiceableItems.indexed) {
+                                for (var (i, items) in e.choiceableItems.indexed) {
                                   var backupInventory = character.inventory;
-                                  character.addLoot(Loot({
-                                    items.entries.first.key:
-                                        items.entries.first.value
-                                  }));
+                                  character.addLoot(
+                                      Loot({items.entries.first.key: items.entries.first.value}));
                                   if (items.length > 1) {
                                     ++count;
                                     await context.checkList<InventoryItem>(
@@ -812,17 +664,14 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                       color: Palette.primaryRed,
                                       selectionRequirement: 1,
                                       onChanged: (value) {
-                                        var selected = character.inventory -
-                                            backupInventory;
+                                        var selected = character.inventory - backupInventory;
                                         if (!selected.containsKey(value)) {
                                           character.inventory = backupInventory;
-                                          character.addLoot(
-                                              Loot({value: items[value]!}));
+                                          character.addLoot(Loot({value: items[value]!}));
                                         }
                                       },
-                                      value: (value) => (character.inventory -
-                                              backupInventory)
-                                          .containsKey(value),
+                                      value: (value) =>
+                                          (character.inventory - backupInventory).containsKey(value),
                                     );
                                   }
                                 }
@@ -832,81 +681,60 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                             child: Stack(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: Measures.hMarginMed),
+                                  padding: const EdgeInsets.symmetric(vertical: Measures.hMarginMed),
                                   child: Column(
                                     children: [
                                       // Title, description and info button
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: Measures.hMarginBig),
+                                        padding:
+                                            const EdgeInsets.symmetric(horizontal: Measures.hMarginBig),
                                         child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             e.iconPath.toIcon(height: 24),
-                                            const SizedBox(
-                                                width: Measures.hMarginMed),
+                                            const SizedBox(width: Measures.hMarginMed),
                                             Expanded(
                                               child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(e.title,
-                                                      style: Fonts.bold()),
+                                                  Text(e.title, style: Fonts.bold()),
                                                   SingleChildScrollView(
-                                                    scrollDirection:
-                                                        Axis.horizontal,
-                                                    child: Text(
-                                                        e.subClassesInfo,
-                                                        style: Fonts.light(
-                                                            size: 14)),
+                                                    scrollDirection: Axis.horizontal,
+                                                    child: Text(e.subClassesInfo,
+                                                        style: Fonts.light(size: 14)),
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                            const SizedBox(
-                                                width: Measures.hMarginBig),
+                                            const SizedBox(width: Measures.hMarginBig),
                                           ],
                                         ),
                                       ),
-                                      const SizedBox(
-                                          height: Measures.vMarginThin),
+                                      const SizedBox(height: Measures.vMarginThin),
                                       // Saving throws
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: SingleChildScrollView(
                                           scrollDirection: Axis.horizontal,
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                                  const SizedBox(
-                                                      width:
-                                                          Measures.hMarginBig)
-                                                ].cast<Widget>() +
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [const SizedBox(width: Measures.hMarginBig)]
+                                                    .cast<Widget>() +
                                                 (e.savingThrows.isEmpty
                                                     ? [
                                                         const RadioButton(
                                                           text: 'Nessuna',
-                                                          color: Palette
-                                                              .primaryBlue,
+                                                          color: Palette.primaryBlue,
                                                           isSmall: true,
                                                           width: 100,
                                                         )
                                                       ]
                                                     : e.savingThrows
                                                         .map((e) => Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      right:
-                                                                          6.0),
-                                                              child:
-                                                                  RadioButton(
+                                                              padding: const EdgeInsets.only(right: 6.0),
+                                                              child: RadioButton(
                                                                 text: e.title,
-                                                                color: Palette
-                                                                    .primaryYellow,
+                                                                color: Palette.primaryYellow,
                                                                 isSmall: true,
                                                                 width: 100,
                                                               ),
@@ -915,43 +743,31 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(
-                                          height: Measures.vMarginThin),
+                                      const SizedBox(height: Measures.vMarginThin),
                                       // Masteries
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: SingleChildScrollView(
                                           scrollDirection: Axis.horizontal,
                                           child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                                  const SizedBox(
-                                                      width:
-                                                          Measures.hMarginBig)
-                                                ].cast<Widget>() +
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            children: [const SizedBox(width: Measures.hMarginBig)]
+                                                    .cast<Widget>() +
                                                 (e.defaultMasteries.isEmpty
                                                     ? [
                                                         const RadioButton(
                                                           text: 'Nessuna',
-                                                          color: Palette
-                                                              .primaryBlue,
+                                                          color: Palette.primaryBlue,
                                                           isSmall: true,
                                                           width: 100,
                                                         )
                                                       ]
                                                     : e.defaultMasteries
                                                         .map((e) => Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                      .only(
-                                                                      right:
-                                                                          6.0),
-                                                              child:
-                                                                  RadioButton(
+                                                              padding: const EdgeInsets.only(right: 6.0),
+                                                              child: RadioButton(
                                                                 text: e.title,
-                                                                color: Palette
-                                                                    .primaryBlue,
+                                                                color: Palette.primaryBlue,
                                                                 isSmall: true,
                                                                 width: 100,
                                                               ),
@@ -968,16 +784,13 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                                   alignment: Alignment.topRight,
                                   child: Padding(
                                     padding: const EdgeInsets.only(
-                                        top: Measures.hMarginSmall,
-                                        right: Measures.hMarginSmall),
+                                        top: Measures.hMarginSmall, right: Measures.hMarginSmall),
                                     child: 'info'.toIcon(
                                         onTap: () {
                                           context.popup(e.title,
                                               message: e.description,
                                               positiveText: 'Ok',
-                                              backgroundColor: Palette
-                                                  .background
-                                                  .withOpacity(0.5));
+                                              backgroundColor: Palette.background.withOpacity(0.5));
                                         },
                                         padding: const EdgeInsets.all(12)),
                                   ),
@@ -992,10 +805,9 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
       ]),
       // Select alignment
       Column(children: [
-        // Page Title
+        // Title
         Align(
-            alignment: Alignment.centerLeft,
-            child: Text('Scegli l’allineamento', style: Fonts.black())),
+            alignment: Alignment.centerLeft, child: Text('Scegli l’allineamento', style: Fonts.black())),
         const SizedBox(height: Measures.vMarginThin),
         // Subtitle
         Text(
@@ -1013,10 +825,9 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                     ))
                 .toList()),
       ]),
-
-      // Set stats
+      // Set skills
       Column(children: [
-        // Page Title
+        // Title
         Align(
             alignment: Alignment.centerLeft,
             child: Text('Completa le statistiche', style: Fonts.black())),
@@ -1036,9 +847,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                       skillInputController: _skillControllers[e.index],
                     ))
                 .toList()),
-        SizedBox(
-            height:
-                MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig),
+        SizedBox(height: MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig),
         // <-- This is essential, as it is dynamic based on the keyboard status.
       ]),
     ];
@@ -1053,9 +862,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
       null,
       null,
       () {
-        character.rollSkills = _skillControllers
-            .asMap()
-            .map((i, e) => MapEntry(Skill.values[i], int.parse(e.text)));
+        character.rollSkills =
+            _skillControllers.asMap().map((i, e) => MapEntry(Skill.values[i], int.parse(e.text)));
         next();
       },
     ];
@@ -1073,12 +881,10 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
               controller: _pageController,
               children: _screens!
                   .map((e) => Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: Measures.hPadding),
+                      padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
                       child: SingleChildScrollView(
-                        padding: const EdgeInsets.only(
-                            top: Measures.vMarginBig * 2 +
-                                Measures.vMarginSmall),
+                        padding:
+                            const EdgeInsets.only(top: Measures.vMarginBig * 2 + Measures.vMarginSmall),
                         child: e,
                       )))
                   .toList(),
@@ -1111,17 +917,13 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
                         children: List.generate(
                             _screens?.length ?? 0,
                             (index) => Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 3.2),
+                                  padding: const EdgeInsets.symmetric(horizontal: 3.2),
                                   child: AnimatedContainer(
                                     height: _index == index ? 13 : 11,
                                     width: _index == index ? 13 : 11,
                                     decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(999),
-                                        color: _index == index
-                                            ? Palette.onBackground
-                                            : Palette.card),
+                                        borderRadius: BorderRadius.circular(999),
+                                        color: _index == index ? Palette.onBackground : Palette.card),
                                     duration: Durations.medium3,
                                   ),
                                 )))
@@ -1144,10 +946,12 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
 
   next({int step = 1}) {
     if (_index + step >= (_screens?.length ?? 0)) {
-      // The character creation is completed
+      // The character creation is completed, save the character
       withLoading(() async {
         character.initiative = character.skillModifier(Skill.destrezza);
-        character.speed=character.defaultSpeed;
+        character.speed = character.defaultSpeed;
+        character.maxHp = character.class_.maxHpDice.size + character.skillModifier(Skill.costituzione);
+        character.hp = character.maxHp;
         character.uid = await DataManager().save(character, SaveMode.post);
         AccountManager().user.charactersUIDs.add(character.uid!);
         await DataManager().save(AccountManager().user);
@@ -1166,13 +970,10 @@ class _CreateCharacterPageState extends State<CreateCharacterPage>
 
   previous() {
     // Reset the current screen state
-    int step = (_index == 3 && characters[2]!.race.subRaces.isEmpty)
-        ? 2
-        : 1; // Skipp-able screens
+    int step = (_index == 3 && characters[2]!.race.subRaces.isEmpty) ? 2 : 1; // Skipp-able screens
     if (_index > 0) {
-      characters[_index - step] = _index > 1
-          ? Character.fromJson(characters[_index - step - 1]!.toJSON())
-          : Character();
+      characters[_index - step] =
+          _index > 1 ? Character.fromJson(characters[_index - step - 1]!.toJSON()) : Character();
     }
     FocusManager.instance.primaryFocus?.unfocus();
     if (_index == 0) {

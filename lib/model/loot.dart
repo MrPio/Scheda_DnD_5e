@@ -106,10 +106,10 @@ enum Armor implements InventoryItem {
   @override
   final String title;
   final String CA;
-  final int strenght;
+  final int strength;
   final bool disadvantage;
 
-  const Armor(this.title, this.CA, this.strenght, this.disadvantage);
+  const Armor(this.title, this.CA, this.strength, this.disadvantage);
 }
 
 enum Item implements InventoryItem {

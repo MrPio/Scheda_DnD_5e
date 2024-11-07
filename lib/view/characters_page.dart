@@ -15,6 +15,7 @@ import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
+import 'package:scheda_dnd_5e/view/partial/recycler_view.dart';
 
 import '../constant/fonts.dart';
 import '../constant/measures.dart';
@@ -89,19 +90,16 @@ class _CharactersPageState extends State<CharactersPage> {
   Widget build(BuildContext context) {
     final characters = _characters;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: Measures.vMarginBig),
-          // Body
-          Expanded(
-            child: Column(children: [
-              const SizedBox(height: Measures.vMarginMed),
+        padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+        child: RecyclerView(
+          header: Column(
+            children: [
+              const SizedBox(height: Measures.vMarginBig+Measures.vMarginMed),
               // Page Title
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text('I tuoi personaggi', style: Fonts.black()),
-                'png/settings'.toIcon(padding: const EdgeInsets.all(6),onTap: () => context.goto('/settings')),
+                'png/settings'
+                    .toIcon(padding: const EdgeInsets.all(6), onTap: () => context.goto('/settings')),
               ]),
               const SizedBox(height: Measures.vMarginMed),
               // Search TextField
@@ -134,7 +132,6 @@ class _CharactersPageState extends State<CharactersPage> {
                                         setState(() => _filters[i].selectedValues.toggle(value)),
                                     value: (value) => _filters[i].selectedValues.contains(value),
                                   )))),
-              // Found enchantments
               const SizedBox(height: Measures.vMarginSmall),
               // Nothing to show
               if (isDataReady && characters.isEmpty)
@@ -142,22 +139,16 @@ class _CharactersPageState extends State<CharactersPage> {
                   padding: const EdgeInsets.only(top: Measures.vMarginSmall),
                   child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
                 ),
-              Expanded(
-                child: ListView.builder(
-                    itemCount: isDataReady ? characters.length : 10,
-                    itemBuilder: (_, i) => isDataReady
-                        ? characterCard(characters[i])
-                        : const GlassCard(isShimmer: true, shimmerHeight: 75)),
-              ),
-            ]),
+            ],
           ),
-        ],
-      ),
-    );
+          children: isDataReady
+              ? characters.map<Widget>(characterCard).toList()
+              : List.filled(10, const GlassCard(isShimmer: true, shimmerHeight: 75)),
+        ));
   }
 
   /// The card for a character, made of name, race icon, hp bar and level.
-  characterCard(Character character) => Padding(
+  Widget characterCard(Character character) => Padding(
         padding: const EdgeInsets.only(bottom: 10.0),
         child: GlassCard(
           onTap: () => gotoCharacter(character),
@@ -217,7 +208,7 @@ class _CharactersPageState extends State<CharactersPage> {
                 })
               ]),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
             child: Column(
               children: [
                 // Class icon, name and race
