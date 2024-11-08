@@ -1,16 +1,19 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
+import 'package:scheda_dnd_5e/manager/data_manager.dart';
 
 import '../enum/dice.dart';
+import '../interface/enum_with_title.dart';
 
 part 'part/loot.g.dart';
 
 /// Any item that can be part of a character's inventory
-abstract class InventoryItem {
+abstract class InventoryItem implements WithUID, WithTitle {
+  @override
   String title = '';
   final int regDateTimestamp;
+  final String? authorUID;
   static const Map<Type, String> icons = {
     Weapon: 'png/weapon',
     Armor: 'png/armor',
@@ -28,18 +31,19 @@ abstract class InventoryItem {
 
   static List<Type> get types => icons.keys.toList();
 
-  InventoryItem({this.title = '', int? regDateTimestamp})
+  InventoryItem({this.title = '', int? regDateTimestamp, this.authorUID})
       : regDateTimestamp = regDateTimestamp ?? DateTime.now().millisecondsSinceEpoch;
 }
 
 @JsonSerializable(constructor: 'jsonConstructor')
-class Weapon extends InventoryItem implements WithUID {
+class Weapon extends InventoryItem {
   final List<Dice> rollDamage;
   final int fixedDamage;
   final String property;
 
   Weapon.jsonConstructor(
       {super.title,
+      super.authorUID,
       super.regDateTimestamp,
       List<Dice>? rollDamage,
       this.fixedDamage = 0,
@@ -62,13 +66,18 @@ class Weapon extends InventoryItem implements WithUID {
 }
 
 @JsonSerializable(constructor: 'jsonConstructor')
-class Armor extends InventoryItem implements WithUID {
+class Armor extends InventoryItem {
   final String CA;
   final int strength;
   final bool disadvantage;
 
   Armor.jsonConstructor(
-      {super.title, super.regDateTimestamp, this.CA = '', this.strength = 0, this.disadvantage = false});
+      {super.title,
+      super.authorUID,
+      super.regDateTimestamp,
+      this.CA = '',
+      this.strength = 0,
+      this.disadvantage = false});
 
   Armor(title, this.CA, this.strength, this.disadvantage)
       : uid = title,
@@ -86,8 +95,8 @@ class Armor extends InventoryItem implements WithUID {
 }
 
 @JsonSerializable(constructor: 'jsonConstructor')
-class Item extends InventoryItem implements WithUID {
-  Item.jsonConstructor({super.title, super.regDateTimestamp});
+class Item extends InventoryItem {
+  Item.jsonConstructor({super.title, super.authorUID, super.regDateTimestamp});
 
   Item(title)
       : uid = title,
@@ -105,11 +114,12 @@ class Item extends InventoryItem implements WithUID {
 }
 
 @JsonSerializable(constructor: 'jsonConstructor')
-class Coin extends InventoryItem implements WithUID {
+class Coin extends InventoryItem {
   final int value;
   final String currency;
 
-  Coin.jsonConstructor({super.title, super.regDateTimestamp, this.currency = '', this.value = 0});
+  Coin.jsonConstructor(
+      {super.title, super.authorUID, super.regDateTimestamp, this.currency = '', this.value = 0});
 
   Coin(title, this.currency, this.value)
       : uid = title,
@@ -127,10 +137,11 @@ class Coin extends InventoryItem implements WithUID {
 }
 
 @JsonSerializable(constructor: 'jsonConstructor')
-class Equipment extends InventoryItem implements WithUID {
+class Equipment extends InventoryItem {
   final Map<String, int> content;
 
-  Equipment.jsonConstructor({super.title, super.regDateTimestamp, Map<String, int>? content})
+  Equipment.jsonConstructor(
+      {super.title, super.authorUID, super.regDateTimestamp, Map<String, int>? content})
       : content = content ?? {};
 
   Equipment(title, this.content)
@@ -154,20 +165,24 @@ class Equipment extends InventoryItem implements WithUID {
 class Loot implements JSONSerializable {
   @JsonKey(includeFromJson: true, includeToJson: true)
   final String? _name;
-  final Map<String, int> content;
+  @JsonKey(includeFromJson: true, includeToJson: true)
+  final Map<String, int> _content;
 
-  Loot.jsonConstructor(this._name, this.content);
+  Loot.jsonConstructor(this._name, this._content);
 
-  Loot(this.content, [this._name]) {
-    for (var qta in content.values) {
+  Loot(this._content, [this._name]) {
+    for (var qta in _content.values) {
       assert(qta > 0);
     }
   }
 
-  String get name => _name ?? content.keys.toList()[0];
+  String get name => _name ?? _content.keys.toList()[0];
 
-  // @JsonKey(includeFromJson: false, includeToJson: false)
-  // Map<InventoryItem, int> get content => _content.cast<InventoryItem, int>();
+  /// This requires that DataManager.fetchData() has been called
+  Map<InventoryItem, int> get content => {
+    for (var entry in _content.entries)
+      DataManager().cachedInventoryItems.firstWhere((e) => e.uid == entry.key): entry.value
+  };
 
   @override
   factory Loot.fromJson(Map<String, dynamic> json) => _$LootFromJson(json);

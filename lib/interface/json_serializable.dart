@@ -5,6 +5,8 @@ import 'package:scheda_dnd_5e/model/user.dart' as user;
 import 'package:scheda_dnd_5e/model/npc.dart';
 import 'package:scheda_dnd_5e/model/session.dart';
 
+import '../model/loot.dart';
+
 abstract class JSONSerializable {
   static Map<Type, Function> modelFactories = {
     enchantment.Enchantment: enchantment.Enchantment.fromJson,
@@ -13,6 +15,11 @@ abstract class JSONSerializable {
     Npc: Npc.fromJson,
     Session: Session.fromJson,
     Campaign: Campaign.fromJson,
+    Weapon: Weapon.fromJson,
+    Armor: Armor.fromJson,
+    Item: Item.fromJson,
+    Coin: Coin.fromJson,
+    Equipment: Equipment.fromJson,
   };
   factory JSONSerializable.fromJson(Map<String, dynamic> json) {
     throw UnimplementedError();

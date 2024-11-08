@@ -46,12 +46,17 @@ class IOManager {
   }
 
   /// Retrieve an entry from disk. This can be called intensively, as a cache is used.
-  T? get<T>(String key) =>
-      _cache[key] ?? (_getMethods[T] ?? (sp, key) => sp.get(key))(prefs, key);
+  T? get<T>(String key) => _cache[key] ?? (_getMethods[T] ?? (sp, key) => sp.get(key))(prefs, key);
 
   remove(String key) async {
     _cache.remove(key);
-    prefs.remove(key);
+    await prefs.remove(key);
+  }
+
+  removeAll(List<String> keys) async {
+    for (var key in keys) {
+      await remove(key);
+    }
   }
 
   // Object Serialization/Deserialization ==================================================================
@@ -66,12 +71,12 @@ class IOManager {
 
   Future<List<T>> deserializeObjects<T extends JSONSerializable>(String key) async {
     key = key.replaceAll('/', '');
-    final List<T> objs = jsonDecode(await get<String>(key) ?? '')
+    final List<T> objs = jsonDecode(get<String>(key) ?? '')
         .map((e) => JSONSerializable.modelFactories[T]!(e) as T)
         .toList()
         .cast<T>();
     if (<T>[] is List<WithUID>) {
-      final uids = (await get<List<String>>('${key}_uids')) ?? [];
+      final uids = get<List<String>>('${key}_uids') ?? [];
       for (var (i, e) in objs.indexed) {
         (e as WithUID).uid = uids[i];
       }

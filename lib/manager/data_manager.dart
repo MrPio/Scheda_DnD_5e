@@ -2,15 +2,15 @@ import 'dart:core' as core show Type;
 import 'dart:core' hide Type;
 
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/extension_function/int_extensions.dart';
-import 'package:scheda_dnd_5e/interface/json_serializable.dart';
+import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/database_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart';
 import 'package:scheda_dnd_5e/model/enchantment.dart';
+import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
 
 import '../model/campaign.dart';
@@ -29,63 +29,103 @@ class DataManager {
   final anonymous = User();
   List<User> cachedUsers = [];
   List<Character> cachedCharacters = [];
-  List<Character> cachedCampaigns = [];
-  ValueNotifier<List<Enchantment>?> enchantments = ValueNotifier(null);
-  // TODO here: inventory 5 types of objects
+  List<Campaign> cachedCampaigns = [];
+  List<InventoryItem> cachedInventoryItems = [];
+  List<Enchantment> cachedEnchantments = [];
 
   Map<core.Type, List<WithUID>> get caches =>
       {
         User: cachedUsers,
         Campaign: cachedCampaigns,
         Character: cachedCharacters,
+        Enchantment: cachedEnchantments,
+        Weapon: cachedInventoryItems,
+        Armor: cachedInventoryItems,
+        Item: cachedInventoryItems,
+        Coin: cachedInventoryItems,
+        Equipment: cachedInventoryItems,
       };
 
-  Map<core.Type, Function()> get cachesDeserializer =>
+  Map<core.Type, int> get cachesTTL =>
+      {
+        User: 30 * 60,
+        Campaign: 30 * 60,
+        Character: 30 * 60,
+        Enchantment: 7 * 24 * 60 * 60,
+        Weapon: 7 * 24 * 60 * 60,
+        Armor: 7 * 24 * 60 * 60,
+        Item: 7 * 24 * 60 * 60,
+        Coin: 7 * 24 * 60 * 60,
+        Equipment: 7 * 24 * 60 * 60,
+      };
+
+  /// Function used to deserialize cache from disk
+  Map<core.Type, Function()> get cacheDeserializers =>
       {
         User: () => IOManager().deserializeObjects<User>(DatabaseManager.collections[User]!),
         Campaign: () => IOManager().deserializeObjects<Campaign>(DatabaseManager.collections[Campaign]!),
         Character: () =>
             IOManager().deserializeObjects<Character>(DatabaseManager.collections[Character]!),
+        Enchantment: () =>
+            IOManager().deserializeObjects<Enchantment>(DatabaseManager.collections[Enchantment]!),
+        Weapon: () => IOManager().deserializeObjects<Weapon>(DatabaseManager.collections[Weapon]!),
+        Armor: () => IOManager().deserializeObjects<Armor>(DatabaseManager.collections[Armor]!),
+        Item: () => IOManager().deserializeObjects<Item>(DatabaseManager.collections[Item]!),
+        Coin: () => IOManager().deserializeObjects<Coin>(DatabaseManager.collections[Coin]!),
+        Equipment: () =>
+            IOManager().deserializeObjects<Equipment>(DatabaseManager.collections[Equipment]!),
+      };
+
+  /// Function used to fetch cache data from db
+  Map<core.Type, Future<List<WithUID>> Function()> get cacheSeeders =>
+      {
+        Enchantment: () async =>
+        await DatabaseManager()
+            .getList<Enchantment>(DatabaseManager.collections[Enchantment]!, pageSize: 9999) ??
+            [],
+        Weapon: () async =>
+        await DatabaseManager()
+            .getList<Weapon>(DatabaseManager.collections[Weapon]!, pageSize: 9999) ??
+            [],
+        Armor: () async =>
+        await DatabaseManager().getList<Armor>(DatabaseManager.collections[Armor]!, pageSize: 9999) ??
+            [],
+        Item: () async =>
+        await DatabaseManager().getList<Item>(DatabaseManager.collections[Item]!, pageSize: 9999) ??
+            [],
+        Coin: () async =>
+        await DatabaseManager().getList<Coin>(DatabaseManager.collections[Coin]!, pageSize: 9999) ??
+            [],
+        Equipment: () async =>
+        await DatabaseManager()
+            .getList<Equipment>(DatabaseManager.collections[Equipment]!, pageSize: 9999) ??
+            [],
       };
 
   /// This should be called after obtaining the auth
   fetchData() async {
-    print('========================================');
-    // Loading enchantments ============================================
-    // Check if I have already downloaded the enchantments before 7 days ago
-    final enchantmentsTimestamp =
-        await IOManager().get<int>('enchantments_timestamp') ?? 0;
-    if (enchantmentsTimestamp
-        .elapsedTime()
-        .inDays >= 7) {
-      print('⬇️ Scarico gli enchantments');
-      enchantments.value = await DatabaseManager().getList<Enchantment>(
-          DatabaseManager.collections[Enchantment]!,
-          pageSize: 9999) ??
-          [];
-      IOManager().serializeObjects(
-          DatabaseManager.collections[Enchantment]!, enchantments.value!);
-    } else {
-      enchantments.value = await IOManager().deserializeObjects<Enchantment>(
-          DatabaseManager.collections[Enchantment]!);
-      print('📘 Ho letto localmente ${enchantments.value!.length} Enchantments');
-    }
     for (var cache in caches.entries) {
       final path = DatabaseManager.collections[cache.key]!.replaceAll('/', '');
-      if ((await IOManager().get<int>('${path}_timestamp') ?? 0)
+      final timestamp = IOManager().get<int>('${path}_timestamp') ?? 0;
+      if (timestamp
           .elapsedTime()
-          .inMinutes <
-          10) {
+          .inSeconds < cachesTTL[cache.key]!) {
         caches[cache.key]!.clear();
-        caches[cache.key]!.addAll(await cachesDeserializer[cache.key]!());
-        print('📘 Ho letto localmente ${caches[cache.key]!.length} ${cache.key}s');
+        caches[cache.key]!.addAll(await cacheDeserializers[cache.key]!());
+        print('📘 I\'ve read ${caches[cache.key]!.length} ${cache.key}s locally');
       } else {
-        await IOManager().remove(path);
-        await IOManager().remove('${path}_timestamp');
-        print('❗ Cache invalidata per ${cache.key}');
+        await IOManager().removeAll([path, '${path}_timestamp']);
+        print('❗ The ${cache.key} cache has been invalidated');
+        // Seed the cache if a seeder is defined
+        if (cacheSeeders.containsKey(cache.key)) {
+          caches[cache.key]!.clear();
+          caches[cache.key]!.addAll(await cacheSeeders[cache.key]!());
+          IOManager()
+              .serializeObjects(DatabaseManager.collections[cache.key]!, caches[cache.key]!);
+          print('⬇️ I\'ve downloaded ${caches[cache.key]!.length} ${cache.key}s');
+        }
       }
     }
-    print('========================================');
   }
 
   /// Load a single object from a given UID
@@ -100,19 +140,17 @@ class DataManager {
     }
 
     // Ask the database for the object and caching it
-    T obj =
-    await DatabaseManager().get<T>(DatabaseManager.collections[T]!, uid);
+    T obj = await DatabaseManager().get<T>(DatabaseManager.collections[T]!, uid);
     caches[T]?.removeWhere((e) => e.uid == uid);
-    caches[T]?.add(obj);
+    caches[T]!.add(obj);
     // Write cache to disk
     await IOManager().serializeObjects(DatabaseManager.collections[T]!, caches[T]!);
-    print('📙 Ho scritto su cache ${caches[T]!.length} ${T}s');
+    print('📙 I\'ve cached ${caches[T]!.length} ${T}s');
     return obj;
   }
 
   /// Load a multiple objects from a given list of UIDs
-  Future<List<T>> loadList<T extends WithUID>(List<String> uids,
-      {bool useCache = true}) async {
+  Future<List<T>> loadList<T extends WithUID>(List<String> uids, {bool useCache = true}) async {
     List<T> objects = [];
     if (useCache) {
       for (var uid in uids) {
@@ -123,21 +161,18 @@ class DataManager {
           }
         }
         WithUID? obj = caches[T]?.firstWhereOrNull((e) => e.uid == uid);
-        if (obj != null) {
-          objects.add(obj as T);
-        }
+        if (obj != null) objects.add(obj as T);
       }
     }
-    final leftovers = uids.where((uid) => objects.firstWhereOrNull((obj) => obj.uid == uid) == null).toList();
-    print(leftovers.length);
+    final leftovers =
+    uids.where((uid) => objects.firstWhereOrNull((obj) => obj.uid == uid) == null).toList();
 
     // Ask the database for the objects and caching it
     if (leftovers.isNotEmpty) {
-      objects.addAll(await DatabaseManager()
-          .getListFromUIDs<T>(DatabaseManager.collections[T]!, leftovers) ??
-          []);
-      caches[T]?.removeWhere((e) => leftovers.contains(e.uid));
-      caches[T]?.addAll(objects);
+      objects.addAll(
+          await DatabaseManager().getListFromUIDs<T>(DatabaseManager.collections[T]!, leftovers) ?? []);
+      caches[T]!.removeWhere((e) => leftovers.contains(e.uid));
+      caches[T]!.addAll(objects);
       // Write cache to disk
       await IOManager().serializeObjects(DatabaseManager.collections[T]!, caches[T]!);
       print('📙 Ho scritto su cache ${caches[T]!.length} ${T}s');
@@ -146,35 +181,44 @@ class DataManager {
   }
 
   /// Load the characters of a given user
-  loadUserCharacters(User user) async =>
-      user.characters.value = await loadList(user.charactersUIDs);
+  loadUserCharacters(User user) async => user.characters.value = await loadList(user.charactersUIDs);
+
+  /// Load the weapon, armor, item and coin objects of a given character
+  loadCharacterInventory(Character character) async =>
+      character.inventory.value = {
+        for (var entry in character.weaponsUIDs.entries)
+          (await load<Weapon>(entry.key)) as InventoryItem: entry.value
+      } +
+          {
+            for (var entry in character.armorsUIDs.entries)
+              (await load<Armor>(entry.key)) as InventoryItem: entry.value
+          } +
+          {
+            for (var entry in character.itemsUIDs.entries)
+              (await load<Item>(entry.key)) as InventoryItem: entry.value
+          } +
+          {
+            for (var entry in character.coinsUIDs.entries)
+              (await load<Coin>(entry.key)) as InventoryItem: entry.value
+          };
 
   /// Save Model objects
-  Future<String?> save(JSONSerializable model,
-      [SaveMode mode = SaveMode.put]) async {
+  Future<String?> save<T extends WithUID>(T model, [SaveMode mode = SaveMode.put]) async {
     String path = DatabaseManager.collections[model.runtimeType] ?? '';
-    if (mode == SaveMode.put) {
-      if (model is WithUID) {
-        path += (model).uid ?? '';
-      } else if (model is Enchantment) {
-        path += model.name.replaceAll('/', ' ');
-      }
-    }
+    if (mode == SaveMode.put) path += model.uid?.replaceAll('/', ' ') ?? '';
 
     String? newUID;
     // Query the FirebaseRD
     if (mode == SaveMode.put) {
       DatabaseManager().put(path, model.toJSON());
+      // Update cache value
+      caches[model.runtimeType]!.removeWhere((e) => e.uid == model.uid);
+      caches[model.runtimeType]!.add(model);
+      await IOManager().serializeObjects(DatabaseManager.collections[model.runtimeType]!,
+          (caches[model.runtimeType]!.cast<WithUID>()));
     } else {
-      if (model is WithUID) {
-        caches[model.runtimeType]?.add(model);
-      }
+      caches[model.runtimeType]!.add(model);
       newUID = await DatabaseManager().post(path, model.toJSON());
-    }
-    if (model is WithUID && mode == SaveMode.put) {
-      await IOManager().serializeObjects(
-          DatabaseManager.collections[model.runtimeType]!, caches[model.runtimeType]!);
-      print('📙 Ho scritto su cache ${caches[model.runtimeType]!.length} ${model.runtimeType}s');
     }
     return newUID;
   }

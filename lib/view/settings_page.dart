@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
+import 'package:scheda_dnd_5e/database/seeders/settings_seeder.dart';
 import 'package:scheda_dnd_5e/extension_function/iterable_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
-import 'package:scheda_dnd_5e/manager/dummy_manager.dart';
 import 'package:scheda_dnd_5e/model/setting.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
@@ -21,7 +21,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final settings = DummyManager().getSettings();
+  final settings = SettingSeeder().seeds;
   final List<SettingMenu> activeSettings = [];
   final iconWidth = 48.0;
 

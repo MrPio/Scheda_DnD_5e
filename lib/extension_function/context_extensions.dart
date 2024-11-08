@@ -130,7 +130,7 @@ extension ContextExtensions on BuildContext {
     );
   }
 
-  Future<void> checkList<T extends EnumWithTitle>(String title,
+  Future<void> checkList<T extends WithTitle>(String title,
       {required List<T> values,
       Function(T)? onChanged,
       // Function()? positiveCallback,

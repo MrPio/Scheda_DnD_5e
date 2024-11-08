@@ -23,6 +23,7 @@ import 'package:scheda_dnd_5e/view/partial/grid_column.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
+import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
 import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/partial/rule.dart';
 
@@ -112,9 +113,12 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    _character ??= ModalRoute.of(context)!.settings.arguments as Character;
+    if (_character == null) {
+      _character = ModalRoute.of(context)!.settings.arguments as Character;
+      _oldCharacter = Character.fromJson(_character!.toJSON());
+      _character!.inventory.addListener(() => setState(() {}));
+    }
     final character = _character!;
-    _oldCharacter ??= Character.fromJson(character.toJSON());
     final hpBottomSheetArgs = BottomSheetArgs(
       items: [
         BottomSheetItem('png/hp', 'Modifica HP', () {
@@ -547,34 +551,37 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       // Inventory
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: Measures.vMarginMed),
-          // Inventory sections
-          ...InventoryItem.types.map((type) => Column(
-                children: [
-                  // Header
-                  Clickable(
-                    onTap: () => setState(
-                        () => _setIsInventoryItemExpanded(type, !_getIsInventoryItemExpanded(type))),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: Measures.vMarginThin),
-                      child: Row(children: [
-                        Text(InventoryItem.names[type]!, style: Fonts.black(size: 18)),
-                        const SizedBox(width: Measures.hMarginMed),
-                        'chevron_left'.toIcon(
-                            height: 16, rotation: _getIsInventoryItemExpanded(type) ? pi / 2 : -pi / 2)
-                      ]),
-                    ),
-                  ),
-                  // List of inventory items
-                  if (_getIsInventoryItemExpanded(type))
-                    ...character.inventory.entries
-                        .where((e) => e.runtimeType == type)
-                        .map((e) => inventoryItemCard(e.key, e.value)),
-                  const SizedBox(height: Measures.vMarginSmall),
-                ],
-              ))
-        ],
+        children: character.inventory.value == null
+            ? List.filled(10, const GlassCard(isShimmer: true, shimmerHeight: 75))
+            : [
+                const SizedBox(height: Measures.vMarginMed),
+                // Inventory sections
+                ...InventoryItem.types.map((type) => Column(
+                      children: [
+                        // Header
+                        Clickable(
+                          onTap: () => setState(() =>
+                              _setIsInventoryItemExpanded(type, !_getIsInventoryItemExpanded(type))),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: Measures.vMarginThin),
+                            child: Row(children: [
+                              Text(InventoryItem.names[type]!, style: Fonts.black(size: 18)),
+                              const SizedBox(width: Measures.hMarginMed),
+                              'chevron_left'.toIcon(
+                                  height: 16,
+                                  rotation: _getIsInventoryItemExpanded(type) ? pi / 2 : -pi / 2)
+                            ]),
+                          ),
+                        ),
+                        // List of inventory items
+                        if (_getIsInventoryItemExpanded(type))
+                          ...character.inventory.value!.entries
+                              .where((e) => e.runtimeType == type)
+                              .map((e) => inventoryItemCard(e.key, e.value)),
+                        const SizedBox(height: Measures.vMarginSmall),
+                      ],
+                    ))
+              ],
       ),
       // Enchantments
       const Placeholder(),
@@ -585,6 +592,11 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
     ];
     _tabController ??= TabController(length: _screens!.length, vsync: this)
       ..addListener(() {
+        // Load character inventory
+        if (_tabController?.index == 1) {
+          character.inventory.value = null;
+          DataManager().loadCharacterInventory(character);
+        }
         setState(() {});
       });
 

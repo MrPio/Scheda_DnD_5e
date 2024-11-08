@@ -32,13 +32,14 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
   late final TextEditingController _searchController;
   late final List<Filter> _filters;
 
-  List<Enchantment> get _enchantments => (DataManager().enchantments.value ?? [])
+  List<Enchantment> get _enchantments => DataManager()
+      .cachedEnchantments
       .where((e) =>
           _filters.every((filter) => filter.checkFilter(e)) && e.name.match(_searchController.text))
       .toList()
     ..sort();
 
-  bool get isDataReady => DataManager().enchantments.value != null;
+  bool get isDataReady => DataManager().cachedEnchantments.isNotEmpty;
 
   @override
   void initState() {
@@ -57,15 +58,11 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
       Filter<Enchantment, Type>('Tipo', Palette.primaryBlue, Type.values,
           (enchantment, values) => values.contains(enchantment.type)),
     ];
-    DataManager().enchantments.addListener(() {
-      if (mounted) {
-        setState(() {});
-      }
-    });
     // Forcing shimmer effect
-    final tmpEnchantments = DataManager().enchantments.value;
-    DataManager().enchantments.value = null;
-    Future.delayed(Durations.medium1, () => DataManager().enchantments.value = tmpEnchantments);
+    final tmpEnchantments = DataManager().cachedEnchantments;
+    DataManager().cachedEnchantments=[];
+    Future.delayed(
+        Durations.medium1, () => setState(() => DataManager().cachedEnchantments = tmpEnchantments));
     super.initState();
   }
 
@@ -83,7 +80,7 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
         child: RecyclerView(
             header: Column(
               children: [
-                const SizedBox(height: Measures.vMarginBig+Measures.vMarginMed),
+                const SizedBox(height: Measures.vMarginBig + Measures.vMarginMed),
                 // Page Title
                 Align(
                     alignment: Alignment.centerLeft,

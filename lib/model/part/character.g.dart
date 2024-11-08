@@ -14,7 +14,18 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       json['_name'] as String,
       json['_hp'] as int?,
       json['_maxHp'] as int?,
-      Map<String, int>.from(json['_inventory'] as Map),
+      (json['weaponsUIDs'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as int),
+      ),
+      (json['armorsUIDs'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as int),
+      ),
+      (json['itemsUIDs'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as int),
+      ),
+      (json['coinsUIDs'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as int),
+      ),
       $enumDecode(_$ClassEnumMap, json['class_']),
       $enumDecode(_$SubClassEnumMap, json['subClass']),
       $enumDecode(_$RaceEnumMap, json['race']),
@@ -72,7 +83,10 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'level': instance.level,
       'armorClass': instance.armorClass,
       'initiative': instance.initiative,
-      '_inventory': instance._inventory,
+      'weaponsUIDs': instance.weaponsUIDs,
+      'armorsUIDs': instance.armorsUIDs,
+      'itemsUIDs': instance.itemsUIDs,
+      'coinsUIDs': instance.coinsUIDs,
       'speed': instance.speed,
       'skills': instance.skills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
       'skillsModifier': instance.skillsModifier

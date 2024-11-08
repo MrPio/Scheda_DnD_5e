@@ -1,11 +1,4 @@
-import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
-import 'package:expand_tap_area/expand_tap_area.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:scheda_dnd_5e/constant/character_names.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/iterable_extensions.dart';
@@ -16,21 +9,20 @@ import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/mixin/loadable.dart';
+import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/model/loot.dart';
-import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
-import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
-import 'package:scheda_dnd_5e/view/partial/card/dice_card.dart';
+import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/skill_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';
+import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/legend.dart';
 import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
-import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 
 import '../constant/fonts.dart';
 import '../constant/measures.dart';
@@ -650,11 +642,17 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                               }
                               if (e.choiceableItems.isNotEmpty) {
                                 var count = 0;
-                                for (var (i, items) in e.choiceableItems.indexed) {
-                                  var backupInventory = character.inventory;
-                                  character.addLoot(
-                                      Loot({items.entries.first.key: items.entries.first.value}));
-                                  if (items.length > 1) {
+                                for (var itemsUIDs in e.choiceableItems) {
+                                  var items = {
+                                    for (var entry in itemsUIDs.entries)
+                                      DataManager()
+                                          .cachedInventoryItems
+                                          .firstWhere((e) => e.uid == entry.key): entry.value
+                                  };
+                                  var backupInventory = character.inventory.value!;
+                                  character
+                                      .addLoot(Loot({itemsUIDs.keys.first: itemsUIDs.entries.first.value}));
+                                  if (itemsUIDs.length > 1) {
                                     ++count;
                                     await context.checkList<InventoryItem>(
                                       'Scegli un oggetto ($count/${e.choiceableItems.where((e) => e.length > 1).length})',
@@ -664,14 +662,14 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                       color: Palette.primaryRed,
                                       selectionRequirement: 1,
                                       onChanged: (value) {
-                                        var selected = character.inventory - backupInventory;
+                                        var selected = character.inventory.value! - backupInventory;
                                         if (!selected.containsKey(value)) {
-                                          character.inventory = backupInventory;
-                                          character.addLoot(Loot({value: items[value]!}));
+                                          character.inventory.value = backupInventory;
+                                          character.addLoot(Loot({value.uid!: items[value]!}));
                                         }
                                       },
                                       value: (value) =>
-                                          (character.inventory - backupInventory).containsKey(value),
+                                          (character.inventory.value! - backupInventory).containsKey(value),
                                     );
                                   }
                                 }

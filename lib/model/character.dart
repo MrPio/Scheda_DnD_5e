@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
-import 'dart:ui';
 
+import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
 import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
@@ -2562,9 +2562,15 @@ class Character with Comparable<Character> implements WithUID {
   Status? status;
   Alignment alignment;
   int level, armorClass, initiative;
-  @JsonKey(includeFromJson: true, includeToJson: true)
-  Map<String, int> _inventory = {};
+  Map<String, int> weaponsUIDs = {}, armorsUIDs = {}, itemsUIDs = {}, coinsUIDs = {};
   double speed;
+
+  Map<Type, Map<String, int>> get inventoryItems => {
+        Weapon: weaponsUIDs,
+        Armor: armorsUIDs,
+        Item: itemsUIDs,
+        Coin: coinsUIDs,
+      };
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   String get name => _name;
@@ -2613,7 +2619,10 @@ class Character with Comparable<Character> implements WithUID {
       this._name,
       int? _hp,
       int? _maxHp,
-      this._inventory,
+      Map<String, int>? weaponsUIDs,
+      Map<String, int>? armorsUIDs,
+      Map<String, int>? itemsUIDs,
+      Map<String, int>? coinsUIDs,
       this.class_,
       this.subClass,
       this.race,
@@ -2630,7 +2639,11 @@ class Character with Comparable<Character> implements WithUID {
       this.armorClass,
       this.initiative,
       this.speed)
-      : _chosenSkills = _chosenSkills ?? {},
+      : weaponsUIDs=weaponsUIDs??{},
+        armorsUIDs = armorsUIDs ?? {},
+        itemsUIDs = itemsUIDs ?? {},
+        coinsUIDs = coinsUIDs ?? {},
+        _chosenSkills = _chosenSkills ?? {},
         rollSkills = rollSkills ?? {},
         customSkills = customSkills ?? {},
         subSkills = subSkills ?? {},
@@ -2639,7 +2652,7 @@ class Character with Comparable<Character> implements WithUID {
         _hp = _hp ?? 10,
         _maxHp = _maxHp ?? 10 {
     // Assert that each inventory entry has at least 1 amount. Non owned items should not be in the inventory map.
-    for (var qta in _inventory.values) {
+    for (var qta in inventoryUIDs.values) {
       assert(qta > 0);
     }
     assert(level > 0);
@@ -2667,12 +2680,8 @@ class Character with Comparable<Character> implements WithUID {
   @JsonKey(includeFromJson: false, includeToJson: false)
   late final String? uid;
 
-  // @JsonKey(includeFromJson: false, includeToJson: false)
-  // Map<InventoryItem, int> get inventory =>
-  //     _inventory.map((key, value) => MapEntry(InventoryItem.fromName(key), value));
-
-  set inventory(Map<InventoryItem, int> value) =>
-      _inventory = value.map((key, value) => MapEntry(key.toString(), value));
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  ValueNotifier<Map<InventoryItem, int>?> inventory = ValueNotifier(null);
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   DateTime get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
@@ -2696,6 +2705,9 @@ class Character with Comparable<Character> implements WithUID {
   @JsonKey(includeFromJson: false, includeToJson: false)
   int get competenceBonus => (level - 1) ~/ 4 + 2;
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  Map<String, int> get inventoryUIDs => weaponsUIDs + armorsUIDs + itemsUIDs + coinsUIDs;
+
   // il max è 20
   int skillValue(Skill skill) =>
       customSkills[skill] ??
@@ -2714,7 +2726,8 @@ class Character with Comparable<Character> implements WithUID {
 
   addLoot(Loot loot) {
     loot.content.forEach((item, qta) {
-      _inventory += {item: qta};
+      inventoryItems[item.runtimeType] = inventoryItems[item.runtimeType]! + {item.uid!: qta};
+      if (inventory.value != null) inventory.value = inventory.value! + {item: qta};
     });
   }
 

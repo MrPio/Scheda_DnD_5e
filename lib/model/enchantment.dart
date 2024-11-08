@@ -1,3 +1,4 @@
+import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/mixin/comparable.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -23,10 +24,9 @@ enum Level implements EnumWithTitle {
   int get num => int.parse(name.split('level')[1]);
 
   const Level(this.title);
-
 }
 
-enum Type implements EnumWithTitle{
+enum Type implements EnumWithTitle {
   evocazione('Evocazione'),
   divinazione('Divinazione'),
   invocazione('Invocazione'),
@@ -39,7 +39,6 @@ enum Type implements EnumWithTitle{
   final String title;
 
   const Type(this.title);
-
 }
 
 enum Range {
@@ -136,12 +135,10 @@ enum Component {
   const Component(this.title);
 }
 
-enum Damage{
-  attacco, tiroSalvezza, descrittivo
-}
+enum Damage { attacco, tiroSalvezza, descrittivo }
 
-@JsonSerializable()
-class Enchantment with Comparable<Enchantment> implements JSONSerializable {
+@JsonSerializable(constructor: 'jsonConstructor')
+class Enchantment with Comparable<Enchantment> implements WithUID {
   final String name, description;
   final Level level;
   final Type type;
@@ -166,47 +163,65 @@ class Enchantment with Comparable<Enchantment> implements JSONSerializable {
 
   final Damage damage; // TODO: rename to "category"
 
-  Enchantment(this.name,
-      this.level,
-      this.type,
-      this.classes,
-      this.range,
-      this.rangeType,
-      this.isCharmer,
-      this.launchTime,
-      this.launchCondition,
-      this.duration,
-      this.concentration,
-      this.components,
-      this.componentsDescription,
-      this.damage,
-      this.description,);
+  Enchantment.jsonConstructor(
+    this.name,
+    this.level,
+    this.type,
+    this.classes,
+    this.range,
+    this.rangeType,
+    this.isCharmer,
+    this.launchTime,
+    this.launchCondition,
+    this.duration,
+    this.concentration,
+    this.components,
+    this.componentsDescription,
+    this.damage,
+    this.description,
+  );
+
+  Enchantment(
+    this.name,
+    this.level,
+    this.type,
+    this.classes,
+    this.range,
+    this.rangeType,
+    this.isCharmer,
+    this.launchTime,
+    this.launchCondition,
+    this.duration,
+    this.concentration,
+    this.components,
+    this.componentsDescription,
+    this.damage,
+    this.description,
+  ) : uid = name;
 
   @override
-  factory Enchantment.fromJson(Map<String, dynamic> json) =>
-      _$EnchantmentFromJson(json);
+  factory Enchantment.fromJson(Map<String, dynamic> json) => _$EnchantmentFromJson(json);
 
   @override
   Map<String, dynamic> toJSON() => _$EnchantmentToJson(this);
 
   @override
   // Compare first by level than by name
-  int compareTo(Enchantment other) =>
-      level.num.compareTo(other.level.num) == 0
-          ? name.compareTo(other.name)
-          : level.num.compareTo(other.level.num);
+  int compareTo(Enchantment other) => level.num.compareTo(other.level.num) == 0
+      ? name.compareTo(other.name)
+      : level.num.compareTo(other.level.num);
 
-  String get launchTimeStr =>
-      launchTime.title +
-          (launchCondition.isNotEmpty ? '($launchCondition)' : '');
+  String get launchTimeStr => launchTime.title + (launchCondition.isNotEmpty ? '($launchCondition)' : '');
 
-  String get rangeStr =>
-      '${rangeType.title} ${range.title}${isCharmer ? ' (Incantatore)' : ''}';
+  String get rangeStr => '${rangeType.title} ${range.title}${isCharmer ? ' (Incantatore)' : ''}';
 
   String get componentsStr =>
       components.map((e) => e.title).join(', ') +
-          (componentsDescription.isNotEmpty ? ' ($componentsDescription)' : '');
+      (componentsDescription.isNotEmpty ? ' ($componentsDescription)' : '');
 
-  String get durationStr =>
-      (concentration ? 'concentrazione, ':'') + duration.title;
+  String get durationStr => (concentration ? 'concentrazione, ' : '') + duration.title;
+
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  late final String? uid;
 }

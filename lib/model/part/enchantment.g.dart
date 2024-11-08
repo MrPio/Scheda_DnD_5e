@@ -6,7 +6,8 @@ part of '../enchantment.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-Enchantment _$EnchantmentFromJson(Map<String, dynamic> json) => Enchantment(
+Enchantment _$EnchantmentFromJson(Map<String, dynamic> json) =>
+    Enchantment.jsonConstructor(
       json['name'] as String,
       $enumDecode(_$LevelEnumMap, json['level']),
       $enumDecode(_$TypeEnumMap, json['type']),
