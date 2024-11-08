@@ -647,11 +647,11 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                     for (var entry in itemsUIDs.entries)
                                       DataManager()
                                           .cachedInventoryItems
-                                          .firstWhere((e) => e.uid == entry.key): entry.value
+                                          .firstWhere((e) => e.uid!.match(entry.key)): entry.value
                                   };
-                                  var backupInventory = character.inventory.value!;
-                                  character
-                                      .addLoot(Loot({itemsUIDs.keys.first: itemsUIDs.entries.first.value}));
+                                  var backupInventory = character.inventoryUIDs;
+                                  character.addLoot(
+                                      Loot({itemsUIDs.keys.first: itemsUIDs.entries.first.value}));
                                   if (itemsUIDs.length > 1) {
                                     ++count;
                                     await context.checkList<InventoryItem>(
@@ -662,14 +662,17 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                       color: Palette.primaryRed,
                                       selectionRequirement: 1,
                                       onChanged: (value) {
-                                        var selected = character.inventory.value! - backupInventory;
-                                        if (!selected.containsKey(value)) {
-                                          character.inventory.value = backupInventory;
+                                        var selected = character.inventoryUIDs - backupInventory;
+                                        if (!selected.containsKey(value.uid)) {
+                                          character.removeItems(selected.keys
+                                              .map((uid) =>
+                                                  items.keys.firstWhere((item) => item.uid!.match(uid)))
+                                              .toList());
                                           character.addLoot(Loot({value.uid!: items[value]!}));
                                         }
                                       },
-                                      value: (value) =>
-                                          (character.inventory.value! - backupInventory).containsKey(value),
+                                      value: (value) => (character.inventoryUIDs - backupInventory)
+                                          .containsKey(value.uid),
                                     );
                                   }
                                 }

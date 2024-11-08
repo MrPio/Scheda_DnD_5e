@@ -7,6 +7,7 @@ import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
+
 // import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/filter.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
@@ -43,8 +44,7 @@ class _CharactersPageState extends State<CharactersPage> {
       .where((e) =>
           _filters.every((filter) => filter.checkFilter(e)) && e.name.match(_searchController.text))
       .toList()
-    ..sort()
-    ..reversed;
+    ..sort();
 
   bool get isDataReady => AccountManager().user.characters.value != null;
 
@@ -92,7 +92,7 @@ class _CharactersPageState extends State<CharactersPage> {
         child: RecyclerView(
           header: Column(
             children: [
-              const SizedBox(height: Measures.vMarginBig+Measures.vMarginMed),
+              const SizedBox(height: Measures.vMarginBig + Measures.vMarginMed),
               // Page Title
               Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                 Text('I tuoi personaggi', style: Fonts.black()),

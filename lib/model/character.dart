@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
@@ -2639,7 +2640,7 @@ class Character with Comparable<Character> implements WithUID {
       this.armorClass,
       this.initiative,
       this.speed)
-      : weaponsUIDs=weaponsUIDs??{},
+      : weaponsUIDs = weaponsUIDs ?? {},
         armorsUIDs = armorsUIDs ?? {},
         itemsUIDs = itemsUIDs ?? {},
         coinsUIDs = coinsUIDs ?? {},
@@ -2726,9 +2727,24 @@ class Character with Comparable<Character> implements WithUID {
 
   addLoot(Loot loot) {
     loot.content.forEach((item, qta) {
-      inventoryItems[item.runtimeType] = inventoryItems[item.runtimeType]! + {item.uid!: qta};
-      if (inventory.value != null) inventory.value = inventory.value! + {item: qta};
+      if (item is Equipment) {
+        addLoot(Loot({for (var e in item.content.entries) e.key: e.value * qta}));
+      } else {
+        inventoryItems[item.runtimeType]!.addAll({item.uid!: qta});
+        if (inventory.value != null) inventory.value!.addAll({item: qta});
+      }
     });
+  }
+
+  removeItems(List<InventoryItem> items) {
+    for (var item in items) {
+      if (item is! Equipment) {
+        inventoryItems[item.runtimeType]!.removeWhere((key, value) => key.match(item.uid!));
+        if (inventory.value != null) {
+          inventory.value!.removeWhere((key, value) => key.uid!.match(item.uid!));
+        }
+      }
+    }
   }
 
   @override
@@ -2743,6 +2759,6 @@ class Character with Comparable<Character> implements WithUID {
   }
 
   @override
-  // Compare first by creation date
-  int compareTo(Character other) => regDateTimestamp.compareTo(other.regDateTimestamp);
+  // Compare by creation date in descending order
+  int compareTo(Character other) => regDateTimestamp.compareTo(other.regDateTimestamp)*-1;
 }

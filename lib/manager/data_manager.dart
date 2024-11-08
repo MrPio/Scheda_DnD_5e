@@ -30,24 +30,33 @@ class DataManager {
   List<User> cachedUsers = [];
   List<Character> cachedCharacters = [];
   List<Campaign> cachedCampaigns = [];
-  List<InventoryItem> cachedInventoryItems = [];
+  List<Weapon> cachedWeapons = [];
+  List<Armor> cachedArmors = [];
+  List<Item> cachedItems = [];
+  List<Coin> cachedCoins = [];
+  List<Equipment> cachedEquipments = [];
   List<Enchantment> cachedEnchantments = [];
 
-  Map<core.Type, List<WithUID>> get caches =>
-      {
+  List<InventoryItem> get cachedInventoryItems =>
+      (cachedWeapons.cast<InventoryItem>()) +
+      (cachedArmors.cast<InventoryItem>()) +
+      (cachedItems.cast<InventoryItem>()) +
+      (cachedCoins.cast<InventoryItem>()) +
+      (cachedEquipments.cast<InventoryItem>());
+
+  Map<core.Type, List<WithUID>> get caches => {
         User: cachedUsers,
         Campaign: cachedCampaigns,
         Character: cachedCharacters,
         Enchantment: cachedEnchantments,
-        Weapon: cachedInventoryItems,
-        Armor: cachedInventoryItems,
-        Item: cachedInventoryItems,
-        Coin: cachedInventoryItems,
-        Equipment: cachedInventoryItems,
+        Weapon: cachedWeapons,
+        Armor: cachedArmors,
+        Item: cachedItems,
+        Coin: cachedCoins,
+        Equipment: cachedEquipments,
       };
 
-  Map<core.Type, int> get cachesTTL =>
-      {
+  Map<core.Type, int> get cachesTTL => {
         User: 30 * 60,
         Campaign: 30 * 60,
         Character: 30 * 60,
@@ -60,8 +69,7 @@ class DataManager {
       };
 
   /// Function used to deserialize cache from disk
-  Map<core.Type, Function()> get cacheDeserializers =>
-      {
+  Map<core.Type, Function()> get cacheDeserializers => {
         User: () => IOManager().deserializeObjects<User>(DatabaseManager.collections[User]!),
         Campaign: () => IOManager().deserializeObjects<Campaign>(DatabaseManager.collections[Campaign]!),
         Character: () =>
@@ -77,28 +85,27 @@ class DataManager {
       };
 
   /// Function used to fetch cache data from db
-  Map<core.Type, Future<List<WithUID>> Function()> get cacheSeeders =>
-      {
+  Map<core.Type, Future<List<WithUID>> Function()> get cacheSeeders => {
         Enchantment: () async =>
-        await DatabaseManager()
-            .getList<Enchantment>(DatabaseManager.collections[Enchantment]!, pageSize: 9999) ??
+            await DatabaseManager()
+                .getList<Enchantment>(DatabaseManager.collections[Enchantment]!, pageSize: 9999) ??
             [],
         Weapon: () async =>
-        await DatabaseManager()
-            .getList<Weapon>(DatabaseManager.collections[Weapon]!, pageSize: 9999) ??
+            await DatabaseManager()
+                .getList<Weapon>(DatabaseManager.collections[Weapon]!, pageSize: 9999) ??
             [],
         Armor: () async =>
-        await DatabaseManager().getList<Armor>(DatabaseManager.collections[Armor]!, pageSize: 9999) ??
+            await DatabaseManager().getList<Armor>(DatabaseManager.collections[Armor]!, pageSize: 9999) ??
             [],
         Item: () async =>
-        await DatabaseManager().getList<Item>(DatabaseManager.collections[Item]!, pageSize: 9999) ??
+            await DatabaseManager().getList<Item>(DatabaseManager.collections[Item]!, pageSize: 9999) ??
             [],
         Coin: () async =>
-        await DatabaseManager().getList<Coin>(DatabaseManager.collections[Coin]!, pageSize: 9999) ??
+            await DatabaseManager().getList<Coin>(DatabaseManager.collections[Coin]!, pageSize: 9999) ??
             [],
         Equipment: () async =>
-        await DatabaseManager()
-            .getList<Equipment>(DatabaseManager.collections[Equipment]!, pageSize: 9999) ??
+            await DatabaseManager()
+                .getList<Equipment>(DatabaseManager.collections[Equipment]!, pageSize: 9999) ??
             [],
       };
 
@@ -107,9 +114,7 @@ class DataManager {
     for (var cache in caches.entries) {
       final path = DatabaseManager.collections[cache.key]!.replaceAll('/', '');
       final timestamp = IOManager().get<int>('${path}_timestamp') ?? 0;
-      if (timestamp
-          .elapsedTime()
-          .inSeconds < cachesTTL[cache.key]!) {
+      if (timestamp.elapsedTime().inSeconds < cachesTTL[cache.key]!) {
         caches[cache.key]!.clear();
         caches[cache.key]!.addAll(await cacheDeserializers[cache.key]!());
         print('📘 I\'ve read ${caches[cache.key]!.length} ${cache.key}s locally');
@@ -120,8 +125,7 @@ class DataManager {
         if (cacheSeeders.containsKey(cache.key)) {
           caches[cache.key]!.clear();
           caches[cache.key]!.addAll(await cacheSeeders[cache.key]!());
-          IOManager()
-              .serializeObjects(DatabaseManager.collections[cache.key]!, caches[cache.key]!);
+          IOManager().serializeObjects(DatabaseManager.collections[cache.key]!, caches[cache.key]!);
           print('⬇️ I\'ve downloaded ${caches[cache.key]!.length} ${cache.key}s');
         }
       }
@@ -165,7 +169,7 @@ class DataManager {
       }
     }
     final leftovers =
-    uids.where((uid) => objects.firstWhereOrNull((obj) => obj.uid == uid) == null).toList();
+        uids.where((uid) => objects.firstWhereOrNull((obj) => obj.uid == uid) == null).toList();
 
     // Ask the database for the objects and caching it
     if (leftovers.isNotEmpty) {
@@ -184,23 +188,22 @@ class DataManager {
   loadUserCharacters(User user) async => user.characters.value = await loadList(user.charactersUIDs);
 
   /// Load the weapon, armor, item and coin objects of a given character
-  loadCharacterInventory(Character character) async =>
-      character.inventory.value = {
+  loadCharacterInventory(Character character) async => character.inventory.value = {
         for (var entry in character.weaponsUIDs.entries)
           (await load<Weapon>(entry.key)) as InventoryItem: entry.value
       } +
-          {
-            for (var entry in character.armorsUIDs.entries)
-              (await load<Armor>(entry.key)) as InventoryItem: entry.value
-          } +
-          {
-            for (var entry in character.itemsUIDs.entries)
-              (await load<Item>(entry.key)) as InventoryItem: entry.value
-          } +
-          {
-            for (var entry in character.coinsUIDs.entries)
-              (await load<Coin>(entry.key)) as InventoryItem: entry.value
-          };
+      {
+        for (var entry in character.armorsUIDs.entries)
+          (await load<Armor>(entry.key)) as InventoryItem: entry.value
+      } +
+      {
+        for (var entry in character.itemsUIDs.entries)
+          (await load<Item>(entry.key)) as InventoryItem: entry.value
+      } +
+      {
+        for (var entry in character.coinsUIDs.entries)
+          (await load<Coin>(entry.key)) as InventoryItem: entry.value
+      };
 
   /// Save Model objects
   Future<String?> save<T extends WithUID>(T model, [SaveMode mode = SaveMode.put]) async {
@@ -214,8 +217,8 @@ class DataManager {
       // Update cache value
       caches[model.runtimeType]!.removeWhere((e) => e.uid == model.uid);
       caches[model.runtimeType]!.add(model);
-      await IOManager().serializeObjects(DatabaseManager.collections[model.runtimeType]!,
-          (caches[model.runtimeType]!.cast<WithUID>()));
+      await IOManager().serializeObjects(
+          DatabaseManager.collections[model.runtimeType]!, (caches[model.runtimeType]!.cast<WithUID>()));
     } else {
       caches[model.runtimeType]!.add(model);
       newUID = await DatabaseManager().post(path, model.toJSON());

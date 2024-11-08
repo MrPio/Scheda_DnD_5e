@@ -552,7 +552,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: character.inventory.value == null
-            ? List.filled(10, const GlassCard(isShimmer: true, shimmerHeight: 75))
+            ? List.filled(10, const GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 75))
             : [
                 const SizedBox(height: Measures.vMarginMed),
                 // Inventory sections
@@ -576,7 +576,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                         // List of inventory items
                         if (_getIsInventoryItemExpanded(type))
                           ...character.inventory.value!.entries
-                              .where((e) => e.runtimeType == type)
+                              .where((e) => e.key.runtimeType == type)
                               .map((e) => inventoryItemCard(e.key, e.value)),
                         const SizedBox(height: Measures.vMarginSmall),
                       ],
@@ -707,5 +707,11 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
     );
   }
 
-  Widget inventoryItemCard(InventoryItem item, int amount) => Container();
+  Widget inventoryItemCard(InventoryItem item, int amount) => GlassCard(
+        isFlat: true,
+        child: Text(
+          item.title,
+          style: Fonts.bold(),
+        ),
+      );
 }

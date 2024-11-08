@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
@@ -180,9 +181,9 @@ class Loot implements JSONSerializable {
 
   /// This requires that DataManager.fetchData() has been called
   Map<InventoryItem, int> get content => {
-    for (var entry in _content.entries)
-      DataManager().cachedInventoryItems.firstWhere((e) => e.uid == entry.key): entry.value
-  };
+        for (var entry in _content.entries)
+          DataManager().cachedInventoryItems.firstWhere((e) => e.uid!.match(entry.key)): entry.value
+      };
 
   @override
   factory Loot.fromJson(Map<String, dynamic> json) => _$LootFromJson(json);

@@ -11,7 +11,7 @@ extension StringExtensions on String {
   bool match(String other) => toLowerCase()
       .trim()
       .replaceAll(' ', '')
-      .contains(other.toLowerCase().trim());
+      .contains(other.toLowerCase().trim().replaceAll(' ', ''));
 
   bool get isEmail =>
       RegExp(r'^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$').hasMatch(this);
