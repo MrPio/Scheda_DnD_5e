@@ -107,7 +107,7 @@ class _CharactersPageState extends State<CharactersPage> {
                 textController: _searchController,
               ),
               // Filters
-              if (characters.length > 5)
+              if (AccountManager().user.charactersUIDs.length > 5)
                 GridView.count(
                     physics: const NeverScrollableScrollPhysics(),
                     crossAxisCount: 3,

@@ -641,6 +641,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                 );
                               }
                               if (e.choiceableItems.isNotEmpty) {
+                                List<Map<String, int>> selected =
+                                    List.generate(e.choiceableItems.length,(_) => {});
                                 var count = 0;
                                 for (var itemsUIDs in e.choiceableItems) {
                                   var items = {
@@ -649,32 +651,25 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                           .cachedInventoryItems
                                           .firstWhere((e) => e.uid!.match(entry.key)): entry.value
                                   };
-                                  var backupInventory = character.inventoryUIDs;
-                                  character.addLoot(
-                                      Loot({itemsUIDs.keys.first: itemsUIDs.entries.first.value}));
+                                  selected[count][items.keys.first.uid!] = items.values.first;
+                                  print(selected[count]);
                                   if (itemsUIDs.length > 1) {
-                                    ++count;
                                     await context.checkList<InventoryItem>(
-                                      'Scegli un oggetto ($count/${e.choiceableItems.where((e) => e.length > 1).length})',
+                                      'Scegli un oggetto (${count + 1}/${e.choiceableItems.where((e) => e.length > 1).length})',
                                       dismissible: false,
                                       isRadio: true,
                                       values: items.keys.toList(),
                                       color: Palette.primaryRed,
                                       selectionRequirement: 1,
-                                      onChanged: (value) {
-                                        var selected = character.inventoryUIDs - backupInventory;
-                                        if (!selected.containsKey(value.uid)) {
-                                          character.removeItems(selected.keys
-                                              .map((uid) =>
-                                                  items.keys.firstWhere((item) => item.uid!.match(uid)))
-                                              .toList());
-                                          character.addLoot(Loot({value.uid!: items[value]!}));
-                                        }
-                                      },
-                                      value: (value) => (character.inventoryUIDs - backupInventory)
-                                          .containsKey(value.uid),
+                                      onChanged: (value) => selected[count] = {value.uid!: items[value]!},
+                                      value: (value) => selected[count].containsKey(value.uid),
                                     );
+                                    count++;
                                   }
+                                }
+                                for (var items in selected) {
+                                  print(items);
+                                  character.addLoot(Loot(items));
                                 }
                               }
                               next();
