@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
@@ -556,31 +558,49 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
             : [
                 const SizedBox(height: Measures.vMarginMed),
                 // Inventory sections
-                ...InventoryItem.types.map((type) => Column(
-                      children: [
-                        // Header
-                        Clickable(
-                          onTap: () => setState(() =>
-                              _setIsInventoryItemExpanded(type, !_getIsInventoryItemExpanded(type))),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: Measures.vMarginThin),
-                            child: Row(children: [
-                              Text(InventoryItem.names[type]!, style: Fonts.black(size: 18)),
-                              const SizedBox(width: Measures.hMarginMed),
+                ...InventoryItem.types.map((type) {
+                  final isEmpty =
+                      character.inventory.value!.entries.where((e) => e.key.runtimeType == type).isEmpty;
+                  return Column(
+                    children: [
+                      // Header
+                      Clickable(
+                        active: !isEmpty,
+                        onTap: () => setState(
+                            () => _setIsInventoryItemExpanded(type, !_getIsInventoryItemExpanded(type))),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
+                          child: Row(children: [
+                            Text(InventoryItem.names[type]!, style: Fonts.black(size: 18)),
+                            const SizedBox(width: Measures.hMarginMed),
+                            if (!isEmpty)
                               'chevron_left'.toIcon(
                                   height: 16,
                                   rotation: _getIsInventoryItemExpanded(type) ? pi / 2 : -pi / 2)
-                            ]),
-                          ),
+                          ]),
                         ),
-                        // List of inventory items
-                        if (_getIsInventoryItemExpanded(type))
-                          ...character.inventory.value!.entries
-                              .where((e) => e.key.runtimeType == type)
-                              .map((e) => inventoryItemCard(e.key, e.value)),
-                        const SizedBox(height: Measures.vMarginSmall),
-                      ],
-                    ))
+                      ),
+                      // List of inventory items
+                      if (!isEmpty && _getIsInventoryItemExpanded(type))
+                        ...character.inventory.value!.entries
+                            .where((e) => e.key.runtimeType == type)
+                            .map((e) => inventoryItemCard(e.key, e.value)),
+                      if (!_getIsInventoryItemExpanded(type))
+                        const Padding(
+                          padding: EdgeInsets.only(top: Measures.vMarginThin),
+                          child: Rule(),
+                        ),
+                      if (isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
+                          child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
+                        ),
+                      const SizedBox(height: Measures.vMarginSmall),
+                    ],
+                  );
+                }),
+                const SizedBox(height: Measures.vMarginBig),
               ],
       ),
       // Enchantments
@@ -690,7 +710,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       controller: _tabController,
                       children: _screens!
                           .map((e) => SingleChildScrollView(
-                                padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: _screens!.indexOf(e) == 1 ? 0 : Measures.hPadding),
                                 child: e,
                               ))
                           .toList(),
@@ -709,9 +730,49 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
   Widget inventoryItemCard(InventoryItem item, int amount) => GlassCard(
         isFlat: true,
-        child: Text(
-          item.title,
-          style: Fonts.bold(),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: Measures.hPadding),
+          child: SizedBox(
+            width: double.infinity,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            InventoryItem.icons[item.runtimeType]!.toIcon(height: 22),
+                            const SizedBox(width: Measures.hMarginSmall),
+                            Text(item.title, style: Fonts.regular()),
+                            Text(' (x$amount)', style: Fonts.black(size: 16)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    if (item is Weapon)
+                      Row(
+                        children: [
+                          const SizedBox(width: Measures.hMarginMed),
+                          ...item.rollDamage.map((e) => SvgPicture.asset(e.svgPath, height: 28)),
+                          Text('  + ${item.fixedDamage}', style: Fonts.black(size: 18))
+                        ],
+                      )
+                  ],
+                ),
+                if (item is Weapon) ...[
+                  const SizedBox(height: Measures.vMarginMoreThin),
+                  Text(item.property, style: Fonts.light())
+                ],
+                if (item is Item && item.description.isNotEmpty) ...[
+                  const SizedBox(height: Measures.vMarginMoreThin),
+                  Text(item.description, style: Fonts.light())
+                ]
+              ],
+            ),
+          ),
         ),
       );
 }

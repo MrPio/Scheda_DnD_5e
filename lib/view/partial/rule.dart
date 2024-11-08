@@ -8,7 +8,7 @@ class Rule extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
       width: double.infinity,
-      height: 0.4,
-      color: Palette.card,
+      height: 0.6,
+      color: Palette.card2,
     );
 }

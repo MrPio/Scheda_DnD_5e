@@ -97,10 +97,13 @@ class Armor extends InventoryItem {
 
 @JsonSerializable(constructor: 'jsonConstructor')
 class Item extends InventoryItem {
-  Item.jsonConstructor({super.title, super.authorUID, super.regDateTimestamp});
+  final String description;
+
+  Item.jsonConstructor({super.title, super.authorUID, super.regDateTimestamp, this.description = ''});
 
   Item(title)
       : uid = title,
+        description = '',
         super(title: title);
 
   @override
