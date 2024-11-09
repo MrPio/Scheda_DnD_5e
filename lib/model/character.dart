@@ -2736,6 +2736,17 @@ class Character with Comparable<Character> implements WithUID {
     });
   }
 
+  editQuantity(InventoryItem item, int newQuantity) {
+    if (newQuantity <= 0) {
+      removeItems([item]);
+    } else if (item is! Equipment) {
+      inventoryItems[item.runtimeType]![item.uid!] = newQuantity;
+      if (inventory.value != null) {
+        inventory.value![item] = newQuantity;
+      }
+    }
+  }
+
   removeItems(List<InventoryItem> items) {
     for (var item in items) {
       if (item is! Equipment) {
@@ -2760,5 +2771,5 @@ class Character with Comparable<Character> implements WithUID {
 
   @override
   // Compare by creation date in descending order
-  int compareTo(Character other) => regDateTimestamp.compareTo(other.regDateTimestamp)*-1;
+  int compareTo(Character other) => regDateTimestamp.compareTo(other.regDateTimestamp) * -1;
 }

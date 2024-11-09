@@ -30,8 +30,8 @@ class SheetItemCard extends StatelessWidget {
       this.bottomSheetArgs,
       this.numericInputArgs,
       this.onTap}) {
-    if (numericInputArgs != null) {
-      numericInputArgs!.controller.text = value.toString();
+    if (numericInputArgs != null && numericInputArgs!.controller != null) {
+      numericInputArgs!.controller!.text = value.toString();
     }
   }
 

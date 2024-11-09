@@ -5,7 +5,8 @@ class Measures {
       vMarginMed = 28.0,
       vMarginSmall = 18.0,
       vMarginThin = 9.0,
-      vMarginMoreThin = 5.0;
+      vMarginMoreThin = 5.0,
+  vMarginThinnest = 2.5;
   static const vButtonPadding = 11.0, vButtonPaddingSmall = 6.0;
   static const hMarginBig = 20.0, hMarginMed = 12.0, hMarginSmall = 6.0,hMarginThin = 4.0;
   static const hTextFieldPadding = 18.0;

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
@@ -73,7 +74,7 @@ extension ContextExtensions on BuildContext {
                                   data: message,
                                   shrinkWrap: true,
                                   styleSheet: MarkdownStyleSheet(
-                                    // TODO in mago c'è un pezzo nero
+                                      // TODO in mago c'è un pezzo nero
                                       p: Fonts.light(size: 15),
                                       tableBody: Fonts.light(size: 12),
                                       listBullet: Fonts.light(size: 15),
@@ -202,7 +203,8 @@ extension ContextExtensions on BuildContext {
               content: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(message, style: Fonts.regular()),
+                  Expanded(
+                      child: Text(message, style: Fonts.regular())),
                   if (undoCallback != null)
                     TextButton(
                       onPressed: () {

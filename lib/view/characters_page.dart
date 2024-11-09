@@ -252,7 +252,10 @@ class _CharactersPageState extends State<CharactersPage> {
   /// When returning from the character page, reload if any changes have been applied
   gotoCharacter(Character character) => context.goto('/character',
       arguments: character,
-      then: (args) => args is CharacterPageToCharactersPageArgs && !args.noChanges ? null : refresh());
+      then: (args) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        args is CharacterPageToCharactersPageArgs && !args.noChanges ? null : refresh();
+      });
 
   /// Refresh the characters UIDs
   refresh() {
