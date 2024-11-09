@@ -109,6 +109,11 @@ class DataManager {
             [],
       };
 
+  invalidateCache<T>() async{
+    final path = DatabaseManager.collections[T]!.replaceAll('/', '');
+    await IOManager().removeAll([path, '${path}_timestamp']);
+  }
+
   /// This should be called after obtaining the auth
   fetchData() async {
     for (var cache in caches.entries) {

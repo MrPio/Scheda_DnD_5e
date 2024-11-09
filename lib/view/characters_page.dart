@@ -235,7 +235,7 @@ class _CharactersPageState extends State<CharactersPage> {
                         ],
                       ),
                     ),
-                    const SizedBox(width: Measures.hMarginMed),
+                    const SizedBox(width: Measures.hMarginSmall),
                     // Level
                     Level(level: character.level, maxLevel: 20),
                   ],

@@ -21,13 +21,14 @@ extension DateTimeExtensions on DateTime {
         .difference(this)
         .inSeconds;
     if (seconds < 60) {
-      return 'Alcuni secondi fa';
+      return 'Alcuni sec fa';
     } else if (seconds < 3600) {
       return '${seconds ~/ 60} min fa';
     } else if (seconds < 3600 * 24) {
       return '${seconds ~/ 3600} ore fa';
     } else if (seconds < 3600 * 24 * 7) {
-      return DateFormat('EEEE').format(this);
+      // return DateFormat('EEEE').format(this);
+      return '${seconds ~/ (24*3600)} gg fa';
     } else if (seconds < 3600 * 24 * 60) {
       return toShortDateStr();
     } else {

@@ -10,6 +10,7 @@ Weapon _$WeaponFromJson(Map<String, dynamic> json) => Weapon.jsonConstructor(
       title: json['title'] as String? ?? '',
       authorUID: json['authorUID'] as String?,
       regDateTimestamp: json['regDateTimestamp'] as int?,
+      description: json['description'] as String?,
       rollDamage: (json['rollDamage'] as List<dynamic>?)
           ?.map((e) => $enumDecode(_$DiceEnumMap, e))
           .toList(),
@@ -19,6 +20,7 @@ Weapon _$WeaponFromJson(Map<String, dynamic> json) => Weapon.jsonConstructor(
 
 Map<String, dynamic> _$WeaponToJson(Weapon instance) => <String, dynamic>{
       'title': instance.title,
+      'description': instance.description,
       'regDateTimestamp': instance.regDateTimestamp,
       'authorUID': instance.authorUID,
       'rollDamage': instance.rollDamage.map((e) => _$DiceEnumMap[e]!).toList(),
@@ -40,6 +42,7 @@ Armor _$ArmorFromJson(Map<String, dynamic> json) => Armor.jsonConstructor(
       title: json['title'] as String? ?? '',
       authorUID: json['authorUID'] as String?,
       regDateTimestamp: json['regDateTimestamp'] as int?,
+      description: json['description'] as String?,
       CA: json['CA'] as String? ?? '',
       strength: json['strength'] as int? ?? 0,
       disadvantage: json['disadvantage'] as bool? ?? false,
@@ -47,6 +50,7 @@ Armor _$ArmorFromJson(Map<String, dynamic> json) => Armor.jsonConstructor(
 
 Map<String, dynamic> _$ArmorToJson(Armor instance) => <String, dynamic>{
       'title': instance.title,
+      'description': instance.description,
       'regDateTimestamp': instance.regDateTimestamp,
       'authorUID': instance.authorUID,
       'CA': instance.CA,
@@ -58,10 +62,12 @@ Item _$ItemFromJson(Map<String, dynamic> json) => Item.jsonConstructor(
       title: json['title'] as String? ?? '',
       authorUID: json['authorUID'] as String?,
       regDateTimestamp: json['regDateTimestamp'] as int?,
+      description: json['description'] as String?,
     );
 
 Map<String, dynamic> _$ItemToJson(Item instance) => <String, dynamic>{
       'title': instance.title,
+      'description': instance.description,
       'regDateTimestamp': instance.regDateTimestamp,
       'authorUID': instance.authorUID,
     };
@@ -70,12 +76,14 @@ Coin _$CoinFromJson(Map<String, dynamic> json) => Coin.jsonConstructor(
       title: json['title'] as String? ?? '',
       authorUID: json['authorUID'] as String?,
       regDateTimestamp: json['regDateTimestamp'] as int?,
+      description: json['description'] as String?,
       currency: json['currency'] as String? ?? '',
       value: json['value'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$CoinToJson(Coin instance) => <String, dynamic>{
       'title': instance.title,
+      'description': instance.description,
       'regDateTimestamp': instance.regDateTimestamp,
       'authorUID': instance.authorUID,
       'value': instance.value,
@@ -87,6 +95,7 @@ Equipment _$EquipmentFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String? ?? '',
       authorUID: json['authorUID'] as String?,
       regDateTimestamp: json['regDateTimestamp'] as int?,
+      description: json['description'] as String?,
       content: (json['content'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, e as int),
       ),
@@ -94,6 +103,7 @@ Equipment _$EquipmentFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$EquipmentToJson(Equipment instance) => <String, dynamic>{
       'title': instance.title,
+      'description': instance.description,
       'regDateTimestamp': instance.regDateTimestamp,
       'authorUID': instance.authorUID,
       'content': instance.content,

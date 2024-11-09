@@ -1,14 +1,15 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/date_time_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/int_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
@@ -25,7 +26,6 @@ import 'package:scheda_dnd_5e/view/partial/grid_column.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
-import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
 import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/partial/rule.dart';
 
@@ -47,6 +47,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
   bool get _isSkillsExpanded => IOManager().get<bool>('character_page_isSkillsExpanded') ?? false;
 
   set _isSkillsExpanded(bool value) => IOManager().set('character_page_isSkillsExpanded', value);
+
+  List<InventoryItem>? get inventoryItems => _character?.inventory.value?.keys.toList()?..sort();
 
   bool _getIsInventoryItemExpanded(Type type) =>
       IOManager().get<bool>('character_page_isInventoryItemExpanded_$type') ?? true;
@@ -553,55 +555,56 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       // Inventory
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: character.inventory.value == null
-            ? List.filled(10, const GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 75))
-            : [
-                const SizedBox(height: Measures.vMarginMed),
-                // Inventory sections
-                ...InventoryItem.types.map((type) {
-                  final isEmpty =
-                      character.inventory.value!.entries.where((e) => e.key.runtimeType == type).isEmpty;
-                  return Column(
-                    children: [
-                      // Header
-                      Clickable(
-                        active: !isEmpty,
-                        onTap: () => setState(
-                            () => _setIsInventoryItemExpanded(type, !_getIsInventoryItemExpanded(type))),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
-                          child: Row(children: [
-                            Text(InventoryItem.names[type]!, style: Fonts.black(size: 18)),
-                            const SizedBox(width: Measures.hMarginMed),
-                            if (!isEmpty)
-                              'chevron_left'.toIcon(
-                                  height: 16,
-                                  rotation: _getIsInventoryItemExpanded(type) ? pi / 2 : -pi / 2)
-                          ]),
-                        ),
-                      ),
-                      // List of inventory items
-                      if (!isEmpty && _getIsInventoryItemExpanded(type))
-                        ...character.inventory.value!.entries
-                            .where((e) => e.key.runtimeType == type)
-                            .map((e) => inventoryItemCard(e.key, e.value)),
-                      if (!_getIsInventoryItemExpanded(type))
-                        const Padding(
-                          padding: EdgeInsets.only(top: Measures.vMarginThin),
-                          child: Rule(),
-                        ),
-                      if (isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
-                          child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
-                        ),
-                      const SizedBox(height: Measures.vMarginSmall),
-                    ],
-                  );
-                }),
-                const SizedBox(height: Measures.vMarginBig),
+        children: [
+          const SizedBox(height: Measures.vMarginMed),
+          // Inventory sections
+          ...InventoryItem.types.slice(0, -1).map((type) {
+            final isEmpty = character.inventory.value != null &&
+                character.inventory.value!.entries.where((e) => e.key.runtimeType == type).isEmpty;
+            return Column(
+              children: [
+                // Header
+                Clickable(
+                  active: !isEmpty,
+                  onTap: () => setState(
+                      () => _setIsInventoryItemExpanded(type, !_getIsInventoryItemExpanded(type))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
+                    child: Row(children: [
+                      Text(InventoryItem.names[type]!, style: Fonts.black(size: 18)),
+                      const SizedBox(width: Measures.hMarginMed),
+                      if (!isEmpty)
+                        'chevron_left'.toIcon(
+                            height: 16, rotation: _getIsInventoryItemExpanded(type) ? pi / 2 : -pi / 2)
+                    ]),
+                  ),
+                ),
+                // List of inventory items
+                if (character.inventory.value == null)
+                  ...List.filled(2, const GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 50)),
+                if (character.inventory.value != null) ...[
+                  if (!isEmpty && _getIsInventoryItemExpanded(type))
+                    ...inventoryItems!
+                        .where((e) => e.runtimeType == type)
+                        .map((e) => inventoryItemCard(e, _character!.inventory.value![e]!)),
+                  if (!_getIsInventoryItemExpanded(type))
+                    const Padding(
+                      padding: EdgeInsets.only(top: Measures.vMarginThin),
+                      child: Rule(),
+                    ),
+                  if (isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
+                      child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
+                    )
+                ],
+                const SizedBox(height: Measures.vMarginSmall),
               ],
+            );
+          }),
+          const SizedBox(height: Measures.vMarginBig),
+        ],
       ),
       // Enchantments
       const Placeholder(),
@@ -736,40 +739,108 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
             width: double.infinity,
             child: Column(
               children: [
+                // Header
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    // Icon + Title + Amount
                     Expanded(
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
                           children: [
-                            InventoryItem.icons[item.runtimeType]!.toIcon(height: 22),
+                            InventoryItem.icons[item.runtimeType]!.toIcon(
+                                height: 22,
+                                color: item.regDateTimestamp == null
+                                    ? item is Coin
+                                        ? Coin.iconColors[item.title]
+                                        : null
+                                    : Palette.primaryBlue),
                             const SizedBox(width: Measures.hMarginSmall),
                             Text(item.title, style: Fonts.regular()),
-                            Text(' (x$amount)', style: Fonts.black(size: 16)),
+                            if (amount > 1) Text(' (x$amount)', style: Fonts.black(size: 16)),
                           ],
                         ),
                       ),
                     ),
                     if (item is Weapon)
+                      // Roll damage + Fixed damage
                       Row(
                         children: [
                           const SizedBox(width: Measures.hMarginMed),
                           ...item.rollDamage.map((e) => SvgPicture.asset(e.svgPath, height: 28)),
                           Text('  + ${item.fixedDamage}', style: Fonts.black(size: 18))
                         ],
-                      )
+                      ),
+                    if (item is Armor)
+                      // Disadvantage + Stringth
+                      Row(
+                        children: [
+                          if (item.disadvantage) ...[
+                            const SizedBox(width: Measures.hMarginMed),
+                            'png/disadvantage'.toIcon(height: 22, color: Palette.primaryBlue),
+                          ],
+                          const SizedBox(width: Measures.hMarginMed),
+                          'png/strength'.toIcon(height: 22, color: Skill.forza.color),
+                          Text('  ${item.strength}', style: Fonts.black(size: 18)),
+                        ],
+                      ),
                   ],
                 ),
-                if (item is Weapon) ...[
+                // Type-based properties
+                if (item is Weapon || item is Armor) ...[
                   const SizedBox(height: Measures.vMarginMoreThin),
-                  Text(item.property, style: Fonts.light())
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: [
+                          if (item is Weapon) Text(item.property, style: Fonts.light()),
+                          if (item is Armor) ...[
+                            'png/shield'.toIcon(height: 18, color: Palette.primaryBlue),
+                            const SizedBox(width: Measures.hMarginSmall),
+                            RichText(
+                                text: TextSpan(
+                              children: [
+                                TextSpan(
+                                    text: '${item.CA.contains(' ') ? item.CA.split(' ')[0] : item.CA} ',
+                                    style: Fonts.black(size: 18)),
+                                TextSpan(
+                                    text:
+                                        '${item.CA.contains(' ') ? item.CA.split(' ').slice(1).join(' ') : ''} ',
+                                    style: Fonts.light()),
+                              ],
+                            )),
+                          ],
+                        ],
+                      ),
+                    ),
+                  )
                 ],
-                if (item is Item && item.description.isNotEmpty) ...[
+                // Description
+                if (item.description != null || item.regDateTimestamp != null) ...[
                   const SizedBox(height: Measures.vMarginMoreThin),
-                  Text(item.description, style: Fonts.light())
-                ]
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Description
+                      item.description == null
+                          ? Container()
+                          : Expanded(
+                              child: SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Text(item.description!, style: Fonts.light()),
+                              ),
+                            ),
+                      // How long ago it was added (if added by the user)
+                      if (item.regDateTimestamp != null) ...[
+                        const SizedBox(width: Measures.hMarginMed),
+                        Text(item.dateReg!.toPostStr(), style: Fonts.light()),
+                      ]
+                    ],
+                  )
+                ],
               ],
             ),
           ),

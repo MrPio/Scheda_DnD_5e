@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
 import 'package:shimmer/shimmer.dart';
@@ -46,7 +47,7 @@ class _GlassCardState extends State<GlassCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: !widget.isFlat?Colors.transparent: _backgroundColor,
+      color: (!widget.isFlat || widget.isShimmer)?Colors.transparent: _backgroundColor,
       child: Clickable(
         active: widget.clickable && !widget.isShimmer,
         onTap: widget.onTap,
@@ -54,7 +55,7 @@ class _GlassCardState extends State<GlassCard> {
         onDownChange: (value) => setState(() => _down = value),
         child: widget.isShimmer
             ? Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
+                padding: const EdgeInsets.only(bottom: Measures.vMarginMoreThin),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(_borderRadius),
                   child: Shimmer(

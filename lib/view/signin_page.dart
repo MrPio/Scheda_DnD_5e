@@ -4,6 +4,7 @@ import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
+import 'package:scheda_dnd_5e/manager/database_manager.dart';
 import 'package:scheda_dnd_5e/mixin/loadable.dart';
 import 'package:scheda_dnd_5e/firebase_options.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
@@ -17,6 +18,8 @@ import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
 
 import '../constant/palette.dart';
 import '../database/database_seeder.dart';
+import '../model/character.dart';
+import '../model/loot.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -35,32 +38,31 @@ class _SignInPageState extends State<SignInPage> with Loadable {
     if (!_isInitialized) {
       _isInitialized = true;
       Future.delayed(Duration.zero, () async {
-        withLoading(()  async{
+        withLoading(() async {
+          WidgetsFlutterBinding.ensureInitialized();
+          await Firebase.initializeApp(
+            options: DefaultFirebaseOptions.currentPlatform,
+          );
+          await IOManager().init();
+          if (!await IOManager().hasInternetConnection(context)) {
+            return;
+          }
 
-        WidgetsFlutterBinding.ensureInitialized();
-        await Firebase.initializeApp(
-          options: DefaultFirebaseOptions.currentPlatform,
-        );
-        await IOManager().init();
-        if (!await IOManager().hasInternetConnection(context)) {
-          return;
-        }
-        // await seedDatabase();
+          // 📘📘📘 FIREBASE FIRESTORE 📘📘📘
+          // ⚠️⚠️⚠️ DANGER ZONE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+          // await seedDatabase(fresh: true);
+          // await DataManager().invalidateCache<Character>();
+          // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
-        await DataManager().fetchData();
-        // 👤👤👤 FIREBASE AUTH 👤👤👤
-      if (await AccountManager().cacheSignIn()) {
-        setState(() {
-          isLoading=true;
-        });
-        Navigator.of(context).popAndPushNamed('/home');
-      }
 
-        // 📘📘📘 FIREBASE FIRESTORE 📘📘📘
-        // ⚠️⚠️⚠️ DANGER ZONE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-        // await IOManager().remove('enchantments_timestamp');
-        // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
-
+          await DataManager().fetchData();
+          // 👤👤👤 FIREBASE AUTH 👤👤👤
+          if (await AccountManager().cacheSignIn()) {
+            setState(() {
+              isLoading = true;
+            });
+            Navigator.of(context).popAndPushNamed('/home');
+          }
         });
       });
     }
@@ -91,21 +93,17 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           // Header + Body
           Center(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+              padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Title
-                  SizedBox(
-                      width: double.infinity,
-                      child: Text('Bentornato!', style: Fonts.black())),
+                  SizedBox(width: double.infinity, child: Text('Bentornato!', style: Fonts.black())),
                   const SizedBox(
                     height: Measures.vMarginThin,
                   ),
                   // Subtitle
-                  Text(
-                      'Per favore accedi al tuo account per poter utilizzare l’app.',
+                  Text('Per favore accedi al tuo account per poter utilizzare l’app.',
                       style: Fonts.light()),
                   const SizedBox(
                     height: Measures.vMarginMed,
@@ -121,8 +119,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
                   // Password TextField
                   GlassTextField(
                     iconPath: 'password',
-                    secondaryIconPath:
-                        _passwordVisible ? 'visibility_on' : 'visibility_off',
+                    secondaryIconPath: _passwordVisible ? 'visibility_on' : 'visibility_off',
                     obscureText: !_passwordVisible,
                     hintText: 'Inserisci la tua password',
                     textController: _passwordController,
@@ -137,8 +134,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
                     children: [
                       GlassCheckbox(
                         value: _rememberMe,
-                        onChanged: () =>
-                            setState(() => _rememberMe = !_rememberMe),
+                        onChanged: () => setState(() => _rememberMe = !_rememberMe),
                         color: Palette.primaryBlue,
                       ),
                       Text('Ricordami', style: Fonts.light()),
@@ -146,8 +142,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
                       GestureDetector(
                           onTap: forgotPassword,
                           child: Text('Password dimenticata',
-                              style: Fonts.regular(
-                                  size: 14, color: Palette.primaryBlue))),
+                              style: Fonts.regular(size: 14, color: Palette.primaryBlue))),
                     ],
                   ),
                   const SizedBox(height: Measures.vMarginSmall),
@@ -195,11 +190,9 @@ class _SignInPageState extends State<SignInPage> with Loadable {
                       Text('Non hai un account?', style: Fonts.light()),
                       const SizedBox(width: 6),
                       GestureDetector(
-                          onTap: () =>
-                              Navigator.of(context).pushNamed('/signup'),
+                          onTap: () => Navigator.of(context).pushNamed('/signup'),
                           child: Text('Crea un account',
-                              style: Fonts.regular(
-                                  size: 14, color: Palette.primaryBlue))),
+                              style: Fonts.regular(size: 14, color: Palette.primaryBlue))),
                     ],
                   ),
                 ],
@@ -221,14 +214,12 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           context.snackbar('Per favore inserisci una email valida',
               backgroundColor: Palette.backgroundBlue);
         } else {
-          SignInStatus status = await AccountManager()
-              .signIn(_emailController.text, _passwordController.text);
+          SignInStatus status =
+              await AccountManager().signIn(_emailController.text, _passwordController.text);
           if (status == SignInStatus.wrongCredentials) {
-            context.snackbar('Le credenziali sono errate!',
-                backgroundColor: Palette.primaryRed);
+            context.snackbar('Le credenziali sono errate!', backgroundColor: Palette.primaryRed);
           } else if (status == SignInStatus.userNotInDatabase) {
-            context.snackbar('L\'account non è più esistente!',
-                backgroundColor: Palette.primaryRed);
+            context.snackbar('L\'account non è più esistente!', backgroundColor: Palette.primaryRed);
           } else if (status == SignInStatus.success) {
             context.snackbar('Bentornato ${AccountManager().user.nickname}!',
                 backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
@@ -243,11 +234,9 @@ class _SignInPageState extends State<SignInPage> with Loadable {
         }
         SignInStatus status = await AccountManager().signInWithGoogle();
         if (status == SignInStatus.googleProviderError) {
-          context.snackbar('Errore nell\'accesso a Google',
-              backgroundColor: Palette.primaryRed);
+          context.snackbar('Errore nell\'accesso a Google', backgroundColor: Palette.primaryRed);
         } else if (status == SignInStatus.userNotInDatabase) {
-          context.snackbar('L\'account non è più esistente!',
-              backgroundColor: Palette.primaryRed);
+          context.snackbar('L\'account non è più esistente!', backgroundColor: Palette.primaryRed);
         } else if (status == SignInStatus.success) {
           context.snackbar('Bentornato ${AccountManager().user.nickname}!',
               backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
@@ -263,25 +252,20 @@ class _SignInPageState extends State<SignInPage> with Loadable {
     final emailController = TextEditingController();
     context.popup(
       'Reset della password',
-      message:
-          'Inserisci l\'email dell\'account del quale vuoi reimpostare la password:',
+      message: 'Inserisci l\'email dell\'account del quale vuoi reimpostare la password:',
       backgroundColor: Palette.popup,
       positiveText: 'Invia email',
       positiveCallback: () async {
         if (emailController.text.isEmail) {
-          ResetPasswordStatus status =
-              await AccountManager().resetPassword(emailController.text);
+          ResetPasswordStatus status = await AccountManager().resetPassword(emailController.text);
           if (status == ResetPasswordStatus.success) {
-            context.snackbar(
-                'Controlla il tuo indirizzo per reimpostare la password',
+            context.snackbar('Controlla il tuo indirizzo per reimpostare la password',
                 backgroundColor: Palette.backgroundBlue);
           } else {
-            context.snackbar('Errore generico!',
-                backgroundColor: Palette.primaryRed);
+            context.snackbar('Errore generico!', backgroundColor: Palette.primaryRed);
           }
         } else {
-          context.snackbar('L\'email inserita non è valida',
-              backgroundColor: Palette.primaryRed);
+          context.snackbar('L\'email inserita non è valida', backgroundColor: Palette.primaryRed);
         }
       },
       child: Padding(
