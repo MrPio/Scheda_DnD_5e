@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
@@ -17,6 +16,7 @@ import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/view/characters_page.dart';
+import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
@@ -50,8 +50,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
   set _isSkillsExpanded(bool value) => IOManager().set('character_page_isSkillsExpanded', value);
 
   List<InventoryItem>? inventoryItems(Type type) =>
-      _character?.inventory.value?.keys.where((e) => e.runtimeType == type).toList()
-        ?..sort();
+      _character?.inventory.value?.keys.where((e) => e.runtimeType == type).toList()?..sort();
 
   bool _getIsInventoryItemExpanded(Type type) =>
       IOManager().get<bool>('character_page_isInventoryItemExpanded_$type') ?? true;
@@ -65,12 +64,11 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       _hpController,
       _maxHpController;
   final List<TextEditingController> _skillsControllers =
-  List.generate(Skill.values.length, (_) => TextEditingController());
+      List.generate(Skill.values.length, (_) => TextEditingController());
   final List<TextEditingController> _subSkillsControllers =
-  List.generate(SubSkill.values.length, (_) => TextEditingController());
+      List.generate(SubSkill.values.length, (_) => TextEditingController());
   final String _speedSuffix = 'm';
-  bool _isEditingHp = false,
-      _isEditingMaxHp = false;
+  bool _isEditingHp = false, _isEditingMaxHp = false;
   Skill? _selectedSkill;
 
   bool get hasChanges => jsonEncode(_oldCharacter!.toJSON()) != jsonEncode(_character!.toJSON());
@@ -103,14 +101,14 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
     // Dispose the controllers
     for (var e in [
-      _armorClassController,
-      _speedController,
-      _initiativeController,
-      _hpController,
-      _maxHpController,
-      _tabController,
-      _bodyController
-    ] +
+          _armorClassController,
+          _speedController,
+          _initiativeController,
+          _hpController,
+          _maxHpController,
+          _tabController,
+          _bodyController
+        ] +
         _skillsControllers +
         _subSkillsControllers) {
       e?.dispose();
@@ -121,10 +119,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     if (_character == null) {
-      _character = ModalRoute
-          .of(context)!
-          .settings
-          .arguments as Character;
+      _character = ModalRoute.of(context)!.settings.arguments as Character;
       _oldCharacter = Character.fromJson(_character!.toJSON());
       _character!.inventory.addListener(() => setState(() {}));
     }
@@ -166,25 +161,25 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           subValue: _isEditingMaxHp || _isEditingHp ? null : character.maxHp.toString(),
           numericInputArgs: (_isEditingHp || _isEditingMaxHp)
               ? NumericInputArgs(
-            min: _isEditingHp ? -character.maxHp : 1,
-            max: _isEditingHp ? character.maxHp : 999,
-            controller: _isEditingHp ? _hpController : _maxHpController,
-            defaultValue: (_isEditingHp ? character.hp : character.maxHp).toDouble(),
-            onSubmit: (value) {
-              if (_isEditingHp) {
-                character.hp = value.toInt();
-              } else if (_isEditingMaxHp) {
-                character.maxHp = value.toInt();
-              }
-            },
-            finalize: () {
-              setState(() {
-                _isEditingHp = false;
-                _isEditingMaxHp = false;
-              });
-            },
-            autofocus: true,
-          )
+                  min: _isEditingHp ? -character.maxHp : 1,
+                  max: _isEditingHp ? character.maxHp : 999,
+                  controller: _isEditingHp ? _hpController : _maxHpController,
+                  defaultValue: (_isEditingHp ? character.hp : character.maxHp).toDouble(),
+                  onSubmit: (value) {
+                    if (_isEditingHp) {
+                      character.hp = value.toInt();
+                    } else if (_isEditingMaxHp) {
+                      character.maxHp = value.toInt();
+                    }
+                  },
+                  finalize: () {
+                    setState(() {
+                      _isEditingHp = false;
+                      _isEditingMaxHp = false;
+                    });
+                  },
+                  autofocus: true,
+                )
               : null,
           bottomSheetArgs: hpBottomSheetArgs),
       SheetItemCard(iconPath: 'png/bonus', text: 'BC', value: character.competenceBonus.toSignedString()),
@@ -200,7 +195,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
             defaultValue: character.defaultSpeed,
             suffix: _speedSuffix,
             valueRestriction: (value) =>
-            value % 1.5 < 1.5 - value % 1.5 ? value - value % 1.5 : value + value % 1.5,
+                value % 1.5 < 1.5 - value % 1.5 ? value - value % 1.5 : value + value % 1.5,
           ),
           value: '${character.speed.toStringAsFixed(1)}m'),
       SheetItemCard(
@@ -211,18 +206,17 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           header: GridRow(
               columnsCount: 3,
               children: ch.Alignment.values
-                  .map((e) =>
-                  AlignmentCard(
-                    e,
-                    onTap: (alignment) {
-                      setState(() {
-                        character.alignment = alignment;
-                      });
+                  .map((e) => AlignmentCard(
+                        e,
+                        onTap: (alignment) {
+                          setState(() {
+                            character.alignment = alignment;
+                          });
 
-                      Navigator.of(context).pop();
-                    },
-                    isSmall: e == ch.Alignment.nessuno,
-                  ))
+                          Navigator.of(context).pop();
+                        },
+                        isSmall: e == ch.Alignment.nessuno,
+                      ))
                   .toList()),
         ),
       ),
@@ -245,140 +239,138 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       Skill.saggezza,
       Skill.carisma
     ]
-        .map((skill) =>
-        SheetItemCard(
-          iconPath: skill.iconPath,
-          text: skill.title,
-          iconColor: skill.color,
-          value: _selectedSkill == skill
-              ? character.skillValue(skill).toString()
-              : character.skillModifier(skill).toSignedString(),
-          subValue: _selectedSkill == skill ? null : character.skillValue(skill).toString(),
-          numericInputArgs: _selectedSkill == skill
-              ? NumericInputArgs(
-              min: 3,
-              max: 20,
-              controller: _skillsControllers[Skill.values.indexOf(skill)],
-              defaultValue: (character.skillValue(skill)).toDouble(),
-              onSubmit: (value) {
-                character.customSkills[skill] = value.toInt();
-              },
-              finalize: () {
-                setState(() {
-                  _selectedSkill = null;
-                });
-              },
-              autofocus: true)
-              : null,
-          onTap: _isSkillsExpanded
-              ? null
-              : () {
-            setState(() {
-              _selectedSkill = skill;
-            });
-          },
-          child: _isSkillsExpanded
-              ? Column(
-            children: [
-              Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: Measures.hMarginMed, vertical: Measures.vMarginMoreThin),
-                  child: Row(children: [
-                    // SavingThrow title
-                    Flexible(
-                      fit: FlexFit.tight,
-                      child: Text(
-                        'Tiro salvezza',
-                        style: Fonts.regular(size: 13),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    // SavingThrow value
-                    Text(character.savingThrowValue(skill).toSignedString(),
-                        style: Fonts.black(size: 14)),
-                    const SizedBox(width: Measures.hMarginSmall),
-                    // Saving Throw
-                    Container(
-                        width: 12,
-                        height: 12,
-                        decoration: BoxDecoration(
-                            color: character.class_.savingThrows.contains(skill)
-                                ? Palette.onBackground
-                                : Colors.transparent,
-                            border: Border.all(color: Palette.onBackground, width: 0.65),
-                            borderRadius: BorderRadius.circular(999))),
-                  ])),
-              if (skill.subSkills.isNotEmpty)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: Measures.vMarginMoreThin),
-                  child: Rule(),
-                ),
-            ].cast<Widget>() +
-                skill.subSkills
-                    .map((subSkill) =>
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            character.subSkills[subSkill] =
-                                ((character.subSkills[subSkill] ?? 0) + 1) % 3;
-                          });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: Measures.hMarginMed,
-                              vertical: Measures.vMarginMoreThin),
-                          child: Row(
-                            children: [
-                              // SubSkill title
-                              Flexible(
-                                fit: FlexFit.tight,
-                                child: Text(
-                                  subSkill.title,
-                                  style: Fonts.regular(size: 13),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+        .map((skill) => SheetItemCard(
+              iconPath: skill.iconPath,
+              text: skill.title,
+              iconColor: skill.color,
+              value: _selectedSkill == skill
+                  ? character.skillValue(skill).toString()
+                  : character.skillModifier(skill).toSignedString(),
+              subValue: _selectedSkill == skill ? null : character.skillValue(skill).toString(),
+              numericInputArgs: _selectedSkill == skill
+                  ? NumericInputArgs(
+                      min: 3,
+                      max: 20,
+                      controller: _skillsControllers[Skill.values.indexOf(skill)],
+                      defaultValue: (character.skillValue(skill)).toDouble(),
+                      onSubmit: (value) {
+                        character.customSkills[skill] = value.toInt();
+                      },
+                      finalize: () {
+                        setState(() {
+                          _selectedSkill = null;
+                        });
+                      },
+                      autofocus: true)
+                  : null,
+              onTap: _isSkillsExpanded
+                  ? null
+                  : () {
+                      setState(() {
+                        _selectedSkill = skill;
+                      });
+                    },
+              child: _isSkillsExpanded
+                  ? Column(
+                      children: [
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: Measures.hMarginMed, vertical: Measures.vMarginMoreThin),
+                                child: Row(children: [
+                                  // SavingThrow title
+                                  Flexible(
+                                    fit: FlexFit.tight,
+                                    child: Text(
+                                      'Tiro salvezza',
+                                      style: Fonts.regular(size: 13),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  // SavingThrow value
+                                  Text(character.savingThrowValue(skill).toSignedString(),
+                                      style: Fonts.black(size: 14)),
+                                  const SizedBox(width: Measures.hMarginSmall),
+                                  // Saving Throw
+                                  Container(
+                                      width: 12,
+                                      height: 12,
+                                      decoration: BoxDecoration(
+                                          color: character.class_.savingThrows.contains(skill)
+                                              ? Palette.onBackground
+                                              : Colors.transparent,
+                                          border: Border.all(color: Palette.onBackground, width: 0.65),
+                                          borderRadius: BorderRadius.circular(999))),
+                                ])),
+                            if (skill.subSkills.isNotEmpty)
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: Measures.vMarginMoreThin),
+                                child: Rule(),
                               ),
-                              // SubSkill value
-                              Text(character.subSkillValue(subSkill).toSignedString(),
-                                  style: Fonts.black(size: 14)),
-                              const SizedBox(width: Measures.hMarginSmall),
-                              // Competenza
-                              Container(
-                                  width: 12,
-                                  height: 12,
-                                  decoration: BoxDecoration(
-                                      color: (character.subSkills[subSkill] ?? 0) >= 1
-                                          ? Palette.onBackground
-                                          : Colors.transparent,
-                                      border: Border.all(
-                                          color: Palette.onBackground, width: 0.65),
-                                      borderRadius: BorderRadius.circular(999))),
-                              const SizedBox(width: Measures.hMarginThin),
-                              // Maestria
-                              Container(
-                                  width: 12,
-                                  height: 12,
-                                  decoration: BoxDecoration(
-                                      color: (character.subSkills[subSkill] ?? 0) >= 2
-                                          ? Palette.onBackground
-                                          : Colors.transparent,
-                                      border: Border.all(
-                                          color: Palette.onBackground, width: 0.65),
-                                      borderRadius: BorderRadius.circular(1.75)))
-                            ],
-                          ),
-                        ),
-                      ),
-                    ))
-                    .toList()
-                    .cast<Widget>(),
-          )
-              : null,
-        ))
+                          ].cast<Widget>() +
+                          skill.subSkills
+                              .map((subSkill) => Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      onTap: () {
+                                        setState(() {
+                                          character.subSkills[subSkill] =
+                                              ((character.subSkills[subSkill] ?? 0) + 1) % 3;
+                                        });
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: Measures.hMarginMed,
+                                            vertical: Measures.vMarginMoreThin),
+                                        child: Row(
+                                          children: [
+                                            // SubSkill title
+                                            Flexible(
+                                              fit: FlexFit.tight,
+                                              child: Text(
+                                                subSkill.title,
+                                                style: Fonts.regular(size: 13),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            // SubSkill value
+                                            Text(character.subSkillValue(subSkill).toSignedString(),
+                                                style: Fonts.black(size: 14)),
+                                            const SizedBox(width: Measures.hMarginSmall),
+                                            // Competenza
+                                            Container(
+                                                width: 12,
+                                                height: 12,
+                                                decoration: BoxDecoration(
+                                                    color: (character.subSkills[subSkill] ?? 0) >= 1
+                                                        ? Palette.onBackground
+                                                        : Colors.transparent,
+                                                    border: Border.all(
+                                                        color: Palette.onBackground, width: 0.65),
+                                                    borderRadius: BorderRadius.circular(999))),
+                                            const SizedBox(width: Measures.hMarginThin),
+                                            // Maestria
+                                            Container(
+                                                width: 12,
+                                                height: 12,
+                                                decoration: BoxDecoration(
+                                                    color: (character.subSkills[subSkill] ?? 0) >= 2
+                                                        ? Palette.onBackground
+                                                        : Colors.transparent,
+                                                    border: Border.all(
+                                                        color: Palette.onBackground, width: 0.65),
+                                                    borderRadius: BorderRadius.circular(1.75)))
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ))
+                              .toList()
+                              .cast<Widget>(),
+                    )
+                  : null,
+            ))
         .toList();
     _screens = [
       // Sheet
@@ -413,13 +405,13 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           ),
           _isSkillsExpanded
               ? GridColumn(
-            columnsCount: 2,
-            children: sheetSkills,
-          )
+                  columnsCount: 2,
+                  children: sheetSkills,
+                )
               : GridRow(
-            columnsCount: 3,
-            children: sheetSkills,
-          ),
+                  columnsCount: 3,
+                  children: sheetSkills,
+                ),
           const SizedBox(height: Measures.vMarginSmall),
           // Masteries
           Text('Competenze', style: Fonts.black(size: 18)),
@@ -428,26 +420,25 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
               fill: true,
               columnsCount: 3,
               children: character.masteries
-                  .map((e) =>
-                  SheetItemCard(
-                    text: e.title,
-                    iconPath: e.masteryType.iconPath,
-                    onTap: () {
-                      context.popup('Stai per rimuovere una competenza',
-                          message: 'Sei sicuro di voler rimuovere **${e.title}**?',
-                          positiveCallback: () {
-                            setState(() {
-                              character.masteries.remove(e);
-                            });
-                          },
-                          negativeCallback: () {},
-                          positiveText: 'Si',
-                          negativeText: 'No',
-                          backgroundColor: Palette.background.withOpacity(0.5));
-                    },
-                  ))
-                  .toList()
-                  .cast<Widget>() +
+                      .map((e) => SheetItemCard(
+                            text: e.title,
+                            iconPath: e.masteryType.iconPath,
+                            onTap: () {
+                              context.popup('Stai per rimuovere una competenza',
+                                  message: 'Sei sicuro di voler rimuovere **${e.title}**?',
+                                  positiveCallback: () {
+                                setState(() {
+                                  character.masteries.remove(e);
+                                });
+                              },
+                                  negativeCallback: () {},
+                                  positiveText: 'Si',
+                                  negativeText: 'No',
+                                  backgroundColor: Palette.background.withOpacity(0.5));
+                            },
+                          ))
+                      .toList()
+                      .cast<Widget>() +
                   [
                     GlassCard(
                         height: Measures.sheetCardSmallHeight,
@@ -462,36 +453,34 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                 const SizedBox(height: Measures.vMarginThin),
                                 Column(
                                     children: MasteryType.values
-                                        .map((masteryType) =>
-                                        Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            const Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                  vertical: Measures.vMarginSmall),
-                                              child: Rule(),
-                                            ),
-                                            Text(masteryType.title, style: Fonts.regular()),
-                                            const SizedBox(height: Measures.vMarginSmall),
-                                            GridRow(
-                                                columnsCount: 3,
-                                                fill: true,
-                                                children: masteryType.masteries
-                                                    .where((e) => !character.masteries.contains(e))
-                                                    .map((mastery) =>
-                                                    SheetItemCard(
-                                                      text: mastery.title,
-                                                      iconPath: masteryType.iconPath,
-                                                      onTap: () {
-                                                        setState(() {
-                                                          character.masteries.add(mastery);
-                                                        });
-                                                        Navigator.of(context).pop();
-                                                      },
-                                                    ))
-                                                    .toList()),
-                                          ],
-                                        ))
+                                        .map((masteryType) => Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                const Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: Measures.vMarginSmall),
+                                                  child: Rule(),
+                                                ),
+                                                Text(masteryType.title, style: Fonts.regular()),
+                                                const SizedBox(height: Measures.vMarginSmall),
+                                                GridRow(
+                                                    columnsCount: 3,
+                                                    fill: true,
+                                                    children: masteryType.masteries
+                                                        .where((e) => !character.masteries.contains(e))
+                                                        .map((mastery) => SheetItemCard(
+                                                              text: mastery.title,
+                                                              iconPath: masteryType.iconPath,
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  character.masteries.add(mastery);
+                                                                });
+                                                                Navigator.of(context).pop();
+                                                              },
+                                                            ))
+                                                        .toList()),
+                                              ],
+                                            ))
                                         .toList()),
                                 const SizedBox(height: Measures.vMarginMed),
                               ],
@@ -508,26 +497,25 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
               fill: true,
               columnsCount: 3,
               children: character.languages
-                  .map((e) =>
-                  SheetItemCard(
-                    text: e.title,
-                    iconPath: 'png/language',
-                    onTap: () {
-                      context.popup('Stai per rimuovere un linguaggio',
-                          message: 'Sei sicuro di voler rimuovere **${e.title}**?',
-                          positiveCallback: () {
-                            setState(() {
-                              character.languages.remove(e);
-                            });
-                          },
-                          negativeCallback: () {},
-                          positiveText: 'Si',
-                          negativeText: 'No',
-                          backgroundColor: Palette.background.withOpacity(0.5));
-                    },
-                  ))
-                  .toList()
-                  .cast<Widget>() +
+                      .map((e) => SheetItemCard(
+                            text: e.title,
+                            iconPath: 'png/language',
+                            onTap: () {
+                              context.popup('Stai per rimuovere un linguaggio',
+                                  message: 'Sei sicuro di voler rimuovere **${e.title}**?',
+                                  positiveCallback: () {
+                                setState(() {
+                                  character.languages.remove(e);
+                                });
+                              },
+                                  negativeCallback: () {},
+                                  positiveText: 'Si',
+                                  negativeText: 'No',
+                                  backgroundColor: Palette.background.withOpacity(0.5));
+                            },
+                          ))
+                      .toList()
+                      .cast<Widget>() +
                   [
                     GlassCard(
                         height: Measures.sheetCardSmallHeight,
@@ -535,17 +523,16 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                         clickable: true,
                         bottomSheetArgs: BottomSheetArgs(
                             header: Column(
-                              children: [
-                                const SizedBox(height: Measures.vMarginThin),
-                                Text('Aggiungi un linguaggio', style: Fonts.bold(size: 18)),
-                                const SizedBox(height: Measures.vMarginMed),
-                                GridRow(
-                                    columnsCount: 3,
-                                    fill: true,
-                                    children: Language.values
-                                        .where((e) => !character.languages.contains(e))
-                                        .map((e) =>
-                                        SheetItemCard(
+                          children: [
+                            const SizedBox(height: Measures.vMarginThin),
+                            Text('Aggiungi un linguaggio', style: Fonts.bold(size: 18)),
+                            const SizedBox(height: Measures.vMarginMed),
+                            GridRow(
+                                columnsCount: 3,
+                                fill: true,
+                                children: Language.values
+                                    .where((e) => !character.languages.contains(e))
+                                    .map((e) => SheetItemCard(
                                           text: e.title,
                                           iconPath: 'png/language',
                                           onTap: () {
@@ -555,10 +542,10 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                             Navigator.of(context).pop();
                                           },
                                         ))
-                                        .toList()),
-                                const SizedBox(height: Measures.vMarginMed),
-                              ],
-                            )),
+                                    .toList()),
+                            const SizedBox(height: Measures.vMarginMed),
+                          ],
+                        )),
                         child: Center(child: 'add'.toIcon(height: 16)))
                   ]),
           // const SizedBox(height: Measures.vMarginSmall),
@@ -574,19 +561,14 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           const SizedBox(height: Measures.vMarginMoreThin),
           ...InventoryItem.types.slice(0, -1).map((type) {
             final isEmpty = character.inventory.value != null &&
-                character.inventory.value!
-                    .entries
-                    .where((e) => e.key.runtimeType == type)
-                    .isEmpty;
+                character.inventory.value!.entries.where((e) => e.key.runtimeType == type).isEmpty;
             return Column(
               children: [
                 // Header
                 Clickable(
                   active: !isEmpty,
-                  onTap: () =>
-                      setState(
-                              () =>
-                              _setIsInventoryItemExpanded(type, !_getIsInventoryItemExpanded(type))),
+                  onTap: () => setState(
+                      () => _setIsInventoryItemExpanded(type, !_getIsInventoryItemExpanded(type))),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
@@ -655,7 +637,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                 return [
                   SliverAppBar(
                     flexibleSpace: // Header
-                    Padding(
+                        Padding(
                       padding: const EdgeInsets.only(top: Measures.vMarginMed),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -707,22 +689,21 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       }
                           .entries
                           .indexed
-                          .map((e) =>
-                          Tab(
-                            child: Row(
-                              children: [
-                                (e.$2.value + (_tabController!.index == e.$1 ? '_on' : '_off'))
-                                    .toIcon(height: 20),
-                                const SizedBox(width: Measures.hMarginSmall),
-                                Text(
-                                  e.$2.key,
-                                  style: _tabController!.index == e.$1
-                                      ? Fonts.bold()
-                                      : Fonts.light(size: 16),
+                          .map((e) => Tab(
+                                child: Row(
+                                  children: [
+                                    (e.$2.value + (_tabController!.index == e.$1 ? '_on' : '_off'))
+                                        .toIcon(height: 20),
+                                    const SizedBox(width: Measures.hMarginSmall),
+                                    Text(
+                                      e.$2.key,
+                                      style: _tabController!.index == e.$1
+                                          ? Fonts.bold()
+                                          : Fonts.light(size: 16),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ))
+                              ))
                           .toList()
                           .cast<Widget>()),
                   const SizedBox(height: Measures.vMarginThin),
@@ -731,12 +712,11 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                     child: TabBarView(
                       controller: _tabController,
                       children: _screens!
-                          .map((e) =>
-                          SingleChildScrollView(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: _screens!.indexOf(e) == 1 ? 0 : Measures.hPadding),
-                            child: e,
-                          ))
+                          .map((e) => SingleChildScrollView(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: _screens!.indexOf(e) == 1 ? 0 : Measures.hPadding),
+                                child: e,
+                              ))
                           .toList(),
                     ),
                   ),
@@ -751,8 +731,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
     );
   }
 
-  Widget inventoryItemCard(InventoryItem item, int quantity) =>
-      Padding(
+  Widget inventoryItemCard(InventoryItem item, int quantity) => Padding(
         padding: const EdgeInsets.only(bottom: Measures.vMarginThinnest),
         child: GlassCard(
           bottomSheetArgs: BottomSheetArgs(
@@ -766,8 +745,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                           height: 22,
                           color: item.regDateTimestamp == null
                               ? item is Coin
-                              ? Coin.iconColors[item.title]
-                              : null
+                                  ? Coin.iconColors[item.title]
+                                  : null
                               : Palette.primaryBlue),
                       const SizedBox(width: Measures.hMarginMed),
                       Text(item.title, style: Fonts.regular()),
@@ -779,7 +758,15 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
               items: [
                 // Roll damage dice
                 if (item is Weapon)
-                  BottomSheetItem('png/dice_on', 'Tira i danni', () => {}),
+                  BottomSheetItem(
+                      'png/dice_on',
+                      'Tira i danni',
+                      () => context.goto('/dice',
+                          arguments: DiceArgs(
+                              title: 'Lancio di danni per ${item.title}',
+                              dices: item.rollDamage,
+                              modifier: item.fixedDamage,
+                              oneShot: true))),
                 // Edit quantity
                 BottomSheetItem('png/quantity', 'Modifica quantità', () {
                   onSubmit(int value) {
@@ -812,136 +799,139 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                 // Sell item
                 if (item is! Coin)
                   BottomSheetItem('png/coin', 'Vendi', () async {
-                    final coins = DataManager().cachedInventoryItems.whereType<Coin>().toList()
-                      ..sort();
+                    final coins = DataManager().cachedInventoryItems.whereType<Coin>().toList()..sort();
                     final coinNumericInputs = List.generate(
                         coins.length,
-                            (i) =>
-                            NumericInput(NumericInputArgs(
-                                min: 0,
-                                max: 99,
-                                initialValue: i == coins.length - 1 ? '1' : '0',
-                                isDense: false)));
+                        (i) => NumericInput(NumericInputArgs(
+                            min: 0,
+                            max: 99,
+                            initialValue: i == coins.length - 1 ? '1' : '0',
+                            isDense: false)));
                     var quantityToSell = 1.0;
                     context.popup('Stai per vendere ${item.title}',
                         message: 'A quanto vuoi vendere un\'unità di **${item.title}**?',
-                        noContentHPadding: true,
-                        child: StatefulBuilder(
-                          builder: (context, setState)
-                          {
-                            for (var numericInput in coinNumericInputs) {
-                              numericInput.args.onSubmit=(_)=>setState(() {});
-                            }
-                            return Column(
-                              children: [
-                                // Unity sell price
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-                                  child: GridRow(
-                                    fill: true,
-                                    columnsCount: 3,
+                        noContentHPadding: true, child: StatefulBuilder(
+                      builder: (context, setState) {
+                        for (var numericInput in coinNumericInputs) {
+                          numericInput.args.onSubmit = (_) => setState(() {});
+                        }
+                        return Column(
+                          children: [
+                            // Unity sell price
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                              child: GridRow(
+                                fill: true,
+                                columnsCount: 3,
+                                children: [
+                                  ...coins.map((coin) => Row(
+                                        children: [
+                                          'png/coin'.toIcon(color: Coin.iconColors[coin.title]),
+                                          coinNumericInputs[coins.indexOf(coin)],
+                                        ],
+                                      ))
+                                ],
+                              ),
+                            ),
+                            // Quantity
+                            GlassCard(
+                              isFlat: true,
+                              clickable: false,
+                              isLight: true,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: Measures.vMarginThin),
+                                    Text('Unità da vendere:', style: Fonts.bold()),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Slider(
+                                            value: quantityToSell,
+                                            onChanged: (value) {
+                                              setState(() => quantityToSell = value);
+                                              if (quantityToSell == 0) {
+                                                Navigator.of(context).pop();
+                                              }
+                                            },
+                                            min: 0,
+                                            max: quantity.toDouble(),
+                                            activeColor: Palette.primaryBlue,
+                                            label: quantityToSell.round().toString(),
+                                            divisions: quantity,
+                                          ),
+                                        ),
+                                        Text('x${quantityToSell.round()}', style: Fonts.black(size: 18)),
+                                        const SizedBox(width: Measures.hMarginBig)
+                                      ],
+                                    ),
+                                    const SizedBox(height: Measures.vMarginMoreThin),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: Measures.vMarginThin),
+                            const Rule(),
+                            const SizedBox(height: Measures.vMarginThin),
+                            // Summary
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                              child: Column(
+                                children: [
+                                  Text('Ricavi totali:', style: Fonts.bold()),
+                                  const SizedBox(height: Measures.vMarginThin),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       ...coins.map((coin) => Row(
                                             children: [
-                                              'png/coin'.toIcon(color: Coin.iconColors[coin.title]),
-                                              coinNumericInputs[coins.indexOf(coin)],
+                                              'png/coin'
+                                                  .toIcon(height: 18, color: Coin.iconColors[coin.title]),
+                                              const SizedBox(width: Measures.hMarginThin),
+                                              Text(
+                                                  (coinNumericInputs[coins.indexOf(coin)].value *
+                                                          quantityToSell)
+                                                      .round()
+                                                      .toString(),
+                                                  style: Fonts.black(size: 18)),
                                             ],
                                           ))
                                     ],
                                   ),
-                                ),
-                                // Quantity
-                                GlassCard(
-                                  isFlat: true,
-                                  clickable: false,
-                                  isLight: true,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-                                    child: Column(
-                                      children: [
-                                        const SizedBox(height: Measures.vMarginThin),
-                                        Text('Unità da vendere:', style: Fonts.bold()),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Slider(
-                                                value: quantityToSell,
-                                                onChanged: (value) {
-                                                  setState(() => quantityToSell = value);
-                                                  if (quantityToSell == 0) {
-                                                    Navigator.of(context).pop();
-                                                  }
-                                                },
-                                                min: 0,
-                                                max: quantity.toDouble(),
-                                                activeColor: Palette.primaryBlue,
-                                                label: quantityToSell.round().toString(),
-                                                divisions: quantity,
-                                              ),
-                                            ),
-                                            Text('x${quantityToSell.round()}',
-                                                style: Fonts.black(size: 18)),
-                                            const SizedBox(width: Measures.hMarginBig)
-                                          ],
-                                        ),
-                                        const SizedBox(height: Measures.vMarginMoreThin),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: Measures.vMarginThin),
-                                const Rule(),
-                                const SizedBox(height: Measures.vMarginThin),
-                                // Summary
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-                                  child: Column(
-                                    children: [
-                                      Text('Ricavi totali:', style: Fonts.bold()),
-                                      const SizedBox(height: Measures.vMarginThin),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          ...coins.map((coin) => Row(
-                                                children: [
-                                                  'png/coin'.toIcon(
-                                                      height: 18, color: Coin.iconColors[coin.title]),
-                                                  const SizedBox(width: Measures.hMarginThin),
-                                                  Text(
-                                                      (coinNumericInputs[coins.indexOf(coin)].value *
-                                                              quantityToSell)
-                                                          .round()
-                                                          .toString(),
-                                                      style: Fonts.black(size: 18)),
-                                                ],
-                                              ))
-                                        ],
-                                      ),
-                                      const SizedBox(height: Measures.vMarginSmall),
-                                    ],
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                        ),
-                        positiveCallback: () async {
-                          _character?.removeItems([item]);
-                          setState(() {});
-                          bool hasUndone = false;
-                          await context.snackbar('Hai eliminato ${item.title} (x$quantity)',
-                              backgroundColor: Palette.backgroundBlue,
-                              bottomMargin: Measures.bottomBarHeight, undoCallback: () {
-                                if (!mounted) return;
-                                hasUndone = true;
-                                _character?.addLoot(Loot({item.uid!: quantity}));
-                                setState(() {});
-                              });
-                          if (!hasUndone) {
-                            print('⬆️ Ho salvato la rimozione dell\'item ${item.title}');
-                            DataManager().save(_character!);
-                          }
-                        },
+                                  const SizedBox(height: Measures.vMarginSmall),
+                                ],
+                              ),
+                            )
+                          ],
+                        );
+                      },
+                    ), positiveCallback: () async {
+                      _character?.editQuantity(item, (quantity - quantityToSell).toInt());
+                      _character?.addLoot(Loot({
+                        for (var (i, coin) in coins.indexed)
+                          coin.uid!: (coinNumericInputs[i].value * quantityToSell).toInt()
+                      }));
+                      setState(() {});
+                      bool hasUndone = false;
+                      await context.snackbar('Hai venduto ${item.title} (x$quantity)',
+                          backgroundColor: Palette.backgroundBlue, undoCallback: () {
+                        if (!mounted) return;
+                        hasUndone = true;
+                        _character?.addLoot(Loot({item.uid!: quantityToSell.toInt()}));
+                        for (var (i, coin) in coins.indexed) {
+                          _character?.editQuantity(
+                              coin,
+                              _character!.inventoryUIDs[coin.uid]! -
+                                  (coinNumericInputs[i].value * quantityToSell).toInt());
+                        }
+                        setState(() {});
+                      });
+                      if (!hasUndone) {
+                        print('⬆️ Ho salvato la vendita dell\'item ${item.title}');
+                        DataManager().save(_character!);
+                      }
+                    },
                         negativeCallback: () {},
                         positiveText: 'Si',
                         negativeText: 'No',
@@ -949,29 +939,57 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                   }),
                 // Remove item
                 BottomSheetItem('png/delete_2', 'Scarta', () async {
-                  context.popup('Stai per scartare un oggetto',
-                      message:
-                      'Sei sicuro di voler scartare **${item.title}** (x$quantity) dal tuo inventario?',
-                      positiveCallback: () async {
-                        _character?.removeItems([item]);
-                        setState(() {});
-                        bool hasUndone = false;
-                        await context.snackbar('Hai eliminato ${item.title} (x$quantity)',
-                            backgroundColor: Palette.backgroundBlue,
-                            bottomMargin: Measures.bottomBarHeight, undoCallback: () {
-                              if (!mounted) return;
-                              hasUndone = true;
-                              _character?.addLoot(Loot({item.uid!: quantity}));
-                              setState(() {});
-                            });
-                        if (!hasUndone) {
-                          print('⬆️ Ho salvato la rimozione dell\'item ${item.title}');
-                          DataManager().save(_character!);
-                        }
-                      },
+                  var quantityToDiscard = 1.0;
+                  context.popup('Stai per scartare delle unità di ${item.title}',
+                      message: 'Quante unità di **${item.title}** vuoi scartare dal tuo inventario?',
+                      child: Column(
+                        children: [
+                          StatefulBuilder(
+                            builder: (context, setState) => Row(
+                              children: [
+                                Expanded(
+                                  child: Slider(
+                                    value: quantityToDiscard,
+                                    onChanged: (value) {
+                                      setState(() => quantityToDiscard = value);
+                                      if (quantityToDiscard == 0) {
+                                        Navigator.of(context).pop();
+                                      }
+                                    },
+                                    min: 0,
+                                    max: quantity.toDouble(),
+                                    activeColor: Palette.primaryBlue,
+                                    label: quantityToDiscard.round().toString(),
+                                    divisions: quantity,
+                                  ),
+                                ),
+                                Text('x${quantityToDiscard.round()}', style: Fonts.black(size: 18)),
+                                const SizedBox(width: Measures.hMarginBig)
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: Measures.vMarginMoreThin),
+                        ],
+                      ), positiveCallback: () async {
+                    _character?.editQuantity(
+                        item, (_character!.inventoryUIDs[item.uid!]! - quantityToDiscard).round());
+                    setState(() {});
+                    bool hasUndone = false;
+                    await context.snackbar('Hai scartato ${item.title} (x${quantityToDiscard.round()})',
+                        backgroundColor: Palette.backgroundBlue, undoCallback: () {
+                      if (!mounted) return;
+                      hasUndone = true;
+                      _character?.addLoot(Loot({item.uid!: quantityToDiscard.round()}));
+                      setState(() {});
+                    });
+                    if (!hasUndone) {
+                      print('⬆️ Ho salvato la rimozione dell\'item ${item.title}');
+                      DataManager().save(_character!);
+                    }
+                  },
                       negativeCallback: () {},
-                      positiveText: 'Si',
-                      negativeText: 'No',
+                      positiveText: 'Conferma',
+                      negativeText: 'Annulla',
                       backgroundColor: Palette.background.withOpacity(0.5));
                 }),
               ]),
@@ -996,8 +1014,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                   height: 22,
                                   color: item.regDateTimestamp == null
                                       ? item is Coin
-                                      ? Coin.iconColors[item.title]
-                                      : null
+                                          ? Coin.iconColors[item.title]
+                                          : null
                                       : Palette.primaryBlue),
                               const SizedBox(width: Measures.hMarginSmall),
                               Text(item.title, style: Fonts.regular()),
@@ -1007,7 +1025,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                         ),
                       ),
                       if (item is Weapon)
-                      // Roll damage + Fixed damage
+                        // Roll damage + Fixed damage
                         Row(
                           children: [
                             const SizedBox(width: Measures.hMarginMed),
@@ -1016,7 +1034,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                           ],
                         ),
                       if (item is Armor)
-                      // Disadvantage + Stringth
+                        // Disadvantage + Stringth
                         Row(
                           children: [
                             if (item.disadvantage) ...[
@@ -1045,19 +1063,16 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                               const SizedBox(width: Measures.hMarginSmall),
                               RichText(
                                   text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                          text: '${item.CA.contains(' ') ? item.CA.split(' ')[0] : item
-                                              .CA} ',
-                                          style: Fonts.black(size: 18)),
-                                      TextSpan(
-                                          text:
-                                          '${item.CA.contains(' ')
-                                              ? item.CA.split(' ').slice(1).join(' ')
-                                              : ''} ',
-                                          style: Fonts.light()),
-                                    ],
-                                  )),
+                                children: [
+                                  TextSpan(
+                                      text: '${item.CA.contains(' ') ? item.CA.split(' ')[0] : item.CA} ',
+                                      style: Fonts.black(size: 18)),
+                                  TextSpan(
+                                      text:
+                                          '${item.CA.contains(' ') ? item.CA.split(' ').slice(1).join(' ') : ''} ',
+                                      style: Fonts.light()),
+                                ],
+                              )),
                             ],
                           ],
                         ),
@@ -1074,11 +1089,11 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                         item.description == null
                             ? Container()
                             : Expanded(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Text(item.description!, style: Fonts.light()),
-                          ),
-                        ),
+                                child: SingleChildScrollView(
+                                  scrollDirection: Axis.horizontal,
+                                  child: Text(item.description!, style: Fonts.light()),
+                                ),
+                              ),
                         // How long ago it was added (if added by the user)
                         if (item.regDateTimestamp != null) ...[
                           const SizedBox(width: Measures.hMarginMed),

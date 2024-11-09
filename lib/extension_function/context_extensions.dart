@@ -186,7 +186,7 @@ extension ContextExtensions on BuildContext {
   snackbar(
     String message, {
     Color backgroundColor = Palette.background,
-    double bottomMargin = Measures.vMarginSmall,
+    double bottomMargin = Measures.vMarginMed,
     Function()? undoCallback,
   }) async =>
       await ScaffoldMessenger.of(this)
@@ -196,7 +196,7 @@ extension ContextExtensions on BuildContext {
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
               margin: EdgeInsets.only(
                   left: Measures.hPadding, right: Measures.hPadding, bottom: bottomMargin),
-              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(25))),
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
               behavior: SnackBarBehavior.floating,
               backgroundColor: backgroundColor,
               elevation: 0,
