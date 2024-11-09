@@ -210,11 +210,7 @@ class Loot implements JSONSerializable {
 
   Loot.jsonConstructor(this._name, this._content);
 
-  Loot(this._content, [this._name]) {
-    for (var qta in _content.values) {
-      assert(qta > 0);
-    }
-  }
+  Loot(this._content, [this._name]);
 
   String get name => _name ?? _content.keys.toList()[0];
 

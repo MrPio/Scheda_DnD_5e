@@ -10,7 +10,7 @@ import '../../../constant/fonts.dart';
 import '../../../constant/measures.dart';
 import '../../../constant/palette.dart';
 
-class SheetItemCard extends StatelessWidget {
+class SheetItemCard extends StatefulWidget {
   final String iconPath, text;
   final Color? iconColor;
   final String? value, subValue;
@@ -35,32 +35,45 @@ class SheetItemCard extends StatelessWidget {
     }
   }
 
-  bool get isSmall => value == null && subValue == null;
+  @override
+  State<SheetItemCard> createState() => _SheetItemCardState();
+}
 
+class _SheetItemCardState extends State<SheetItemCard> {
+  bool get isSmall => widget.value == null && widget.subValue == null;
+bool isShimmer=true;
+
+@override
+  void initState() {
+    Future.delayed(Durations.medium2,()=>setState(()=>isShimmer=false));
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    final newBottomSheetArgs = bottomSheetArgs != null
+    final newBottomSheetArgs = widget.bottomSheetArgs != null
         ? BottomSheetArgs(
             header: Align(
               alignment: Alignment.center,
               child: Column(
                 children: [
                   const SizedBox(height: Measures.vMarginThin),
-                  Text(text, style: Fonts.bold(size: 18)),
-                  if (bottomSheetArgs?.header != null) const SizedBox(height: Measures.vMarginMed),
-                  if (bottomSheetArgs?.header != null) bottomSheetArgs!.header!,
-                  if (bottomSheetArgs?.header != null)
+                  Text(widget.text, style: Fonts.bold(size: 18)),
+                  if (widget.bottomSheetArgs?.header != null) const SizedBox(height: Measures.vMarginMed),
+                  if (widget.bottomSheetArgs?.header != null) widget.bottomSheetArgs!.header!,
+                  if (widget.bottomSheetArgs?.header != null)
                     const SizedBox(height: Measures.vMarginMed + Measures.vMarginSmall),
                 ],
               ),
             ),
-            items: bottomSheetArgs?.items)
+            items: widget.bottomSheetArgs?.items)
         : null;
     return GlassCard(
+      isShimmer: isShimmer,
+      shimmerHeight: 60,
       height: isSmall ? Measures.sheetCardSmallHeight : null,
-      clickable: bottomSheetArgs != null || onTap != null,
+      clickable: widget.bottomSheetArgs != null || widget.onTap != null,
       bottomSheetArgs: newBottomSheetArgs,
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Padding(
         padding: EdgeInsets.symmetric(
             vertical: isSmall ? 0 : Measures.vMarginThin, horizontal: isSmall ? Measures.hMarginMed : 0),
@@ -71,11 +84,11 @@ class SheetItemCard extends StatelessWidget {
             Row(
               mainAxisAlignment: isSmall ? MainAxisAlignment.start : MainAxisAlignment.center,
               children: [
-                iconPath.toIcon(height: 15, color: iconColor ?? Palette.onBackground),
+                widget.iconPath.toIcon(height: 15, color: widget.iconColor ?? Palette.onBackground),
                 SizedBox(width: isSmall ? Measures.hMarginSmall : Measures.hMarginThin),
                 Flexible(
                   child: Text(
-                    text,
+                    widget.text,
                     style: Fonts.regular(size: 13),
                     overflow: TextOverflow.ellipsis,
                     textHeightBehavior: isSmall
@@ -88,30 +101,30 @@ class SheetItemCard extends StatelessWidget {
               ],
             ),
             // Value + subValue
-            if (value != null)
+            if (widget.value != null)
               Padding(
                 padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    numericInputArgs != null
+                    widget.numericInputArgs != null
                         ? NumericInput(
-                            numericInputArgs!
+                            widget.numericInputArgs!
                               ..style = Fonts.black(size: 18)
                               ..isDense = true
                               ..contentPadding = EdgeInsets.zero,
                           )
-                        : Text(value!, style: Fonts.black(size: 18)),
-                    if (subValue != null) Text('($subValue)', style: Fonts.light()),
+                        : Text(widget.value!, style: Fonts.black(size: 18)),
+                    if (widget.subValue != null) Text('(${widget.subValue})', style: Fonts.light()),
                   ],
                 ),
               ),
-            if (child != null)
+            if (widget.child != null)
               const Padding(
                 padding: EdgeInsets.symmetric(vertical: Measures.vMarginMoreThin),
                 child: Rule(),
               ),
-            if (child != null) child!,
+            if (widget.child != null) widget.child!,
           ],
         ),
       ),

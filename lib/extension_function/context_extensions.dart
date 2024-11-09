@@ -187,12 +187,13 @@ extension ContextExtensions on BuildContext {
     String message, {
     Color backgroundColor = Palette.background,
     double bottomMargin = Measures.vMarginMed,
+
     Function()? undoCallback,
   }) async =>
       await ScaffoldMessenger.of(this)
           .showSnackBar(
             SnackBar(
-              duration: undoCallback == null ? const Duration(seconds: 3) : const Duration(seconds: 6),
+              duration: undoCallback == null ? const Duration(seconds: 3) : const Duration(seconds: 5),
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
               margin: EdgeInsets.only(
                   left: Measures.hPadding, right: Measures.hPadding, bottom: bottomMargin),

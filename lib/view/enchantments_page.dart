@@ -35,7 +35,7 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
   List<Enchantment> get _enchantments => DataManager()
       .cachedEnchantments
       .where((e) =>
-          _filters.every((filter) => filter.checkFilter(e)) && e.name.match(_searchController.text))
+          _filters.every((filter) => filter.checkFilter(e)) && e.name.match(_searchController.text,contains: true))
       .toList()
     ..sort();
 

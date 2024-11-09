@@ -29,5 +29,5 @@ class Measures {
   // Others
   static const bottomButtonMargin = 30.0;
   static const bottomBarHeight = 80.0;
-  static const fABBottomMargin = 84.0;
+  static const fABBottomMargin = 50.0;
 }

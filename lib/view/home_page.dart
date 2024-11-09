@@ -1,16 +1,13 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
-import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/characters_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
-import 'package:tuple/tuple.dart';
+import 'package:scheda_dnd_5e/view/partial/fab.dart';
 
 import 'partial/glass_bottom_bar_icon.dart';
 import 'partial/gradient_background.dart';
@@ -53,7 +50,23 @@ class _HomePageState extends State<HomePage> {
     Palette.backgroundPurple,
     Palette.backgroundBlue
   ];
-
+  final fabs = [
+    FABArgs(
+      color: Palette.primaryBlue,
+      icon: 'add',
+      onPress: () => HomePage.onFabTaps[CharactersPage]?.call(),
+      bottomMargin: Measures.bottomBarHeight + Measures.vMarginThin,
+    ),
+    null,
+    FABArgs(
+      color: Palette.primaryGreen,
+      icon: 'refresh',
+      onPress: () => HomePage.onFabTaps[DicePage]?.call(),
+      bottomMargin: Measures.bottomBarHeight + Measures.vMarginThin,
+    ),
+    null,
+    null
+  ];
   late final PageController _pageController;
   var _index = 0;
 
@@ -76,13 +89,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final fabs = [
-      const Tuple2(Palette.primaryBlue, 'add'),
-      null,
-      const Tuple2(Palette.primaryGreen, 'refresh'),
-      null,
-      null
-    ];
     return Scaffold(
       backgroundColor: Palette.background,
       body: Stack(
@@ -99,23 +105,7 @@ class _HomePageState extends State<HomePage> {
             // Bottom vignette
             const BottomVignette(),
             // FAB
-            if (fabs[_index] != null)
-              Align(
-                  alignment: Alignment.bottomRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: Measures.fABBottomMargin,
-                        right: Measures.hPadding),
-                    child: FloatingActionButton(
-                      onPressed: ()=>HomePage.onFabTaps[_screens[_index].runtimeType]?.call(),
-                      elevation: 0,
-                      foregroundColor: fabs[_index]!.item1,
-                      backgroundColor: fabs[_index]!.item1,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(999)),
-                      child: fabs[_index]!.item2.toIcon(height: 20),
-                    ),
-                  )),
+            if (fabs[_index] != null) FAB(fabs[_index]!),
           ]),
           // Bottom bar
           Align(
@@ -134,8 +124,7 @@ class _HomePageState extends State<HomePage> {
                       iconPathOff: '${_screenIconPaths[i]}_off',
                       active: _index == i,
                       onTap: () => _pageController.animateToPage(i,
-                          duration:
-                              Durations.medium3 * pow((_index - i).abs(), 0.7),
+                          duration: Durations.medium3 * pow((_index - i).abs(), 0.7),
                           curve: Curves.easeOutCubic));
                 }).toList(),
               ),

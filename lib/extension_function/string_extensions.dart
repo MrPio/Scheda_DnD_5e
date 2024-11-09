@@ -8,10 +8,10 @@ import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 
 extension StringExtensions on String {
-  bool match(String other) => toLowerCase()
-      .trim()
-      .replaceAll(RegExp(r'[^a-zA-Z0-9]'), '')
-      .contains(other.toLowerCase().trim().replaceAll(RegExp(r'[^a-zA-Z0-9]'), ''));
+  bool match(String other, {bool contains = false}) =>
+      contains ? simplify.contains(other.simplify) : simplify == other.simplify;
+
+  String get simplify => toLowerCase().trim().replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
 
   bool get isEmail => RegExp(r'^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$').hasMatch(this);
 

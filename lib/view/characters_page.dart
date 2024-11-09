@@ -42,7 +42,7 @@ class _CharactersPageState extends State<CharactersPage> {
 
   List<Character> get _characters => (AccountManager().user.characters.value ?? [])
       .where((e) =>
-          _filters.every((filter) => filter.checkFilter(e)) && e.name.match(_searchController.text))
+          _filters.every((filter) => filter.checkFilter(e)) && e.name.match(_searchController.text, contains: true))
       .toList()
     ..sort();
 

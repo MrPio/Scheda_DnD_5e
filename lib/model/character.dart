@@ -2727,16 +2727,18 @@ class Character with Comparable<Character> implements WithUID {
 
   addLoot(Loot loot) {
     loot.content.forEach((item, qta) {
-      if (item is Equipment) {
-        addLoot(Loot({for (var e in item.content.entries) e.key: e.value * qta}));
-      } else {
-        if (inventoryItems[item.runtimeType]!.containsKey(item.uid!)) {
-          inventoryItems[item.runtimeType]![item.uid!] =
-              inventoryItems[item.runtimeType]![item.uid!]! + qta;
+      if (qta > 0) {
+        if (item is Equipment) {
+          addLoot(Loot({for (var e in item.content.entries) e.key: e.value * qta}));
         } else {
-          inventoryItems[item.runtimeType]![item.uid!] = qta;
+          if (inventoryItems[item.runtimeType]!.containsKey(item.uid!)) {
+            inventoryItems[item.runtimeType]![item.uid!] =
+                inventoryItems[item.runtimeType]![item.uid!]! + qta;
+          } else {
+            inventoryItems[item.runtimeType]![item.uid!] = qta;
+          }
+          if (inventory.value != null) inventory.value = inventory.value! + {item: qta};
         }
-        if (inventory.value != null) inventory.value = inventory.value! + {item: qta};
       }
     });
   }

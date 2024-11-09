@@ -22,6 +22,7 @@ import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
+import 'package:scheda_dnd_5e/view/partial/fab.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_column.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
@@ -588,7 +589,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                   if (!isEmpty && _getIsInventoryItemExpanded(type))
                     ...inventoryItems(type)!
                         .map((e) => inventoryItemCard(e, _character!.inventory.value![e]!)),
-                  if (!_getIsInventoryItemExpanded(type))
+                  if (!isEmpty && !_getIsInventoryItemExpanded(type))
                     const Padding(
                       padding: EdgeInsets.only(top: Measures.vMarginThin),
                       child: Rule(),
@@ -620,8 +621,83 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           character.inventory.value = null;
           DataManager().loadCharacterInventory(character);
         }
+        ScaffoldMessenger.of(context).clearSnackBars();
         setState(() {});
       });
+    final fabs = [
+      null,
+      FABArgs(
+          color: Palette.primaryBlue,
+          icon: 'add',
+          onPress: () {
+            context.bottomSheet(BottomSheetArgs(
+                header: Row(
+                  children: [
+                    'add'.toIcon(),
+                    const SizedBox(width: Measures.hMarginBig),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Aggiungi un oggetto all\'inventario', style: Fonts.bold()),
+                        Text('Che tipo di oggetto vuoi aggiungere?', style: Fonts.light()),
+                      ],
+                    )
+                  ],
+                ),
+                items: [
+                  BottomSheetItem('png/common_item', 'Un\'oggetto comune', () async {
+                    await Future.delayed(Durations.short3);
+                    unknown(Type type) => DataManager().cachedInventoryItems.where(
+                        (e) => e.runtimeType == type && !character.inventoryUIDs.containsKey(e.uid!));
+                    context.draggableBottomSheet(
+                      body: Column(
+                        children: [
+                          const SizedBox(height: Measures.vMarginThin),
+                          Text('Aggiungi un oggetto all\'inventario', style: Fonts.bold(size: 18)),
+                          const SizedBox(height: Measures.vMarginThin),
+                          Column(
+                              children: InventoryItem.types
+                                  .where((e) => unknown(e).isNotEmpty)
+                                  .map((type) => Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Padding(
+                                            padding:
+                                                EdgeInsets.symmetric(vertical: Measures.vMarginSmall),
+                                            child: Rule(),
+                                          ),
+                                          Text(InventoryItem.names[type]!, style: Fonts.regular()),
+                                          const SizedBox(height: Measures.vMarginSmall),
+                                          GridRow(
+                                              columnsCount: type == Equipment?1:3,
+                                              fill: true,
+                                              children: unknown(type)
+                                                  .map((item) => SheetItemCard(
+                                                        text: item.title,
+                                                        iconPath: InventoryItem.icons[type]!,
+                                                        onTap: () {
+                                                          setState(() {
+                                                            character.addLoot(Loot({item.uid!: 1}));
+                                                          });
+                                                          Navigator.of(context).pop();
+                                                        },
+                                                      ))
+                                                  .toList()),
+                                        ],
+                                      ))
+                                  .toList()),
+                          const SizedBox(height: Measures.vMarginMed),
+                        ],
+                      ),
+                    );
+                  }),
+                  BottomSheetItem('png/custom_item', 'Un\'oggetto personalizzato', () {}),
+                ]));
+          }),
+      null,
+      null,
+      null,
+    ];
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -726,6 +802,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           ),
           // Bottom vignette
           const BottomVignette(height: 0, spread: 50),
+          // FAB
+          if (fabs[_tabController!.index] != null) FAB(fabs[_tabController!.index]!),
         ],
       ),
     );
@@ -879,6 +957,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                               padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
                               child: Column(
                                 children: [
+                                  // Total income
                                   Text('Ricavi totali:', style: Fonts.bold()),
                                   const SizedBox(height: Measures.vMarginThin),
                                   Row(
@@ -900,6 +979,29 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                     ],
                                   ),
                                   const SizedBox(height: Measures.vMarginSmall),
+                                  // After sale
+                                  Text('Monete dopo la vedita:', style: Fonts.bold()),
+                                  const SizedBox(height: Measures.vMarginThin),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      ...coins.map((coin) => Row(
+                                            children: [
+                                              'png/coin'
+                                                  .toIcon(height: 18, color: Coin.iconColors[coin.title]),
+                                              const SizedBox(width: Measures.hMarginThin),
+                                              Text(
+                                                  ((_character!.coinsUIDs[coin.uid!]??0) +
+                                                          (coinNumericInputs[coins.indexOf(coin)].value *
+                                                                  quantityToSell)
+                                                              .round())
+                                                      .toString(),
+                                                  style: Fonts.black(size: 18)),
+                                            ],
+                                          ))
+                                    ],
+                                  ),
+                                  const SizedBox(height: Measures.vMarginSmall),
                                 ],
                               ),
                             )
@@ -907,23 +1009,23 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                         );
                       },
                     ), positiveCallback: () async {
-                      _character?.editQuantity(item, (quantity - quantityToSell).toInt());
+                      _character?.editQuantity(item, (quantity - quantityToSell).round());
                       _character?.addLoot(Loot({
                         for (var (i, coin) in coins.indexed)
-                          coin.uid!: (coinNumericInputs[i].value * quantityToSell).toInt()
+                          coin.uid!: (coinNumericInputs[i].value * quantityToSell).round()
                       }));
                       setState(() {});
                       bool hasUndone = false;
-                      await context.snackbar('Hai venduto ${item.title} (x$quantity)',
+                      await context.snackbar('Hai venduto ${item.title} (x${quantityToSell.round()})',
                           backgroundColor: Palette.backgroundBlue, undoCallback: () {
                         if (!mounted) return;
                         hasUndone = true;
-                        _character?.addLoot(Loot({item.uid!: quantityToSell.toInt()}));
+                        _character?.addLoot(Loot({item.uid!: quantityToSell.round()}));
                         for (var (i, coin) in coins.indexed) {
                           _character?.editQuantity(
                               coin,
-                              _character!.inventoryUIDs[coin.uid]! -
-                                  (coinNumericInputs[i].value * quantityToSell).toInt());
+                              (_character!.inventoryUIDs[coin.uid!]??0) -
+                                  (coinNumericInputs[i].value * quantityToSell).round());
                         }
                         setState(() {});
                       });
