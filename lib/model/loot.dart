@@ -33,6 +33,13 @@ abstract class InventoryItem with Comparable<InventoryItem> implements WithUID, 
     Coin: 'Monete',
     Equipment: 'Dotazioni',
   };
+  static const Map<Type, String> namesSingulars = {
+    Weapon: 'Arma',
+    Armor: 'Armatura',
+    Item: 'Oggetto',
+    Coin: 'Moneta',
+    Equipment: 'Dotazione',
+  };
 
   static List<Type> get types => icons.keys.toList();
 

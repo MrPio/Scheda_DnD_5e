@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
@@ -40,6 +39,7 @@ extension ContextExtensions on BuildContext {
         return PopScope(
           canPop: dismissible,
           child: AlertDialog(
+            insetPadding: const EdgeInsets.symmetric(horizontal: Measures.hPadding+Measures.hMarginSmall,vertical: Measures.vMarginThin),
             shadowColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.transparent,

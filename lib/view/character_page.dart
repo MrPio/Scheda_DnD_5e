@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
@@ -24,6 +25,7 @@ import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
 import 'package:scheda_dnd_5e/view/partial/fab.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
+import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_column.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
@@ -669,7 +671,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                           Text(InventoryItem.names[type]!, style: Fonts.regular()),
                                           const SizedBox(height: Measures.vMarginSmall),
                                           GridRow(
-                                              columnsCount: type == Equipment?1:3,
+                                              columnsCount: type == Equipment ? 1 : 3,
                                               fill: true,
                                               children: unknown(type)
                                                   .map((item) => SheetItemCard(
@@ -691,7 +693,48 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       ),
                     );
                   }),
-                  BottomSheetItem('png/custom_item', 'Un\'oggetto personalizzato', () {}),
+                  BottomSheetItem('png/custom_item', 'Un\'oggetto personalizzato', () async {
+                    await Future.delayed(Durations.short3);
+                    context.bottomSheet(BottomSheetArgs(
+                        header: Row(
+                          children: [
+                            'png/edit'.toIcon(),
+                            const SizedBox(width: Measures.hMarginBig),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Crea un oggetto personalizzato', style: Fonts.bold()),
+                                Text('Che tipo di oggetto vuoi creare?', style: Fonts.light()),
+                              ],
+                            )
+                          ],
+                        ),
+                        items: [
+                          ...InventoryItem.types.slice(0, -1).map((type) => BottomSheetItem(
+                                InventoryItem.icons[type]!,
+                                InventoryItem.namesSingulars[type]!,
+                                () {
+                                  context.popup('Crea un ${InventoryItem.namesSingulars[type]!}',
+                                      message:
+                                          'Compila i seguenti campi per creare il tuo oggetto personalizzato!',
+                                      // noContentHPadding: true,
+                                      positiveCallback: () {},
+                                      positiveText: 'Conferma',
+                                      backgroundColor: Palette.background.withOpacity(0.5),
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          GlassTextField(iconPath: 'png/edit',hintText: 'Nome',clearable: true),
+                                          const SizedBox(height: Measures.vMarginThin),
+                                          GlassTextField(iconPath: 'png/damage',hintText: 'Proprietà dell\'arma',clearable: true),
+                                          const SizedBox(height: Measures.vMarginThin),
+                                          GlassTextField(iconPath: 'info',hintText: 'Descrizione',clearable: false, multiline: true),
+                                        ],
+                                      ));
+                                },
+                              ))
+                        ]));
+                  }),
                 ]));
           }),
       null,
@@ -991,7 +1034,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                                   .toIcon(height: 18, color: Coin.iconColors[coin.title]),
                                               const SizedBox(width: Measures.hMarginThin),
                                               Text(
-                                                  ((_character!.coinsUIDs[coin.uid!]??0) +
+                                                  ((_character!.coinsUIDs[coin.uid!] ?? 0) +
                                                           (coinNumericInputs[coins.indexOf(coin)].value *
                                                                   quantityToSell)
                                                               .round())
@@ -1024,7 +1067,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                         for (var (i, coin) in coins.indexed) {
                           _character?.editQuantity(
                               coin,
-                              (_character!.inventoryUIDs[coin.uid!]??0) -
+                              (_character!.inventoryUIDs[coin.uid!] ?? 0) -
                                   (coinNumericInputs[i].value * quantityToSell).round());
                         }
                         setState(() {});
