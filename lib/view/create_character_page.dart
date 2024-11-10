@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/constant/character_names.dart';
+import 'package:scheda_dnd_5e/constant/dictionary.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/iterable_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
@@ -90,11 +90,11 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
         const SizedBox(height: Measures.vMarginMed),
         // Search TextField
         GlassTextField(
-          iconPath: 'search_alt',
+          iconPath: 'png/edit',
           hintText: 'Il nome del personaggio',
           secondaryIconPath: 'png/random',
           onSecondaryIconTap: () {
-            _nameController.text = CharacterNames.names.random;
+            _nameController.text = Dictionary.names.random;
             setState(() {});
           },
           textController: _nameController,

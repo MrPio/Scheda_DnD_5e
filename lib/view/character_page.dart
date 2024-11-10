@@ -17,6 +17,7 @@ import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/view/characters_page.dart';
+import 'package:scheda_dnd_5e/view/create_item_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
@@ -714,23 +715,24 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                 InventoryItem.icons[type]!,
                                 InventoryItem.namesSingulars[type]!,
                                 () {
-                                  context.popup('Crea un ${InventoryItem.namesSingulars[type]!}',
-                                      message:
-                                          'Compila i seguenti campi per creare il tuo oggetto personalizzato!',
-                                      // noContentHPadding: true,
-                                      positiveCallback: () {},
-                                      positiveText: 'Conferma',
-                                      backgroundColor: Palette.background.withOpacity(0.5),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          GlassTextField(iconPath: 'png/edit',hintText: 'Nome',clearable: true),
-                                          const SizedBox(height: Measures.vMarginThin),
-                                          GlassTextField(iconPath: 'png/damage',hintText: 'Proprietà dell\'arma',clearable: true),
-                                          const SizedBox(height: Measures.vMarginThin),
-                                          GlassTextField(iconPath: 'info',hintText: 'Descrizione',clearable: false, multiline: true),
-                                        ],
-                                      ));
+                                  context.goto('/create_item', arguments: CreateItemArgs(type));
+                                  // context.popup('Crea un ${InventoryItem.namesSingulars[type]!}',
+                                  //     message:
+                                  //         'Compila i seguenti campi per creare il tuo oggetto personalizzato!',
+                                  //     // noContentHPadding: true,
+                                  //     positiveCallback: () {},
+                                  //     positiveText: 'Conferma',
+                                  //     backgroundColor: Palette.background.withOpacity(0.5),
+                                  //     child: Column(
+                                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                                  //       children: [
+                                  //         GlassTextField(iconPath: 'png/edit',hintText: 'Nome',clearable: true),
+                                  //         const SizedBox(height: Measures.vMarginThin),
+                                  //         GlassTextField(iconPath: 'png/damage',hintText: 'Proprietà dell\'arma',clearable: true),
+                                  //         const SizedBox(height: Measures.vMarginThin),
+                                  //         GlassTextField(iconPath: 'info',hintText: 'Descrizione',clearable: false, multiline: true),
+                                  //       ],
+                                  //     ));
                                 },
                               ))
                         ]));

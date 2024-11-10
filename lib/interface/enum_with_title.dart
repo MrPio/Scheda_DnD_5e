@@ -1,8 +1,8 @@
-abstract class EnumWithTitle implements Enum,WithTitle {
-  @override
+abstract class WithTitle {
   final String title = '';
 }
 
-abstract class WithTitle {
+abstract class EnumWithTitle implements Enum,WithTitle {
+  @override
   final String title = '';
 }

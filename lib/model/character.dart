@@ -2578,7 +2578,7 @@ class Character with Comparable<Character> implements WithUID {
 
   set name(String value) {
     if (value.length < 3) {
-      throw const FormatException('The name must have at least 3 characters');
+      throw const FormatException('Il nome deve avere almeno 3 caratteri');
     }
     _name = value;
   }

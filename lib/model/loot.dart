@@ -14,8 +14,22 @@ part 'part/loot.g.dart';
 
 /// Any item that can be part of a character's inventory
 abstract class InventoryItem with Comparable<InventoryItem> implements WithUID, WithTitle {
+  // @override
+  String _title = '';
+
   @override
-  String title = '';
+  String get title => _title;
+
+  set title(value) {
+    if (value.length < 3) {
+      throw const FormatException('Il nome deve avere almeno 3 caratteri');
+    }
+    if(DataManager().cachedInventoryItems.where((e) => e.title.match(value)).isNotEmpty){
+      throw const FormatException('Un oggetto con questo nome già esiste. Provane un altro');
+    }
+    _title = value;
+  }
+
   final String? description;
   final int? regDateTimestamp; // null if not added by user
   final String? authorUID;
@@ -46,7 +60,9 @@ abstract class InventoryItem with Comparable<InventoryItem> implements WithUID, 
   DateTime? get dateReg =>
       regDateTimestamp == null ? null : DateTime.fromMillisecondsSinceEpoch(regDateTimestamp!);
 
-  InventoryItem({this.title = '', this.regDateTimestamp, this.authorUID, this.description});
+  InventoryItem({title = '', this.regDateTimestamp, this.authorUID, this.description}) {
+    _title = title;
+  }
 
   @override
   int compareTo(InventoryItem other) {

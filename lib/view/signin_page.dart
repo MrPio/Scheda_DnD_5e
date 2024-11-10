@@ -56,6 +56,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
 
 
           await DataManager().fetchData();
+
           // 👤👤👤 FIREBASE AUTH 👤👤👤
           if (await AccountManager().cacheSignIn()) {
             setState(() {

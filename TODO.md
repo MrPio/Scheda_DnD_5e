@@ -6,12 +6,12 @@
 
 # TODO
 - MaxHP has its own rules.
-  - Set MaxHP right after the character's creation
+  X Set MaxHP right after the character's creation
   - Update MaxHP after the new level
-- Inventory TAB mockup
-  - How should each entry be made? Cards again? Or a more uniform row + line separator?
-
+- Add custom inventory item page
+- edit custom item bottom sheet entry 
 
 # IN PROGRESS
+X Inventory TAB mockup
 
 # DONE
