@@ -14,7 +14,6 @@ part 'part/loot.g.dart';
 
 /// Any item that can be part of a character's inventory
 abstract class InventoryItem with Comparable<InventoryItem> implements WithUID, WithTitle {
-  // @override
   String _title = '';
 
   @override
@@ -24,7 +23,7 @@ abstract class InventoryItem with Comparable<InventoryItem> implements WithUID, 
     if (value.length < 3) {
       throw const FormatException('Il nome deve avere almeno 3 caratteri');
     }
-    if(DataManager().cachedInventoryItems.where((e) => e.title.match(value)).isNotEmpty){
+    if (DataManager().cachedInventoryItems.where((e) => e.title.match(value)).isNotEmpty) {
       throw const FormatException('Un oggetto con questo nome già esiste. Provane un altro');
     }
     _title = value;
@@ -32,7 +31,7 @@ abstract class InventoryItem with Comparable<InventoryItem> implements WithUID, 
 
   final String? description;
   final int? regDateTimestamp; // null if not added by user
-  final String? authorUID;
+  final String? authorUID; // null if not added by user
   static const Map<Type, String> icons = {
     Weapon: 'png/weapon',
     Armor: 'png/armor',
@@ -77,9 +76,19 @@ abstract class InventoryItem with Comparable<InventoryItem> implements WithUID, 
 
 @JsonSerializable(constructor: 'jsonConstructor')
 class Weapon extends InventoryItem {
-  final List<Dice> rollDamage;
-  final int fixedDamage;
-  final String property;
+  List<Dice> _rollDamage;
+
+  List<Dice> get rollDamage => _rollDamage;
+
+  set rollDamage(value) {
+    if (value.isEmpty) {
+      throw const FormatException('Devi selezionare almeno un dado');
+    }
+    _rollDamage = rollDamage;
+  }
+
+  int fixedDamage;
+  String property;
 
   Weapon.jsonConstructor(
       {super.title,
@@ -89,9 +98,9 @@ class Weapon extends InventoryItem {
       List<Dice>? rollDamage,
       this.fixedDamage = 0,
       this.property = ''})
-      : rollDamage = rollDamage ?? [];
+      : _rollDamage = rollDamage ?? [];
 
-  Weapon(title, this.rollDamage, this.fixedDamage, this.property)
+  Weapon(title, this._rollDamage, this.fixedDamage, this.property)
       : uid = title,
         super(title: title);
 

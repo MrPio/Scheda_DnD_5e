@@ -10,6 +10,7 @@ import 'package:scheda_dnd_5e/firebase_options.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
+import 'package:scheda_dnd_5e/view/create_item_page.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
@@ -54,7 +55,6 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           // await DataManager().invalidateCache<Character>();
           // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
-
           await DataManager().fetchData();
 
           // 👤👤👤 FIREBASE AUTH 👤👤👤
@@ -62,7 +62,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
             setState(() {
               isLoading = true;
             });
-            Navigator.of(context).popAndPushNamed('/home');
+            gotoHome();
           }
         });
       });
@@ -224,7 +224,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           } else if (status == SignInStatus.success) {
             context.snackbar('Bentornato ${AccountManager().user.nickname}!',
                 backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
-            Navigator.of(context).popAndPushNamed('/home');
+            gotoHome();
           }
         }
       });
@@ -241,11 +241,11 @@ class _SignInPageState extends State<SignInPage> with Loadable {
         } else if (status == SignInStatus.success) {
           context.snackbar('Bentornato ${AccountManager().user.nickname}!',
               backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
-          Navigator.of(context).popAndPushNamed('/home');
+          gotoHome();
         } else if (status == SignInStatus.successNewAccount) {
           context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
               backgroundColor: Palette.backgroundGreen, bottomMargin: Measures.bottomBarHeight);
-          Navigator.of(context).popAndPushNamed('/home');
+          gotoHome();
         }
       });
 
@@ -281,4 +281,6 @@ class _SignInPageState extends State<SignInPage> with Loadable {
       ),
     );
   }
+
+  gotoHome() => context.goto('/create_item',pop: true, arguments: CreateItemArgs(Weapon));//context.goto('/home',pop: true);
 }

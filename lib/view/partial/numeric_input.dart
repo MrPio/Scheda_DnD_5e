@@ -7,7 +7,7 @@ import '../../constant/palette.dart';
 
 class NumericInputArgs {
   TextEditingController? controller;
-  String? suffix,initialValue;
+  String? suffix, initialValue;
   int max, min, decimalPlaces;
   double? defaultValue;
   double Function(double)? valueRestriction;
@@ -28,7 +28,7 @@ class NumericInputArgs {
       this.suffix,
       this.decimalPlaces = 0,
       this.defaultValue,
-        this.initialValue,
+      this.initialValue,
       this.valueRestriction,
       this.onSubmit,
       this.finalize,
@@ -51,14 +51,19 @@ class NumericInput extends StatefulWidget {
 
   int get value => ((args.valueRestriction ?? (v) => v)(max(
               args.min.toDouble(),
-              min(args.max.toDouble(),
-                  (double.tryParse(args.controller?.text??args.initialValue??'0') ?? args.defaultValue ?? 0)))) *
+              min(
+                  args.max.toDouble(),
+                  (double.tryParse(args.controller?.text ?? args.initialValue ?? '0') ??
+                      args.defaultValue ??
+                      0)))) *
           pow(10, args.decimalPlaces))
       .toInt();
+
 }
 
 class _NumericInputState extends State<NumericInput> {
   late final double Function(double) valueRestriction;
+  bool hasFocus = false;
 
   int get value => (valueRestriction(max(
               widget.args.min.toDouble(),
@@ -103,8 +108,6 @@ class _NumericInputState extends State<NumericInput> {
     });
     super.initState();
   }
-
-  bool hasFocus = false;
 
   @override
   Widget build(BuildContext context) {

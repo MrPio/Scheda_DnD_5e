@@ -43,8 +43,10 @@ class DataManager {
       (cachedItems.cast<InventoryItem>()) +
       (cachedCoins.cast<InventoryItem>()) +
       (cachedEquipments.cast<InventoryItem>());
+  List<InventoryItem> get appInventoryItems =>cachedInventoryItems.where((item) => item.regDateTimestamp==null && item.authorUID==null).toList();
 
-  Map<core.Type, List<WithUID>> get caches => {
+
+      Map<core.Type, List<WithUID>> get caches => {
         User: cachedUsers,
         Campaign: cachedCampaigns,
         Character: cachedCharacters,
