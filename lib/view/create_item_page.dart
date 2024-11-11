@@ -272,7 +272,7 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
             textInputAction: TextInputAction.none,
           ),
 
-          const SizedBox(height: Measures.vMarginBig * 4),
+          const SizedBox(height: Measures.vMarginBig * 3),
         ]),
     ];
     _bottomButtons ??= [

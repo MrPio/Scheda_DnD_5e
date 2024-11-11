@@ -68,6 +68,8 @@ class _GlassTextFieldState extends State<GlassTextField> {
                 ],
                 Expanded(
                   child: TextField(
+                      scrollPadding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig*3),
                       maxLength: maxLength,
                       maxLines: widget.lines,
                       textInputAction: widget.textInputAction,

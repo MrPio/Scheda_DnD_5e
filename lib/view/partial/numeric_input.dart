@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../constant/fonts.dart';
+import '../../constant/measures.dart';
 import '../../constant/palette.dart';
 
 class NumericInputArgs {
@@ -122,6 +123,8 @@ class _NumericInputState extends State<NumericInput> {
           }
         },
         child: TextField(
+            scrollPadding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig*3),
             autofocus: widget.args.autofocus,
             focusNode: widget.args.focusNode,
             onSubmitted: (_) {
