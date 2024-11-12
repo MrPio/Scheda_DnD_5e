@@ -487,9 +487,8 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
                               NumericInput(NumericInputArgs(
                                 min: 0,
                                 max: 20,
-                                remapping: {0: '-'},
+                                zeroEncoding: '—',
                                 defaultValue: 2,
-                                initialValue: '-',
                                 controller: armorSkillModifiersControllers[skill],
                                 isDense: true,
                               ))

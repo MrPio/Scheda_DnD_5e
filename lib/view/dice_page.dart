@@ -53,7 +53,7 @@ class _DicePageState extends State<DicePage> with SingleTickerProviderStateMixin
   final TextEditingController _modifierController = TextEditingController(text: '0');
 
   /// The integer value of the modifier
-  int get modifier => int.parse(_modifierController.text);
+  int get modifier => args?.modifier ?? int.parse(_modifierController.text);
 
   set modifier(int value) => setState(() => _modifierController.text = value.toString());
 

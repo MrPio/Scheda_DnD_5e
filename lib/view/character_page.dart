@@ -85,6 +85,10 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
   final String _speedSuffix = 'm';
   bool _isEditingHp = false, _isEditingMaxHp = false;
   Skill? _selectedSkill;
+  final Map<en.Level, TextEditingController> _slotsControllers = {
+    for (var level in en.Level.values) level: TextEditingController()
+  };
+  final double slotSize = 38;
 
   bool get hasChanges => jsonEncode(_oldCharacter!.toJSON()) != jsonEncode(_character!.toJSON());
 
@@ -105,6 +109,9 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
     _character!.speed =
         double.tryParse(_speedController.text.replaceAll(_speedSuffix, '')) ?? _character!.speed;
     _character!.initiative = int.tryParse(_initiativeController.text) ?? _character!.initiative;
+    _slotsControllers
+        .forEach((key, value) => _character!.totalSlots[key] = int.tryParse(value.text) ?? 0);
+    // TODO here: set available slots
 
     // If the character is any different from `initState`, save it.
     if (hasChanges) {
@@ -139,580 +146,667 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       _character!.inventory.addListener(() => setState(() {}));
     }
     final character = _character!;
-    final hpBottomSheetArgs = BottomSheetArgs(
-      items: [
-        BottomSheetItem('png/hp', 'Modifica HP', () {
-          setState(() {
-            _isEditingHp = true;
-            _isEditingMaxHp = false;
-          });
-        }),
-        BottomSheetItem('png/max_hp', 'Modifica HP Massimi', () {
-          setState(() {
-            _isEditingHp = false;
-            _isEditingMaxHp = true;
-          });
-        }),
-        if (character.hp < character.maxHp)
-          BottomSheetItem('png/rest', 'Riposa', () {
-            setState(() {
-              character.hp = character.maxHp;
-            });
-            context.snackbar('La vita è stata ripristinata', backgroundColor: Palette.primaryBlue);
-          }),
-      ],
-    );
-    var sheetAttributes = [
-      SheetItemCard(
-        iconPath: 'png/shield',
-        text: 'CA',
-        value: character.armorClass.toString(),
-        numericInputArgs: NumericInputArgs(min: 0, max: 99, controller: _armorClassController),
-      ),
-      SheetItemCard(
-          iconPath: 'png/hp',
-          text: _isEditingMaxHp ? 'Max HP' : 'HP',
-          value: (_isEditingMaxHp ? character.maxHp : character.hp).toString(),
-          subValue: _isEditingMaxHp || _isEditingHp ? null : character.maxHp.toString(),
-          numericInputArgs: (_isEditingHp || _isEditingMaxHp)
-              ? NumericInputArgs(
-                  min: _isEditingHp ? -character.maxHp : 1,
-                  max: _isEditingHp ? character.maxHp : 999,
-                  controller: _isEditingHp ? _hpController : _maxHpController,
-                  defaultValue: (_isEditingHp ? character.hp : character.maxHp).toDouble(),
-                  onSubmit: (value) {
-                    if (_isEditingHp) {
-                      character.hp = value.toInt();
-                    } else if (_isEditingMaxHp) {
-                      character.maxHp = value.toInt();
-                    }
-                  },
-                  finalize: () {
-                    setState(() {
-                      _isEditingHp = false;
-                      _isEditingMaxHp = false;
-                    });
-                  },
-                  autofocus: true,
-                )
-              : null,
-          bottomSheetArgs: hpBottomSheetArgs),
-      SheetItemCard(iconPath: 'png/bonus', text: 'BC', value: character.competenceBonus.toSignedString()),
-      // Note: the speed goes back to the default value on purpose
-      SheetItemCard(
-          iconPath: 'png/speed',
-          text: 'Speed',
-          numericInputArgs: NumericInputArgs(
-            min: 0,
-            max: 99,
-            controller: _speedController,
-            decimalPlaces: 1,
-            defaultValue: character.defaultSpeed,
-            suffix: _speedSuffix,
-            valueRestriction: (value) =>
-                value % 1.5 < 1.5 - value % 1.5 ? value - value % 1.5 : value + value % 1.5,
-          ),
-          value: '${character.speed.toStringAsFixed(1)}m'),
-      SheetItemCard(
-        iconPath: 'png/status',
-        text: 'Allineamento',
-        value: character.alignment.initials ?? '-',
-        bottomSheetArgs: BottomSheetArgs(
-          header: GridRow(
-              columnsCount: 3,
-              children: ch.Alignment.values
-                  .map((e) => AlignmentCard(
-                        e,
-                        onTap: (alignment) {
-                          setState(() {
-                            character.alignment = alignment;
-                          });
 
-                          Navigator.of(context).pop();
-                        },
-                        isSmall: e == ch.Alignment.nessuno,
-                      ))
-                  .toList()),
+    BottomSheetArgs? hpBottomSheetArgs;
+    List<Widget> sheetAttributes = [];
+    List<Widget> sheetSkills = [];
+    if (_tabController!.index <= 1) {
+      final hpBottomSheetArgs = BottomSheetArgs(
+        items: [
+          BottomSheetItem('png/hp', 'Modifica HP', () {
+            setState(() {
+              _isEditingHp = true;
+              _isEditingMaxHp = false;
+            });
+          }),
+          BottomSheetItem('png/max_hp', 'Modifica HP Massimi', () {
+            setState(() {
+              _isEditingHp = false;
+              _isEditingMaxHp = true;
+            });
+          }),
+          if (character.hp < character.maxHp)
+            BottomSheetItem('png/rest', 'Riposa', () {
+              setState(() {
+                character.hp = character.maxHp;
+              });
+              context.snackbar('La vita è stata ripristinata', backgroundColor: Palette.primaryBlue);
+            }),
+        ],
+      );
+      sheetAttributes = [
+        SheetItemCard(
+          iconPath: 'png/shield',
+          text: 'CA',
+          value: character.armorClass.toString(),
+          numericInputArgs: NumericInputArgs(min: 0, max: 99, controller: _armorClassController),
         ),
-      ),
-      SheetItemCard(
-          iconPath: 'png/initiative',
-          text: 'Iniziativa',
-          numericInputArgs: NumericInputArgs(
-            min: -20,
-            max: 20,
-            controller: _initiativeController,
-            defaultValue: character.skillModifier(Skill.destrezza).toDouble(),
-          ),
-          value: character.initiative.toSignedString()),
-    ];
-    var sheetSkills = [
-      Skill.forza,
-      Skill.costituzione,
-      Skill.destrezza,
-      Skill.intelligenza,
-      Skill.saggezza,
-      Skill.carisma
-    ]
-        .map((skill) => SheetItemCard(
-              iconPath: skill.iconPath,
-              text: skill.title,
-              iconColor: skill.color,
-              value: _selectedSkill == skill
-                  ? character.skillValue(skill).toString()
-                  : character.skillModifier(skill).toSignedString(),
-              subValue: _selectedSkill == skill ? null : character.skillValue(skill).toString(),
-              numericInputArgs: _selectedSkill == skill
-                  ? NumericInputArgs(
-                      min: 3,
-                      max: 20,
-                      controller: _skillsControllers[Skill.values.indexOf(skill)],
-                      defaultValue: (character.skillValue(skill)).toDouble(),
-                      onSubmit: (value) {
-                        character.customSkills[skill] = value.toInt();
-                      },
-                      finalize: () {
-                        setState(() {
-                          _selectedSkill = null;
-                        });
-                      },
-                      autofocus: true)
-                  : null,
-              onTap: _isSkillsExpanded
-                  ? null
-                  : () {
+        SheetItemCard(
+            iconPath: 'png/hp',
+            text: _isEditingMaxHp ? 'Max HP' : 'HP',
+            value: (_isEditingMaxHp ? character.maxHp : character.hp).toString(),
+            subValue: _isEditingMaxHp || _isEditingHp ? null : character.maxHp.toString(),
+            numericInputArgs: (_isEditingHp || _isEditingMaxHp)
+                ? NumericInputArgs(
+                    min: _isEditingHp ? -character.maxHp : 1,
+                    max: _isEditingHp ? character.maxHp : 999,
+                    controller: _isEditingHp ? _hpController : _maxHpController,
+                    defaultValue: (_isEditingHp ? character.hp : character.maxHp).toDouble(),
+                    onSubmit: (value) {
+                      if (_isEditingHp) {
+                        character.hp = value.toInt();
+                      } else if (_isEditingMaxHp) {
+                        character.maxHp = value.toInt();
+                      }
+                    },
+                    finalize: () {
                       setState(() {
-                        _selectedSkill = skill;
+                        _isEditingHp = false;
+                        _isEditingMaxHp = false;
                       });
                     },
-              child: _isSkillsExpanded
-                  ? Column(
-                      children: [
-                            Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: Measures.hMarginMed, vertical: Measures.vMarginMoreThin),
-                                child: Row(children: [
-                                  // SavingThrow title
-                                  Flexible(
-                                    fit: FlexFit.tight,
-                                    child: Text(
-                                      'Tiro salvezza',
-                                      style: Fonts.regular(size: 13),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  // SavingThrow value
-                                  Text(character.savingThrowValue(skill).toSignedString(),
-                                      style: Fonts.black(size: 14)),
-                                  const SizedBox(width: Measures.hMarginSmall),
-                                  // Saving Throw
-                                  Container(
-                                      width: 12,
-                                      height: 12,
-                                      decoration: BoxDecoration(
-                                          color: character.class_.savingThrows.contains(skill)
-                                              ? Palette.onBackground
-                                              : Colors.transparent,
-                                          border: Border.all(color: Palette.onBackground, width: 0.65),
-                                          borderRadius: BorderRadius.circular(999))),
-                                ])),
-                            if (skill.subSkills.isNotEmpty)
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: Measures.vMarginMoreThin),
-                                child: Rule(),
-                              ),
-                          ].cast<Widget>() +
-                          skill.subSkills
-                              .map((subSkill) => Material(
-                                    color: Colors.transparent,
-                                    child: InkWell(
-                                      onTap: () {
-                                        setState(() {
-                                          character.subSkills[subSkill] =
-                                              ((character.subSkills[subSkill] ?? 0) + 1) % 3;
-                                        });
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: Measures.hMarginMed,
-                                            vertical: Measures.vMarginMoreThin),
-                                        child: Row(
-                                          children: [
-                                            // SubSkill title
-                                            Flexible(
-                                              fit: FlexFit.tight,
-                                              child: Text(
-                                                subSkill.title,
-                                                style: Fonts.regular(size: 13),
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            // SubSkill value
-                                            Text(character.subSkillValue(subSkill).toSignedString(),
-                                                style: Fonts.black(size: 14)),
-                                            const SizedBox(width: Measures.hMarginSmall),
-                                            // Competenza
-                                            Container(
-                                                width: 12,
-                                                height: 12,
-                                                decoration: BoxDecoration(
-                                                    color: (character.subSkills[subSkill] ?? 0) >= 1
-                                                        ? Palette.onBackground
-                                                        : Colors.transparent,
-                                                    border: Border.all(
-                                                        color: Palette.onBackground, width: 0.65),
-                                                    borderRadius: BorderRadius.circular(999))),
-                                            const SizedBox(width: Measures.hMarginThin),
-                                            // Maestria
-                                            Container(
-                                                width: 12,
-                                                height: 12,
-                                                decoration: BoxDecoration(
-                                                    color: (character.subSkills[subSkill] ?? 0) >= 2
-                                                        ? Palette.onBackground
-                                                        : Colors.transparent,
-                                                    border: Border.all(
-                                                        color: Palette.onBackground, width: 0.65),
-                                                    borderRadius: BorderRadius.circular(1.75)))
-                                          ],
-                                        ),
+                    autofocus: true,
+                  )
+                : null,
+            bottomSheetArgs: hpBottomSheetArgs),
+        SheetItemCard(
+            iconPath: 'png/bonus', text: 'BC', value: character.competenceBonus.toSignedString()),
+        // Note: the speed goes back to the default value on purpose
+        SheetItemCard(
+            iconPath: 'png/speed',
+            text: 'Speed',
+            numericInputArgs: NumericInputArgs(
+              min: 0,
+              max: 99,
+              controller: _speedController,
+              decimalPlaces: 1,
+              defaultValue: character.defaultSpeed,
+              suffix: _speedSuffix,
+              valueRestriction: (value) =>
+                  value % 1.5 < 1.5 - value % 1.5 ? value - value % 1.5 : value + value % 1.5,
+            ),
+            value: '${character.speed.toStringAsFixed(1)}m'),
+        SheetItemCard(
+          iconPath: 'png/status',
+          text: 'Allineamento',
+          value: character.alignment.initials ?? '-',
+          bottomSheetArgs: BottomSheetArgs(
+            header: GridRow(
+                columnsCount: 3,
+                children: ch.Alignment.values
+                    .map((e) => AlignmentCard(
+                          e,
+                          onTap: (alignment) {
+                            setState(() {
+                              character.alignment = alignment;
+                            });
+
+                            Navigator.of(context).pop();
+                          },
+                          isSmall: e == ch.Alignment.nessuno,
+                        ))
+                    .toList()),
+          ),
+        ),
+        SheetItemCard(
+            iconPath: 'png/initiative',
+            text: 'Iniziativa',
+            numericInputArgs: NumericInputArgs(
+              min: -20,
+              max: 20,
+              controller: _initiativeController,
+              defaultValue: character.skillModifier(Skill.destrezza).toDouble(),
+            ),
+            value: character.initiative.toSignedString()),
+      ];
+      sheetSkills = [
+        Skill.forza,
+        Skill.costituzione,
+        Skill.destrezza,
+        Skill.intelligenza,
+        Skill.saggezza,
+        Skill.carisma
+      ]
+          .map((skill) => SheetItemCard(
+                iconPath: skill.iconPath,
+                text: skill.title,
+                iconColor: skill.color,
+                value: _selectedSkill == skill
+                    ? character.skillValue(skill).toString()
+                    : character.skillModifier(skill).toSignedString(),
+                subValue: _selectedSkill == skill ? null : character.skillValue(skill).toString(),
+                numericInputArgs: _selectedSkill == skill
+                    ? NumericInputArgs(
+                        min: 3,
+                        max: 20,
+                        controller: _skillsControllers[Skill.values.indexOf(skill)],
+                        defaultValue: (character.skillValue(skill)).toDouble(),
+                        onSubmit: (value) {
+                          character.customSkills[skill] = value.toInt();
+                        },
+                        finalize: () {
+                          setState(() {
+                            _selectedSkill = null;
+                          });
+                        },
+                        autofocus: true)
+                    : null,
+                onTap: _isSkillsExpanded
+                    ? null
+                    : () {
+                        setState(() {
+                          _selectedSkill = skill;
+                        });
+                      },
+                child: _isSkillsExpanded
+                    ? Column(
+                        children: [
+                              Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: Measures.hMarginMed,
+                                      vertical: Measures.vMarginMoreThin),
+                                  child: Row(children: [
+                                    // SavingThrow title
+                                    Flexible(
+                                      fit: FlexFit.tight,
+                                      child: Text(
+                                        'Tiro salvezza',
+                                        style: Fonts.regular(size: 13),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                  ))
-                              .toList()
-                              .cast<Widget>(),
-                    )
-                  : null,
-            ))
-        .toList();
+                                    // SavingThrow value
+                                    Text(character.savingThrowValue(skill).toSignedString(),
+                                        style: Fonts.black(size: 14)),
+                                    const SizedBox(width: Measures.hMarginSmall),
+                                    // Saving Throw
+                                    Container(
+                                        width: 12,
+                                        height: 12,
+                                        decoration: BoxDecoration(
+                                            color: character.class_.savingThrows.contains(skill)
+                                                ? Palette.onBackground
+                                                : Colors.transparent,
+                                            border: Border.all(color: Palette.onBackground, width: 0.65),
+                                            borderRadius: BorderRadius.circular(999))),
+                                  ])),
+                              if (skill.subSkills.isNotEmpty)
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(vertical: Measures.vMarginMoreThin),
+                                  child: Rule(),
+                                ),
+                            ].cast<Widget>() +
+                            skill.subSkills
+                                .map((subSkill) => Material(
+                                      color: Colors.transparent,
+                                      child: InkWell(
+                                        onTap: () {
+                                          setState(() {
+                                            character.subSkills[subSkill] =
+                                                ((character.subSkills[subSkill] ?? 0) + 1) % 3;
+                                          });
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: Measures.hMarginMed,
+                                              vertical: Measures.vMarginMoreThin),
+                                          child: Row(
+                                            children: [
+                                              // SubSkill title
+                                              Flexible(
+                                                fit: FlexFit.tight,
+                                                child: Text(
+                                                  subSkill.title,
+                                                  style: Fonts.regular(size: 13),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                              // SubSkill value
+                                              Text(character.subSkillValue(subSkill).toSignedString(),
+                                                  style: Fonts.black(size: 14)),
+                                              const SizedBox(width: Measures.hMarginSmall),
+                                              // Competenza
+                                              Container(
+                                                  width: 12,
+                                                  height: 12,
+                                                  decoration: BoxDecoration(
+                                                      color: (character.subSkills[subSkill] ?? 0) >= 1
+                                                          ? Palette.onBackground
+                                                          : Colors.transparent,
+                                                      border: Border.all(
+                                                          color: Palette.onBackground, width: 0.65),
+                                                      borderRadius: BorderRadius.circular(999))),
+                                              const SizedBox(width: Measures.hMarginThin),
+                                              // Maestria
+                                              Container(
+                                                  width: 12,
+                                                  height: 12,
+                                                  decoration: BoxDecoration(
+                                                      color: (character.subSkills[subSkill] ?? 0) >= 2
+                                                          ? Palette.onBackground
+                                                          : Colors.transparent,
+                                                      border: Border.all(
+                                                          color: Palette.onBackground, width: 0.65),
+                                                      borderRadius: BorderRadius.circular(1.75)))
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ))
+                                .toList()
+                                .cast<Widget>(),
+                      )
+                    : null,
+              ))
+          .toList();
+    }
+
     _screens = [
       // Sheet
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: Measures.vMarginMed),
-          // TODO here: class and multiclass +
-          // TODO: info race,
-          // HP bar
-          HpBar(character.hp, character.maxHp, bottomSheetArgs: hpBottomSheetArgs),
-          const SizedBox(height: Measures.vMarginSmall),
-          // Attributes
-          Text('Attributi', style: Fonts.black(size: 18)),
-          const SizedBox(height: Measures.vMarginThin),
-          GridRow(
-            columnsCount: 3,
-            children: sheetAttributes,
-          ),
-          const SizedBox(height: Measures.vMarginThin),
-          // Skills and subSkills
-          Clickable(
-            onTap: () => setState(() => _isSkillsExpanded = !_isSkillsExpanded),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: Measures.vMarginThin),
-              child: Row(children: [
-                Text('Caratteristiche', style: Fonts.black(size: 18)),
-                const SizedBox(width: Measures.hMarginMed),
-                'chevron_left'.toIcon(height: 16, rotation: _isSkillsExpanded ? pi / 2 : -pi / 2)
-              ]),
-            ),
-          ),
-          _isSkillsExpanded
-              ? GridColumn(
-                  columnsCount: 2,
-                  children: sheetSkills,
-                )
-              : GridRow(
-                  columnsCount: 3,
-                  children: sheetSkills,
-                ),
-          const SizedBox(height: Measures.vMarginSmall),
-          // Masteries
-          Text('Competenze', style: Fonts.black(size: 18)),
-          const SizedBox(height: Measures.vMarginThin),
-          GridRow(
-              fill: true,
-              columnsCount: 3,
-              children: character.masteries
-                      .map((e) => SheetItemCard(
-                            text: e.title,
-                            iconPath: e.masteryType.iconPath,
-                            onTap: () {
-                              context.popup('Stai per rimuovere una competenza',
-                                  message: 'Sei sicuro di voler rimuovere **${e.title}**?',
-                                  positiveCallback: () {
-                                setState(() {
-                                  character.masteries.remove(e);
-                                });
-                              },
-                                  negativeCallback: () {},
-                                  positiveText: 'Si',
-                                  negativeText: 'No',
-                                  backgroundColor: Palette.background.withOpacity(0.5));
-                            },
-                          ))
-                      .toList()
-                      .cast<Widget>() +
-                  [
-                    GlassCard(
-                        height: Measures.sheetCardSmallHeight,
-                        isLight: true,
-                        clickable: true,
-                        onTap: () {
-                          context.draggableBottomSheet(
-                            body: Column(
-                              children: [
-                                const SizedBox(height: Measures.vMarginThin),
-                                Text('Aggiungi una competenza', style: Fonts.bold(size: 18)),
-                                const SizedBox(height: Measures.vMarginThin),
-                                Column(
-                                    children: MasteryType.values
-                                        .map((masteryType) => Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                const Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: Measures.vMarginSmall),
-                                                  child: Rule(),
-                                                ),
-                                                Text(masteryType.title, style: Fonts.regular()),
-                                                const SizedBox(height: Measures.vMarginSmall),
-                                                GridRow(
-                                                    columnsCount: 3,
-                                                    fill: true,
-                                                    children: masteryType.masteries
-                                                        .where((e) => !character.masteries.contains(e))
-                                                        .map((mastery) => SheetItemCard(
-                                                              text: mastery.title,
-                                                              iconPath: masteryType.iconPath,
-                                                              onTap: () {
-                                                                setState(() {
-                                                                  character.masteries.add(mastery);
-                                                                });
-                                                                Navigator.of(context).pop();
-                                                              },
-                                                            ))
-                                                        .toList()),
-                                              ],
-                                            ))
-                                        .toList()),
-                                const SizedBox(height: Measures.vMarginMed),
-                              ],
-                            ),
-                          );
-                        },
-                        child: Center(child: 'add'.toIcon(height: 16)))
-                  ]),
-          const SizedBox(height: Measures.vMarginSmall),
-          // Languages
-          Text('Linguaggi', style: Fonts.black(size: 18)),
-          const SizedBox(height: Measures.vMarginThin),
-          GridRow(
-              fill: true,
-              columnsCount: 3,
-              children: character.languages
-                      .map((e) => SheetItemCard(
-                            text: e.title,
-                            iconPath: 'png/language',
-                            onTap: () {
-                              context.popup('Stai per rimuovere un linguaggio',
-                                  message: 'Sei sicuro di voler rimuovere **${e.title}**?',
-                                  positiveCallback: () {
-                                setState(() {
-                                  character.languages.remove(e);
-                                });
-                              },
-                                  negativeCallback: () {},
-                                  positiveText: 'Si',
-                                  negativeText: 'No',
-                                  backgroundColor: Palette.background.withOpacity(0.5));
-                            },
-                          ))
-                      .toList()
-                      .cast<Widget>() +
-                  [
-                    GlassCard(
-                        height: Measures.sheetCardSmallHeight,
-                        isLight: true,
-                        clickable: true,
-                        bottomSheetArgs: BottomSheetArgs(
-                            header: Column(
-                          children: [
-                            const SizedBox(height: Measures.vMarginThin),
-                            Text('Aggiungi un linguaggio', style: Fonts.bold(size: 18)),
-                            const SizedBox(height: Measures.vMarginMed),
-                            GridRow(
-                                columnsCount: 3,
-                                fill: true,
-                                children: Language.values
-                                    .where((e) => !character.languages.contains(e))
-                                    .map((e) => SheetItemCard(
-                                          text: e.title,
-                                          iconPath: 'png/language',
-                                          onTap: () {
-                                            setState(() {
-                                              character.languages.add(e);
-                                            });
-                                            Navigator.of(context).pop();
-                                          },
-                                        ))
-                                    .toList()),
-                            const SizedBox(height: Measures.vMarginMed),
-                          ],
-                        )),
-                        child: Center(child: 'add'.toIcon(height: 16)))
-                  ]),
-          // const SizedBox(height: Measures.vMarginSmall),
-          // const GlassButton('Salva',color: Palette.primaryBlue,iconPath: 'png/save',),
-          const SizedBox(height: Measures.vMarginBig),
-        ],
-      ),
-      // Inventory
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Inventory sections
-          const SizedBox(height: Measures.vMarginMoreThin),
-          ...InventoryItem.types.slice(0, -1).map((type) {
-            final isEmpty = character.inventory.value != null &&
-                character.inventory.value!.entries.where((e) => e.key.runtimeType == type).isEmpty;
-            return Column(
+      _tabController!.index != 0
+          ? Column(
               children: [
-                // Header
-                Clickable(
-                  active: !isEmpty,
-                  onTap: () => setState(
-                      () => _setIsInventoryItemExpanded(type, !_getIsInventoryItemExpanded(type))),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
-                    child: Row(children: [
-                      Text(InventoryItem.names[type]!, style: Fonts.black(size: 18)),
-                      const SizedBox(width: Measures.hMarginMed),
-                      if (!isEmpty)
-                        'chevron_left'.toIcon(
-                            height: 16, rotation: _getIsInventoryItemExpanded(type) ? pi / 2 : -pi / 2)
-                    ]),
-                  ),
+                const SizedBox(height: Measures.vMarginMed),
+                GlassCard(isShimmer: true, shimmerHeight: 40),
+                const SizedBox(height: Measures.vMarginMed),
+                GridRow(
+                  columnsCount: 3,
+                  mainAxisSpacing: 0,
+                  children: List.filled(6, GlassCard(isShimmer: true, shimmerHeight: 70)),
                 ),
-                // List of inventory items
-                if (character.inventory.value == null)
-                  ...List.filled(2, const GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 50)),
-                if (character.inventory.value != null) ...[
-                  if (!isEmpty && _getIsInventoryItemExpanded(type))
-                    ...inventoryItems(type)!
-                        .map((e) => inventoryItemCard(e, _character!.inventory.value![e]!)),
-                  if (!isEmpty && !_getIsInventoryItemExpanded(type))
-                    const Padding(
-                      padding: EdgeInsets.only(top: Measures.vMarginThin),
-                      child: Rule(),
-                    ),
-                  if (isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
-                      child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
-                    )
-                ],
-                const SizedBox(height: Measures.vMarginSmall),
+                const SizedBox(height: Measures.vMarginMed),
+                GridRow(
+                  columnsCount: 3,
+                  mainAxisSpacing: 0,
+                  children: List.filled(6, GlassCard(isShimmer: true, shimmerHeight: 70)),
+                ),
+                const SizedBox(height: Measures.vMarginMed),
+                GridRow(
+                  columnsCount: 3,
+                  mainAxisSpacing: 0,
+                  children: List.filled(9, GlassCard(isShimmer: true, shimmerHeight: 70)),
+                ),
               ],
-            );
-          }),
-          const SizedBox(height: Measures.vMarginBig),
-        ],
-      ),
-      // Enchantments
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Inventory sections
-          const SizedBox(height: Measures.vMarginThin),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-            child: Text('Slot disponibili', style: Fonts.black(size: 18)),
-          ),
-          const SizedBox(height: Measures.vMarginThin),
-          SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-            scrollDirection: Axis.horizontal,
-            child: Column(
+            )
+          : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 60,
-                      child: Text('Livello', style: Fonts.light(size: 16)),
-                    ),
-                    // ...List.generate(en.Level, generator)
-                    ...List.filled(9, Padding(
-                      padding: const EdgeInsets.only(right: Measures.vMarginThinnest),
-                      child: Container(width: 33,height: 33,color: Colors.yellow),
-                    ))
-                  ],
+                const SizedBox(height: Measures.vMarginMed),
+                // TODO here: class and multiclass +
+                // TODO: info race,
+                // HP bar
+                HpBar(character.hp, character.maxHp, bottomSheetArgs: hpBottomSheetArgs),
+                const SizedBox(height: Measures.vMarginSmall),
+                // Attributes
+                Text('Attributi', style: Fonts.black(size: 18)),
+                const SizedBox(height: Measures.vMarginThin),
+                GridRow(
+                  columnsCount: 3,
+                  children: sheetAttributes,
                 ),
-                const SizedBox(height: Measures.vMarginThinnest),
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 60,
-                      child: Text('Slot', style: Fonts.regular(size: 16)),
-                    ),
-                    ...List.filled(9, Padding(
-                      padding: const EdgeInsets.only(right: Measures.hMarginThin),
-                      child: Container(width: 33,height: 33,color: Colors.red),
-                    ))
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: Measures.vMarginSmall),
-          ...en.Level.values.map((level) {
-            final isEmpty = character.enchantments.value?.where((e) => e.level == level).isEmpty != false;
-            return Column(
-              children: [
-                // Header
+                const SizedBox(height: Measures.vMarginThin),
+                // Skills and subSkills
                 Clickable(
-                  active: !isEmpty,
-                  onTap: () => setState(() =>
-                      _setIsEnchantmentLevelExpanded(level, !_getIsEnchantmentLevelExpanded(level))),
+                  onTap: () => setState(() => _isSkillsExpanded = !_isSkillsExpanded),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding,vertical: Measures.vMarginThin),
+                    padding: const EdgeInsets.symmetric(vertical: Measures.vMarginThin),
                     child: Row(children: [
-                      Text(level.title, style: Fonts.black(size: 18)),
+                      Text('Caratteristiche', style: Fonts.black(size: 18)),
                       const SizedBox(width: Measures.hMarginMed),
-                      if (!isEmpty)
-                        'chevron_left'.toIcon(
-                            height: 16,
-                            rotation: _getIsEnchantmentLevelExpanded(level) ? pi / 2 : -pi / 2)
+                      'chevron_left'.toIcon(height: 16, rotation: _isSkillsExpanded ? pi / 2 : -pi / 2)
                     ]),
                   ),
                 ),
-                // List of enchantments
-                if (character.inventory.value == null)
-                  ...List.filled(2, const GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 50)),
-                if (character.inventory.value != null) ...[
-                  if (!isEmpty && _getIsEnchantmentLevelExpanded(level))
-                    ...enchantments(level)!.map((e) => EnchantmentCard(e)),
-                  if (!isEmpty && !_getIsEnchantmentLevelExpanded(level))
-                    const Padding(
-                      padding: EdgeInsets.only(top: Measures.vMarginThin),
-                      child: Rule(),
-                    ),
-                  if (isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
-                      child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
-                    )
-                ],
+                _isSkillsExpanded
+                    ? GridColumn(
+                        columnsCount: 2,
+                        children: sheetSkills,
+                      )
+                    : GridRow(
+                        columnsCount: 3,
+                        children: sheetSkills,
+                      ),
                 const SizedBox(height: Measures.vMarginSmall),
+                // Masteries
+                Text('Competenze', style: Fonts.black(size: 18)),
+                const SizedBox(height: Measures.vMarginThin),
+                GridRow(
+                    fill: true,
+                    columnsCount: 3,
+                    children: character.masteries
+                            .map((e) => SheetItemCard(
+                                  text: e.title,
+                                  iconPath: e.masteryType.iconPath,
+                                  onTap: () {
+                                    context.popup('Stai per rimuovere una competenza',
+                                        message: 'Sei sicuro di voler rimuovere **${e.title}**?',
+                                        positiveCallback: () {
+                                      setState(() {
+                                        character.masteries.remove(e);
+                                      });
+                                    },
+                                        negativeCallback: () {},
+                                        positiveText: 'Si',
+                                        negativeText: 'No',
+                                        backgroundColor: Palette.background.withOpacity(0.5));
+                                  },
+                                ))
+                            .toList()
+                            .cast<Widget>() +
+                        [
+                          GlassCard(
+                              height: Measures.sheetCardSmallHeight,
+                              isLight: true,
+                              clickable: true,
+                              onTap: () {
+                                context.draggableBottomSheet(
+                                  body: Column(
+                                    children: [
+                                      const SizedBox(height: Measures.vMarginThin),
+                                      Text('Aggiungi una competenza', style: Fonts.bold(size: 18)),
+                                      const SizedBox(height: Measures.vMarginThin),
+                                      Column(
+                                          children: MasteryType.values
+                                              .map((masteryType) => Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      const Padding(
+                                                        padding: EdgeInsets.symmetric(
+                                                            vertical: Measures.vMarginSmall),
+                                                        child: Rule(),
+                                                      ),
+                                                      Text(masteryType.title, style: Fonts.regular()),
+                                                      const SizedBox(height: Measures.vMarginSmall),
+                                                      GridRow(
+                                                          columnsCount: 3,
+                                                          fill: true,
+                                                          children: masteryType.masteries
+                                                              .where(
+                                                                  (e) => !character.masteries.contains(e))
+                                                              .map((mastery) => SheetItemCard(
+                                                                    text: mastery.title,
+                                                                    iconPath: masteryType.iconPath,
+                                                                    onTap: () {
+                                                                      setState(() {
+                                                                        character.masteries.add(mastery);
+                                                                      });
+                                                                      Navigator.of(context).pop();
+                                                                    },
+                                                                  ))
+                                                              .toList()),
+                                                    ],
+                                                  ))
+                                              .toList()),
+                                      const SizedBox(height: Measures.vMarginMed),
+                                    ],
+                                  ),
+                                );
+                              },
+                              child: Center(child: 'add'.toIcon(height: 16)))
+                        ]),
+                const SizedBox(height: Measures.vMarginSmall),
+                // Languages
+                Text('Linguaggi', style: Fonts.black(size: 18)),
+                const SizedBox(height: Measures.vMarginThin),
+                GridRow(
+                    fill: true,
+                    columnsCount: 3,
+                    children: character.languages
+                            .map((e) => SheetItemCard(
+                                  text: e.title,
+                                  iconPath: 'png/language',
+                                  onTap: () {
+                                    context.popup('Stai per rimuovere un linguaggio',
+                                        message: 'Sei sicuro di voler rimuovere **${e.title}**?',
+                                        positiveCallback: () {
+                                      setState(() {
+                                        character.languages.remove(e);
+                                      });
+                                    },
+                                        negativeCallback: () {},
+                                        positiveText: 'Si',
+                                        negativeText: 'No',
+                                        backgroundColor: Palette.background.withOpacity(0.5));
+                                  },
+                                ))
+                            .toList()
+                            .cast<Widget>() +
+                        [
+                          GlassCard(
+                              height: Measures.sheetCardSmallHeight,
+                              isLight: true,
+                              clickable: true,
+                              bottomSheetArgs: BottomSheetArgs(
+                                  header: Column(
+                                children: [
+                                  const SizedBox(height: Measures.vMarginThin),
+                                  Text('Aggiungi un linguaggio', style: Fonts.bold(size: 18)),
+                                  const SizedBox(height: Measures.vMarginMed),
+                                  GridRow(
+                                      columnsCount: 3,
+                                      fill: true,
+                                      children: Language.values
+                                          .where((e) => !character.languages.contains(e))
+                                          .map((e) => SheetItemCard(
+                                                text: e.title,
+                                                iconPath: 'png/language',
+                                                onTap: () {
+                                                  setState(() {
+                                                    character.languages.add(e);
+                                                  });
+                                                  Navigator.of(context).pop();
+                                                },
+                                              ))
+                                          .toList()),
+                                  const SizedBox(height: Measures.vMarginMed),
+                                ],
+                              )),
+                              child: Center(child: 'add'.toIcon(height: 16)))
+                        ]),
+                // const SizedBox(height: Measures.vMarginSmall),
+                // const GlassButton('Salva',color: Palette.primaryBlue,iconPath: 'png/save',),
+                const SizedBox(height: Measures.vMarginBig),
               ],
-            );
-          }),
-          const SizedBox(height: Measures.vMarginBig),
-        ],
-      ),
+            ),
+      // Inventory
+      _tabController!.index != 1
+          ? Column(children: [
+              const SizedBox(height: Measures.vMarginMed),
+              ...List.filled(10, GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 74))
+            ])
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Inventory sections
+                const SizedBox(height: Measures.vMarginMoreThin),
+                ...InventoryItem.types.slice(0, -1).map((type) {
+                  final isEmpty = character.inventory.value != null &&
+                      character.inventory.value!.entries.where((e) => e.key.runtimeType == type).isEmpty;
+                  return Column(
+                    children: [
+                      // Header
+                      Clickable(
+                        active: !isEmpty,
+                        onTap: () => setState(
+                            () => _setIsInventoryItemExpanded(type, !_getIsInventoryItemExpanded(type))),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
+                          child: Row(children: [
+                            Text(InventoryItem.names[type]!, style: Fonts.black(size: 18)),
+                            const SizedBox(width: Measures.hMarginMed),
+                            if (!isEmpty)
+                              'chevron_left'.toIcon(
+                                  height: 16,
+                                  rotation: _getIsInventoryItemExpanded(type) ? pi / 2 : -pi / 2)
+                          ]),
+                        ),
+                      ),
+                      // List of inventory items
+                      if (character.inventory.value == null)
+                        ...List.filled(
+                            2, const GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 50)),
+                      if (character.inventory.value != null) ...[
+                        if (!isEmpty && _getIsInventoryItemExpanded(type))
+                          ...inventoryItems(type)!
+                              .map((e) => inventoryItemCard(e, _character!.inventory.value![e]!)),
+                        if (!isEmpty && !_getIsInventoryItemExpanded(type))
+                          const Padding(
+                            padding: EdgeInsets.only(top: Measures.vMarginThin),
+                            child: Rule(),
+                          ),
+                        if (isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
+                            child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
+                          )
+                      ],
+                      const SizedBox(height: Measures.vMarginSmall),
+                    ],
+                  );
+                }),
+                const SizedBox(height: Measures.vMarginBig),
+              ],
+            ),
+      // Enchantments
+      _tabController!.index != 2
+          ? Column(children: [
+        const SizedBox(height: Measures.vMarginMed),
+        GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 100),
+        const SizedBox(height: Measures.vMarginMed),
+        ...List.filled(10, Padding(
+          padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+          child: GlassCard(isShimmer: true, shimmerHeight: 70),
+        ))
+      ])
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: Measures.vMarginThin),
+                // Title
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                  child: Text('Slot disponibili', style: Fonts.black(size: 18)),
+                ),
+                const SizedBox(height: Measures.vMarginThin),
+                // Level/Slot graphics
+                SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                  scrollDirection: Axis.horizontal,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 60,
+                            child: Text('Livello', style: Fonts.light(size: 16)),
+                          ),
+                          ...en.Level.values.map(
+                            (level) => Padding(
+                              padding: const EdgeInsets.all(1),
+                              child: Container(
+                                width: slotSize,
+                                height: slotSize,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Palette.onBackground, width: 0.35),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(level.num.toString(), style: Fonts.light(size: 18))),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: Measures.vMarginThinnest),
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 60,
+                            child: Text('Slot', style: Fonts.regular(size: 16)),
+                          ),
+                          ...en.Level.values.map(
+                            (level) => Padding(
+                              padding: const EdgeInsets.all(1),
+                              child: Container(
+                                width: slotSize,
+                                height: slotSize,
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: Palette.onBackground, width: 0.85),
+                                    borderRadius: BorderRadius.circular(5)),
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: NumericInput(
+                                      NumericInputArgs(
+                                          min: 0,
+                                          max: 9,
+                                          controller: _slotsControllers[level],
+                                          isDense: true,
+                                          initialValue: character.totalSlots[level]?.toString() ?? '—',
+                                          zeroEncoding: '—',
+                                          style: Fonts.regular(size: 18)),
+                                    )),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: Measures.vMarginSmall),
+                // Enchantment grouped by level
+                ...en.Level.values.map((level) {
+                  final isEmpty =
+                      character.enchantments.value?.where((e) => e.level == level).isEmpty != false;
+                  return Column(
+                    children: [
+                      // Header
+                      Clickable(
+                        active: !isEmpty,
+                        onTap: () => setState(() => _setIsEnchantmentLevelExpanded(
+                            level, !_getIsEnchantmentLevelExpanded(level))),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
+                          child: Row(children: [
+                            Text(level.title, style: Fonts.black(size: 18)),
+                            const SizedBox(width: Measures.hMarginMed),
+                            if (!isEmpty)
+                              'chevron_left'.toIcon(
+                                  height: 16,
+                                  rotation: _getIsEnchantmentLevelExpanded(level) ? pi / 2 : -pi / 2)
+                          ]),
+                        ),
+                      ),
+                      // List of enchantments
+                      if (character.enchantments.value == null)
+                        ...List.filled(
+                            2, const GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 50)),
+                      if (character.enchantments.value != null) ...[
+                        if (!isEmpty && _getIsEnchantmentLevelExpanded(level))
+                          ...enchantments(level)!.map((e) => EnchantmentCard(e)),
+                        if (!isEmpty && !_getIsEnchantmentLevelExpanded(level))
+                          const Padding(
+                            padding: EdgeInsets.only(top: Measures.vMarginThin),
+                            child: Rule(),
+                          ),
+                        if (isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
+                            child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
+                          )
+                      ],
+                      const SizedBox(height: Measures.vMarginSmall),
+                    ],
+                  );
+                }),
+                const SizedBox(height: Measures.vMarginBig),
+              ],
+            ),
       // Background
       const Placeholder(),
       // Ability
@@ -724,6 +818,9 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
         if (_tabController?.index == 1) {
           character.inventory.value = null;
           DataManager().loadCharacterInventory(character);
+        } else if (_tabController?.index == 2) {
+          character.enchantments.value = null;
+          DataManager().loadCharacterEnchantments(character);
         }
         ScaffoldMessenger.of(context).clearSnackBars();
         setState(() {});
@@ -930,7 +1027,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       children: _screens!
                           .map((e) => SingleChildScrollView(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: [1,2].contains(_screens!.indexOf(e))  ? 0 : Measures.hPadding),
+                                    horizontal:
+                                        [1, 2].contains(_screens!.indexOf(e)) ? 0 : Measures.hPadding),
                                 child: e,
                               ))
                           .toList(),

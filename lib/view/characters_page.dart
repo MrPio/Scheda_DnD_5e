@@ -15,6 +15,7 @@ import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
+import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/partial/recycler_view.dart';
 
 import '../constant/fonts.dart';
@@ -85,6 +86,7 @@ class _CharactersPageState extends State<CharactersPage> {
     super.dispose();
   }
 
+  final c=TextEditingController();
   @override
   Widget build(BuildContext context) {
     final characters = _characters;

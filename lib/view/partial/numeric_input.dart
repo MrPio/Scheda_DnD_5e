@@ -21,7 +21,7 @@ class NumericInputArgs {
   TextStyle? style;
   FocusNode? focusNode;
   bool autofocus;
-  Map<int, String>? remapping;
+  String? zeroEncoding;
 
   NumericInputArgs(
       {required this.min,
@@ -41,7 +41,7 @@ class NumericInputArgs {
       this.style,
       this.focusNode,
       this.autofocus = false,
-      this.remapping});
+      this.zeroEncoding});
 }
 
 class NumericInput extends StatefulWidget {
@@ -83,37 +83,44 @@ class _NumericInputState extends State<NumericInput> {
   @override
   void initState() {
     widget.args.controller ??= TextEditingController();
-    widget.args.controller!.text = widget.args.initialValue ?? widget.args.min.toString();
     valueRestriction = widget.args.valueRestriction ?? (v) => v;
     widget.args.controller!.addListener(() {
-      if (widget.args.remapping?.containsKey(value) == true) {
-        widget.args.controller!.text = widget.args.remapping![value]!;
+      // If the text is '0', replace it with the zero encoding, if any
+      if (widget.args.zeroEncoding != null &&
+          int.tryParse(widget.args.controller!.text) != null &&
+          int.parse(widget.args.controller!.text) == 0) {
+        widget.args.controller!.text = widget.args.zeroEncoding!;
         return;
       }
-      if (widget.args.remapping?.values.contains(widget.args.controller!.text) == true) return;
+      // Remove unnecessary minus signs
       if (widget.args.controller!.text.contains(hasSign ? '--' : '-')) {
         widget.args.controller!.text =
             widget.args.controller!.text.replaceAll(hasSign ? '--' : '-', hasSign ? '-' : '');
       }
+      // Move any minus sign at the beginning of the text
       if (hasSign && widget.args.controller!.text.indexOf('-') > 0) {
         widget.args.controller!.text = '-${widget.args.controller!.text.replaceAll('-', '')}';
       }
+      // Remove any points if it's an integer numeric input
       if (widget.args.decimalPlaces <= 0 && widget.args.controller!.text.contains('.')) {
         widget.args.controller!.text = widget.args.controller!.text.replaceAll('.', '');
       }
+      // Remove or replace commas with points to separate decimal digits
       if (widget.args.controller!.text.contains(',')) {
         widget.args.controller!.text =
             widget.args.controller!.text.replaceAll(',', widget.args.decimalPlaces <= 0 ? '' : '.');
       }
-      if (widget.args.controller!.text.isEmpty) {
-        // value = 0;
-      } else if (hasSign &&
+      // Add leading plus symbol if a negative numbers are allowed
+      if (widget.args.controller!.text.isNotEmpty &&
+          hasSign &&
           !widget.args.controller!.text.contains('+') &&
           !widget.args.controller!.text.contains('-') &&
           value > 0) {
         widget.args.controller!.text = '+$value';
       }
     });
+    // Initialize the text
+    widget.args.controller!.text = widget.args.initialValue ?? widget.args.min.toString();
     super.initState();
   }
 
@@ -127,6 +134,9 @@ class _NumericInputState extends State<NumericInput> {
           value = value;
           if (!focus) {
             widget.args.finalize?.call();
+          } else if (widget.args.zeroEncoding != null &&
+              widget.args.controller!.text == widget.args.zeroEncoding) {
+            widget.args.controller!.text = '';
           }
         },
         child: TextField(
