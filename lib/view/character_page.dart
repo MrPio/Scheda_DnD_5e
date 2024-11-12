@@ -643,7 +643,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                     SizedBox(
                       width: 60,
                       child: Text('Livello', style: Fonts.light(size: 16)),
-                    ),// TODO here
+                    ),
+                    // ...List.generate(en.Level, generator)
                     ...List.filled(9, Padding(
                       padding: const EdgeInsets.only(right: Measures.vMarginThinnest),
                       child: Container(width: 33,height: 33,color: Colors.yellow),

@@ -121,10 +121,11 @@ class _DicePageState extends State<DicePage> with SingleTickerProviderStateMixin
               Align(
                   child: Padding(
                 padding: const EdgeInsets.only(
-                  top: Measures.vMarginThin,
-                  bottom: Measures.vMarginThin,
+                    top: Measures.vMarginThin,bottom: Measures.vMarginThin, left: Measures.hPadding*3, right: Measures.hPadding),
+                child: Expanded(
+                  child: Text(args?.title ?? 'Lanciatore dadi',
+                      style: Fonts.black(size: 18),overflow: TextOverflow.ellipsis),
                 ),
-                child: Text(args?.title ?? 'Lanciatore dadi', style: Fonts.black(size: 18)),
               ))
             else
               Align(
