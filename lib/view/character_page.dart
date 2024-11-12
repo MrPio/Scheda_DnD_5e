@@ -20,6 +20,7 @@ import 'package:scheda_dnd_5e/view/create_item_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
+import 'package:scheda_dnd_5e/view/partial/card/enchantment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
@@ -33,6 +34,7 @@ import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/partial/rule.dart';
 
 import '../model/character.dart' hide Alignment;
+import '../model/enchantment.dart' as en;
 import 'partial/gradient_background.dart';
 
 class CharacterPage extends StatefulWidget {
@@ -59,6 +61,16 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
   _setIsInventoryItemExpanded(Type type, bool value) =>
       IOManager().set('character_page_isInventoryItemExpanded_$type', value);
+
+  bool _getIsEnchantmentLevelExpanded(en.Level level) =>
+      IOManager().get<bool>('character_page_isEnchantmentLevelExpanded_${level.num}') ?? true;
+
+  _setIsEnchantmentLevelExpanded(en.Level level, bool value) =>
+      IOManager().set('character_page_isEnchantmentLevelExpanded_${level.num}', value);
+
+  List<en.Enchantment>? enchantments(en.Level level) =>
+      _character?.enchantments.value?.where((e) => e.level == level).toList()?..sort();
+
   Character? _character, _oldCharacter;
   late final TextEditingController _armorClassController,
       _speedController,
@@ -609,7 +621,56 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
         ],
       ),
       // Enchantments
-      const Placeholder(),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Inventory sections
+          const SizedBox(height: Measures.vMarginMoreThin),
+          ...en.Level.values.map((level) {
+            final isEmpty = character.enchantments.value?.where((e) => e.level == level).isEmpty != false;
+            return Column(
+              children: [
+                // Header
+                Clickable(
+                  active: !isEmpty,
+                  onTap: () => setState(() =>
+                      _setIsEnchantmentLevelExpanded(level, !_getIsEnchantmentLevelExpanded(level))),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric( vertical: Measures.vMarginThin),
+                    child: Row(children: [
+                      Text(level.title, style: Fonts.black(size: 18)),
+                      const SizedBox(width: Measures.hMarginMed),
+                      if (!isEmpty)
+                        'chevron_left'.toIcon(
+                            height: 16,
+                            rotation: _getIsEnchantmentLevelExpanded(level) ? pi / 2 : -pi / 2)
+                    ]),
+                  ),
+                ),
+                // List of enchantments
+                if (character.inventory.value == null)
+                  ...List.filled(2, const GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 50)),
+                if (character.inventory.value != null) ...[
+                  if (!isEmpty && _getIsEnchantmentLevelExpanded(level))
+                    ...enchantments(level)!.map((e) => EnchantmentCard(e)),
+                  if (!isEmpty && !_getIsEnchantmentLevelExpanded(level))
+                    const Padding(
+                      padding: EdgeInsets.only(top: Measures.vMarginThin),
+                      child: Rule(),
+                    ),
+                  if (isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
+                      child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
+                    )
+                ],
+                const SizedBox(height: Measures.vMarginSmall),
+              ],
+            );
+          }),
+          const SizedBox(height: Measures.vMarginBig),
+        ],
+      ),
       // Background
       const Placeholder(),
       // Ability
@@ -1187,7 +1248,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                           children: [
                             if (item.isHeavy) ...[
                               const SizedBox(width: Measures.hMarginMed),
-                              'png/heavy'.toIcon(height: 22, color: Palette.primaryBlue),
+                              'png/heavy'.toIcon(height: 22, color: Palette.primaryGreen),
                             ],
                             const SizedBox(width: Measures.hMarginMed),
                             'png/strength'.toIcon(height: 22, color: Skill.forza.color),
@@ -1213,7 +1274,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                   text: TextSpan(
                                 children: [
                                   TextSpan(text: '${item.caString.item1} ', style: Fonts.black(size: 18)),
-                                  TextSpan(text: item.caString.item2, style: Fonts.light()),
+                                  TextSpan(text: '+ ${item.caString.item2}', style: Fonts.light()),
                                 ],
                               )),
                             ],

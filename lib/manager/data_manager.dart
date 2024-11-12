@@ -149,11 +149,12 @@ class DataManager {
           value.where((e) => caches[key]!.firstWhereOrNull((eCached) => eCached.uid == e) == null);
       if (leftovers.isNotEmpty) {
         final objs = await {
-          Weapon: DatabaseManager().getListFromUIDs<Weapon>,
-          Armor: DatabaseManager().getListFromUIDs<Armor>,
-          Item: DatabaseManager().getListFromUIDs<Item>,
-          Coin: DatabaseManager().getListFromUIDs<Coin>,
-        }[key]!(DatabaseManager.collectionsPOST[key]!,leftovers.toList())??[];
+              Weapon: DatabaseManager().getListFromUIDs<Weapon>,
+              Armor: DatabaseManager().getListFromUIDs<Armor>,
+              Item: DatabaseManager().getListFromUIDs<Item>,
+              Coin: DatabaseManager().getListFromUIDs<Coin>,
+            }[key]!(DatabaseManager.collectionsPOST[key]!, leftovers.toList()) ??
+            [];
         caches[key]!.addAll(objs);
         print('⬇️ I\'ve downloaded ${leftovers.length} user created ${key}s');
         // IOManager().serializeObjects(DatabaseManager.collectionsPOST[key]!, caches[key]!);
@@ -232,6 +233,11 @@ class DataManager {
       {
         for (var entry in character.coinsUIDs.entries)
           (await load<Coin>(entry.key)) as InventoryItem: entry.value
+      };
+
+  /// Load the enchantments objects of a given character
+  loadCharacterEnchantments(Character character) async => character.enchantments.value = {
+        for (var id in character.enchantmentUIDs) await load<Enchantment>(id)
       };
 
   /// Save Model objects

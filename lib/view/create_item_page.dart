@@ -453,7 +453,7 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
             ),
           ),
           const SizedBox(height: Measures.vMarginMed),
-          // Skill advantage
+          // Skill modifiers
           Row(
             children: [
               'png/skill'.toIcon(),
@@ -489,7 +489,7 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
                                 max: 20,
                                 remapping: {0: '-'},
                                 defaultValue: 2,
-                                initialValue: '2',
+                                initialValue: '-',
                                 controller: armorSkillModifiersControllers[skill],
                                 isDense: true,
                               ))
@@ -811,6 +811,9 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
             ..skillModifiers = armorSkillModifiers
             ..strength = strengthArmor
             ..isHeavy = isHeavyArmor;
+          for(var key in armorSkillModifiers.keys) {
+            (item as Armor).skillModifiers[key]=int.tryParse(armorSkillModifiersControllers[key]!.text)??0;
+          }
           next();
         },
       if (args!.type == Coin)

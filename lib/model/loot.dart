@@ -16,7 +16,7 @@ part 'part/loot.g.dart';
 
 /// Any item that can be part of a character's inventory
 abstract class InventoryItem with Comparable<InventoryItem> implements WithUID, WithTitle {
-  @JsonKey(includeFromJson: true, includeToJson: true,defaultValue:'')
+  @JsonKey(includeFromJson: true, includeToJson: true, defaultValue: '')
   String _title = '';
 
   @override
@@ -80,7 +80,7 @@ abstract class InventoryItem with Comparable<InventoryItem> implements WithUID, 
 
 @JsonSerializable(constructor: 'jsonConstructor')
 class Weapon extends InventoryItem {
-  @JsonKey(includeFromJson: true, includeToJson: true,defaultValue: [])
+  @JsonKey(includeFromJson: true, includeToJson: true, defaultValue: [])
   List<Dice> _rollDamage;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -104,7 +104,7 @@ class Weapon extends InventoryItem {
       List<Dice>? rollDamage,
       this.fixedDamage = 0,
       this.property = ''})
-      : _rollDamage = rollDamage ?? [] ;
+      : _rollDamage = rollDamage ?? [];
 
   Weapon(title, this._rollDamage, this.fixedDamage, this.property)
       : uid = title,
@@ -156,8 +156,7 @@ class Armor extends InventoryItem {
   Tuple2<String, String> get caString => Tuple2(
       "${isPartial ? '+' : ''}$ca",
       skillModifiers.entries
-          .where((e) => e.value > 0)
-          .map((e) => 'modificatore di ${e.key.title} (max ${e.value})')
+          .map((e) => '${e.key.title}${e.value > 0 ? ' (max ${e.value})' : ''}')
           .join(', '));
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -192,7 +191,7 @@ class Item extends InventoryItem {
 @JsonSerializable(constructor: 'jsonConstructor')
 class Coin extends InventoryItem {
   int value;
-  @JsonKey(includeFromJson: true, includeToJson: true,defaultValue:'')
+  @JsonKey(includeFromJson: true, includeToJson: true, defaultValue: '')
   String _currency;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -249,7 +248,8 @@ class Equipment extends InventoryItem {
   final Map<String, int> content;
 
   Equipment.jsonConstructor(
-      {super.title, super.authorUID,
+      {super.title,
+      super.authorUID,
       super.regDateTimestamp,
       super.description,
       Map<String, int>? content})

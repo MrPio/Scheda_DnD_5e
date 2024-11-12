@@ -11,6 +11,7 @@
 - Add custom inventory item page
 - edit custom item bottom sheet entry
 - In inventory, non satisfied strength requirement should be handled graphically
+- In numeric input, accorpa anche i pulsanti +, - laterali, così pulisci un sacco di codice
 
 # IN PROGRESS
 X Inventory TAB mockup

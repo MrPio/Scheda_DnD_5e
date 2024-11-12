@@ -82,13 +82,15 @@ class _NumericInputState extends State<NumericInput> {
 
   @override
   void initState() {
-    widget.args.controller ??= TextEditingController(text: widget.args.initialValue);
+    widget.args.controller ??= TextEditingController();
+    widget.args.controller!.text = widget.args.initialValue ?? widget.args.min.toString();
     valueRestriction = widget.args.valueRestriction ?? (v) => v;
     widget.args.controller!.addListener(() {
       if (widget.args.remapping?.containsKey(value) == true) {
         widget.args.controller!.text = widget.args.remapping![value]!;
         return;
       }
+      if (widget.args.remapping?.values.contains(widget.args.controller!.text) == true) return;
       if (widget.args.controller!.text.contains(hasSign ? '--' : '-')) {
         widget.args.controller!.text =
             widget.args.controller!.text.replaceAll(hasSign ? '--' : '-', hasSign ? '-' : '');

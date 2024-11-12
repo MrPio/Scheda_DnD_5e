@@ -14,10 +14,9 @@ import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
 import 'package:scheda_dnd_5e/model/enchantment.dart' as enc show Level;
 import 'package:scheda_dnd_5e/model/enchantment.dart' hide Level;
 import 'package:scheda_dnd_5e/model/filter.dart';
-import 'package:scheda_dnd_5e/view/partial/clickable.dart';
+import 'package:scheda_dnd_5e/view/partial/card/enchantment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
-import 'package:scheda_dnd_5e/view/partial/level.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
 import 'package:scheda_dnd_5e/view/partial/recycler_view.dart';
 
@@ -128,53 +127,7 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
               ],
             ),
             children: isDataReady
-                ? enchantments.map<Widget>(enchantmentCard).toList()
+                ? enchantments.map<Widget>((e) => EnchantmentCard(e)).toList()
                 : List.filled(10, const GlassCard(isShimmer: true, shimmerHeight: 75))));
   }
-
-  Widget enchantmentCard(Enchantment enchantment) => Padding(
-        padding: const EdgeInsets.only(bottom: 10.0),
-        child: GlassCard(
-          bottomSheetArgs: BottomSheetArgs(
-              header: Row(
-                children: [
-                  Level(level: enchantment.level.num, maxLevel: 9),
-                  const SizedBox(width: Measures.hMarginBig),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(enchantment.name, style: Fonts.bold()),
-                      Text(enchantment.type.title, style: Fonts.light()),
-                    ],
-                  )
-                ],
-              ),
-              items: [
-                BottomSheetItem('png/open', 'Visualizza dettagli',
-                    () => Navigator.of(context).pushNamed('/enchantment', arguments: enchantment)),
-              ]),
-          onTap: () => Navigator.of(context).pushNamed('/enchantment', arguments: enchantment),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Title and type
-                Flexible(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SingleChildScrollView(child: Text(enchantment.name, style: Fonts.bold())),
-                      Text(enchantment.type.title, style: Fonts.light()),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: Measures.hMarginMed),
-                // Level
-                Level(level: enchantment.level.num, maxLevel: 9),
-              ],
-            ),
-          ),
-        ),
-      );
 }
