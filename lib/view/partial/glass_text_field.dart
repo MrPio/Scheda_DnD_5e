@@ -9,39 +9,41 @@ class GlassTextField extends StatefulWidget {
   TextEditingController? textController;
   final String? iconPath, secondaryIconPath, hintText;
   final bool obscureText, clearable, autofocus, isFlat;
-  final int lines;
+  final int lines, maxLength;
   final Function()? onSecondaryIconTap;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
   final Function(String)? onSubmitted;
 
-  GlassTextField(
-      {super.key,
-      this.iconPath,
-      this.secondaryIconPath,
-      this.onSecondaryIconTap,
-      this.hintText,
-      this.textController,
-      this.keyboardType,
-      this.obscureText = false,
-      this.clearable = true,
-      this.autofocus = false,
-      this.textInputAction,
-      this.onSubmitted,
-      this.lines = 1,
-      this.isFlat = false});
+  GlassTextField({super.key,
+    this.iconPath,
+    this.secondaryIconPath,
+    this.onSecondaryIconTap,
+    this.hintText,
+    this.textController,
+    this.keyboardType,
+    this.obscureText = false,
+    this.clearable = true,
+    this.autofocus = false,
+    this.textInputAction,
+    this.onSubmitted,
+    this.lines = 1,
+    this.maxLength = 40,
+    this.isFlat = false});
 
   @override
   State<GlassTextField> createState() => _GlassTextFieldState();
 }
 
 class _GlassTextFieldState extends State<GlassTextField> {
-  int get maxLength => widget.lines * 40;
+  int get maxLength => widget.lines * widget.maxLength;
 
   @override
   Widget build(BuildContext context) {
     widget.textController ??= TextEditingController();
-    widget.textController!.addListener(() => setState(() {}));
+    widget.textController!.addListener(() {
+      if (mounted) setState(() {});
+    });
 
     return Container(
       decoration: BoxDecoration(
@@ -49,8 +51,8 @@ class _GlassTextFieldState extends State<GlassTextField> {
           borderRadius: BorderRadius.circular(widget.isFlat
               ? 0
               : widget.lines > 1
-                  ? 12
-                  : 999)),
+              ? 12
+              : 999)),
       child: Padding(
         padding: EdgeInsets.only(
             left: Measures.hTextFieldPadding,
@@ -69,7 +71,10 @@ class _GlassTextFieldState extends State<GlassTextField> {
                 Expanded(
                   child: TextField(
                       scrollPadding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig*3),
+                          bottom: MediaQuery
+                              .of(context)
+                              .viewInsets
+                              .bottom + Measures.vMarginBig * 3),
                       maxLength: maxLength,
                       maxLines: widget.lines,
                       textInputAction: widget.textInputAction,
@@ -109,5 +114,10 @@ class _GlassTextFieldState extends State<GlassTextField> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

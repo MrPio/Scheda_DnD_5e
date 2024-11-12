@@ -1,6 +1,7 @@
 import 'package:scheda_dnd_5e/model/loot.dart';
 
 import '../../enum/dice.dart';
+import '../../model/character.dart';
 import '../database_seeder.dart';
 
 class WeaponSeeder extends Seeder<Weapon> {
@@ -58,23 +59,23 @@ class ArmorSeeder extends Seeder<Armor> {
   @override
   List<Armor> get seeds => [
         // Leggere
-        Armor('Imbottita', '11 + modificatore di Destrezza', 0, true),
-        Armor('Armatura di cuoio', '11 + modificatore di Destrezza', 0, false),
-        Armor('Armatura di cuoio borchiato', '12 + modificatore di Destrezza', 0, false),
+        Armor('Imbottita', 11, 0, true, {Skill.destrezza: 0}, false),
+        Armor('Armatura di cuoio', 11, 0, false, {Skill.destrezza: 0}, false),
+        Armor('Armatura di cuoio borchiato', 12, 0, false, {Skill.destrezza: 0}, false),
         // Medie
-        Armor('Armatura di pelle', '12 + modificatore di Destrezza (max 2)', 0, false),
-        Armor('Giaco di maglia', '13 + modificatore di Destrezza (max 2)', 0, false),
-        Armor('Corazza di scaglie', '14 + modificatore di Destrezza (max 2)', 0, true),
-        Armor('Corazza di piastre', '14 + modificatore di Destrezza (max 2)', 0, false),
-        Armor('Mezza armatura', '15 + modificatore di Destrezza (max 2)', 0, true),
+        Armor('Armatura di pelle', 12, 0, false, {Skill.destrezza: 2}, false),
+        Armor('Giaco di maglia', 13, 0, false, {Skill.destrezza: 2}, false),
+        Armor('Corazza di scaglie', 14, 0, true, {Skill.destrezza: 2}, false),
+        Armor('Corazza di piastre', 14, 0, false, {Skill.destrezza: 2}, false),
+        Armor('Mezza armatura', 15, 0, true, {Skill.destrezza: 2}, false),
         // Pesanti
-        Armor('Cotta di maglia', '14', 0, true),
-        Armor('Corazza ad anelli', '16', 13, true),
-        Armor('Corazza a strisce', '17', 15, true),
-        Armor('Armatura completa', '18', 15, true),
+        Armor('Cotta di maglia', 14, 0, true, {}, false),
+        Armor('Corazza ad anelli', 16, 13, true, {}, false),
+        Armor('Corazza a strisce', 17, 15, true, {}, false),
+        Armor('Armatura completa', 18, 15, true, {}, false),
         // Scudi
-        Armor('Scudo', '+2', 0, false),
-        Armor('Scudo di legno', '+2', 0, false)
+        Armor('Scudo', 2, 0, false, {}, true),
+        Armor('Scudo di legno', 2, 0, false, {}, true)
       ];
 }
 

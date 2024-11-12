@@ -52,6 +52,11 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           // 📘📘📘 FIREBASE FIRESTORE 📘📘📘
           // ⚠️⚠️⚠️ DANGER ZONE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
           // await seedDatabase(fresh: true);
+          // await DataManager().invalidateCache<Weapon>();
+          // await DataManager().invalidateCache<Armor>();
+          // await DataManager().invalidateCache<Item>();
+          // await DataManager().invalidateCache<Coin>();
+          // await DataManager().invalidateCache<Equipment>();
           // await DataManager().invalidateCache<Character>();
           // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
@@ -59,19 +64,15 @@ class _SignInPageState extends State<SignInPage> with Loadable {
 
           // 👤👤👤 FIREBASE AUTH 👤👤👤
           if (await AccountManager().cacheSignIn()) {
-            setState(() {
-              isLoading = true;
-            });
+            setState(() => isLoading = true);
+            await DataManager().fetchUserItems();
             gotoHome();
           }
         });
       });
     }
 
-    _emailController = TextEditingController(text: 'valeriomorelli50@gmail.com')
-      ..addListener(() {
-        setState(() {});
-      });
+    _emailController = TextEditingController(text: 'valeriomorelli50@gmail.com');// TODO here
     _passwordController = TextEditingController(text: 'aaaaaa');
     super.initState();
   }
@@ -282,5 +283,5 @@ class _SignInPageState extends State<SignInPage> with Loadable {
     );
   }
 
-  gotoHome() => context.goto('/create_item',pop: true, arguments: CreateItemArgs(Weapon));//context.goto('/home',pop: true);
+  gotoHome() => context.goto('/home', pop: true);
 }

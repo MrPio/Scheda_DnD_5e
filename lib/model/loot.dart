@@ -6,17 +6,21 @@ import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/mixin/comparable.dart';
+import 'package:tuple/tuple.dart';
 
 import '../enum/dice.dart';
 import '../interface/enum_with_title.dart';
+import 'character.dart';
 
 part 'part/loot.g.dart';
 
 /// Any item that can be part of a character's inventory
 abstract class InventoryItem with Comparable<InventoryItem> implements WithUID, WithTitle {
+  @JsonKey(includeFromJson: true, includeToJson: true,defaultValue:'')
   String _title = '';
 
   @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   String get title => _title;
 
   set title(value) {
@@ -29,9 +33,9 @@ abstract class InventoryItem with Comparable<InventoryItem> implements WithUID, 
     _title = value;
   }
 
-  final String? description;
-  final int? regDateTimestamp; // null if not added by user
-  final String? authorUID; // null if not added by user
+  String? description;
+  int? regDateTimestamp; // null if not added by user
+  String? authorUID; // null if not added by user
   static const Map<Type, String> icons = {
     Weapon: 'png/weapon',
     Armor: 'png/armor',
@@ -76,15 +80,17 @@ abstract class InventoryItem with Comparable<InventoryItem> implements WithUID, 
 
 @JsonSerializable(constructor: 'jsonConstructor')
 class Weapon extends InventoryItem {
+  @JsonKey(includeFromJson: true, includeToJson: true,defaultValue: [])
   List<Dice> _rollDamage;
 
+  @JsonKey(includeFromJson: false, includeToJson: false)
   List<Dice> get rollDamage => _rollDamage;
 
   set rollDamage(value) {
     if (value.isEmpty) {
       throw const FormatException('Devi selezionare almeno un dado');
     }
-    _rollDamage = rollDamage;
+    _rollDamage = value;
   }
 
   int fixedDamage;
@@ -98,7 +104,7 @@ class Weapon extends InventoryItem {
       List<Dice>? rollDamage,
       this.fixedDamage = 0,
       this.property = ''})
-      : _rollDamage = rollDamage ?? [];
+      : _rollDamage = rollDamage ?? [] ;
 
   Weapon(title, this._rollDamage, this.fixedDamage, this.property)
       : uid = title,
@@ -117,23 +123,42 @@ class Weapon extends InventoryItem {
 
 @JsonSerializable(constructor: 'jsonConstructor')
 class Armor extends InventoryItem {
-  final String CA;
-  final int strength;
-  final bool disadvantage;
+  int ca;
+
+  /// Bonus on skill values. The value of each entry represents the maximum bonus for that skill
+  Map<Skill, int> skillModifiers;
+
+  /// The strength requirement to equip the armor
+  int strength;
+
+  /// Heavy armors have a disadvantage on stealth rolls
+  bool isHeavy;
+
+  /// Partial armors don't give an absolute CA, but a CA bonus
+  bool isPartial;
 
   Armor.jsonConstructor(
       {super.title,
       super.authorUID,
       super.regDateTimestamp,
       super.description,
-      this.CA = '',
+      this.ca = 0,
       this.strength = 0,
-      this.disadvantage = false});
+      Map<Skill, int>? skillModifiers,
+      this.isHeavy = false,
+      this.isPartial = false})
+      : skillModifiers = skillModifiers ?? {};
 
-  Armor(title, this.CA, this.strength, this.disadvantage)
+  Armor(title, this.ca, this.strength, this.isHeavy, this.skillModifiers, this.isPartial)
       : uid = title,
         super(title: title);
 
+  Tuple2<String, String> get caString => Tuple2(
+      "${isPartial ? '+' : ''}$ca",
+      skillModifiers.entries
+          .where((e) => e.value > 0)
+          .map((e) => 'modificatore di ${e.key.title} (max ${e.value})')
+          .join(', '));
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   late final String? uid;
@@ -166,8 +191,22 @@ class Item extends InventoryItem {
 
 @JsonSerializable(constructor: 'jsonConstructor')
 class Coin extends InventoryItem {
-  final int value;
-  final String currency;
+  int value;
+  @JsonKey(includeFromJson: true, includeToJson: true,defaultValue:'')
+  String _currency;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String get currency => _currency;
+
+  set currency(String value) {
+    if (value.isEmpty) {
+      throw const FormatException('La sigla deve essere lunga almeno 1 carattere');
+    }
+    if (DataManager().cachedCoins.where((e) => e.title.match(value)).isNotEmpty) {
+      throw const FormatException('Una valuta con questa sigla già esiste. Provane un\'altra');
+    }
+    _currency = value;
+  }
 
   static const Map<String, Color> iconColors = {
     'Platino': Color(0xFFffffff),
@@ -182,10 +221,11 @@ class Coin extends InventoryItem {
       super.authorUID,
       super.regDateTimestamp,
       super.description,
-      this.currency = '',
-      this.value = 0});
+      currency = '',
+      this.value = 0})
+      : _currency = currency;
 
-  Coin(title, this.currency, this.value)
+  Coin(title, this._currency, this.value)
       : uid = title,
         super(title: title);
 
@@ -209,8 +249,7 @@ class Equipment extends InventoryItem {
   final Map<String, int> content;
 
   Equipment.jsonConstructor(
-      {super.title,
-      super.authorUID,
+      {super.title, super.authorUID,
       super.regDateTimestamp,
       super.description,
       Map<String, int>? content})

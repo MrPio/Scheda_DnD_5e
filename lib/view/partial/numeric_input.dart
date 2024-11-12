@@ -21,6 +21,7 @@ class NumericInputArgs {
   TextStyle? style;
   FocusNode? focusNode;
   bool autofocus;
+  Map<int, String>? remapping;
 
   NumericInputArgs(
       {required this.min,
@@ -39,7 +40,8 @@ class NumericInputArgs {
       this.hint,
       this.style,
       this.focusNode,
-      this.autofocus = false});
+      this.autofocus = false,
+      this.remapping});
 }
 
 class NumericInput extends StatefulWidget {
@@ -59,7 +61,6 @@ class NumericInput extends StatefulWidget {
                       0)))) *
           pow(10, args.decimalPlaces))
       .toInt();
-
 }
 
 class _NumericInputState extends State<NumericInput> {
@@ -84,6 +85,10 @@ class _NumericInputState extends State<NumericInput> {
     widget.args.controller ??= TextEditingController(text: widget.args.initialValue);
     valueRestriction = widget.args.valueRestriction ?? (v) => v;
     widget.args.controller!.addListener(() {
+      if (widget.args.remapping?.containsKey(value) == true) {
+        widget.args.controller!.text = widget.args.remapping![value]!;
+        return;
+      }
       if (widget.args.controller!.text.contains(hasSign ? '--' : '-')) {
         widget.args.controller!.text =
             widget.args.controller!.text.replaceAll(hasSign ? '--' : '-', hasSign ? '-' : '');
@@ -124,7 +129,7 @@ class _NumericInputState extends State<NumericInput> {
         },
         child: TextField(
             scrollPadding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig*3),
+                bottom: MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig * 3),
             autofocus: widget.args.autofocus,
             focusNode: widget.args.focusNode,
             onSubmitted: (_) {

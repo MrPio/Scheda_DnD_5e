@@ -19,12 +19,28 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       campaignsUIDs: (json['campaignsUIDs'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toList(),
+      weaponsUIDs: (json['weaponsUIDs'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      armorsUIDs: (json['armorsUIDs'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      itemsUIDs: (json['itemsUIDs'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      coinsUIDs: (json['coinsUIDs'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'nickname': instance.nickname,
       'email': instance.email,
       'regDateTimestamp': instance.regDateTimestamp,
+      'weaponsUIDs': instance.weaponsUIDs,
+      'armorsUIDs': instance.armorsUIDs,
+      'itemsUIDs': instance.itemsUIDs,
+      'coinsUIDs': instance.coinsUIDs,
       'charactersUIDs': instance.charactersUIDs,
       'deletedCharactersUIDs': instance.deletedCharactersUIDs,
       'campaignsUIDs': instance.campaignsUIDs,

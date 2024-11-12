@@ -332,5 +332,5 @@ extension ContextExtensions on BuildContext {
       });
 
   goto(String routeName, {bool pop=false, Object? arguments, Function(Object?)? then}) =>
-      Navigator.of(this).pushNamed(routeName, arguments: arguments).then((value) => then?.call(value));
+      (pop?Navigator.of(this).popAndPushNamed:Navigator.of(this).pushNamed)(routeName, arguments: arguments).then((value) => then?.call(value));
 }

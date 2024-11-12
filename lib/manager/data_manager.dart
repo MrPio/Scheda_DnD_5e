@@ -13,6 +13,7 @@ import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
 
+import '../interface/json_serializable.dart';
 import '../model/campaign.dart';
 
 enum SaveMode { post, put }
@@ -43,10 +44,12 @@ class DataManager {
       (cachedItems.cast<InventoryItem>()) +
       (cachedCoins.cast<InventoryItem>()) +
       (cachedEquipments.cast<InventoryItem>());
-  List<InventoryItem> get appInventoryItems =>cachedInventoryItems.where((item) => item.regDateTimestamp==null && item.authorUID==null).toList();
 
+  List<InventoryItem> get appInventoryItems => cachedInventoryItems
+      .where((item) => item.regDateTimestamp == null && item.authorUID == null)
+      .toList();
 
-      Map<core.Type, List<WithUID>> get caches => {
+  Map<core.Type, List<WithUID>> get caches => {
         User: cachedUsers,
         Campaign: cachedCampaigns,
         Character: cachedCharacters,
@@ -111,7 +114,7 @@ class DataManager {
             [],
       };
 
-  invalidateCache<T>() async{
+  invalidateCache<T>() async {
     final path = DatabaseManager.collections[T]!.replaceAll('/', '');
     await IOManager().removeAll([path, '${path}_timestamp']);
   }
@@ -137,6 +140,25 @@ class DataManager {
         }
       }
     }
+  }
+
+  /// Fetch items created by the user TODO: (and their campaign buddies)
+  fetchUserItems() async {
+    AccountManager().user.inventoryItems.forEach((key, value) async {
+      var leftovers =
+          value.where((e) => caches[key]!.firstWhereOrNull((eCached) => eCached.uid == e) == null);
+      if (leftovers.isNotEmpty) {
+        final objs = await {
+          Weapon: DatabaseManager().getListFromUIDs<Weapon>,
+          Armor: DatabaseManager().getListFromUIDs<Armor>,
+          Item: DatabaseManager().getListFromUIDs<Item>,
+          Coin: DatabaseManager().getListFromUIDs<Coin>,
+        }[key]!(DatabaseManager.collectionsPOST[key]!,leftovers.toList())??[];
+        caches[key]!.addAll(objs);
+        print('⬇️ I\'ve downloaded ${leftovers.length} user created ${key}s');
+        // IOManager().serializeObjects(DatabaseManager.collectionsPOST[key]!, caches[key]!);
+      }
+    });
   }
 
   /// Load a single object from a given UID
@@ -214,7 +236,10 @@ class DataManager {
 
   /// Save Model objects
   Future<String?> save<T extends WithUID>(T model, [SaveMode mode = SaveMode.put]) async {
-    String path = DatabaseManager.collections[model.runtimeType] ?? '';
+    String path = mode == SaveMode.post
+        ? DatabaseManager.collectionsPOST[model.runtimeType]!
+        : DatabaseManager.collections[model.runtimeType]!;
+
     if (mode == SaveMode.put) path += model.uid?.replaceAll('/', ' ') ?? '';
 
     String? newUID;

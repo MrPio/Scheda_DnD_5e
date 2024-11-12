@@ -15,6 +15,7 @@ class SheetItemCard extends StatefulWidget {
   final Color? iconColor;
   final String? value, subValue;
   final Widget? child;
+  final bool isLight;
   final BottomSheetArgs? bottomSheetArgs;
   final NumericInputArgs? numericInputArgs;
   final Function()? onTap;
@@ -29,6 +30,7 @@ class SheetItemCard extends StatefulWidget {
       this.child,
       this.bottomSheetArgs,
       this.numericInputArgs,
+        this.isLight=false,
       this.onTap}) {
     if (numericInputArgs != null && numericInputArgs!.controller != null) {
       numericInputArgs!.controller!.text = value.toString();
@@ -40,7 +42,7 @@ class SheetItemCard extends StatefulWidget {
 }
 
 class _SheetItemCardState extends State<SheetItemCard> {
-  bool get isSmall => widget.value == null && widget.subValue == null;
+  bool get isSmall => widget.value == null && widget.subValue == null && widget.child == null;
 bool isShimmer=true;
 
 @override
@@ -68,6 +70,7 @@ bool isShimmer=true;
             items: widget.bottomSheetArgs?.items)
         : null;
     return GlassCard(
+      isLight: widget.isLight,
       isShimmer: isShimmer,
       shimmerHeight: 60,
       height: isSmall ? Measures.sheetCardSmallHeight : null,
@@ -84,7 +87,7 @@ bool isShimmer=true;
             Row(
               mainAxisAlignment: isSmall ? MainAxisAlignment.start : MainAxisAlignment.center,
               children: [
-                widget.iconPath.toIcon(height: 15, color: widget.iconColor ?? Palette.onBackground),
+                widget.iconPath.toIcon(height: 16, color: widget.iconColor ?? Palette.onBackground),
                 SizedBox(width: isSmall ? Measures.hMarginSmall : Measures.hMarginThin),
                 Flexible(
                   child: Text(

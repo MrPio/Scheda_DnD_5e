@@ -42,7 +42,8 @@ class _CharactersPageState extends State<CharactersPage> {
 
   List<Character> get _characters => (AccountManager().user.characters.value ?? [])
       .where((e) =>
-          _filters.every((filter) => filter.checkFilter(e)) && e.name.match(_searchController.text, contains: true))
+          _filters.every((filter) => filter.checkFilter(e)) &&
+          e.name.match(_searchController.text, contains: true))
       .toList()
     ..sort();
 
@@ -80,7 +81,7 @@ class _CharactersPageState extends State<CharactersPage> {
 
   @override
   void dispose() {
-    _searchController.dispose();
+    if (mounted) _searchController.dispose();
     super.dispose();
   }
 
@@ -250,9 +251,7 @@ class _CharactersPageState extends State<CharactersPage> {
       );
 
   /// When returning from the character page, reload if any changes have been applied
-  gotoCharacter(Character character) => context.goto('/character',
-      arguments: character,
-      then: (args) {
+  gotoCharacter(Character character) => context.goto('/character', arguments: character, then: (args) {
         ScaffoldMessenger.of(context).clearSnackBars();
         args is CharacterPageToCharactersPageArgs && !args.noChanges ? null : refresh();
       });

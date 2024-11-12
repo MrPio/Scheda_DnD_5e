@@ -28,6 +28,12 @@ class DatabaseManager {
     Coin: 'coins/',
     Equipment: 'equipments/',
   };
+  static const collectionsPOST = {
+    Weapon: 'users_weapons/',
+    Armor: 'users_armors/',
+    Item: 'users_items/',
+    Coin: 'users_coins/',
+  };
   final FirebaseFirestore _database = FirebaseFirestore.instance;
   var paginateKeys = HashMap<String, String?>();
 

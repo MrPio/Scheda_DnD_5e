@@ -941,6 +941,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
   }
 
   next({int step = 1}) {
+    ScaffoldMessenger.of(context).clearSnackBars();
     if (_index + step >= (_screens?.length ?? 0)) {
       // The character creation is completed, save the character
       withLoading(() async {
@@ -965,6 +966,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
   }
 
   previous() {
+    ScaffoldMessenger.of(context).clearSnackBars();
     // Reset the current screen state
     int step = (_index == 3 && characters[2]!.race.subRaces.isEmpty) ? 2 : 1; // Skipp-able screens
     if (_index > 0) {

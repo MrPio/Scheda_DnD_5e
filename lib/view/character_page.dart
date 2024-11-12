@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
@@ -26,7 +25,6 @@ import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
 import 'package:scheda_dnd_5e/view/partial/fab.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
-import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_column.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
@@ -715,24 +713,13 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                 InventoryItem.icons[type]!,
                                 InventoryItem.namesSingulars[type]!,
                                 () {
-                                  context.goto('/create_item', arguments: CreateItemArgs(type));
-                                  // context.popup('Crea un ${InventoryItem.namesSingulars[type]!}',
-                                  //     message:
-                                  //         'Compila i seguenti campi per creare il tuo oggetto personalizzato!',
-                                  //     // noContentHPadding: true,
-                                  //     positiveCallback: () {},
-                                  //     positiveText: 'Conferma',
-                                  //     backgroundColor: Palette.background.withOpacity(0.5),
-                                  //     child: Column(
-                                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                                  //       children: [
-                                  //         GlassTextField(iconPath: 'png/edit',hintText: 'Nome',clearable: true),
-                                  //         const SizedBox(height: Measures.vMarginThin),
-                                  //         GlassTextField(iconPath: 'png/damage',hintText: 'Proprietà dell\'arma',clearable: true),
-                                  //         const SizedBox(height: Measures.vMarginThin),
-                                  //         GlassTextField(iconPath: 'info',hintText: 'Descrizione',clearable: false, multiline: true),
-                                  //       ],
-                                  //     ));
+                                  context.goto('/create_item',
+                                      arguments: CreateItemArgs(type, character: character),
+                                      then: (_) async {
+                                    ScaffoldMessenger.of(context).clearSnackBars();
+                                    character.inventory.value = null;
+                                    await DataManager().loadCharacterInventory(character);
+                                  });
                                 },
                               ))
                         ]));
@@ -857,6 +844,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
   Widget inventoryItemCard(InventoryItem item, int quantity) => Padding(
         padding: const EdgeInsets.only(bottom: Measures.vMarginThinnest),
         child: GlassCard(
+          isLight: item.regDateTimestamp != null,
           bottomSheetArgs: BottomSheetArgs(
               header: Align(
                 alignment: Alignment.centerLeft,
@@ -870,9 +858,11 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                               ? item is Coin
                                   ? Coin.iconColors[item.title]
                                   : null
-                              : Palette.primaryBlue),
+                              : Palette.primaryYellow),
                       const SizedBox(width: Measures.hMarginMed),
-                      Text(item.title, style: Fonts.regular()),
+                      Text(item.title,
+                          style: Fonts.regular(
+                              color: item.regDateTimestamp == null ? null : Palette.primaryYellow)),
                       if (quantity > 1) Text(' (x$quantity)', style: Fonts.black(size: 16)),
                     ],
                   ),
@@ -1139,6 +1129,14 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       negativeText: 'Annulla',
                       backgroundColor: Palette.background.withOpacity(0.5));
                 }),
+                // Read full description
+                if (item.description != null && item.description!.length > 30)
+                  BottomSheetItem('info', 'Leggi descrizione', () {
+                    context.popup(item.title,
+                        message: item.description,
+                        positiveText: 'Ok',
+                        backgroundColor: Palette.background.withOpacity(0.5));
+                  }),
               ]),
           isFlat: true,
           child: Padding(
@@ -1163,9 +1161,12 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                       ? item is Coin
                                           ? Coin.iconColors[item.title]
                                           : null
-                                      : Palette.primaryBlue),
+                                      : Palette.primaryYellow),
                               const SizedBox(width: Measures.hMarginSmall),
-                              Text(item.title, style: Fonts.regular()),
+                              Text(item.title,
+                                  style: Fonts.regular(
+                                      color:
+                                          item.regDateTimestamp == null ? null : Palette.primaryYellow)),
                               if (quantity > 1) Text(' (x$quantity)', style: Fonts.black(size: 16)),
                             ],
                           ),
@@ -1184,9 +1185,9 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                         // Disadvantage + Stringth
                         Row(
                           children: [
-                            if (item.disadvantage) ...[
+                            if (item.isHeavy) ...[
                               const SizedBox(width: Measures.hMarginMed),
-                              'png/disadvantage'.toIcon(height: 22, color: Palette.primaryBlue),
+                              'png/heavy'.toIcon(height: 22, color: Palette.primaryBlue),
                             ],
                             const SizedBox(width: Measures.hMarginMed),
                             'png/strength'.toIcon(height: 22, color: Skill.forza.color),
@@ -1211,13 +1212,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                               RichText(
                                   text: TextSpan(
                                 children: [
-                                  TextSpan(
-                                      text: '${item.CA.contains(' ') ? item.CA.split(' ')[0] : item.CA} ',
-                                      style: Fonts.black(size: 18)),
-                                  TextSpan(
-                                      text:
-                                          '${item.CA.contains(' ') ? item.CA.split(' ').slice(1).join(' ') : ''} ',
-                                      style: Fonts.light()),
+                                  TextSpan(text: '${item.caString.item1} ', style: Fonts.black(size: 18)),
+                                  TextSpan(text: item.caString.item2, style: Fonts.light()),
                                 ],
                               )),
                             ],
@@ -1230,6 +1226,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                   if (item.description != null || item.regDateTimestamp != null) ...[
                     const SizedBox(height: Measures.vMarginMoreThin),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         // Description
@@ -1237,9 +1234,12 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                             ? Container()
                             : Expanded(
                                 child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Text(item.description!, style: Fonts.light()),
-                                ),
+                                    child: Text(
+                                  item.description!,
+                                  style: Fonts.regular(size: 14),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                )),
                               ),
                         // How long ago it was added (if added by the user)
                         if (item.regDateTimestamp != null) ...[

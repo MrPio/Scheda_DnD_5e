@@ -9,7 +9,8 @@
   X Set MaxHP right after the character's creation
   - Update MaxHP after the new level
 - Add custom inventory item page
-- edit custom item bottom sheet entry 
+- edit custom item bottom sheet entry
+- In inventory, non satisfied strength requirement should be handled graphically
 
 # IN PROGRESS
 X Inventory TAB mockup
