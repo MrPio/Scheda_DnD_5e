@@ -10,8 +10,10 @@ import '../level.dart';
 
 class EnchantmentCard extends StatelessWidget {
   final Enchantment enchantment;
+  final Function()? onTap;
+  final List<BottomSheetItem>? additionalBottomSheetItems;
 
-  const EnchantmentCard(this.enchantment, {super.key});
+  const EnchantmentCard(this.enchantment, {this.additionalBottomSheetItems, this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -33,9 +35,10 @@ class EnchantmentCard extends StatelessWidget {
               ),
               items: [
                 BottomSheetItem('png/open', 'Visualizza dettagli',
-                    () => Navigator.of(context).pushNamed('/enchantment', arguments: enchantment)),
+                    () => context.goto('/enchantment', args: enchantment)),
+                ...(additionalBottomSheetItems??[])
               ]),
-          onTap: () => Navigator.of(context).pushNamed('/enchantment', arguments: enchantment),
+          onTap: onTap ?? () => context.goto('/enchantment', args: enchantment),
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
             child: Row(

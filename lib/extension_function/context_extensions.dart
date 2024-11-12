@@ -39,7 +39,8 @@ extension ContextExtensions on BuildContext {
         return PopScope(
           canPop: dismissible,
           child: AlertDialog(
-            insetPadding: const EdgeInsets.symmetric(horizontal: Measures.hPadding+Measures.hMarginSmall,vertical: Measures.vMarginThin),
+            insetPadding: const EdgeInsets.symmetric(
+                horizontal: Measures.hPadding + Measures.hMarginSmall, vertical: Measures.vMarginThin),
             shadowColor: Colors.transparent,
             surfaceTintColor: Colors.transparent,
             backgroundColor: Colors.transparent,
@@ -187,7 +188,6 @@ extension ContextExtensions on BuildContext {
     String message, {
     Color backgroundColor = Palette.background,
     double bottomMargin = Measures.vMarginMed,
-
     Function()? undoCallback,
   }) async =>
       await ScaffoldMessenger.of(this)
@@ -204,8 +204,7 @@ extension ContextExtensions on BuildContext {
               content: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                      child: Text(message, style: Fonts.regular())),
+                  Expanded(child: Text(message, style: Fonts.regular())),
                   if (undoCallback != null)
                     TextButton(
                       onPressed: () {
@@ -331,6 +330,9 @@ extension ContextExtensions on BuildContext {
         );
       });
 
-  goto(String routeName, {bool pop=false, Object? arguments, Function(Object?)? then}) =>
-      (pop?Navigator.of(this).popAndPushNamed:Navigator.of(this).pushNamed)(routeName, arguments: arguments).then((value) => then?.call(value));
+  Future<Object?> goto(String routeName, {bool pop = false, Object? args}) async => await (pop
+      ? Navigator.of(this).popAndPushNamed
+      : Navigator.of(this).pushNamed)(routeName, arguments: args);
+
+  pop([Object? arguments]) => Navigator.of(this).pop(arguments);
 }

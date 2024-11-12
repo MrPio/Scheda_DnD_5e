@@ -19,6 +19,7 @@ import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/view/characters_page.dart';
 import 'package:scheda_dnd_5e/view/create_item_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
+import 'package:scheda_dnd_5e/view/enchantments_page.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/enchantment_card.dart';
@@ -88,7 +89,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
   final Map<en.Level, TextEditingController> _slotsControllers = {
     for (var level in en.Level.values) level: TextEditingController()
   };
-  final double slotSize = 38;
+  final double slotSizeSquare = 38, slotSizeCircle = 24;
 
   bool get hasChanges => jsonEncode(_oldCharacter!.toJSON()) != jsonEncode(_character!.toJSON());
 
@@ -143,14 +144,15 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
     if (_character == null) {
       _character = ModalRoute.of(context)!.settings.arguments as Character;
       _oldCharacter = Character.fromJson(_character!.toJSON());
-      _character!.inventory.addListener(() => setState(() {}));
+      _character!.inventory.addListener(() => mounted ? setState(() {}) : null);
+      _character!.enchantments.addListener(() => mounted ? setState(() {}) : null);
     }
     final character = _character!;
 
     BottomSheetArgs? hpBottomSheetArgs;
     List<Widget> sheetAttributes = [];
     List<Widget> sheetSkills = [];
-    if (_tabController!.index <= 1) {
+    if ((_tabController?.index ?? 0) == 0) {
       final hpBottomSheetArgs = BottomSheetArgs(
         items: [
           BottomSheetItem('png/hp', 'Modifica HP', () {
@@ -328,7 +330,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                             color: character.class_.savingThrows.contains(skill)
                                                 ? Palette.onBackground
                                                 : Colors.transparent,
-                                            border: Border.all(color: Palette.onBackground, width: 0.65),
+                                            border: Border.all(color: Palette.onBackground, width: 0.75),
                                             borderRadius: BorderRadius.circular(999))),
                                   ])),
                               if (skill.subSkills.isNotEmpty)
@@ -405,7 +407,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
     _screens = [
       // Sheet
-      _tabController!.index != 0
+      (_tabController?.index ?? 0) != 0
           ? Column(
               children: [
                 const SizedBox(height: Measures.vMarginMed),
@@ -611,7 +613,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
               ],
             ),
       // Inventory
-      _tabController!.index != 1
+      (_tabController?.index ?? 0) != 1
           ? Column(children: [
               const SizedBox(height: Measures.vMarginMed),
               ...List.filled(10, GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 74))
@@ -657,30 +659,30 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                             padding: EdgeInsets.only(top: Measures.vMarginThin),
                             child: Rule(),
                           ),
-                        if (isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
-                            child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
-                          )
+                        // if (isEmpty)
+                        //   Padding(
+                        //     padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
+                        //     child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
+                        //   )
                       ],
                       const SizedBox(height: Measures.vMarginSmall),
                     ],
                   );
                 }),
-                const SizedBox(height: Measures.vMarginBig),
+                const SizedBox(height: Measures.vMarginBig * 2),
               ],
             ),
       // Enchantments
-      _tabController!.index != 2
+      (_tabController?.index ?? 0) != 2
           ? Column(children: [
-        const SizedBox(height: Measures.vMarginMed),
-        GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 100),
-        const SizedBox(height: Measures.vMarginMed),
-        ...List.filled(10, Padding(
-          padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-          child: GlassCard(isShimmer: true, shimmerHeight: 70),
-        ))
-      ])
+              const SizedBox(height: Measures.vMarginMed),
+              ...List.filled(
+                  12,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                    child: GlassCard(isShimmer: true, shimmerHeight: 70),
+                  ))
+            ])
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -708,11 +710,11 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                             (level) => Padding(
                               padding: const EdgeInsets.all(1),
                               child: Container(
-                                width: slotSize,
-                                height: slotSize,
+                                width: slotSizeSquare,
+                                height: slotSizeSquare,
                                 decoration: BoxDecoration(
-                                    border: Border.all(color: Palette.onBackground, width: 0.35),
-                                    borderRadius: BorderRadius.circular(5)),
+                                    border: Border.all(color: Palette.onBackground, width: 0.45),
+                                    borderRadius: BorderRadius.circular(6)),
                                 child: Align(
                                     alignment: Alignment.center,
                                     child: Text(level.num.toString(), style: Fonts.light(size: 18))),
@@ -732,11 +734,11 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                             (level) => Padding(
                               padding: const EdgeInsets.all(1),
                               child: Container(
-                                width: slotSize,
-                                height: slotSize,
+                                width: slotSizeSquare,
+                                height: slotSizeSquare,
                                 decoration: BoxDecoration(
-                                    border: Border.all(color: Palette.onBackground, width: 0.85),
-                                    borderRadius: BorderRadius.circular(5)),
+                                    border: Border.all(color: Palette.onBackground, width: 1),
+                                    borderRadius: BorderRadius.circular(6)),
                                 child: Align(
                                     alignment: Alignment.center,
                                     child: NumericInput(
@@ -747,6 +749,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                           isDense: true,
                                           initialValue: character.totalSlots[level]?.toString() ?? '—',
                                           zeroEncoding: '—',
+                                          finalize: () => setState(() => character.totalSlots[level] =
+                                              int.tryParse(_slotsControllers[level]!.text) ?? 0),
                                           style: Fonts.regular(size: 18)),
                                     )),
                               ),
@@ -762,25 +766,62 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                 ...en.Level.values.map((level) {
                   final isEmpty =
                       character.enchantments.value?.where((e) => e.level == level).isEmpty != false;
+                  if (isEmpty && (character.totalSlots[level] ?? 0) <= 0) return Container();
                   return Column(
                     children: [
                       // Header
-                      Clickable(
-                        active: !isEmpty,
-                        onTap: () => setState(() => _setIsEnchantmentLevelExpanded(
-                            level, !_getIsEnchantmentLevelExpanded(level))),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
-                          child: Row(children: [
-                            Text(level.title, style: Fonts.black(size: 18)),
-                            const SizedBox(width: Measures.hMarginMed),
-                            if (!isEmpty)
-                              'chevron_left'.toIcon(
-                                  height: 16,
-                                  rotation: _getIsEnchantmentLevelExpanded(level) ? pi / 2 : -pi / 2)
-                          ]),
-                        ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
+                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                          Clickable(
+                            active: !isEmpty,
+                            onTap: () => setState(() => _setIsEnchantmentLevelExpanded(
+                                level, !_getIsEnchantmentLevelExpanded(level))),
+                            child: Row(children: [
+                              Text(level.title, style: Fonts.black(size: 18)),
+                              const SizedBox(width: Measures.hMarginMed),
+                              if (!isEmpty)
+                                'chevron_left'.toIcon(
+                                    height: 16,
+                                    rotation: _getIsEnchantmentLevelExpanded(level) ? pi / 2 : -pi / 2),
+                              const SizedBox(width: Measures.hMarginBig)
+                            ]),
+                          ),
+                          StatefulBuilder(
+                            builder: (context, setState) => Clickable(
+                              onTap: () => setState(() => character.availableSlots[level] =
+                                  ((character.availableSlots[level] ?? 0) + 1) %
+                                      ((character.totalSlots[level] ?? 0) + 1)),
+                              child: Expanded(
+                                child: SingleChildScrollView(
+                                  reverse: true,
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                      children: List.generate(
+                                          character.totalSlots[level] ?? 0,
+                                          (i) => Padding(
+                                                padding:
+                                                    const EdgeInsets.only(left: Measures.hMarginMoreThin),
+                                                child: Container(
+                                                  width: slotSizeCircle,
+                                                  height: slotSizeCircle,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(999),
+                                                      border: Border.all(
+                                                          color: Palette.onBackground, width: 0.75),
+                                                      color: i >=
+                                                              (character.totalSlots[level] ?? 0) -
+                                                                  (character.availableSlots[level] ?? 0)
+                                                          ? Palette.onBackground
+                                                          : Colors.transparent),
+                                                ),
+                                              ))),
+                                ),
+                              ),
+                            ),
+                          )
+                        ]),
                       ),
                       // List of enchantments
                       if (character.enchantments.value == null)
@@ -788,23 +829,42 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                             2, const GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 50)),
                       if (character.enchantments.value != null) ...[
                         if (!isEmpty && _getIsEnchantmentLevelExpanded(level))
-                          ...enchantments(level)!.map((e) => EnchantmentCard(e)),
+                          ...enchantments(level)!.map((e) => Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                                child: EnchantmentCard(
+                                  e,
+                                  additionalBottomSheetItems: [
+                                    BottomSheetItem('png/delete_2', 'Rimuovi', () {
+                                      context.popup('Stai per rimuovere un incantesimo',
+                                          message:
+                                              "Sei sicuro di voler rimuovere l'incantesimo ${e.name}?",
+                                          positiveText: 'Si',
+                                          negativeText: 'No', positiveCallback: () {
+                                        character.enchantmentUIDs.remove(e.uid);
+                                        character.enchantments.value = null;
+                                        DataManager().loadCharacterEnchantments(character);
+                                      });
+                                    })
+                                  ],
+                                  onTap: () => context.goto('/enchantment', args: e),
+                                ),
+                              )),
                         if (!isEmpty && !_getIsEnchantmentLevelExpanded(level))
                           const Padding(
                             padding: EdgeInsets.only(top: Measures.vMarginThin),
                             child: Rule(),
                           ),
-                        if (isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
-                            child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
-                          )
+                        // if (isEmpty)
+                        //   Padding(
+                        //     padding: const EdgeInsets.only(top: Measures.vMarginMoreThin),
+                        //     child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
+                        //   )
                       ],
                       const SizedBox(height: Measures.vMarginSmall),
                     ],
                   );
                 }),
-                const SizedBox(height: Measures.vMarginBig),
+                const SizedBox(height: Measures.vMarginBig * 2),
               ],
             ),
       // Background
@@ -912,14 +972,12 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                           ...InventoryItem.types.slice(0, -1).map((type) => BottomSheetItem(
                                 InventoryItem.icons[type]!,
                                 InventoryItem.namesSingulars[type]!,
-                                () {
-                                  context.goto('/create_item',
-                                      arguments: CreateItemArgs(type, character: character),
-                                      then: (_) async {
-                                    ScaffoldMessenger.of(context).clearSnackBars();
-                                    character.inventory.value = null;
-                                    await DataManager().loadCharacterInventory(character);
-                                  });
+                                () async {
+                                  await context.goto('/create_item',
+                                      args: CreateItemArgs(type, character: character));
+                                  ScaffoldMessenger.of(context).clearSnackBars();
+                                  character.inventory.value = null;
+                                  await DataManager().loadCharacterInventory(character);
                                 },
                               ))
                         ]));
@@ -929,8 +987,15 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       FABArgs(
           color: Palette.primaryBlue,
           icon: 'add',
-          onPress: () {
-            // todo: GOTO enchantment selection
+          onPress: () async {
+            var uid = await context.goto('/enchantments',
+                args: EnchantmentsArgs(
+                    title: 'Seleziona l\'incantesimo da aggiungere', filterClasses: [character.class_]));
+            if (uid is String) {
+              character.enchantmentUIDs.add(uid);
+              character.enchantments.value = null;
+              await DataManager().loadCharacterEnchantments(character);
+            }
           }),
       null,
       null,
@@ -1081,7 +1146,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       'png/dice_on',
                       'Tira i danni',
                       () => context.goto('/dice',
-                          arguments: DiceArgs(
+                          args: DiceArgs(
                               title: 'Lancio di danni per ${item.title}',
                               dices: item.rollDamage,
                               modifier: item.fixedDamage,

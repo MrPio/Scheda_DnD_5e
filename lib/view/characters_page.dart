@@ -52,8 +52,10 @@ class _CharactersPageState extends State<CharactersPage> {
 
   @override
   void initState() {
-    HomePage.onFabTaps[widget.runtimeType] =
-        () => context.goto('/create_character', then: (_) => refresh());
+    HomePage.onFabTaps[widget.runtimeType] = () async {
+      await context.goto('/create_character');
+      refresh();
+    };
 
     _filters = [
       Filter<Character, Class>('Classe', Palette.primaryGreen, Class.values,
@@ -86,7 +88,8 @@ class _CharactersPageState extends State<CharactersPage> {
     super.dispose();
   }
 
-  final c=TextEditingController();
+  final c = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final characters = _characters;
@@ -253,10 +256,11 @@ class _CharactersPageState extends State<CharactersPage> {
       );
 
   /// When returning from the character page, reload if any changes have been applied
-  gotoCharacter(Character character) => context.goto('/character', arguments: character, then: (args) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        args is CharacterPageToCharactersPageArgs && !args.noChanges ? null : refresh();
-      });
+  gotoCharacter(Character character) async {
+    final args = await context.goto('/character', args: character);
+    ScaffoldMessenger.of(context).clearSnackBars();
+    args is CharacterPageToCharactersPageArgs && !args.noChanges ? null : refresh();
+  }
 
   /// Refresh the characters UIDs
   refresh() {
