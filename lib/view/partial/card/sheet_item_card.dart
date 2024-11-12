@@ -43,11 +43,11 @@ class SheetItemCard extends StatefulWidget {
 
 class _SheetItemCardState extends State<SheetItemCard> {
   bool get isSmall => widget.value == null && widget.subValue == null && widget.child == null;
-bool isShimmer=true;
+bool isShimmer=false;
 
 @override
   void initState() {
-    Future.delayed(Durations.medium2,()=>setState(()=>isShimmer=false));
+    // Future.delayed(Durations.short4,()=>setState(()=>isShimmer=false));
     super.initState();
   }
   @override

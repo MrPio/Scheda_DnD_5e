@@ -42,6 +42,12 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       (json['subSkills'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry($enumDecode(_$SubSkillEnumMap, k), e as int),
       ),
+      (json['totalSlots'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry($enumDecode(_$LevelEnumMap, k), e as int),
+      ),
+      (json['availableSlots'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry($enumDecode(_$LevelEnumMap, k), e as int),
+      ),
       (json['masteries'] as List<dynamic>?)
           ?.map((e) => $enumDecode(_$MasteryEnumMap, e))
           .toSet(),
@@ -54,6 +60,9 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       json['armorClass'] as int,
       json['initiative'] as int,
       (json['speed'] as num).toDouble(),
+      (json['enchantmentUIDs'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toSet(),
     );
 
 Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
@@ -75,9 +84,14 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
           instance.customSkills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
       'subSkills':
           instance.subSkills.map((k, e) => MapEntry(_$SubSkillEnumMap[k]!, e)),
+      'totalSlots':
+          instance.totalSlots.map((k, e) => MapEntry(_$LevelEnumMap[k]!, e)),
+      'availableSlots': instance.availableSlots
+          .map((k, e) => MapEntry(_$LevelEnumMap[k]!, e)),
       'masteries': instance.masteries.map((e) => _$MasteryEnumMap[e]!).toList(),
       'languages':
           instance.languages.map((e) => _$LanguageEnumMap[e]!).toList(),
+      'enchantmentUIDs': instance.enchantmentUIDs.toList(),
       'status': _$StatusEnumMap[instance.status],
       'alignment': _$AlignmentEnumMap[instance.alignment]!,
       'level': instance.level,
@@ -213,6 +227,19 @@ const _$SubSkillEnumMap = {
   SubSkill.intimidire: 'intimidire',
   SubSkill.intrattenere: 'intrattenere',
   SubSkill.persuasione: 'persuasione',
+};
+
+const _$LevelEnumMap = {
+  Level.level0: 'level0',
+  Level.level1: 'level1',
+  Level.level2: 'level2',
+  Level.level3: 'level3',
+  Level.level4: 'level4',
+  Level.level5: 'level5',
+  Level.level6: 'level6',
+  Level.level7: 'level7',
+  Level.level8: 'level8',
+  Level.level9: 'level9',
 };
 
 const _$MasteryEnumMap = {

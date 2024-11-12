@@ -13,10 +13,9 @@ import 'package:scheda_dnd_5e/model/enchantment.dart' hide Type;
 import 'package:tuple/tuple.dart';
 
 import '../enum/dice.dart';
-import '../manager/data_manager.dart';
 import 'loot.dart';
 
-part 'character.g.dart';
+part 'part/character.g.dart';
 
 enum SubClass implements EnumWithTitle {
   // Servono solo per lettura info
@@ -2559,6 +2558,8 @@ class Character with Comparable<Character> implements WithUID {
   Map<Skill, int> rollSkills = {}; // The results of the dice thrown at the end of the character creation
   Map<Skill, int> customSkills = {}; // The custom skills values manually assigned by the user
   Map<SubSkill, int> subSkills = {};
+  Map<Level, int> totalSlots = {};
+  Map<Level, int> availableSlots = {};
   Set<Mastery> masteries = {};
   Set<Language> languages = {};
   Set<String> enchantmentUIDs = {};
@@ -2634,6 +2635,8 @@ class Character with Comparable<Character> implements WithUID {
       Map<Skill, int>? rollSkills,
       Map<Skill, int>? customSkills,
       Map<SubSkill, int>? subSkills,
+      Map<Level, int>? totalSlots,
+      Map<Level, int>? availableSlots,
       Set<Mastery>? masteries,
       Set<Language>? languages,
       this.status,
@@ -2651,6 +2654,8 @@ class Character with Comparable<Character> implements WithUID {
         rollSkills = rollSkills ?? {},
         customSkills = customSkills ?? {},
         subSkills = subSkills ?? {},
+        totalSlots = totalSlots ?? {},
+        availableSlots = availableSlots ?? {},
         masteries = masteries ?? {},
         languages = languages ?? {},
         enchantmentUIDs = enchantmentUIDs ?? {},
@@ -2715,10 +2720,6 @@ class Character with Comparable<Character> implements WithUID {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   ValueNotifier<Set<Enchantment>?> enchantments = ValueNotifier(null);
-
-  // @JsonKey(includeFromJson: false, includeToJson: false)
-  // Set<Enchantment> get enchantments =>
-  //     DataManager().cachedEnchantments.where((e) => enchantmentUIDs.contains(e.uid)).toSet();
 
   // il max è 20
   int skillValue(Skill skill) =>

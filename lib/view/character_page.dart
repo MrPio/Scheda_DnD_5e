@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
@@ -625,7 +626,47 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Inventory sections
-          const SizedBox(height: Measures.vMarginMoreThin),
+          const SizedBox(height: Measures.vMarginThin),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+            child: Text('Slot disponibili', style: Fonts.black(size: 18)),
+          ),
+          const SizedBox(height: Measures.vMarginThin),
+          SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+            scrollDirection: Axis.horizontal,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 60,
+                      child: Text('Livello', style: Fonts.light(size: 16)),
+                    ),// TODO here
+                    ...List.filled(9, Padding(
+                      padding: const EdgeInsets.only(right: Measures.vMarginThinnest),
+                      child: Container(width: 33,height: 33,color: Colors.yellow),
+                    ))
+                  ],
+                ),
+                const SizedBox(height: Measures.vMarginThinnest),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 60,
+                      child: Text('Slot', style: Fonts.regular(size: 16)),
+                    ),
+                    ...List.filled(9, Padding(
+                      padding: const EdgeInsets.only(right: Measures.hMarginThin),
+                      child: Container(width: 33,height: 33,color: Colors.red),
+                    ))
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: Measures.vMarginSmall),
           ...en.Level.values.map((level) {
             final isEmpty = character.enchantments.value?.where((e) => e.level == level).isEmpty != false;
             return Column(
@@ -636,7 +677,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                   onTap: () => setState(() =>
                       _setIsEnchantmentLevelExpanded(level, !_getIsEnchantmentLevelExpanded(level))),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric( vertical: Measures.vMarginThin),
+                    padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding,vertical: Measures.vMarginThin),
                     child: Row(children: [
                       Text(level.title, style: Fonts.black(size: 18)),
                       const SizedBox(width: Measures.hMarginMed),
@@ -707,8 +748,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                   ],
                 ),
                 items: [
-                  BottomSheetItem('png/common_item', 'Un\'oggetto comune', () async {
-                    await Future.delayed(Durations.short3);
+                  BottomSheetItem('png/common_item', 'Un\'oggetto comune', () {
+                    // await Future.delayed(Durations.short3);
                     unknown(Type type) => DataManager().cachedInventoryItems.where(
                         (e) => e.runtimeType == type && !character.inventoryUIDs.containsKey(e.uid!));
                     context.draggableBottomSheet(
@@ -753,8 +794,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       ),
                     );
                   }),
-                  BottomSheetItem('png/custom_item', 'Un\'oggetto personalizzato', () async {
-                    await Future.delayed(Durations.short3);
+                  BottomSheetItem('png/custom_item', 'Un\'oggetto personalizzato', () {
+                    // await Future.delayed(Durations.short3);
                     context.bottomSheet(BottomSheetArgs(
                         header: Row(
                           children: [
@@ -787,7 +828,12 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                   }),
                 ]));
           }),
-      null,
+      FABArgs(
+          color: Palette.primaryBlue,
+          icon: 'add',
+          onPress: () {
+            // todo: GOTO enchantment selection
+          }),
       null,
       null,
     ];
@@ -883,7 +929,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       children: _screens!
                           .map((e) => SingleChildScrollView(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: _screens!.indexOf(e) == 1 ? 0 : Measures.hPadding),
+                                    horizontal: [1,2].contains(_screens!.indexOf(e))  ? 0 : Measures.hPadding),
                                 child: e,
                               ))
                           .toList(),
