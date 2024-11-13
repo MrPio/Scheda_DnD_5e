@@ -2540,6 +2540,21 @@ enum Alignment implements EnumWithTitle {
       };
 }
 
+enum Background implements EnumWithTitle {
+  physical('Descrizione fisica','png/physical',"Descrivi l'aspetto fisico del personaggio."),
+  history('Storia','png/history',"Riassumi le esperienze principali del personaggio."),
+  traits('Tratti caratteriali','png/traits',"Elenca i tratti distintivi della personalità."),
+  defects('Difetti','png/defects',"Descrivi i punti deboli e i difetti."),
+  ideals('Ideali','png/ideals',"Indica i valori e le aspirazioni."),
+  bonds('Legami','png/bonds',"Scrivi le relazioni e i legami principali.");
+
+  @override
+  final String title;
+  final String iconPath,hint;
+
+  const Background(this.title,this.iconPath,this.hint);
+}
+
 @JsonSerializable(constructor: 'jsonConstructor')
 class Character with Comparable<Character> implements WithUID {
   int regDateTimestamp;
@@ -2568,6 +2583,7 @@ class Character with Comparable<Character> implements WithUID {
   int level, armorClass, initiative;
   Map<String, int> weaponsUIDs = {}, armorsUIDs = {}, itemsUIDs = {}, coinsUIDs = {};
   double speed;
+  String? physical, history, traits, defects, ideals, bonds;
 
   Map<Type, Map<String, int>> get inventoryItems => {
         Weapon: weaponsUIDs,
@@ -2645,6 +2661,12 @@ class Character with Comparable<Character> implements WithUID {
       this.armorClass,
       this.initiative,
       this.speed,
+      this.physical,
+      this.history,
+      this.traits,
+      this.defects,
+      this.ideals,
+      this.bonds,
       Set<String>? enchantmentUIDs)
       : weaponsUIDs = weaponsUIDs ?? {},
         armorsUIDs = armorsUIDs ?? {},
@@ -2720,6 +2742,25 @@ class Character with Comparable<Character> implements WithUID {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   ValueNotifier<Set<Enchantment>?> enchantments = ValueNotifier(null);
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  Map<Background, String?> get descriptions => {
+        Background.physical: physical,
+        Background.history: history,
+        Background.traits: traits,
+        Background.defects: defects,
+        Background.ideals: ideals,
+        Background.bonds: bonds,
+      };
+
+  set descriptions(Map<Background, String?> value) {
+    physical = value[Background.physical];
+    history = value[Background.history];
+    traits = value[Background.traits];
+    defects = value[Background.defects];
+    ideals = value[Background.ideals];
+    bonds = value[Background.bonds];
+  }
 
   // il max è 20
   int skillValue(Skill skill) =>

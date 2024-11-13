@@ -28,6 +28,7 @@ import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
 import 'package:scheda_dnd_5e/view/partial/fab.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
+import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_column.dart';
 import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
@@ -70,6 +71,12 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
   _setIsEnchantmentLevelExpanded(en.Level level, bool value) =>
       IOManager().set('character_page_isEnchantmentLevelExpanded_${level.num}', value);
 
+  bool _getIsBackgroundExpanded(Background background) =>
+      IOManager().get<bool>('character_page_IsBackgroundExpanded_${background.name}') ?? true;
+
+  _setIsBackgroundExpanded(Background background, bool value) =>
+      IOManager().set('character_page_IsBackgroundExpanded_${background.name}', value);
+
   List<en.Enchantment>? enchantments(en.Level level) =>
       _character?.enchantments.value?.where((e) => e.level == level).toList()?..sort();
 
@@ -90,6 +97,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
     for (var level in en.Level.values) level: TextEditingController()
   };
   final double slotSizeSquare = 38, slotSizeCircle = 24;
+  late final Map<Background, TextEditingController> _backgroundControllers;
 
   bool get hasChanges => jsonEncode(_oldCharacter!.toJSON()) != jsonEncode(_character!.toJSON());
 
@@ -112,6 +120,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
     _character!.initiative = int.tryParse(_initiativeController.text) ?? _character!.initiative;
     _slotsControllers
         .forEach((key, value) => _character!.totalSlots[key] = int.tryParse(value.text) ?? 0);
+    _character!.descriptions = _backgroundControllers.map((key, value) => MapEntry(key, value.text));
+
     // TODO here: set available slots
 
     // If the character is any different from `initState`, save it.
@@ -146,6 +156,9 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       _oldCharacter = Character.fromJson(_character!.toJSON());
       _character!.inventory.addListener(() => mounted ? setState(() {}) : null);
       _character!.enchantments.addListener(() => mounted ? setState(() {}) : null);
+      _backgroundControllers = {
+        for (var b in Background.values) b: TextEditingController(text: _character?.descriptions[b] ?? '')
+      };
     }
     final character = _character!;
 
@@ -793,31 +806,29 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                               onTap: () => setState(() => character.availableSlots[level] =
                                   ((character.availableSlots[level] ?? 0) + 1) %
                                       ((character.totalSlots[level] ?? 0) + 1)),
-                              child: Expanded(
-                                child: SingleChildScrollView(
-                                  reverse: true,
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                      children: List.generate(
-                                          character.totalSlots[level] ?? 0,
-                                          (i) => Padding(
-                                                padding:
-                                                    const EdgeInsets.only(left: Measures.hMarginMoreThin),
-                                                child: Container(
-                                                  width: slotSizeCircle,
-                                                  height: slotSizeCircle,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(999),
-                                                      border: Border.all(
-                                                          color: Palette.onBackground, width: 0.75),
-                                                      color: i >=
-                                                              (character.totalSlots[level] ?? 0) -
-                                                                  (character.availableSlots[level] ?? 0)
-                                                          ? Palette.onBackground
-                                                          : Colors.transparent),
-                                                ),
-                                              ))),
-                                ),
+                              child: SingleChildScrollView(
+                                reverse: true,
+                                scrollDirection: Axis.horizontal,
+                                child: Row(
+                                    children: List.generate(
+                                        character.totalSlots[level] ?? 0,
+                                        (i) => Padding(
+                                              padding:
+                                                  const EdgeInsets.only(left: Measures.hMarginMoreThin),
+                                              child: Container(
+                                                width: slotSizeCircle,
+                                                height: slotSizeCircle,
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(999),
+                                                    border: Border.all(
+                                                        color: Palette.onBackground, width: 0.75),
+                                                    color: i >=
+                                                            (character.totalSlots[level] ?? 0) -
+                                                                (character.availableSlots[level] ?? 0)
+                                                        ? Palette.onBackground
+                                                        : Colors.transparent),
+                                              ),
+                                            ))),
                               ),
                             ),
                           )
@@ -868,7 +879,60 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
               ],
             ),
       // Background
-      const Placeholder(),
+      (_tabController?.index ?? 0) != 3
+          ? Column(children: [
+              const SizedBox(height: Measures.vMarginMed),
+              ...List.filled(10, GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 74))
+            ])
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Inventory sections
+                const SizedBox(height: Measures.vMarginMoreThin),
+                ...character.descriptions.entries.map((description) {
+                  return Column(
+                    children: [
+                      // Header
+                      Clickable(
+                        onTap: () => setState(() => _setIsBackgroundExpanded(
+                            description.key, !_getIsBackgroundExpanded(description.key))),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
+                          child: Row(children: [
+                            Text(description.key.title, style: Fonts.black(size: 18)),
+                            const SizedBox(width: Measures.hMarginMed),
+                            'chevron_left'.toIcon(
+                                height: 16,
+                                rotation: _getIsBackgroundExpanded(description.key) ? pi / 2 : -pi / 2)
+                          ]),
+                        ),
+                      ),
+                      // List of background descriptions
+                      if (_getIsBackgroundExpanded(description.key))
+                        GlassTextField(
+                          isFlat: true,
+                          lines: 5,
+                          iconPath: description.key.iconPath,
+                          textInputAction: TextInputAction.done,
+                          hintText: description.key.hint,
+                          // secondaryIconPath: 'png/random',
+                          // onSecondaryIconTap: (){},
+                          clearable: true,
+                          textController: _backgroundControllers[description.key],
+                        ),
+                      if (!_getIsBackgroundExpanded(description.key))
+                        const Padding(
+                          padding: EdgeInsets.only(top: Measures.vMarginThin),
+                          child: Rule(),
+                        ),
+                      const SizedBox(height: Measures.vMarginSmall),
+                    ],
+                  );
+                }),
+                const SizedBox(height: Measures.vMarginBig * 2),
+              ],
+            ),
       // Ability
       const Placeholder(),
     ];
@@ -1093,7 +1157,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                           .map((e) => SingleChildScrollView(
                                 padding: EdgeInsets.symmetric(
                                     horizontal:
-                                        [1, 2].contains(_screens!.indexOf(e)) ? 0 : Measures.hPadding),
+                                        [1, 2, 3].contains(_screens!.indexOf(e)) ? 0 : Measures.hPadding),
                                 child: e,
                               ))
                           .toList(),

@@ -12,7 +12,7 @@ class Palette {
   static const primaryBlue = Color(0xFF3f8cdc);
   static const primaryYellow =Color(0xFFffb800);//Color(0xFFffd37f);
   static const card = Color(0x17ffffff);
-  static const card2 = Color(0x28ffffff);
+  static const card2 = Color(0x22ffffff);
   static const hint = Color(0x64ffffff);
   static const popup = Color(0x5D0061A4);
 }

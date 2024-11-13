@@ -8,45 +8,46 @@ part of '../character.dart';
 
 Character _$CharacterFromJson(Map<String, dynamic> json) =>
     Character.jsonConstructor(
-      json['regDateTimestamp'] as int,
+      (json['regDateTimestamp'] as num).toInt(),
       json['campaignUID'] as String?,
       json['authorUID'] as String,
       json['_name'] as String,
-      json['_hp'] as int?,
-      json['_maxHp'] as int?,
+      (json['_hp'] as num?)?.toInt(),
+      (json['_maxHp'] as num?)?.toInt(),
       (json['weaponsUIDs'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as int),
+        (k, e) => MapEntry(k, (e as num).toInt()),
       ),
       (json['armorsUIDs'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as int),
+        (k, e) => MapEntry(k, (e as num).toInt()),
       ),
       (json['itemsUIDs'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as int),
+        (k, e) => MapEntry(k, (e as num).toInt()),
       ),
       (json['coinsUIDs'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry(k, e as int),
+        (k, e) => MapEntry(k, (e as num).toInt()),
       ),
       $enumDecode(_$ClassEnumMap, json['class_']),
       $enumDecode(_$SubClassEnumMap, json['subClass']),
       $enumDecode(_$RaceEnumMap, json['race']),
       $enumDecodeNullable(_$SubRaceEnumMap, json['subRace']),
       (json['_chosenSkills'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), e as int),
+        (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), (e as num).toInt()),
       ),
       (json['rollSkills'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), e as int),
+        (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), (e as num).toInt()),
       ),
       (json['customSkills'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), e as int),
+        (k, e) => MapEntry($enumDecode(_$SkillEnumMap, k), (e as num).toInt()),
       ),
       (json['subSkills'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry($enumDecode(_$SubSkillEnumMap, k), e as int),
+        (k, e) =>
+            MapEntry($enumDecode(_$SubSkillEnumMap, k), (e as num).toInt()),
       ),
       (json['totalSlots'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry($enumDecode(_$LevelEnumMap, k), e as int),
+        (k, e) => MapEntry($enumDecode(_$LevelEnumMap, k), (e as num).toInt()),
       ),
       (json['availableSlots'] as Map<String, dynamic>?)?.map(
-        (k, e) => MapEntry($enumDecode(_$LevelEnumMap, k), e as int),
+        (k, e) => MapEntry($enumDecode(_$LevelEnumMap, k), (e as num).toInt()),
       ),
       (json['masteries'] as List<dynamic>?)
           ?.map((e) => $enumDecode(_$MasteryEnumMap, e))
@@ -56,10 +57,16 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
           .toSet(),
       $enumDecodeNullable(_$StatusEnumMap, json['status']),
       $enumDecode(_$AlignmentEnumMap, json['alignment']),
-      json['level'] as int,
-      json['armorClass'] as int,
-      json['initiative'] as int,
+      (json['level'] as num).toInt(),
+      (json['armorClass'] as num).toInt(),
+      (json['initiative'] as num).toInt(),
       (json['speed'] as num).toDouble(),
+      json['physical'] as String?,
+      json['history'] as String?,
+      json['traits'] as String?,
+      json['defects'] as String?,
+      json['ideals'] as String?,
+      json['bonds'] as String?,
       (json['enchantmentUIDs'] as List<dynamic>?)
           ?.map((e) => e as String)
           .toSet(),
@@ -102,6 +109,12 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       'itemsUIDs': instance.itemsUIDs,
       'coinsUIDs': instance.coinsUIDs,
       'speed': instance.speed,
+      'physical': instance.physical,
+      'history': instance.history,
+      'traits': instance.traits,
+      'defects': instance.defects,
+      'ideals': instance.ideals,
+      'bonds': instance.bonds,
       'skills': instance.skills.map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
       'skillsModifier': instance.skillsModifier
           .map((k, e) => MapEntry(_$SkillEnumMap[k]!, e)),
