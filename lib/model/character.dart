@@ -654,6 +654,7 @@ enum Class implements EnumWithTitle {
   barbaro(
       'Barbaro',
       'png/barbarian',
+      3,
       [
         SubClass.camminoDelBerserker,
         SubClass.camminoDelCombattenteTotemico,
@@ -675,8 +676,14 @@ enum Class implements EnumWithTitle {
         Mastery.armiSemplici,
         Mastery.armiDaGuerra
       ],
+      [
+        Mastery.scudi,
+        Mastery.armiSemplici,
+        Mastery.armiDaGuerra,
+      ],
       0,
       [],
+      false,
       [Skill.forza, Skill.costituzione],
       [
         {
@@ -759,6 +766,7 @@ enum Class implements EnumWithTitle {
   bardo(
       'Bardo',
       'png/bard',
+      3,
       [
         SubClass.collegioSapienza,
         SubClass.collegioValore,
@@ -793,8 +801,12 @@ enum Class implements EnumWithTitle {
         Mastery.spadeLunghe,
         Mastery.stocchi
       ],
+      [
+        Mastery.armatureLeggere,
+      ],
       3,
       [MasteryType.strumentiMusicali],
+      true,
       [Skill.destrezza, Skill.carisma],
       [
         {
@@ -864,8 +876,9 @@ enum Class implements EnumWithTitle {
   chierico(
       'Chierico',
       'png/cleric',
+      1,
       [
-        // SubClass.dominioDellaConoscenza,
+        SubClass.dominioDellaConoscenza,
         SubClass.dominioDellaGuerra,
         SubClass.dominioDellaLuce,
         SubClass.dominioDellaNatura,
@@ -888,8 +901,14 @@ enum Class implements EnumWithTitle {
         Mastery.armiSemplici,
         Mastery.scudi,
       ],
+      [
+        Mastery.armatureLeggere,
+        Mastery.armatureMedie,
+        Mastery.scudi,
+      ],
       0,
       [],
+      false,
       [Skill.saggezza, Skill.carisma],
       [
         {'mazza': 1, 'martelloDaGuerra': 1},
@@ -943,6 +962,7 @@ enum Class implements EnumWithTitle {
   druido(
       'Druido',
       'png/druid',
+      2,
       [
         SubClass.circoloDellaLuna,
         SubClass.circoloDellaTerra,
@@ -975,8 +995,14 @@ enum Class implements EnumWithTitle {
         Mastery.scimitarre,
         Mastery.strumentiDaErborista
       ],
+      [
+        Mastery.armatureLeggere,
+        Mastery.armatureMedie,
+        Mastery.scudi,
+      ],
       0,
       [],
+      false,
       [Skill.intelligenza, Skill.saggezza],
       [
         {
@@ -1040,6 +1066,7 @@ enum Class implements EnumWithTitle {
   guerriero(
       'Guerriero',
       'png/warrior',
+      3,
       [
         SubClass.campione,
         SubClass.maestroDiBattaglia,
@@ -1063,9 +1090,16 @@ enum Class implements EnumWithTitle {
         Mastery.armiSemplici,
         Mastery.armiDaGuerra,
       ],
+      [
+        Mastery.armatureLeggere,
+        Mastery.armatureMedie,
+        Mastery.scudi,
+        Mastery.armiSemplici,
+        Mastery.armiDaGuerra,
+      ],
       0,
       [],
-      //non presente
+      false,
       [Skill.forza, Skill.costituzione],
       [
         {'cottaDiMaglia': 1, 'unArmaturaDiCuoioUnArcoLungoE20Frecce': 1},
@@ -1147,6 +1181,7 @@ enum Class implements EnumWithTitle {
   ladro(
       'Ladro',
       'png/thief',
+      3,
       [
         SubClass.furfante,
         SubClass.assassino,
@@ -1177,8 +1212,13 @@ enum Class implements EnumWithTitle {
         Mastery.stocchi,
         Mastery.arnesiDaScasso,
       ],
+      [
+        Mastery.armatureLeggere,
+        Mastery.arnesiDaScasso,
+      ],
       0,
       [],
+      true,
       [Skill.destrezza, Skill.intelligenza],
       [
         {'stocco': 1, 'spadaCorta': 1},
@@ -1228,6 +1268,7 @@ enum Class implements EnumWithTitle {
   mago(
       'Mago',
       'png/magician',
+      2,
       [
         SubClass.abiurazione,
         SubClass.ammaliamento,
@@ -1255,8 +1296,10 @@ enum Class implements EnumWithTitle {
         Mastery.fionde,
         Mastery.pugnali,
       ],
+      [],
       0,
       [],
+      false,
       [Skill.intelligenza, Skill.saggezza],
       [
         {'bastoneFerrato': 1, 'pugnale': 1},
@@ -1290,6 +1333,7 @@ enum Class implements EnumWithTitle {
   monaco(
       'Monaco',
       'png/monk',
+      3,
       [
         SubClass.viaDeiQuattroElementi,
         SubClass.viaDellaManoAperta,
@@ -1309,8 +1353,13 @@ enum Class implements EnumWithTitle {
         Mastery.armiSemplici,
         Mastery.spadeCorte,
       ],
+      [
+        Mastery.armiSemplici,
+        Mastery.spadeCorte,
+      ],
       1,
       [MasteryType.strumentiArtigiano, MasteryType.strumentiMusicali],
+      false,
       [Skill.destrezza, Skill.forza],
       [
         {
@@ -1383,9 +1432,10 @@ enum Class implements EnumWithTitle {
   paladino(
       'Paladino',
       'png/paladin',
+      3,
       [
         SubClass.giuramentoDegliAntichi,
-        // SubClass.giuramentoDiDevozione,
+        SubClass.giuramentoDiDevozione,
         SubClass.giuramentoDellaVendetta,
       ],
       true,
@@ -1404,8 +1454,16 @@ enum Class implements EnumWithTitle {
         Mastery.armiSemplici,
         Mastery.armiDaGuerra,
       ],
+      [
+        Mastery.armatureLeggere,
+        Mastery.armatureMedie,
+        Mastery.scudi,
+        Mastery.armiSemplici,
+        Mastery.armiDaGuerra,
+      ],
       0,
       [],
+      false,
       [Skill.saggezza, Skill.carisma],
       [
         {
@@ -1413,7 +1471,7 @@ enum Class implements EnumWithTitle {
           'ascia': 1,
           'bastoneFerrato': 1,
           'falcetto': 1,
-          // 'giavellotto':1,
+          'giavellotto':1,
           'lancia': 1,
           'martelloLeggero': 1,
           'mazza': 1,
@@ -1515,6 +1573,7 @@ enum Class implements EnumWithTitle {
   ranger(
       'Ranger',
       'png/ranger',
+      3,
       [
         SubClass.cacciatore,
         SubClass.signoreDelleBestie,
@@ -1538,8 +1597,16 @@ enum Class implements EnumWithTitle {
         Mastery.armiDaGuerra,
         Mastery.armatureMedie,
       ],
+      [
+        Mastery.armatureLeggere,
+        Mastery.scudi,
+        Mastery.armiSemplici,
+        Mastery.armiDaGuerra,
+        Mastery.armatureMedie,
+      ],
       0,
       [],
+      true,
       [Skill.forza, Skill.destrezza],
       [
         {'corazzaDiScaglie': 1, 'armaturaDiCuoio': 1},
@@ -1610,6 +1677,7 @@ enum Class implements EnumWithTitle {
   stregone(
       'Stregone',
       'png/sorcerer',
+      1,
       [
         SubClass.discendenzaDraconica,
         SubClass.magiaSelvaggia,
@@ -1631,8 +1699,10 @@ enum Class implements EnumWithTitle {
         Mastery.fionde,
         Mastery.pugnali,
       ],
+      [],
       0,
       [],
+      false,
       [Skill.costituzione, Skill.carisma],
       [
         {
@@ -1680,6 +1750,7 @@ enum Class implements EnumWithTitle {
   warlock(
       'Warlock',
       'png/warlock',
+      1,
       [
         SubClass.ilGrandeAntico,
         SubClass.ilSignoreFatato,
@@ -1700,8 +1771,13 @@ enum Class implements EnumWithTitle {
         Mastery.armatureLeggere,
         Mastery.armiSemplici,
       ],
+      [
+        Mastery.armatureLeggere,
+        Mastery.armiSemplici,
+      ],
       0,
       [],
+      false,
       [Skill.saggezza, Skill.carisma],
       [
         {
@@ -1768,12 +1844,14 @@ enum Class implements EnumWithTitle {
 
   @override
   final String title, description, iconPath;
+  final int levelSubClasses; 
   final List<SubClass> subClasses;
   final bool isEnchanter;
   final List<SubSkill> choiceableSubSkills;
   final int numChoiceableSubSkills, numChoiceableMasteries;
   final List<Mastery> defaultMasteries, defaultMasteriesMultiClass;
-  final List<MasteryType> choiceableMasteryTypes, choiceableMasteryTypesMultiClass;
+  final List<MasteryType> choiceableMasteryTypes;
+  final bool choiceableSubSkillsMultiClass;
   final List<Skill> savingThrows;
   final List<Map<String, int>> choiceableItems;
   final List<Tuple3<int, String, String>> abilities; //level, name, info pop-up
@@ -1781,23 +1859,24 @@ enum Class implements EnumWithTitle {
   final Dice maxHpDice;
 
   const Class(
-       { required this.title,
-      required this.iconPath,
-      required this.subClasses,
-      required this.isEnchanter,
-      required this.choiceableSubSkills,
-      required this.numChoiceableSubSkills,
-      required this.defaultMasteries,
-      required this.defaultMasteriesMultiClass,
-      required this.numChoiceableMasteries,
-      required this.choiceableMasteryTypes,
-      required this.choiceableMasteryTypesMultiClass,
-      required this.savingThrows,
-      required this.choiceableItems,
-      required this.maxHpDice,
-      required this.requirements,
-      required this.abilities,
-      required this.description});
+       {required this.title,  //nome della classe
+      required this.iconPath, //icona
+      required this.levelSubClasses, //livello a cui sblocca la sottoclasse
+      required this.subClasses, //sottoclassi disponibili
+      required this.isEnchanter, //è un incantatore o no
+      required this.choiceableSubSkills, //lista delle abilità selezionabili durante la fase di creazione
+      required this.numChoiceableSubSkills, //numero delle abilità selezionabili durante la fase di creazione
+      required this.defaultMasteries, //competenze che apprende al momento della creazione
+      required this.defaultMasteriesMultiClass, //competenze che apprende al momento di multiclassare
+      required this.numChoiceableMasteries, //numero delle competenze selezionabili durante la fase di creazione
+      required this.choiceableMasteryTypes, //competenze selezionabili durante la fase di creazione
+      required this.choiceableSubSkillsMultiClass, //può scegliere o no un abilità durante il multiclassamento
+      required this.savingThrows, //tiri salvezza della classe
+      required this.choiceableItems, //oggetti selezionabili durante la fase di creazione del personaggio
+      required this.maxHpDice, //dado che bisogna tirare durante il livellamento
+      required this.requirements, //requisiti necessari per multiclassare
+      required this.abilities, //abilità apprendibili ai diversi livelli
+      required this.description}); //elenco di tutte le abilità apprendibili
 
   String get subClassesInfo =>
       subClasses.isEmpty ? 'Nessuna sottoclasse' : subClasses.map((e) => e.title).join(', ');
