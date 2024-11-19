@@ -884,9 +884,9 @@ enum Class implements EnumWithTitle {
       2,
       [
         Mastery.armatureLeggere,
+        Mastery.armatureMedie,
         Mastery.armiSemplici,
         Mastery.scudi,
-        Mastery.armatureMedie,
       ],
       0,
       [],
@@ -1772,8 +1772,8 @@ enum Class implements EnumWithTitle {
   final bool isEnchanter;
   final List<SubSkill> choiceableSubSkills;
   final int numChoiceableSubSkills, numChoiceableMasteries;
-  final List<Mastery> defaultMasteries;
-  final List<MasteryType> choiceableMasteryTypes;
+  final List<Mastery> defaultMasteries, defaultMasteriesMultiClass;
+  final List<MasteryType> choiceableMasteryTypes, choiceableMasteryTypesMultiClass;
   final List<Skill> savingThrows;
   final List<Map<String, int>> choiceableItems;
   final List<Tuple3<int, String, String>> abilities; //level, name, info pop-up
@@ -1781,21 +1781,23 @@ enum Class implements EnumWithTitle {
   final Dice maxHpDice;
 
   const Class(
-      this.title,
-      this.iconPath,
-      this.subClasses,
-      this.isEnchanter,
-      this.choiceableSubSkills,
-      this.numChoiceableSubSkills,
-      this.defaultMasteries,
-      this.numChoiceableMasteries,
-      this.choiceableMasteryTypes,
-      this.savingThrows,
-      this.choiceableItems,
-      this.maxHpDice,
-      this.requirements,
-      this.abilities,
-      this.description);
+       { required this.title,
+      required this.iconPath,
+      required this.subClasses,
+      required this.isEnchanter,
+      required this.choiceableSubSkills,
+      required this.numChoiceableSubSkills,
+      required this.defaultMasteries,
+      required this.defaultMasteriesMultiClass,
+      required this.numChoiceableMasteries,
+      required this.choiceableMasteryTypes,
+      required this.choiceableMasteryTypesMultiClass,
+      required this.savingThrows,
+      required this.choiceableItems,
+      required this.maxHpDice,
+      required this.requirements,
+      required this.abilities,
+      required this.description});
 
   String get subClassesInfo =>
       subClasses.isEmpty ? 'Nessuna sottoclasse' : subClasses.map((e) => e.title).join(', ');
@@ -2541,18 +2543,18 @@ enum Alignment implements EnumWithTitle {
 }
 
 enum Background implements EnumWithTitle {
-  physical('Descrizione fisica','png/physical',"Descrivi l'aspetto fisico del personaggio."),
-  history('Storia','png/history',"Riassumi le esperienze principali del personaggio."),
-  traits('Tratti caratteriali','png/traits',"Elenca i tratti distintivi della personalità."),
-  defects('Difetti','png/defects',"Descrivi i punti deboli e i difetti."),
-  ideals('Ideali','png/ideals',"Indica i valori e le aspirazioni."),
-  bonds('Legami','png/bonds',"Scrivi le relazioni e i legami principali.");
+  physical('Descrizione fisica', 'png/physical', "Descrivi l'aspetto fisico del personaggio."),
+  history('Storia', 'png/history', "Riassumi le esperienze principali del personaggio."),
+  traits('Tratti caratteriali', 'png/traits', "Elenca i tratti distintivi della personalità."),
+  defects('Difetti', 'png/defects', "Descrivi i punti deboli e i difetti."),
+  ideals('Ideali', 'png/ideals', "Indica i valori e le aspirazioni."),
+  bonds('Legami', 'png/bonds', "Scrivi le relazioni e i legami principali.");
 
   @override
   final String title;
-  final String iconPath,hint;
+  final String iconPath, hint;
 
-  const Background(this.title,this.iconPath,this.hint);
+  const Background(this.title, this.iconPath, this.hint);
 }
 
 @JsonSerializable(constructor: 'jsonConstructor')

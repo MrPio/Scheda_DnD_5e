@@ -147,15 +147,17 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                       selected: e.selectedValues.isNotEmpty,
                       text: e.title,
                       color: e.color,
-                      onPressed:  () => e.selectedValues.isNotEmpty&& !(i == 0 && args?.filterClasses != null)
-                              ? setState(() => e.selectedValues.clear())
-                              : context.checkList(
-                                  'Filtro su ${e.title.toLowerCase()}',
-                                  values: e.values,
-                                  color: e.color,
-                                  onChanged: i == 0 && args?.filterClasses != null?null:(value) => setState(() => e.selectedValues.toggle(value)),
-                                  value: (value) => e.selectedValues.contains(value),
-                                ));
+                      onPressed: () => e.selectedValues.isNotEmpty && !(i == 0)
+                          ? setState(() => e.selectedValues.clear())
+                          : context.checkList(
+                              'Filtro su ${e.title.toLowerCase()}',
+                              values: e.values,
+                              color: e.color,
+                              onChanged: i == 0
+                                  ? null
+                                  : (value) => setState(() => e.selectedValues.toggle(value)),
+                              value: (value) => e.selectedValues.contains(value),
+                            ));
                 },
               ),
             ),
