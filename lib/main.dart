@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
-        .copyWith(systemNavigationBarColor: Palette.background));
+        .copyWith(systemNavigationBarColor: Palette.background,statusBarColor: Colors.transparent));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Scheda DnD 5e',

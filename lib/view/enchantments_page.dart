@@ -23,7 +23,7 @@ import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
 import 'package:scheda_dnd_5e/view/partial/recycler_view.dart';
 
 class EnchantmentsArgs {
-  final List<Class>? filterClasses;
+  List<Class>? filterClasses;
   final String? title;
 
   EnchantmentsArgs({this.title, this.filterClasses});
@@ -37,7 +37,7 @@ class EnchantmentsPage extends StatefulWidget {
 }
 
 class _EnchantmentsPageState extends State<EnchantmentsPage> {
-  EnchantmentsArgs? args;
+  ValueNotifier<EnchantmentsArgs?> args = ValueNotifier(null);
   late final TextEditingController _searchController;
   late final List<Filter> _filters;
 
@@ -68,6 +68,21 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
       Filter<Enchantment, Type>('Tipo', Palette.primaryBlue, Type.values,
           (enchantment, values) => values.contains(enchantment.type)),
     ];
+    // Getting any args
+    args.addListener(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        print(args.value?.filterClasses);
+        if (args.value?.filterClasses != null) {
+          if (args.value!.filterClasses!.any((c) => _filters[0].values.contains(c))) {
+            _filters[0].selectedValues.addAll(args.value!.filterClasses!);
+          } else {
+            context.snackbar('Le classi attuali non consentono gli incantesimi',
+                backgroundColor: Palette.backgroundPurple);
+            args.value?.filterClasses = null;
+          }
+        }
+      });
+    });
     // Forcing shimmer effect
     final tmpEnchantments = DataManager().cachedEnchantments;
     DataManager().cachedEnchantments = [];
@@ -79,25 +94,23 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
   @override
   void dispose() {
     _searchController.dispose();
+    ScaffoldMessenger.of(context).clearSnackBars();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    args = (ModalRoute.of(context)!.settings.arguments) as EnchantmentsArgs?;
-    if (args?.filterClasses != null) {
-      _filters[0].selectedValues.addAll(args!.filterClasses!);
-    }
+    args.value ??= (ModalRoute.of(context)!.settings.arguments) as EnchantmentsArgs?;
     final enchantments = _enchantments;
     final page = RecyclerView(
         header: Column(
           children: [
             SizedBox(
-                height:
-                    Measures.vMarginBig + (args == null ? Measures.vMarginMed : -Measures.vMarginThin)),
+                height: Measures.vMarginBig +
+                    (args.value == null ? Measures.vMarginMed : -Measures.vMarginThin)),
             // Page Title
             Stack(children: [
-              if (args != null)
+              if (args.value != null)
                 Align(
                     child: Padding(
                   padding: const EdgeInsets.only(
@@ -105,7 +118,7 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                       bottom: Measures.vMarginThin,
                       left: Measures.hPadding * 3,
                       right: Measures.hPadding),
-                  child: Text(args?.title ?? 'Che incantesimo stai cercando?',
+                  child: Text(args.value?.title ?? 'Che incantesimo stai cercando?',
                       style: Fonts.black(size: 18), overflow: TextOverflow.ellipsis),
                 ))
               else
@@ -115,13 +128,13 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                       alignment: Alignment.centerLeft,
                       child: Text('Che incantesimo stai cercando?', style: Fonts.black())),
                 ),
-              if (args != null)
+              if (args.value != null)
                 const Align(
                   alignment: Alignment.centerLeft,
                   child: Chevron(inAppBar: true),
                 )
             ]),
-            SizedBox(height: args == null ? Measures.vMarginMed : Measures.vMarginSmall),
+            SizedBox(height: args.value == null ? Measures.vMarginMed : Measures.vMarginSmall),
             // Search TextField
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
@@ -147,13 +160,13 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                       selected: e.selectedValues.isNotEmpty,
                       text: e.title,
                       color: e.color,
-                      onPressed: () => e.selectedValues.isNotEmpty && !(i == 0)
+                      onPressed: () => e.selectedValues.isNotEmpty && !(args.value?.filterClasses!=null && i == 0)
                           ? setState(() => e.selectedValues.clear())
                           : context.checkList(
                               'Filtro su ${e.title.toLowerCase()}',
                               values: e.values,
                               color: e.color,
-                              onChanged: i == 0
+                              onChanged: args.value?.filterClasses!=null && i == 0
                                   ? null
                                   : (value) => setState(() => e.selectedValues.toggle(value)),
                               value: (value) => e.selectedValues.contains(value),
@@ -174,7 +187,8 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
             ? enchantments
                 .map<Widget>((e) => Padding(
                       padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-                      child: EnchantmentCard(e, onTap: args != null ? () => context.pop(e.uid) : null),
+                      child:
+                          EnchantmentCard(e, onTap: args.value != null ? () => context.pop(e.uid) : null),
                     ))
                 .toList()
             : List.filled(
@@ -184,7 +198,7 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                   child: const GlassCard(isShimmer: true, shimmerHeight: 75),
                 )));
 
-    if (args == null) {
+    if (args.value == null) {
       return page;
     } else {
       return Scaffold(
