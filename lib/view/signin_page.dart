@@ -60,19 +60,17 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           // await DataManager().invalidateCache<Character>();
           // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
-          await DataManager().fetchData();
-
           // 👤👤👤 FIREBASE AUTH 👤👤👤
           if (await AccountManager().cacheSignIn()) {
             setState(() => isLoading = true);
+            await gotoHome();
             await DataManager().fetchUserItems();
-            gotoHome();
           }
         });
       });
     }
 
-    _emailController = TextEditingController(text: 'valeriomorelli50@gmail.com');// TODO here
+    _emailController = TextEditingController(text: 'valeriomorelli50@gmail.com'); // TODO here
     _passwordController = TextEditingController(text: 'aaaaaa');
     super.initState();
   }
@@ -283,5 +281,8 @@ class _SignInPageState extends State<SignInPage> with Loadable {
     );
   }
 
-  gotoHome() => context.goto('/home', pop: true);
+  gotoHome() async{
+    await DataManager().fetchData();
+    context.goto('/home', pop: true);
+  }
 }

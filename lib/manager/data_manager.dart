@@ -73,7 +73,7 @@ class DataManager {
         Equipment: 7 * 24 * 60 * 60,
       };
 
-  /// Function used to deserialize cache from disk
+  /// The functions used to deserialize cache from disk
   Map<core.Type, Function()> get cacheDeserializers => {
         User: () => IOManager().deserializeObjects<User>(DatabaseManager.collections[User]!),
         Campaign: () => IOManager().deserializeObjects<Campaign>(DatabaseManager.collections[Campaign]!),
@@ -89,7 +89,7 @@ class DataManager {
             IOManager().deserializeObjects<Equipment>(DatabaseManager.collections[Equipment]!),
       };
 
-  /// Function used to fetch cache data from db
+  /// The functions used to fetch cache data from db
   Map<core.Type, Future<List<WithUID>> Function()> get cacheSeeders => {
         Enchantment: () async =>
             await DatabaseManager()

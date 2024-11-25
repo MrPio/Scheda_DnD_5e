@@ -8,6 +8,7 @@ import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../interface/json_serializable.dart';
+import 'database_manager.dart';
 
 class IOManager {
   static final IOManager _instance = IOManager._();
@@ -17,6 +18,9 @@ class IOManager {
   IOManager._();
 
   static const String accountUID = 'accountUID';
+
+  static String getCollection(Type T, [bool timestamp = false]) =>
+      DatabaseManager.collections[T]!.replaceAll('/', '') + (timestamp ? '_timestamp' : '');
 
   late final SharedPreferences prefs;
   final Map<Type, Future<bool> Function(SharedPreferences, String, dynamic)> _setMethods = {
@@ -35,7 +39,7 @@ class IOManager {
   };
   final Map<String, Object?> _cache = {};
 
-  /// This must be called when the application starts
+  /// Note: this must be called before using the IOManager
   init() async => prefs = await SharedPreferences.getInstance();
 
   // Simple Key/Value entries ==============================================================================
