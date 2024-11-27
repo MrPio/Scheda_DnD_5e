@@ -23,8 +23,9 @@ to `List<Chracter>`.
 
 ### Solution
 
-> List<InventoryItem> cachedInventoryItems = [];
-
+```dart
+List<InventoryItem> cachedInventoryItems = [];
+```
 ## Java and Gradle Compatibility
 
 ### Problem
@@ -46,3 +47,5 @@ flutter config --jdk-dir <path_to_jdk>
 ```shell
 flutter create --project-name scheda_dnd_5e .
 ```
+
+Note: JDK version is your degree of freedom, flutter manages its own version of Gradle.
