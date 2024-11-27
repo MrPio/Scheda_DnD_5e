@@ -24,3 +24,25 @@ to `List<Chracter>`.
 ### Solution
 
 > List<InventoryItem> cachedInventoryItems = [];
+
+## Java and Gradle Compatibility
+
+### Problem
+
+Application fails to launch due to incompatibility between Java and Gradle version.
+
+### Solution
+
+1) Check versions according to [Compatibility Matrix](https://docs.gradle.org/current/userguide/compatibility.html#javam)
+    * Determine Gradle version by checking the distributionUrl in the *android/gradle/wrapper/gradle-wrapper.properties* file.
+    * Verify Java version by running *java -version* in terminal.
+2) If Java version is incompatible, change it with:
+```shell
+flutter config --jdk-dir <path_to_jdk>
+```
+3) Recreate Project (if Gradle and Java versions are compatible)
+   * Delete the android folder.
+   * Recreate the project using:
+```shell
+flutter create --project-name scheda_dnd_5e .
+```
