@@ -8,13 +8,13 @@
 - `Inventory`:
   - edit custom item bottom sheet entry
   - In inventory, non satisfied strength requirement should be handled graphically
-- `Mantainability`:
-  X In numeric input, accorpa anche i pulsanti +, - laterali, così pulisci un sacco di codice
-  - Pages that are both screens and pages require cleaner code.
-    - Define 1 screen (with args in constructor) and 1 page (with Navigator args) separately.
-    - The page returns the screen wrapped in a Scaffold
-    - The header title should be centralized since it's a lot of code and is common between Dice, Enchantments and User
 
 # DONE
-X Inventory TAB mockup
+X `Mantainability`:
+  X In numeric input, accorpa anche i pulsanti +, - laterali, così pulisci un sacco di codice
+  X Pages that are both screens and pages require cleaner code.
+    X- Define 1 screen (with args in constructor) and 1 page (with Navigator args) separately.
+    X The page returns the screen wrapped in a Scaffold
+    X The header title should be centralized since it's a lot of code and is common between Dice, Enchantments and User
 X Add custom inventory item page
+X Inventory TAB mockup

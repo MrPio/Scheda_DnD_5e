@@ -89,8 +89,6 @@ class _CharactersScreenState extends State<CharactersScreen> {
     super.dispose();
   }
 
-  final c = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     final characters = _characters;
