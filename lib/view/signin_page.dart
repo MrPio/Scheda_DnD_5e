@@ -20,6 +20,7 @@ import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
 import '../constant/palette.dart';
 import '../database/database_seeder.dart';
 import '../model/character.dart';
+import '../model/enchantment.dart' hide Duration;
 import '../model/loot.dart';
 
 class SignInPage extends StatefulWidget {
@@ -52,6 +53,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           // 📘📘📘 FIREBASE FIRESTORE 📘📘📘
           // ⚠️⚠️⚠️ DANGER ZONE ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
           // await seedDatabase(fresh: true);
+          // await DataManager().invalidateCache<Enchantment>();
           // await DataManager().invalidateCache<Weapon>();
           // await DataManager().invalidateCache<Armor>();
           // await DataManager().invalidateCache<Item>();

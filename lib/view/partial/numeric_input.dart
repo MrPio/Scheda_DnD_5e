@@ -8,7 +8,9 @@ import '../../constant/palette.dart';
 
 class NumericInputArgs {
   TextEditingController? controller;
-  String? suffix, initialValue;
+  bool hasButtons;
+  double Function(double)? smallStep, bigStep;
+  String? prefix, suffix, initialValue;
   int max, min, decimalPlaces;
   double? defaultValue;
   double Function(double)? valueRestriction;
@@ -27,8 +29,12 @@ class NumericInputArgs {
       {required this.min,
       required this.max,
       this.controller,
+      this.prefix,
       this.suffix,
       this.decimalPlaces = 0,
+      this.hasButtons = false,
+      this.smallStep,
+      this.bigStep,
       this.defaultValue,
       this.initialValue,
       this.valueRestriction,
@@ -47,6 +53,18 @@ class NumericInputArgs {
 class NumericInput extends StatefulWidget {
   final NumericInputArgs args;
 
+  /// A `TextField` specialized to handle numeric inputs.
+  ///
+  /// If no [controller] is specified, a new one will be instantiated. The text content is guaranteed to be a number,
+  /// more specifically an integer if [decimalPlaces] == 0, smaller than [max] and greater than [min].
+  /// If the user inputs the number 0, the field will display the [zeroEncoding].
+  /// If [hasButtons], '-' and '+' buttons will be displayed next to the `TextField`. When pressed or long pressed,
+  /// the value changes by the amount of [smallStep] or [bigStep] respectively.
+  /// The field is initialized with [initialValue] or [min] if not specified, and will assume [defaultValue] when cleared.
+  /// The text will use the specified [style] if any, show the [hint] and the field will reduce its padding and show the underline if [isDense].
+  /// The [valueRestriction] function will be called after each edit to further constraint the value. For instance, this can
+  /// be used to allow only multiples of 1.5. The [onSubmit] callback will be called when the user confirms the input,
+  /// whereas the [finalize] will also be called when they leave the `TextField`.
   const NumericInput(this.args, {super.key});
 
   @override
@@ -74,11 +92,22 @@ class _NumericInputState extends State<NumericInput> {
           pow(10, widget.args.decimalPlaces))
       .toInt();
 
-  set value(int value) => setState(() => widget.args.controller!.text =
-      (value.toDouble() / pow(10, widget.args.decimalPlaces)).toStringAsFixed(widget.args.decimalPlaces) +
-          (hasFocus ? '' : (widget.args.suffix ?? '')));
+  set value(int value) {
+    setState(() => widget.args.controller!.text = valueRestriction(max(widget.args.min.toDouble(),
+                min(widget.args.max.toDouble(), (value.toDouble() / pow(10, widget.args.decimalPlaces)))))
+            .toStringAsFixed(widget.args.decimalPlaces) +
+        (hasFocus ? '' : (widget.args.suffix ?? '')));
+  }
 
   bool get hasSign => widget.args.min < 0 || widget.args.max < 0;
+
+  int get smallStep => ((widget.args.smallStep?.call(value / pow(10, widget.args.decimalPlaces)) ?? 1.0) *
+          pow(10, widget.args.decimalPlaces))
+      .toInt();
+
+  int get bigStep => ((widget.args.bigStep?.call(value / pow(10, widget.args.decimalPlaces)) ?? 5.0) *
+          pow(10, widget.args.decimalPlaces))
+      .toInt();
 
   @override
   void initState() {
@@ -126,49 +155,99 @@ class _NumericInputState extends State<NumericInput> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: widget.args.width + (widget.args.suffix?.length ?? 0) * 5,
-      child: Focus(
-        onFocusChange: (focus) {
-          hasFocus = focus;
-          value = value;
-          if (!focus) {
-            widget.args.finalize?.call();
-          } else if (widget.args.zeroEncoding != null &&
-              widget.args.controller!.text == widget.args.zeroEncoding) {
-            widget.args.controller!.text = '';
-          }
-        },
-        child: TextField(
-            scrollPadding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig * 3),
-            autofocus: widget.args.autofocus,
-            focusNode: widget.args.focusNode,
-            onSubmitted: (_) {
+    final textField = Row(
+      children: [
+        if (widget.args.prefix != null)
+          Text(widget.args.prefix!, style: widget.args.style ?? Fonts.black(size: 30)),
+        SizedBox(
+          width: widget.args.width + (widget.args.suffix?.length ?? 0) * 5,
+          child: Focus(
+            onFocusChange: (focus) {
+              hasFocus = focus;
               value = value;
-              widget.args.onSubmit?.call(value.toDouble() / pow(10, widget.args.decimalPlaces));
-              widget.args.finalize?.call();
+              if (!focus) {
+                widget.args.finalize?.call();
+              } else if (widget.args.zeroEncoding != null &&
+                  widget.args.controller!.text == widget.args.zeroEncoding) {
+                widget.args.controller!.text = '';
+              }
             },
-            onTapOutside: (_) => value = value,
-            keyboardAppearance: Brightness.dark,
-            keyboardType: TextInputType.number,
-            maxLength: widget.args.max.toString().length +
-                (hasSign ? 1 : 0) +
-                (widget.args.decimalPlaces > 0 ? widget.args.decimalPlaces + 1 : 0) +
-                (hasFocus ? (widget.args.suffix?.length ?? 0) : 0),
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-                hintText: widget.args.hint,
-                isDense: widget.args.isDense,
-                border: widget.args.isDense ? null : InputBorder.none,
-                contentPadding: widget.args.contentPadding,
-                hintStyle: Fonts.light(color: Palette.hint),
-                hoverColor: Palette.onBackground,
-                focusColor: Palette.onBackground,
-                counterText: ''),
-            controller: widget.args.controller!,
-            style: widget.args.style ?? Fonts.black(size: 26)),
-      ),
+            child: TextField(
+                scrollPadding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom + Measures.vMarginBig * 3),
+                autofocus: widget.args.autofocus,
+                focusNode: widget.args.focusNode,
+                onSubmitted: (_) {
+                  value = value;
+                  widget.args.onSubmit?.call(value.toDouble() / pow(10, widget.args.decimalPlaces));
+                  widget.args.finalize?.call();
+                },
+                onTapOutside: (_) => value = value,
+                keyboardAppearance: Brightness.dark,
+                keyboardType: TextInputType.number,
+                maxLength: widget.args.max.toString().length +
+                    (hasSign ? 1 : 0) +
+                    (widget.args.decimalPlaces > 0 ? widget.args.decimalPlaces + 1 : 0) +
+                    (hasFocus ? (widget.args.suffix?.length ?? 0) : 0),
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                    hintText: widget.args.hint,
+                    isDense: widget.args.isDense,
+                    border: widget.args.isDense ? null : InputBorder.none,
+                    contentPadding: widget.args.contentPadding,
+                    hintStyle: Fonts.light(color: Palette.hint),
+                    hoverColor: Palette.onBackground,
+                    focusColor: Palette.onBackground,
+                    counterText: ''),
+                controller: widget.args.controller!,
+                style: widget.args.style ?? Fonts.black(size: 26)),
+          ),
+        ),
+      ],
     );
+
+    return widget.args.hasButtons
+        ? Container(
+            padding: const EdgeInsets.all(8),
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(999)), color: Palette.card2),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: 48,
+                  width: 48,
+                  child: ElevatedButton(
+                    onPressed: () => value -= smallStep,
+                    onLongPress: () => value -= bigStep,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.background,
+                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      elevation: 0,
+                    ),
+                    child: const Icon(Icons.remove, color: Palette.onBackground, size: 26),
+                  ),
+                ),
+                const SizedBox(width: Measures.hMarginMed),
+                textField,
+                const SizedBox(width: Measures.hMarginMed),
+                SizedBox(
+                  height: 48,
+                  width: 48,
+                  child: ElevatedButton(
+                    onPressed: () => value += smallStep,
+                    onLongPress: () => value += bigStep,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Palette.background,
+                      padding: const EdgeInsets.symmetric(vertical: 13),
+                      elevation: 0,
+                    ),
+                    child: const Icon(Icons.add, color: Palette.onBackground, size: 26),
+                  ),
+                )
+              ],
+            ),
+          )
+        : textField;
   }
 }

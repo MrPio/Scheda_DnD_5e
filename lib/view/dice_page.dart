@@ -1,26 +1,22 @@
 import 'dart:async';
+import 'dart:math';
 
-import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:scheda_dnd_5e/enum/dice.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
+import 'package:scheda_dnd_5e/enum/dice.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/int_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/home_page.dart';
-import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/card/dice_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
-import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';
+import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 
 class DiceArgs {
@@ -53,7 +49,7 @@ class _DicePageState extends State<DicePage> with SingleTickerProviderStateMixin
   final TextEditingController _modifierController = TextEditingController(text: '0');
 
   /// The integer value of the modifier
-  int get modifier => args?.modifier ?? int.parse(_modifierController.text);
+  int get modifier => args?.modifier ?? int.tryParse(_modifierController.text)??0;
 
   set modifier(int value) => setState(() => _modifierController.text = value.toString());
 
@@ -93,6 +89,7 @@ class _DicePageState extends State<DicePage> with SingleTickerProviderStateMixin
     HomePage.onFabTaps[widget.runtimeType] = roll;
     _diceRotationController =
         AnimationController(vsync: this, duration: const Duration(milliseconds: rollDuration));
+    _modifierController.addListener(() => setState(() {}));
     super.initState();
   }
 
@@ -121,10 +118,13 @@ class _DicePageState extends State<DicePage> with SingleTickerProviderStateMixin
               Align(
                   child: Padding(
                 padding: const EdgeInsets.only(
-                    top: Measures.vMarginThin,bottom: Measures.vMarginThin, left: Measures.hPadding*3, right: Measures.hPadding),
+                    top: Measures.vMarginThin,
+                    bottom: Measures.vMarginThin,
+                    left: Measures.hPadding * 3,
+                    right: Measures.hPadding),
                 child: Expanded(
                   child: Text(args?.title ?? 'Lanciatore dadi',
-                      style: Fonts.black(size: 18),overflow: TextOverflow.ellipsis),
+                      style: Fonts.black(size: 18), overflow: TextOverflow.ellipsis),
                 ),
               ))
             else
@@ -207,81 +207,16 @@ class _DicePageState extends State<DicePage> with SingleTickerProviderStateMixin
                                   alignment: Alignment.centerLeft,
                                   child: Text('Modificatore', style: Fonts.regular())),
                               const SizedBox(height: Measures.vMarginSmall),
-                              Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.all(Radius.circular(999)),
-                                    color: Palette.card2),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SizedBox(
-                                      height: 48,
-                                      width: 48,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          if (modifier > minModifier) {
-                                            setState(() {
-                                              modifier--;
-                                            });
-                                          }
-                                        },
-                                        onLongPress: () {
-                                          if (modifier > minModifier + 4) {
-                                            setState(() {
-                                              modifier -= 5;
-                                            });
-                                          }
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Palette.background,
-                                          padding: const EdgeInsets.symmetric(vertical: 13),
-                                          elevation: 0,
-                                        ),
-                                        child: const Icon(Icons.remove,
-                                            color: Palette.onBackground, size: 26),
-                                      ),
-                                    ),
-                                    const SizedBox(width: Measures.hMarginMed),
-                                    NumericInput(NumericInputArgs(
-                                      min: minModifier,
-                                      max: maxModifier,
-                                      controller: _modifierController,
-                                      width: 60,
-                                      contentPadding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
-                                      style: Fonts.black(),
-                                    )),
-                                    const SizedBox(width: Measures.hMarginMed),
-                                    SizedBox(
-                                      height: 48,
-                                      width: 48,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          if (modifier < maxModifier) {
-                                            setState(() {
-                                              modifier++;
-                                            });
-                                          }
-                                        },
-                                        onLongPress: () {
-                                          if (modifier < maxModifier - 4) {
-                                            setState(() {
-                                              modifier += 5;
-                                            });
-                                          }
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Palette.background,
-                                          padding: const EdgeInsets.symmetric(vertical: 13),
-                                          elevation: 0,
-                                        ),
-                                        child:
-                                            const Icon(Icons.add, color: Palette.onBackground, size: 26),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              )
+                              NumericInput(NumericInputArgs(
+                                min: minModifier,
+                                max: maxModifier,
+                                initialValue: '0',
+                                hasButtons: true,
+                                controller: _modifierController,
+                                width: 60,
+                                contentPadding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
+                                style: Fonts.black(),
+                              )),
                             ],
                           ),
                         ),

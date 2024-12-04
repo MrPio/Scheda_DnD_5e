@@ -243,54 +243,15 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
                   style: Fonts.light())),
           const SizedBox(height: Measures.vMarginSmall),
           // Fixed damage numeric input
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(999)), color: Palette.card2),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 48,
-                  width: 48,
-                  child: ElevatedButton(
-                    onPressed: () => fixedDamage--,
-                    onLongPress: () => fixedDamage -= 5,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.background,
-                      padding: const EdgeInsets.symmetric(vertical: 13),
-                      elevation: 0,
-                    ),
-                    child: const Icon(Icons.remove, color: Palette.onBackground, size: 26),
-                  ),
-                ),
-                const SizedBox(width: Measures.hMarginMed),
-                NumericInput(NumericInputArgs(
-                  min: fixedDamageMin,
-                  max: fixedDamageMax,
-                  controller: _fixedDamageController,
-                  width: 60,
-                  contentPadding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
-                  style: Fonts.black(),
-                )),
-                const SizedBox(width: Measures.hMarginMed),
-                SizedBox(
-                  height: 48,
-                  width: 48,
-                  child: ElevatedButton(
-                    onPressed: () => fixedDamage++,
-                    onLongPress: () => fixedDamage += 5,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.background,
-                      padding: const EdgeInsets.symmetric(vertical: 13),
-                      elevation: 0,
-                    ),
-                    child: const Icon(Icons.add, color: Palette.onBackground, size: 26),
-                  ),
-                )
-              ],
-            ),
-          ),
+          NumericInput(NumericInputArgs(
+            min: fixedDamageMin,
+            max: fixedDamageMax,
+            controller: _fixedDamageController,
+            hasButtons: true,
+            width: 60,
+            contentPadding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
+            style: Fonts.black(),
+          )),
           const SizedBox(height: Measures.vMarginMed),
           // Property
           Row(
@@ -403,55 +364,16 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
               child: Text('La CA misura la protezione che l\'armatura fornisce a chi la indossa.',
                   style: Fonts.light())),
           const SizedBox(height: Measures.vMarginSmall),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(999)), color: Palette.card2),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 48,
-                  width: 48,
-                  child: ElevatedButton(
-                    onPressed: () => caArmor--,
-                    onLongPress: () => caArmor -= 5,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.background,
-                      padding: const EdgeInsets.symmetric(vertical: 13),
-                      elevation: 0,
-                    ),
-                    child: const Icon(Icons.remove, color: Palette.onBackground, size: 26),
-                  ),
-                ),
-                const SizedBox(width: Measures.hMarginMed),
-                if (isPartialArmor) Text('+', style: Fonts.black(size: 30)),
-                NumericInput(NumericInputArgs(
-                  min: caMin,
-                  max: caMax,
-                  controller: _caController,
-                  width: isPartialArmor ? 42 : 60,
-                  contentPadding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
-                  style: Fonts.black(),
-                )),
-                const SizedBox(width: Measures.hMarginMed),
-                SizedBox(
-                  height: 48,
-                  width: 48,
-                  child: ElevatedButton(
-                    onPressed: () => caArmor++,
-                    onLongPress: () => caArmor += 5,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.background,
-                      padding: const EdgeInsets.symmetric(vertical: 13),
-                      elevation: 0,
-                    ),
-                    child: const Icon(Icons.add, color: Palette.onBackground, size: 26),
-                  ),
-                )
-              ],
-            ),
-          ),
+          NumericInput(NumericInputArgs(
+            min: caMin,
+            max: caMax,
+            hasButtons: true,
+            prefix: isPartialArmor ? '+' : null,
+            controller: _caController,
+            width: isPartialArmor ? 42 : 60,
+            contentPadding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
+            style: Fonts.black(),
+          )),
           const SizedBox(height: Measures.vMarginMed),
           // Skill modifiers
           Row(
@@ -489,6 +411,7 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
                                 max: 20,
                                 zeroEncoding: '—',
                                 defaultValue: 2,
+                                initialValue: '—',
                                 controller: armorSkillModifiersControllers[skill],
                                 isDense: true,
                               ))
@@ -524,54 +447,15 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
                   "Il requisito minimo di forza che il personaggio deve soddisfare per poter equipaggiare questa armtura.",
                   style: Fonts.light())),
           const SizedBox(height: Measures.vMarginSmall),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(999)), color: Palette.card2),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 48,
-                  width: 48,
-                  child: ElevatedButton(
-                    onPressed: () => strengthArmor--,
-                    onLongPress: () => strengthArmor -= 5,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.background,
-                      padding: const EdgeInsets.symmetric(vertical: 13),
-                      elevation: 0,
-                    ),
-                    child: const Icon(Icons.remove, color: Palette.onBackground, size: 26),
-                  ),
-                ),
-                const SizedBox(width: Measures.hMarginMed),
-                NumericInput(NumericInputArgs(
-                  min: armorStrengthMin,
-                  max: armorStrengthMax,
-                  controller: _armorStrengthController,
-                  width: 60,
-                  contentPadding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
-                  style: Fonts.black(),
-                )),
-                const SizedBox(width: Measures.hMarginMed),
-                SizedBox(
-                  height: 48,
-                  width: 48,
-                  child: ElevatedButton(
-                    onPressed: () => strengthArmor++,
-                    onLongPress: () => strengthArmor += 5,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.background,
-                      padding: const EdgeInsets.symmetric(vertical: 13),
-                      elevation: 0,
-                    ),
-                    child: const Icon(Icons.add, color: Palette.onBackground, size: 26),
-                  ),
-                )
-              ],
-            ),
-          ),
+          NumericInput(NumericInputArgs(
+            min: armorStrengthMin,
+            max: armorStrengthMax,
+            hasButtons: true,
+            controller: _armorStrengthController,
+            width: 60,
+            contentPadding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
+            style: Fonts.black(),
+          )),
           const SizedBox(height: Measures.vMarginMed),
           // Disadvantage
           Row(
@@ -653,60 +537,21 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
                   "Il valore di una valuta viene misurato in base a quante monete di bronzo corrisponde.",
                   style: Fonts.light())),
           const SizedBox(height: Measures.vMarginSmall),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(999)), color: Palette.card2),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  height: 48,
-                  width: 48,
-                  child: ElevatedButton(
-                    onPressed: () =>
-                        coinValue -= max(1, pow(10, (log(coinValue) * log10e).toInt()).toInt()),
-                    onLongPress: () => coinValue ~/= 10,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.background,
-                      padding: const EdgeInsets.symmetric(vertical: 13),
-                      elevation: 0,
-                    ),
-                    child: const Icon(Icons.remove, color: Palette.onBackground, size: 26),
-                  ),
-                ),
-                const SizedBox(width: Measures.hMarginMed),
-                NumericInput(NumericInputArgs(
-                  min: coinValueMin,
-                  max: coinValueMax,
-                  controller: _coinValueController,
-                  defaultValue: 1,
-                  initialValue: '1',
-                  width: 160,
-                  valueRestriction: (value) =>
-                      value < 100 ? value : value - value % pow(10, (log(value) * log10e).toInt()),
-                  contentPadding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
-                  style: Fonts.black(),
-                )),
-                const SizedBox(width: Measures.hMarginMed),
-                SizedBox(
-                  height: 48,
-                  width: 48,
-                  child: ElevatedButton(
-                    onPressed: () =>
-                        coinValue += max(1, pow(10, (log(coinValue) * log10e).toInt()).toInt()),
-                    onLongPress: () => coinValue *= 10,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Palette.background,
-                      padding: const EdgeInsets.symmetric(vertical: 13),
-                      elevation: 0,
-                    ),
-                    child: const Icon(Icons.add, color: Palette.onBackground, size: 26),
-                  ),
-                )
-              ],
-            ),
-          ),
+          NumericInput(NumericInputArgs(
+            min: coinValueMin,
+            max: coinValueMax,
+            hasButtons: true,
+            smallStep: (value) => max(1, pow(10, (log(value) * log10e).toInt()).toDouble()),
+            bigStep: (value) => value * 9,
+            controller: _coinValueController,
+            defaultValue: 1,
+            initialValue: '1',
+            width: 160,
+            valueRestriction: (value) =>
+                value < 100 ? value : value - value % pow(10, (log(value) * log10e).toInt()),
+            contentPadding: const EdgeInsets.fromLTRB(4, 8, 4, 8),
+            style: Fonts.black(),
+          )),
           const SizedBox(height: Measures.vMarginSmall),
           // CA numeric input
           Row(
@@ -810,8 +655,9 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
             ..skillModifiers = armorSkillModifiers
             ..strength = strengthArmor
             ..isHeavy = isHeavyArmor;
-          for(var key in armorSkillModifiers.keys) {
-            (item as Armor).skillModifiers[key]=int.tryParse(armorSkillModifiersControllers[key]!.text)??0;
+          for (var key in armorSkillModifiers.keys) {
+            (item as Armor).skillModifiers[key] =
+                int.tryParse(armorSkillModifiersControllers[key]!.text) ?? 0;
           }
           next();
         },

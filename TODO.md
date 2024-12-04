@@ -9,7 +9,7 @@
   - edit custom item bottom sheet entry
   - In inventory, non satisfied strength requirement should be handled graphically
 - `Mantainability`:
-  - In numeric input, accorpa anche i pulsanti +, - laterali, così pulisci un sacco di codice
+  X In numeric input, accorpa anche i pulsanti +, - laterali, così pulisci un sacco di codice
   - Pages that are both screens and pages require cleaner code.
     - Define 1 screen (with args in constructor) and 1 page (with Navigator args) separately.
     - The page returns the screen wrapped in a Scaffold
