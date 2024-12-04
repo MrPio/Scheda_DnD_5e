@@ -8,7 +8,7 @@ import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
 import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/fab.dart';
-import 'package:scheda_dnd_5e/view/profile_page.dart';
+import 'package:scheda_dnd_5e/view/user_page.dart';
 
 import 'partial/glass_bottom_bar_icon.dart';
 import 'partial/gradient_background.dart';
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
     Palette.backgroundPurple,
     Palette.backgroundGreen,
     Palette.backgroundPurple,
-    Palette.backgroundBlue
+    Palette.backgroundMagenta
   ];
   final fabs = [
     FABArgs(
