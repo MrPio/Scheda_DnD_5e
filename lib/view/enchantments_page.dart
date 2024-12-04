@@ -86,15 +86,14 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
     // Forcing shimmer effect
     final tmpEnchantments = DataManager().cachedEnchantments;
     DataManager().cachedEnchantments = [];
-    Future.delayed(
-        Durations.medium1, () => setState(() => DataManager().cachedEnchantments = tmpEnchantments));
+    Future.delayed(Durations.medium1,
+        !mounted ? null : () => setState(() => DataManager().cachedEnchantments = tmpEnchantments));
     super.initState();
   }
 
   @override
   void dispose() {
     _searchController.dispose();
-    ScaffoldMessenger.of(context).clearSnackBars();
     super.dispose();
   }
 
@@ -160,17 +159,18 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
                       selected: e.selectedValues.isNotEmpty,
                       text: e.title,
                       color: e.color,
-                      onPressed: () => e.selectedValues.isNotEmpty && !(args.value?.filterClasses!=null && i == 0)
-                          ? setState(() => e.selectedValues.clear())
-                          : context.checkList(
-                              'Filtro su ${e.title.toLowerCase()}',
-                              values: e.values,
-                              color: e.color,
-                              onChanged: args.value?.filterClasses!=null && i == 0
-                                  ? null
-                                  : (value) => setState(() => e.selectedValues.toggle(value)),
-                              value: (value) => e.selectedValues.contains(value),
-                            ));
+                      onPressed: () =>
+                          e.selectedValues.isNotEmpty && !(args.value?.filterClasses != null && i == 0)
+                              ? setState(() => e.selectedValues.clear())
+                              : context.checkList(
+                                  'Filtro su ${e.title.toLowerCase()}',
+                                  values: e.values,
+                                  color: e.color,
+                                  onChanged: args.value?.filterClasses != null && i == 0
+                                      ? null
+                                      : (value) => setState(() => e.selectedValues.toggle(value)),
+                                  value: (value) => e.selectedValues.contains(value),
+                                ));
                 },
               ),
             ),
@@ -201,13 +201,16 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
     if (args.value == null) {
       return page;
     } else {
-      return Scaffold(
-        backgroundColor: Palette.background,
-        body: Stack(
-          children: [
-            const GradientBackground(topColor: Palette.backgroundPurple),
-            page,
-          ],
+      return PopScope(
+        onPopInvokedWithResult: (_, __) => ScaffoldMessenger.of(context).clearSnackBars(),
+        child: Scaffold(
+          backgroundColor: Palette.background,
+          body: Stack(
+            children: [
+              const GradientBackground(topColor: Palette.backgroundPurple),
+              page,
+            ],
+          ),
         ),
       );
     }
