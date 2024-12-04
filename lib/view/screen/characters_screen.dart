@@ -19,10 +19,10 @@ import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/partial/layout/recycler_view.dart';
 import 'package:scheda_dnd_5e/view/partial/page_header.dart';
 
-import '../constant/fonts.dart';
-import '../constant/measures.dart';
-import 'home_page.dart';
-import 'partial/radio_button.dart';
+import '../../constant/fonts.dart';
+import '../../constant/measures.dart';
+import '../home_page.dart';
+import '../partial/radio_button.dart';
 
 /// The arguments to receive when CharacterPage navigates to this page
 class CharacterPageToCharactersPageArgs {
@@ -31,14 +31,14 @@ class CharacterPageToCharactersPageArgs {
   CharacterPageToCharactersPageArgs({this.noChanges = false});
 }
 
-class CharactersPage extends StatefulWidget {
-  const CharactersPage({super.key});
+class CharactersScreen extends StatefulWidget {
+  const CharactersScreen({super.key});
 
   @override
-  State<CharactersPage> createState() => _CharactersPageState();
+  State<CharactersScreen> createState() => _CharactersScreenState();
 }
 
-class _CharactersPageState extends State<CharactersPage> {
+class _CharactersScreenState extends State<CharactersScreen> {
   late final TextEditingController _searchController;
   late final List<Filter> _filters;
 

@@ -25,7 +25,7 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
     final enchantment =
         ModalRoute.of(context)!.settings.arguments as Enchantment;
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Palette.background,
       body: Stack(
         children: [
           // Background

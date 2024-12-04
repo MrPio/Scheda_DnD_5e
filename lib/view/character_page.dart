@@ -15,28 +15,28 @@ import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/model/loot.dart';
-import 'package:scheda_dnd_5e/view/characters_page.dart';
 import 'package:scheda_dnd_5e/view/create_item_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
-import 'package:scheda_dnd_5e/view/enchantments_page.dart';
-import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/enchantment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/rule.dart';
 import 'package:scheda_dnd_5e/view/partial/fab.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
+import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 import 'package:scheda_dnd_5e/view/partial/layout/grid_column.dart';
 import 'package:scheda_dnd_5e/view/partial/layout/grid_row.dart';
-import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
 import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
-import 'package:scheda_dnd_5e/view/partial/decoration/rule.dart';
+import 'package:scheda_dnd_5e/view/screen/characters_screen.dart';
 
 import '../model/character.dart' hide Alignment;
 import '../model/enchantment.dart' as en;
+import 'enchantments_page.dart';
 import 'partial/decoration/gradient_background.dart';
 
 class CharacterPage extends StatefulWidget {

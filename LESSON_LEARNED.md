@@ -40,6 +40,16 @@ args.addListener(() {
 ```
 The advantage is a **loosely coupled** binding between the caller and the page.
 
+Note: if you split the polymorphous widget into page + screen, the page receives the args from the Navigator and passes them to the screen constructor. This way the ValueNotifier<> wrapper can be removed and the screen code becomes:
+```dart
+final Args? args;
+
+// initState()
+WidgetsBinding.instance.addPostFrameCallback((_) {
+ // Any initialization that needs to know the value of the args
+});
+```
+
 #### Using the constructor
 This approach **ties** the navigation logic with the page's constructor. It should be used only on `partial`s and `screen`s.
 

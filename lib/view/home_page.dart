@@ -3,11 +3,12 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
-import 'package:scheda_dnd_5e/view/characters_page.dart';
+import 'package:scheda_dnd_5e/view/screen/characters_screen.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
-import 'package:scheda_dnd_5e/view/enchantments_page.dart';
+import 'package:scheda_dnd_5e/view/screen/enchantments_screen.dart';
 import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/fab.dart';
+import 'package:scheda_dnd_5e/view/screen/dice_screen.dart';
 import 'package:scheda_dnd_5e/view/user_page.dart';
 
 import 'partial/glass_bottom_bar_icon.dart';
@@ -24,10 +25,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _screens = [
-    const CharactersPage(),
+    const CharactersScreen(),
     const Placeholder(),
-    const DicePage(),
-    const EnchantmentsPage(),
+    const DiceScreen(),
+    const EnchantmentsScreen(),
     const ProfilePage(),
   ];
   final _screenNames = [
@@ -55,14 +56,14 @@ class _HomePageState extends State<HomePage> {
     FABArgs(
       color: Palette.primaryBlue,
       icon: 'add',
-      onPress: () => HomePage.onFabTaps[CharactersPage]?.call(),
+      onPress: () => HomePage.onFabTaps[CharactersScreen]?.call(),
       bottomMargin: Measures.bottomBarHeight + Measures.vMarginThin,
     ),
     null,
     FABArgs(
       color: Palette.primaryGreen,
       icon: 'refresh',
-      onPress: () => HomePage.onFabTaps[DicePage]?.call(),
+      onPress: () => DicePage.onFabTap?.call(),
       bottomMargin: Measures.bottomBarHeight + Measures.vMarginThin,
     ),
     null,
