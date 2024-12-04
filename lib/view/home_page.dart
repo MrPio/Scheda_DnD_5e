@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
     Palette.backgroundPurple,
     Palette.backgroundGreen,
     Palette.backgroundPurple,
-    Palette.backgroundMagenta
+    Palette.backgroundGrey
   ];
   final fabs = [
     FABArgs(
