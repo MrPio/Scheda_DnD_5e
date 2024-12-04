@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
@@ -6,8 +5,8 @@ import 'package:scheda_dnd_5e/view/partial/card/profile_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';
-import 'package:scheda_dnd_5e/model/user.dart';
-import '../manager/data_manager.dart';
+import '../manager/account_manager.dart';
+import '../model/user.dart';
 
 class ProfileArgs {
   final String? title;
@@ -25,22 +24,14 @@ class _ProfilePageState extends State<ProfilePage> {
   ValueNotifier<ProfileArgs?> args = ValueNotifier(null);
   final double avatarRadius = 60;
 
-  // FirebaseAuth instance
-  final firebase_auth.FirebaseAuth _auth = firebase_auth.FirebaseAuth.instance;
-
-  // Get the logged-in user from DataManager
+  // Get the logged-in user from AccountManager
   Future<User?> getLoggedInUser() async {
-    final firebase_auth.User? firebaseUser = _auth.currentUser;
-    if (firebaseUser != null) {
-      // Load user data from DataManager using the current UID
-      return await DataManager().load(firebaseUser.uid, useCache: true);
-    }
-    return null;
+    return AccountManager().user; // Directly accessing the user from AccountManager
   }
 
   @override
   Widget build(BuildContext context) {
-    args.value ??= (ModalRoute.of(context)!.settings.arguments) as ProfileArgs?;
+    args.value ??= ModalRoute.of(context)!.settings.arguments as ProfileArgs?;
 
     return Scaffold(
       backgroundColor: Palette.background,
@@ -53,10 +44,10 @@ class _ProfilePageState extends State<ProfilePage> {
               future: getLoggedInUser(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
-                if (snapshot.hasError || !snapshot.hasData) {
-                  return Center(child: Text('User not found.'));
+                if (snapshot.hasError || snapshot.data == null) {
+                  return const Center(child: Text('User not found.'));
                 }
 
                 final user = snapshot.data!;
@@ -65,7 +56,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
                 final List<Widget> profileSections = [
                   Padding(
-                    padding: const EdgeInsets.only(left: Measures.hPadding, bottom: Measures.vMarginSmall),
+                    padding: const EdgeInsets.only(bottom: Measures.vMarginSmall),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -99,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: Measures.hPadding, bottom: Measures.vMarginSmall, top: 0),
+                    padding: const EdgeInsets.only(bottom: Measures.vMarginSmall, top: 0),
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
@@ -171,7 +162,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   child: CircleAvatar(
                                     radius: 20,
                                     backgroundColor: Palette.background,
-                                    child: Icon(
+                                    child: const Icon(
                                       Icons.edit,
                                       size: 16,
                                       color: Colors.white,
@@ -205,4 +196,3 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 }
-
