@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import '../../constant/palette.dart';
+import '../../../constant/palette.dart';
 
 class BottomVignette extends StatelessWidget {
   final double height,spread;

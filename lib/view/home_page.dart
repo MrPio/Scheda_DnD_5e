@@ -6,12 +6,12 @@ import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/view/characters_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
-import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/fab.dart';
 import 'package:scheda_dnd_5e/view/user_page.dart';
 
 import 'partial/glass_bottom_bar_icon.dart';
-import 'partial/gradient_background.dart';
+import 'partial/decoration/gradient_background.dart';
 
 class HomePage extends StatefulWidget {
   static Map<Type, Function()> onFabTaps = {};

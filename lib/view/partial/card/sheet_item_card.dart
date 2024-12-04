@@ -4,7 +4,7 @@ import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
-import 'package:scheda_dnd_5e/view/partial/rule.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/rule.dart';
 
 import '../../../constant/fonts.dart';
 import '../../../constant/measures.dart';

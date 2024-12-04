@@ -5,13 +5,13 @@ import 'package:scheda_dnd_5e/database/seeders/settings_seeder.dart';
 import 'package:scheda_dnd_5e/extension_function/iterable_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/model/setting.dart';
-import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 
 import '../constant/fonts.dart';
-import 'partial/gradient_background.dart';
+import 'partial/decoration/gradient_background.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});

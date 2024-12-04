@@ -11,8 +11,8 @@ import 'package:scheda_dnd_5e/model/user.dart';
 
 import 'partial/glass_button.dart';
 import 'partial/glass_text_field.dart';
-import 'partial/gradient_background.dart';
-import 'partial/loading_view.dart';
+import 'partial/decoration/gradient_background.dart';
+import 'partial/decoration/loading_view.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});

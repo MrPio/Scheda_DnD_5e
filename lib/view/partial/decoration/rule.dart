@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../constant/palette.dart';
+import '../../../constant/palette.dart';
 
 class Rule extends StatelessWidget {
   const Rule({super.key});

@@ -10,7 +10,7 @@ import 'package:scheda_dnd_5e/view/partial/level.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
 
 import '../model/enchantment.dart' hide Level;
-import 'partial/gradient_background.dart';
+import 'partial/decoration/gradient_background.dart';
 
 class EnchantmentPage extends StatefulWidget {
   const EnchantmentPage({super.key});

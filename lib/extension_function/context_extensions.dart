@@ -9,7 +9,7 @@ import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
-import 'package:scheda_dnd_5e/view/partial/rule.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/rule.dart';
 
 import '../view/partial/clickable.dart';
 

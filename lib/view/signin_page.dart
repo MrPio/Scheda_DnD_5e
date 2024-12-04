@@ -14,8 +14,8 @@ import 'package:scheda_dnd_5e/view/create_item_page.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
-import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';
-import 'package:scheda_dnd_5e/view/partial/loading_view.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/gradient_background.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/loading_view.dart';
 
 import '../constant/palette.dart';
 import '../database/database_seeder.dart';

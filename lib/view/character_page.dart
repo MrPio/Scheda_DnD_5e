@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
@@ -20,7 +19,7 @@ import 'package:scheda_dnd_5e/view/characters_page.dart';
 import 'package:scheda_dnd_5e/view/create_item_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/enchantments_page.dart';
-import 'package:scheda_dnd_5e/view/partial/bottom_vignette.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/enchantment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
@@ -29,16 +28,16 @@ import 'package:scheda_dnd_5e/view/partial/clickable.dart';
 import 'package:scheda_dnd_5e/view/partial/fab.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
-import 'package:scheda_dnd_5e/view/partial/grid_column.dart';
-import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
+import 'package:scheda_dnd_5e/view/partial/layout/grid_column.dart';
+import 'package:scheda_dnd_5e/view/partial/layout/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
 import 'package:scheda_dnd_5e/view/partial/level.dart';
 import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
-import 'package:scheda_dnd_5e/view/partial/rule.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/rule.dart';
 
 import '../model/character.dart' hide Alignment;
 import '../model/enchantment.dart' as en;
-import 'partial/gradient_background.dart';
+import 'partial/decoration/gradient_background.dart';
 
 class CharacterPage extends StatefulWidget {
   const CharacterPage({super.key});
@@ -759,6 +758,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                           min: 0,
                                           max: 9,
                                           controller: _slotsControllers[level],
+                                          width: slotSizeSquare-2,
                                           isDense: true,
                                           initialValue: character.totalSlots[level]?.toString() ?? '—',
                                           zeroEncoding: '—',
@@ -801,34 +801,36 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                               const SizedBox(width: Measures.hMarginBig)
                             ]),
                           ),
-                          StatefulBuilder(
-                            builder: (context, setState) => Clickable(
-                              onTap: () => setState(() => character.availableSlots[level] =
-                                  ((character.availableSlots[level] ?? 0) + 1) %
-                                      ((character.totalSlots[level] ?? 0) + 1)),
-                              child: SingleChildScrollView(
-                                reverse: true,
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                    children: List.generate(
-                                        character.totalSlots[level] ?? 0,
-                                        (i) => Padding(
-                                              padding:
-                                                  const EdgeInsets.only(left: Measures.hMarginMoreThin),
-                                              child: Container(
-                                                width: slotSizeCircle,
-                                                height: slotSizeCircle,
-                                                decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(999),
-                                                    border: Border.all(
-                                                        color: Palette.onBackground, width: 0.75),
-                                                    color: i >=
-                                                            (character.totalSlots[level] ?? 0) -
-                                                                (character.availableSlots[level] ?? 0)
-                                                        ? Palette.onBackground
-                                                        : Colors.transparent),
-                                              ),
-                                            ))),
+                          Expanded(
+                            child: StatefulBuilder(
+                              builder: (context, setState) => Clickable(
+                                onTap: () => setState(() => character.availableSlots[level] =
+                                    ((character.availableSlots[level] ?? 0) + 1) %
+                                        ((character.totalSlots[level] ?? 0) + 1)),
+                                child: SingleChildScrollView(
+                                  reverse: true,
+                                  scrollDirection: Axis.horizontal,
+                                  child: Row(
+                                      children: List.generate(
+                                          character.totalSlots[level] ?? 0,
+                                          (i) => Padding(
+                                                padding:
+                                                    const EdgeInsets.only(left: Measures.hMarginMoreThin),
+                                                child: Container(
+                                                  width: slotSizeCircle,
+                                                  height: slotSizeCircle,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(999),
+                                                      border: Border.all(
+                                                          color: Palette.onBackground, width: 0.75),
+                                                      color: i >=
+                                                              (character.totalSlots[level] ?? 0) -
+                                                                  (character.availableSlots[level] ?? 0)
+                                                          ? Palette.onBackground
+                                                          : Colors.transparent),
+                                                ),
+                                              ))),
+                                ),
                               ),
                             ),
                           )

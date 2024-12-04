@@ -156,6 +156,7 @@ class _NumericInputState extends State<NumericInput> {
   @override
   Widget build(BuildContext context) {
     final textField = Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         if (widget.args.prefix != null)
           Text(widget.args.prefix!, style: widget.args.style ?? Fonts.black(size: 30)),

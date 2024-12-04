@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,11 +12,12 @@ import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/home_page.dart';
 import 'package:scheda_dnd_5e/view/partial/card/dice_card.dart';
-import 'package:scheda_dnd_5e/view/partial/chevron.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/gradient_background.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
-import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';
-import 'package:scheda_dnd_5e/view/partial/grid_row.dart';
+import 'package:scheda_dnd_5e/view/partial/layout/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
+
+import 'partial/page_header.dart';
 
 class DiceArgs {
   final String? title;
@@ -49,7 +49,7 @@ class _DicePageState extends State<DicePage> with SingleTickerProviderStateMixin
   final TextEditingController _modifierController = TextEditingController(text: '0');
 
   /// The integer value of the modifier
-  int get modifier => args?.modifier ?? int.tryParse(_modifierController.text)??0;
+  int get modifier => args?.modifier ?? int.tryParse(_modifierController.text) ?? 0;
 
   set modifier(int value) => setState(() => _modifierController.text = value.toString());
 
@@ -108,49 +108,22 @@ class _DicePageState extends State<DicePage> with SingleTickerProviderStateMixin
       children: [
         // Header
         Padding(
-          padding: EdgeInsets.only(
-              top: Measures.vMarginBig + (args == null ? Measures.vMarginMed : -Measures.vMarginThin),
-              bottom: Measures.vMarginSmall - Measures.vMarginThin,
-              left: args == null ? Measures.hPadding : 0,
-              right: args == null ? Measures.hPadding : 0),
-          child: Stack(alignment: Alignment.center, children: [
-            if (args != null)
-              Align(
-                  child: Padding(
-                padding: const EdgeInsets.only(
-                    top: Measures.vMarginThin,
-                    bottom: Measures.vMarginThin,
-                    left: Measures.hPadding * 3,
-                    right: Measures.hPadding),
-                child: Expanded(
-                  child: Text(args?.title ?? 'Lanciatore dadi',
-                      style: Fonts.black(size: 18), overflow: TextOverflow.ellipsis),
-                ),
-              ))
-            else
-              Align(
-                  alignment: Alignment.centerLeft, child: Text('Lanciatore dadi', style: Fonts.black())),
-            if ((args?.dices == null && _selectedDice.isNotEmpty) ||
-                (args?.modifier == null && modifier != 0))
-              Align(
-                alignment: Alignment.centerRight,
-                child: 'close'.toIcon(
+          padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+          child: PageHeader(
+            title: args?.title ?? 'Lanciatore dadi',
+            isPage: args != null,
+            rightIcon: (args?.dices == null && _selectedDice.isNotEmpty) ||
+                    (args?.modifier == null && modifier != 0)
+                ? 'close'.toIcon(
                     height: 18,
                     padding: const EdgeInsets.all(6),
                     onTap: () {
                       _selectedDice = [];
                       modifier = 0;
                       setState(() {});
-                    }),
-              ),
-            if (args != null)
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Chevron(
-                  inAppBar: true,
-                ),
-              )
-          ]),
+                    })
+                : null,
+          ),
         ),
         // Body
         Expanded(
@@ -159,7 +132,6 @@ class _DicePageState extends State<DicePage> with SingleTickerProviderStateMixin
             child: Column(
               children: [
                 // Selected dice ===============================
-                const SizedBox(height: Measures.vMarginSmall),
                 GlassCard(
                     height: 224,
                     clickable: false,

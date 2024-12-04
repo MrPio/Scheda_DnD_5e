@@ -15,12 +15,12 @@ import 'package:scheda_dnd_5e/model/enchantment.dart' as enc show Level;
 import 'package:scheda_dnd_5e/model/enchantment.dart' hide Level;
 import 'package:scheda_dnd_5e/model/filter.dart';
 import 'package:scheda_dnd_5e/view/partial/card/enchantment_card.dart';
-import 'package:scheda_dnd_5e/view/partial/chevron.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/gradient_background.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
-import 'package:scheda_dnd_5e/view/partial/gradient_background.dart';
+import 'package:scheda_dnd_5e/view/partial/layout/recycler_view.dart';
+import 'package:scheda_dnd_5e/view/partial/page_header.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
-import 'package:scheda_dnd_5e/view/partial/recycler_view.dart';
 
 class EnchantmentsArgs {
   List<Class>? filterClasses;
@@ -104,36 +104,12 @@ class _EnchantmentsPageState extends State<EnchantmentsPage> {
     final page = RecyclerView(
         header: Column(
           children: [
-            SizedBox(
-                height: Measures.vMarginBig +
-                    (args.value == null ? Measures.vMarginMed : -Measures.vMarginThin)),
-            // Page Title
-            Stack(children: [
-              if (args.value != null)
-                Align(
-                    child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: Measures.vMarginThin,
-                      bottom: Measures.vMarginThin,
-                      left: Measures.hPadding * 3,
-                      right: Measures.hPadding),
-                  child: Text(args.value?.title ?? 'Che incantesimo stai cercando?',
-                      style: Fonts.black(size: 18), overflow: TextOverflow.ellipsis),
-                ))
-              else
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-                  child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Che incantesimo stai cercando?', style: Fonts.black())),
-                ),
-              if (args.value != null)
-                const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Chevron(inAppBar: true),
-                )
-            ]),
-            SizedBox(height: args.value == null ? Measures.vMarginMed : Measures.vMarginSmall),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+              child: PageHeader(
+                  title: args.value?.title ?? 'Che incantesimo stai cercando?', isPage: args.value != null),
+            ),
+
             // Search TextField
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
