@@ -8,6 +8,6 @@ extension IntExtensions on int {
 
 
 
-  Duration elapsedTime() =>
+  Duration get elapsedTime =>
       DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(this));
 }

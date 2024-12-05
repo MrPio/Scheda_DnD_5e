@@ -110,7 +110,7 @@ class AccountManager {
       if (userCredential != null) {
         if (userCredential.additionalUserInfo!.isNewUser) {
           print('👤 SignUp with Google');
-          user = User(email: userCredential.user!.email!, nickname: userCredential.user!.displayName!);
+          user = User(email: userCredential.user!.email!, username: userCredential.user!.displayName!);
           user.uid = userCredential.user!.uid;
           DataManager().save(user);
           return SignInStatus.successNewAccount;

@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
-import 'package:scheda_dnd_5e/interface/with_uid.dart';
-import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:scheda_dnd_5e/extension_function/iterable_extensions.dart';
+import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/model/campaign.dart';
 import 'package:scheda_dnd_5e/model/character.dart';
 
+import '../constant/palette.dart';
 import 'loot.dart';
 
 part 'part/user.g.dart';
 
 @JsonSerializable()
 class User implements WithUID {
-  final String nickname, email;
+  final String username, email;
+  final String? picture;
+  int pictureColor;
   final int regDateTimestamp;
 
   /// The items created by the user
@@ -22,11 +24,11 @@ class User implements WithUID {
   List<String> charactersUIDs, deletedCharactersUIDs, campaignsUIDs;
 
   Map<Type, List<String>> get inventoryItems => {
-    Weapon: weaponsUIDs,
-    Armor: armorsUIDs,
-    Item: itemsUIDs,
-    Coin: coinsUIDs,
-  };
+        Weapon: weaponsUIDs,
+        Armor: armorsUIDs,
+        Item: itemsUIDs,
+        Coin: coinsUIDs,
+      };
 
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -39,9 +41,13 @@ class User implements WithUID {
   @JsonKey(includeFromJson: false, includeToJson: false)
   ValueNotifier<List<Campaign>?> campaigns = ValueNotifier(null);
 
+  get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
+
   User({
-    this.nickname = 'Anonimo',
+    this.username = 'Anonimo',
+    this.picture,
     this.email = '',
+    int? pictureColor,
     int? regDateTimestamp,
     List<String>? charactersUIDs,
     List<String>? deletedCharactersUIDs,
@@ -57,9 +63,19 @@ class User implements WithUID {
         weaponsUIDs = weaponsUIDs ?? [],
         armorsUIDs = armorsUIDs ?? [],
         itemsUIDs = itemsUIDs ?? [],
-        coinsUIDs = coinsUIDs ?? [];
-
-  get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
+        coinsUIDs = coinsUIDs ?? [],
+        pictureColor = pictureColor??[
+          Palette.background,
+          Palette.backgroundGreen,
+          Palette.backgroundMagenta,
+          Palette.backgroundGrey,
+          Palette.backgroundPurple,
+          Palette.backgroundBlue,
+          Palette.primaryGreen,
+          Palette.primaryRed,
+          Palette.primaryBlue,
+          Palette.primaryYellow,
+        ].random.value;
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   List<String> get inventoryItemsUIDs => weaponsUIDs + armorsUIDs + itemsUIDs + coinsUIDs;

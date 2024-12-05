@@ -23,28 +23,31 @@ class DicePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final args = (ModalRoute.of(context)!.settings.arguments) as DiceArgs?;
-    return Scaffold(
-      backgroundColor: Palette.background,
-      body: Stack(
-        children: [
-          const GradientBackground(topColor: Palette.backgroundGreen),
-          DiceScreen(args: args),
-          // FAB
-          Align(
-              alignment: Alignment.bottomRight,
-              child: Padding(
-                padding:
-                const EdgeInsets.only(bottom: Measures.fABBottomMargin, right: Measures.hPadding),
-                child: FloatingActionButton(
-                  onPressed: onFabTap,
-                  elevation: 0,
-                  foregroundColor: Palette.primaryGreen,
-                  backgroundColor: Palette.primaryGreen,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
-                  child: 'refresh'.toIcon(height: 20),
-                ),
-              )),
-        ],
+    return PopScope(
+      onPopInvokedWithResult: (_, __) => ScaffoldMessenger.of(context).clearSnackBars(),
+      child: Scaffold(
+        backgroundColor: Palette.background,
+        body: Stack(
+          children: [
+            const GradientBackground(topColor: Palette.backgroundGreen),
+            DiceScreen(args: args),
+            // FAB
+            Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding:
+                  const EdgeInsets.only(bottom: Measures.fABBottomMargin, right: Measures.hPadding),
+                  child: FloatingActionButton(
+                    onPressed: onFabTap,
+                    elevation: 0,
+                    foregroundColor: Palette.primaryGreen,
+                    backgroundColor: Palette.primaryGreen,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
+                    child: 'refresh'.toIcon(height: 20),
+                  ),
+                )),
+          ],
+        ),
       ),
     );
   }

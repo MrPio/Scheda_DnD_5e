@@ -20,15 +20,16 @@ extension StringExtensions on String {
   /// 'home' ==> 'assets/images/icons/home.svg'
   /// 'png/home' ==> 'assets/images/icons/png/home.png'
   Widget toIcon(
-      {double height = 24,
+      {double? height = 24,
+        double? width,
       Function()? onTap,
       padding = const EdgeInsets.all(8.0),
       margin = EdgeInsets.zero,
       color = Palette.onBackground,
       double rotation = 0}) {
     var icon = contains('png')
-        ? Image.asset('assets/images/icons/$this.png', height: height, color: color)
-        : SvgPicture.asset('assets/images/icons/$this.svg', height: height, color: color);
+        ? Image.asset('assets/images/icons/$this.png', height: height, width: width, color: color)
+        : SvgPicture.asset('assets/images/icons/$this.svg', height: height, width: width, color: color);
     if (onTap == null) {
       return Padding(
         padding: margin,

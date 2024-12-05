@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
@@ -16,6 +17,7 @@ import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/decoration/gradient_background.dart';
 import 'package:scheda_dnd_5e/view/partial/decoration/loading_view.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../constant/palette.dart';
 import '../database/database_seeder.dart';
@@ -41,9 +43,14 @@ class _SignInPageState extends State<SignInPage> with Loadable {
       _isInitialized = true;
       Future.delayed(Duration.zero, () async {
         withLoading(() async {
+          await dotenv.load(fileName: ".env");
           WidgetsFlutterBinding.ensureInitialized();
           await Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform,
+          );
+          await Supabase.initialize(
+            url: 'https://olkuecwwoctlcamzvylf.supabase.co',
+            anonKey: dotenv.env['SUPABASE_KEY']!,
           );
           await IOManager().init();
           if (!await IOManager().hasInternetConnection(context)) {
@@ -223,7 +230,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           } else if (status == SignInStatus.userNotInDatabase) {
             context.snackbar('L\'account non è più esistente!', backgroundColor: Palette.primaryRed);
           } else if (status == SignInStatus.success) {
-            context.snackbar('Bentornato ${AccountManager().user.nickname}!',
+            context.snackbar('Bentornato ${AccountManager().user.username}!',
                 backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
             gotoHome();
           }
@@ -240,11 +247,11 @@ class _SignInPageState extends State<SignInPage> with Loadable {
         } else if (status == SignInStatus.userNotInDatabase) {
           context.snackbar('L\'account non è più esistente!', backgroundColor: Palette.primaryRed);
         } else if (status == SignInStatus.success) {
-          context.snackbar('Bentornato ${AccountManager().user.nickname}!',
+          context.snackbar('Bentornato ${AccountManager().user.username}!',
               backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
           gotoHome();
         } else if (status == SignInStatus.successNewAccount) {
-          context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
+          context.snackbar('Benvenuto ${AccountManager().user.username}!',
               backgroundColor: Palette.backgroundGreen, bottomMargin: Measures.bottomBarHeight);
           gotoHome();
         }

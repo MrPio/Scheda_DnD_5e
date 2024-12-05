@@ -124,7 +124,7 @@ class DataManager {
     for (var cache in caches.entries) {
       final path = DatabaseManager.collections[cache.key]!.replaceAll('/', '');
       final timestamp = IOManager().get<int>('${path}_timestamp') ?? 0;
-      if (timestamp.elapsedTime().inSeconds < cachesTTL[cache.key]!) {
+      if (timestamp.elapsedTime.inSeconds < cachesTTL[cache.key]!) {
         caches[cache.key]!.clear();
         caches[cache.key]!.addAll(await cacheDeserializers[cache.key]!());
         print('📘 I\'ve read ${caches[cache.key]!.length} ${cache.key}s locally');

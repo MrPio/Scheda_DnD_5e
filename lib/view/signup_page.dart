@@ -175,7 +175,7 @@ class _SignUpPageState extends State<SignUpPage> with Loadable {
               _emailController.text,
               _passwordController.text,
               User(
-                  nickname: _usernameController.text,
+                  username: _usernameController.text,
                   email: _emailController.text));
           if (status == SignUpStatus.weakPassword) {
             context.snackbar('La password è troppo corta!',
@@ -187,7 +187,7 @@ class _SignUpPageState extends State<SignUpPage> with Loadable {
             context.snackbar('Errore generico!',
                 backgroundColor: Palette.primaryRed);
           } else if (status == SignUpStatus.success) {
-            context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
+            context.snackbar('Benvenuto ${AccountManager().user.username}!',
                 backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
             Navigator.of(context).popAndPushNamed('/home');
           }
@@ -206,11 +206,11 @@ class _SignUpPageState extends State<SignUpPage> with Loadable {
           context.snackbar('L\'account non è più esistente!',
               backgroundColor: Palette.primaryRed);
         } else if (status == SignInStatus.success) {
-          context.snackbar('Bentornato ${AccountManager().user.nickname}!',
+          context.snackbar('Bentornato ${AccountManager().user.username}!',
               backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
           Navigator.of(context).popAndPushNamed('/home');
         } else if (status == SignInStatus.successNewAccount) {
-          context.snackbar('Benvenuto ${AccountManager().user.nickname}!',
+          context.snackbar('Benvenuto ${AccountManager().user.username}!',
               backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
           Navigator.of(context).popAndPushNamed('/home');
         }

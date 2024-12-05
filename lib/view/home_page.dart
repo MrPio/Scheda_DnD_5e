@@ -9,7 +9,7 @@ import 'package:scheda_dnd_5e/view/screen/enchantments_screen.dart';
 import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/fab.dart';
 import 'package:scheda_dnd_5e/view/screen/dice_screen.dart';
-import 'package:scheda_dnd_5e/view/user_page.dart';
+import 'package:scheda_dnd_5e/view/screen/user_screen.dart';
 
 import 'partial/glass_bottom_bar_icon.dart';
 import 'partial/decoration/gradient_background.dart';
@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     const Placeholder(),
     const DiceScreen(),
     const EnchantmentsScreen(),
-    const ProfilePage(),
+    const UserScreen(),
   ];
   final _screenNames = [
     'Personaggi',

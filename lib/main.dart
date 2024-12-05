@@ -10,6 +10,7 @@ import 'package:scheda_dnd_5e/view/home_page.dart';
 import 'package:scheda_dnd_5e/view/settings_page.dart';
 import 'package:scheda_dnd_5e/view/signin_page.dart';
 import 'package:scheda_dnd_5e/view/signup_page.dart';
+import 'package:scheda_dnd_5e/view/user_page.dart';
 import 'package:tuple/tuple.dart';
 
 import 'constant/palette.dart';
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
         '/create_item':(context) => const CreateItemPage(),
         '/character':(context) => const CharacterPage(),
         '/settings':(context) => const SettingsPage(),
+        '/user':(context) => const UserPage(),
       },
     );
   }
