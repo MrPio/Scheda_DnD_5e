@@ -83,7 +83,7 @@ extension ContextExtensions on BuildContext {
                             ),
                           ),
                         ),
-                      if (child != null) Flexible(child: SingleChildScrollView(child: child)),
+                      if (child != null) Flexible(flex: 5,child: SingleChildScrollView(child: child)),
                       const SizedBox(height: Measures.vMarginThin),
                       Padding(
                         padding:

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/enum/dice.dart';
-import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/view/partial/decoration/gradient_background.dart';
+import 'package:scheda_dnd_5e/view/partial/fab.dart';
 import 'package:scheda_dnd_5e/view/screen/dice_screen.dart';
 
 import '../constant/measures.dart';
@@ -17,7 +17,8 @@ class DiceArgs {
 }
 
 class DicePage extends StatelessWidget {
-  static Function()? onFabTap;
+  static Function() onFabTap = () {};
+
   const DicePage({super.key});
 
   @override
@@ -36,15 +37,12 @@ class DicePage extends StatelessWidget {
                 alignment: Alignment.bottomRight,
                 child: Padding(
                   padding:
-                  const EdgeInsets.only(bottom: Measures.fABBottomMargin, right: Measures.hPadding),
-                  child: FloatingActionButton(
-                    onPressed: onFabTap,
-                    elevation: 0,
-                    foregroundColor: Palette.primaryGreen,
-                    backgroundColor: Palette.primaryGreen,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
-                    child: 'refresh'.toIcon(height: 20),
-                  ),
+                      const EdgeInsets.only(bottom: Measures.fABBottomMargin, right: Measures.hPadding),
+                  child: FAB(FABArgs(
+                    color: Palette.primaryGreen,
+                    icon: 'refresh',
+                    onPress: () => DicePage.onFabTap(),
+                  )),
                 )),
           ],
         ),
