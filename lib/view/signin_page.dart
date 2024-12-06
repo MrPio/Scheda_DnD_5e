@@ -262,7 +262,6 @@ class _SignInPageState extends State<SignInPage> with Loadable {
     context.popup(
       'Reset della password',
       message: 'Inserisci l\'email dell\'account del quale vuoi reimpostare la password:',
-      backgroundColor: Palette.popup,
       positiveText: 'Invia email',
       positiveCallback: () async {
         if (emailController.text.isEmail) {

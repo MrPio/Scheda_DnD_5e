@@ -758,7 +758,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                           min: 0,
                                           max: 9,
                                           controller: _slotsControllers[level],
-                                          width: slotSizeSquare-2,
+                                          width: slotSizeSquare - 2,
                                           isDense: true,
                                           initialValue: character.totalSlots[level]?.toString() ?? '—',
                                           zeroEncoding: '—',
@@ -1249,7 +1249,12 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                 // Sell item
                 if (item is! Coin)
                   BottomSheetItem('png/coin', 'Vendi', () async {
-                    final coins = DataManager().cachedInventoryItems.whereType<Coin>().toList()..sort();
+                    final coins = DataManager()
+                        .cachedInventoryItems
+                        .whereType<Coin>()
+                        .where((coin) => coin.authorUID == null)
+                        .toList()
+                      ..sort();
                     final coinNumericInputs = List.generate(
                         coins.length,
                         (i) => NumericInput(NumericInputArgs(
@@ -1260,156 +1265,162 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                     var quantityToSell = 1.0;
                     context.popup('Stai per vendere ${item.title}',
                         message: 'A quanto vuoi vendere un\'unità di **${item.title}**?',
-                        noContentHPadding: true, child: StatefulBuilder(
-                      builder: (context, setState) {
-                        for (var numericInput in coinNumericInputs) {
-                          numericInput.args.onSubmit = (_) => setState(() {});
-                        }
-                        return Column(
-                          children: [
-                            // Unity sell price
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-                              child: GridRow(
-                                fill: true,
-                                columnsCount: 3,
-                                children: [
-                                  ...coins.map((coin) => Row(
-                                        children: [
-                                          'png/coin'.toIcon(color: Coin.iconColors[coin.title]),
-                                          coinNumericInputs[coins.indexOf(coin)],
-                                        ],
-                                      ))
-                                ],
-                              ),
-                            ),
-                            // Quantity
-                            GlassCard(
-                              isFlat: true,
-                              clickable: false,
-                              isLight: true,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-                                child: Column(
-                                  children: [
-                                    const SizedBox(height: Measures.vMarginThin),
-                                    Text('Unità da vendere:', style: Fonts.bold()),
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          child: Slider(
-                                            value: quantityToSell,
-                                            onChanged: (value) {
-                                              setState(() => quantityToSell = value);
-                                              if (quantityToSell == 0) {
-                                                Navigator.of(context).pop();
-                                              }
-                                            },
-                                            min: 0,
-                                            max: quantity.toDouble(),
-                                            activeColor: Palette.primaryBlue,
-                                            label: quantityToSell.round().toString(),
-                                            divisions: quantity,
-                                          ),
-                                        ),
-                                        Text('x${quantityToSell.round()}', style: Fonts.black(size: 18)),
-                                        const SizedBox(width: Measures.hMarginBig)
-                                      ],
-                                    ),
-                                    const SizedBox(height: Measures.vMarginMoreThin),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: Measures.vMarginThin),
-                            const Rule(),
-                            const SizedBox(height: Measures.vMarginThin),
-                            // Summary
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-                              child: Column(
-                                children: [
-                                  // Total income
-                                  Text('Ricavi totali:', style: Fonts.bold()),
-                                  const SizedBox(height: Measures.vMarginThin),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      ...coins.map((coin) => Row(
-                                            children: [
-                                              'png/coin'
-                                                  .toIcon(height: 18, color: Coin.iconColors[coin.title]),
-                                              const SizedBox(width: Measures.hMarginThin),
-                                              Text(
-                                                  (coinNumericInputs[coins.indexOf(coin)].value *
-                                                          quantityToSell)
-                                                      .round()
-                                                      .toString(),
-                                                  style: Fonts.black(size: 18)),
-                                            ],
-                                          ))
-                                    ],
-                                  ),
-                                  const SizedBox(height: Measures.vMarginSmall),
-                                  // After sale
-                                  Text('Monete dopo la vedita:', style: Fonts.bold()),
-                                  const SizedBox(height: Measures.vMarginThin),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      ...coins.map((coin) => Row(
-                                            children: [
-                                              'png/coin'
-                                                  .toIcon(height: 18, color: Coin.iconColors[coin.title]),
-                                              const SizedBox(width: Measures.hMarginThin),
-                                              Text(
-                                                  ((_character!.coinsUIDs[coin.uid!] ?? 0) +
-                                                          (coinNumericInputs[coins.indexOf(coin)].value *
-                                                                  quantityToSell)
-                                                              .round())
-                                                      .toString(),
-                                                  style: Fonts.black(size: 18)),
-                                            ],
-                                          ))
-                                    ],
-                                  ),
-                                  const SizedBox(height: Measures.vMarginSmall),
-                                ],
-                              ),
-                            )
-                          ],
-                        );
-                      },
-                    ), positiveCallback: () async {
-                      _character?.editQuantity(item, (quantity - quantityToSell).round());
-                      _character?.addLoot(Loot({
-                        for (var (i, coin) in coins.indexed)
-                          coin.uid!: (coinNumericInputs[i].value * quantityToSell).round()
-                      }));
-                      setState(() {});
-                      bool hasUndone = false;
-                      await context.snackbar('Hai venduto ${item.title} (x${quantityToSell.round()})',
-                          backgroundColor: Palette.backgroundBlue, undoCallback: () {
-                        if (!mounted) return;
-                        hasUndone = true;
-                        _character?.addLoot(Loot({item.uid!: quantityToSell.round()}));
-                        for (var (i, coin) in coins.indexed) {
-                          _character?.editQuantity(
-                              coin,
-                              (_character!.inventoryUIDs[coin.uid!] ?? 0) -
-                                  (coinNumericInputs[i].value * quantityToSell).round());
-                        }
-                        setState(() {});
-                      });
-                      if (!hasUndone) {
-                        print('⬆️ Ho salvato la vendita dell\'item ${item.title}');
-                        DataManager().save(_character!);
-                      }
-                    },
+                        noContentHPadding: true,
+                        positiveCallback: () async {
+                          _character?.editQuantity(item, (quantity - quantityToSell).round());
+                          _character?.addLoot(Loot({
+                            for (var (i, coin) in coins.indexed)
+                              coin.uid!: (coinNumericInputs[i].value * quantityToSell).round()
+                          }));
+                          setState(() {});
+                          bool hasUndone = false;
+                          await context.snackbar('Hai venduto ${item.title} (x${quantityToSell.round()})',
+                              backgroundColor: Palette.backgroundBlue, undoCallback: () {
+                            if (!mounted) return;
+                            hasUndone = true;
+                            _character?.addLoot(Loot({item.uid!: quantityToSell.round()}));
+                            for (var (i, coin) in coins.indexed) {
+                              _character?.editQuantity(
+                                  coin,
+                                  (_character!.inventoryUIDs[coin.uid!] ?? 0) -
+                                      (coinNumericInputs[i].value * quantityToSell).round());
+                            }
+                            setState(() {});
+                          });
+                          if (!hasUndone) {
+                            print('⬆️ Ho salvato la vendita dell\'item ${item.title}');
+                            DataManager().save(_character!);
+                          }
+                        },
                         negativeCallback: () {},
                         positiveText: 'Si',
                         negativeText: 'No',
-                        backgroundColor: Palette.background.withOpacity(0.5));
+                        backgroundColor: Palette.background.withOpacity(0.9),
+                        child: StatefulBuilder(
+                          builder: (context, setState) {
+                            for (var numericInput in coinNumericInputs) {
+                              numericInput.args.onSubmit = (_) => setState(() {});
+                            }
+                            return Column(
+                              children: [
+                                // Unity sell price
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                                  child: GridRow(
+                                    fill: true,
+                                    columnsCount: 3,
+                                    children: [
+                                      ...coins.map((coin) => Row(
+                                            children: [
+                                              'png/coin'.toIcon(color: Coin.iconColors[coin.title]),
+                                              coinNumericInputs[coins.indexOf(coin)],
+                                            ],
+                                          ))
+                                    ],
+                                  ),
+                                ),
+
+                                // Quantity
+                                GlassCard(
+                                  isFlat: true,
+                                  clickable: false,
+                                  isLight: true,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(height: Measures.vMarginThin),
+                                        Text('Unità da vendere:', style: Fonts.bold()),
+                                        Row(
+                                          children: [
+                                            Expanded(
+                                              child: Slider(
+                                                value: quantityToSell,
+                                                onChanged: (value) {
+                                                  setState(() => quantityToSell = value);
+                                                  if (quantityToSell == 0) {
+                                                    Navigator.of(context).pop();
+                                                  }
+                                                },
+                                                min: 0,
+                                                max: quantity.toDouble(),
+                                                activeColor: Palette.primaryBlue,
+                                                label: quantityToSell.round().toString(),
+                                                divisions: quantity,
+                                              ),
+                                            ),
+                                            Text('x${quantityToSell.round()}',
+                                                style: Fonts.black(size: 18)),
+                                            const SizedBox(width: Measures.hMarginBig)
+                                          ],
+                                        ),
+                                        const SizedBox(height: Measures.vMarginMoreThin),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: Measures.vMarginThin),
+                                const Rule(),
+                                const SizedBox(height: Measures.vMarginThin),
+
+                                // Summary
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                                  child: Column(
+                                    children: [
+                                      // Total income
+                                      Text('Ricavi totali:', style: Fonts.bold()),
+                                      const SizedBox(height: Measures.vMarginThin),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          ...coins.map((coin) => Row(
+                                                children: [
+                                                  'png/coin'.toIcon(
+                                                      height: 18, color: Coin.iconColors[coin.title]),
+                                                  const SizedBox(width: Measures.hMarginThin),
+                                                  Text(
+                                                      (coinNumericInputs[coins.indexOf(coin)].value *
+                                                              quantityToSell)
+                                                          .round()
+                                                          .toString(),
+                                                      style: Fonts.black(size: 18)),
+                                                ],
+                                              ))
+                                        ],
+                                      ),
+                                      const SizedBox(height: Measures.vMarginSmall),
+                                      // After sale
+                                      Text('Monete dopo la vedita:', style: Fonts.bold()),
+                                      const SizedBox(height: Measures.vMarginThin),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          ...coins.map((coin) => Row(
+                                                children: [
+                                                  'png/coin'.toIcon(
+                                                      height: 18, color: Coin.iconColors[coin.title]),
+                                                  const SizedBox(width: Measures.hMarginThin),
+                                                  Text(
+                                                      ((_character!.coinsUIDs[coin.uid!] ?? 0) +
+                                                              (coinNumericInputs[coins.indexOf(coin)]
+                                                                          .value *
+                                                                      quantityToSell)
+                                                                  .round())
+                                                          .toString(),
+                                                      style: Fonts.black(size: 18)),
+                                                ],
+                                              ))
+                                        ],
+                                      ),
+                                      const SizedBox(height: Measures.vMarginSmall),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                        ));
                   }),
                 // Remove item
                 BottomSheetItem('png/delete_2', 'Scarta', () async {

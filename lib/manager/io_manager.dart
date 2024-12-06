@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
@@ -38,6 +39,7 @@ class IOManager {
     List<String>: (sp, key) => sp.getStringList(key),
   };
   final Map<String, Object?> _cache = {};
+  final ImagePicker _picker = ImagePicker();
 
   /// Note: this must be called before using the IOManager
   init() async => prefs = await SharedPreferences.getInstance();
@@ -98,5 +100,20 @@ class IOManager {
     } on SocketException catch (_) {}
     context.snackbar('Connessione internet assente!', backgroundColor: Palette.primaryRed);
     return false;
+  }
+
+  // Files ====================================
+
+  /// Pick an image file from the galley
+  Future<File?> pickPicture() async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      if (pickedFile != null) {
+        return File(pickedFile.path);
+      }
+    } catch (e) {
+      print('⛔ Error picking image: $e');
+    }
+    return null;
   }
 }

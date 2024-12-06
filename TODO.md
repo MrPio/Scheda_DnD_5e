@@ -7,6 +7,7 @@
   - Update MaxHP after the new level
 - `Inventory`:
   - edit custom item bottom sheet entry
+  - Make sell in a separate page. Too many coins.
   - In inventory, non satisfied strength requirement should be handled graphically
 
 # DONE
