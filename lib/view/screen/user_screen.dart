@@ -39,26 +39,30 @@ class _UserScreenState extends State<UserScreen> {
           children: [
             // Page Title
             PageHeader(title: args?.title ?? 'Gestisci il tuo profilo', isPage: args != null),
+            const SizedBox(height: Measures.vMarginThin),
+
+            // Profile picture
             Column(
               children: [
-                ProfilePicture(user: user),
+                ProfilePicture(user: user, isEditable: true),
                 const SizedBox(height: Measures.vMarginThin),
+
+                // Username text
                 Text(
                   user!.username,
                   style: Fonts.black(size: 20),
                 ),
+
+                // Email text
                 Text(
                   user!.email,
                   style: Fonts.light(size: 16),
                 ),
               ],
             ),
-            const SizedBox(height: Measures.vMarginMed+Measures.vMarginSmall),
-            // Align(
-            //   alignment: Alignment.centerLeft,
-            //   child: Text("Account", style: Fonts.bold(size: 16)),
-            // ),
-            // const SizedBox(height: Measures.vMarginThin),
+            const SizedBox(height: Measures.vMarginMed),
+
+            // Friends list
             ButtonCard(
               title: "Lista Amici",
               icon: 'group',
@@ -68,6 +72,19 @@ class _UserScreenState extends State<UserScreen> {
               },
             ),
             const SizedBox(height: Measures.vMarginThin),
+
+            // Change username
+            ButtonCard(
+              title: "Cambia username",
+              description: 'Modifica il tuo nome visibile pubblicamente',
+              icon: 'person',
+              onTap: () {
+                Navigator.pushNamed(context, '/change-username');
+              },
+            ),
+            const SizedBox(height: Measures.vMarginThin),
+
+            // Change password
             ButtonCard(
               title: "Cambia Password",
               description: 'Modifica le credenziali di accesso al tuo account',
@@ -77,20 +94,8 @@ class _UserScreenState extends State<UserScreen> {
               },
             ),
             const SizedBox(height: Measures.vMarginThin),
-            ButtonCard(
-              title: "Cambia username",
-              description: 'Modifica il tuo nome visibile pubblicamente',
-              icon: 'person',
-              onTap: () {
-                Navigator.pushNamed(context, '/change-username');
-              },
-            ),
-            // const SizedBox(height: Measures.vMarginSmall),
-            // Align(
-            //   alignment: Alignment.centerLeft,
-            //   child: Text("Impostazioni", style: Fonts.bold(size: 16)),
-            // ),
-            const SizedBox(height: Measures.vMarginThin),
+
+            // Settings
             ButtonCard(
               title: "Impostazioni",
               icon: 'png/settings',
@@ -99,7 +104,17 @@ class _UserScreenState extends State<UserScreen> {
                 Navigator.pushNamed(context, '/settings');
               },
             ),
-            const SizedBox(height: Measures.vMarginBig*3),
+            const SizedBox(height: Measures.vMarginThin),
+
+            // Logout
+            ButtonCard(
+              title: "Esci",
+              icon: 'logout',
+              onTap: () {
+                // TODO
+              },
+            ),
+            const SizedBox(height: Measures.vMarginBig * 3),
           ],
         ));
   }
