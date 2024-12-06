@@ -758,7 +758,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                           min: 0,
                                           max: 9,
                                           controller: _slotsControllers[level],
-                                          width: slotSizeSquare-2,
+                                          width: slotSizeSquare - 2,
                                           isDense: true,
                                           initialValue: character.totalSlots[level]?.toString() ?? '—',
                                           zeroEncoding: '—',
@@ -1249,7 +1249,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                 // Sell item
                 if (item is! Coin)
                   BottomSheetItem('png/coin', 'Vendi', () async {
-                    final coins = DataManager().cachedInventoryItems.whereType<Coin>().toList()..sort();
+                    final coins = DataManager().cachedInventoryItems.whereType<Coin>().where((coin) => coin.authorUID==null).toList()..sort();
                     final coinNumericInputs = List.generate(
                         coins.length,
                         (i) => NumericInput(NumericInputArgs(
