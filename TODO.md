@@ -9,9 +9,10 @@
   - edit custom item bottom sheet entry
   - Make sell in a separate page. Too many coins.
   - In inventory, non satisfied strength requirement should be handled graphically
+- `Maintainability`:
+  - Password requirements and error logics need to be centralized. Right now, it is both in SignIn, SignUp and UserScreen
 
 # DONE
-X `Mantainability`:
   X In numeric input, accorpa anche i pulsanti +, - laterali, così pulisci un sacco di codice
   X Pages that are both screens and pages require cleaner code.
     X- Define 1 screen (with args in constructor) and 1 page (with Navigator args) separately.
