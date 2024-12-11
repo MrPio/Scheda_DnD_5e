@@ -2,10 +2,24 @@
 
 <a name="index"></a>
 ## 📘 Table of Contents
+* [Git mismatching line ending causes huge commits](#ll5)
 * [View components taxonomy](#ll4)
 * [Pass arguments to a page](#ll3)
 * [Java and Gradle Compatibility](#ll2)
 * [Use `[]` initialization when the list is involved in a generic usage](#ll1)
+
+<a name="ll5"></a>
+## Git mismatching line ending causes huge commits
+
+### Problem
+When committing from Linux, git forced me to rewrite all the files in the project, even those without any changes by my side.
+
+### Solution
+This is due to the value of the `core.autocrlf` git variable, which may be different between my Windows and Linux installations. This cause git to overwrite the LF with CRLF.
+The solution is to write `* text=auto` in the `.gitattributes` file in the root of the project.
+
+Read more [here](https://stackoverflow.com/a/38017715/19815002).
+
 
 <a name="ll4"></a>
 ## View components taxonomy
