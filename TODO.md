@@ -9,6 +9,12 @@
   - edit custom item bottom sheet entry
   - Make sell in a separate page. Too many coins.
   - In inventory, non satisfied strength requirement should be handled graphically
+- `Account`:
+  - write change password method in AccountManager (requires logged user).
+  - Uniform the popup widget 
+  - Make sure the password constraints on the app match those on Firebase Auth
+  - Add change username popup
+  - Add logout logic
 - `Maintainability`:
   - Password requirements and error logics need to be centralized. Right now, it is both in SignIn, SignUp and UserScreen
 

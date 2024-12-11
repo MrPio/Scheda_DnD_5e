@@ -263,4 +263,9 @@ class DataManager {
     }
     return newUID;
   }
+
+  /// Check that the given username does not belong to any user
+  checkUsername(){
+    // TODO
+  }
 }

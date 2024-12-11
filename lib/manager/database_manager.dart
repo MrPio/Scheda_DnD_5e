@@ -92,4 +92,9 @@ class DatabaseManager {
     }
     await batch.commit();
   }
+
+  // TODO
+  // countWhere()async{
+  //   AggregateQuerySnapshot countSnapshot =
+  //       await users.where('username', isEqualTo: username).count().get();  }
 }
