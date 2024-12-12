@@ -7,6 +7,7 @@ import 'package:scheda_dnd_5e/model/user.dart';
 import 'package:scheda_dnd_5e/view/partial/card/button_card.dart';
 import 'package:scheda_dnd_5e/view/partial/page_header.dart';
 import 'package:scheda_dnd_5e/view/partial/profile_picture.dart';
+import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/user_page.dart';
 
 import '../../constant/palette.dart';
@@ -28,306 +29,250 @@ class _UserScreenState extends State<UserScreen> {
   /// If no user is given in args, the current user is used
   User? user;
 
-  List<String> unmetRequirements = [];
-  bool passwordsMatch = true;
-  bool bothPasswordsEntered = false;
-
-  final TextEditingController newPasswordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-
   @override
   void initState() {
     user = args?.user ?? AccountManager().user;
     super.initState();
   }
 
-  // Function to check password complexity
-  void checkPasswordComplexity(String password) {
-    final rules = {
-      r'(?=.*[A-Z])': 'Almeno una lettera maiuscola',
-      r'(?=.*[a-z])': 'Almeno una lettera minuscola',
-      r'(?=.*\d)': 'Almeno un numero',
-      r'(?=.*[@$!%*?&])': 'Almeno un simbolo speciale (@\$!%*?)',
-      r'.{8,}': 'Almeno 8 caratteri',
-    };
-
-    setState(() {
-      unmetRequirements = rules.entries
-          .where((entry) => !RegExp(entry.key).hasMatch(password))
-          .map((entry) => entry.value)
-          .toList();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-        child: Column(
-          children: [
-            // Page Title
-            PageHeader(title: args?.title ?? 'Gestisci il tuo profilo', isPage: args != null),
-            const SizedBox(height: Measures.vMarginThin),
+      padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+      child: Column(
+        children: [
+          // Page Title
+          PageHeader(title: args?.title ?? 'Gestisci il tuo profilo', isPage: args != null),
+          const SizedBox(height: Measures.vMarginThin),
 
-            // Profile picture
-            Column(
-              children: [
-                ProfilePicture(user: user, isEditable: true),
-                const SizedBox(height: Measures.vMarginThin),
+          // Profile picture
+          Column(
+            children: [
+              ProfilePicture(user: user, isEditable: true),
+              const SizedBox(height: Measures.vMarginThin),
 
-                // Username text
-                Text(
-                  user!.username,
-                  style: Fonts.black(size: 20),
-                ),
+              // Username text
+              Text(
+                user!.username,
+                style: Fonts.black(size: 20),
+              ),
 
-                // Email text
-                Text(
-                  user!.email,
-                  style: Fonts.light(size: 16),
-                ),
-              ],
-            ),
-            const SizedBox(height: Measures.vMarginMed),
+              // Email text
+              Text(
+                user!.email,
+                style: Fonts.light(size: 16),
+              ),
+            ],
+          ),
+          const SizedBox(height: Measures.vMarginMed),
 
-            // Friends list
-            ButtonCard(
-              title: "Lista Amici",
-              icon: 'group',
-              description: "Gestisci la tua community, consulta il profilo dei tuoi amici",
-              onTap: () {
-                Navigator.pushNamed(context, '/friends');
-              },
-            ),
-            const SizedBox(height: Measures.vMarginThin),
+          // Friends list
+          ButtonCard(
+            title: "Lista Amici",
+            icon: 'group',
+            description: "Gestisci la tua community, consulta il profilo dei tuoi amici",
+            onTap: () {
+              Navigator.pushNamed(context, '/friends');
+            },
+          ),
+          const SizedBox(height: Measures.vMarginThin),
 
-            // Change username
-            ButtonCard(
-              title: "Cambia username",
-              description: 'Modifica il tuo nome visibile pubblicamente',
-              icon: 'person',
-              onTap: () {
-                _showChangeUsernamePopup(context);
-              },
-            ),
-            const SizedBox(height: Measures.vMarginThin),
+          // Change username
+          ButtonCard(
+            title: "Cambia username",
+            description: 'Modifica il tuo nome visibile pubblicamente',
+            icon: 'person',
+            onTap: () {
+              _showChangeUsernamePopup(context);
+            },
+          ),
+          const SizedBox(height: Measures.vMarginThin),
 
-            // Change password
-            ButtonCard(
-              title: "Cambia Password",
-              description: 'Modifica le credenziali di accesso al tuo account',
-              icon: 'password',
-              onTap: () {
-                _showChangePasswordPopup(context);
-              },
-            ),
-            const SizedBox(height: Measures.vMarginThin),
+          // Change password
+          ButtonCard(
+            title: "Cambia Password",
+            description: 'Modifica le credenziali di accesso al tuo account',
+            icon: 'password',
+            onTap: () {
+              _showChangePasswordPopup(context);
+            },
+          ),
+          const SizedBox(height: Measures.vMarginThin),
 
-            // Settings
-            ButtonCard(
-              title: "Impostazioni",
-              icon: 'png/settings',
-              description: "Personalizza il comportamento dell'applicazione",
-              onTap: () {
-                Navigator.pushNamed(context, '/settings');
-              },
-            ),
-            const SizedBox(height: Measures.vMarginThin),
+          // Settings
+          ButtonCard(
+            title: "Impostazioni",
+            icon: 'png/settings',
+            description: "Personalizza il comportamento dell'applicazione",
+            onTap: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+          const SizedBox(height: Measures.vMarginThin),
 
-            // Logout
-            ButtonCard(
-              title: "Esci",
-              icon: 'logout',
-              onTap: () {
-                // TODO
-              },
-            ),
-            const SizedBox(height: Measures.vMarginBig * 3),
-          ],
-        ));
+          // Logout
+          ButtonCard(
+            title: "Esci",
+            icon: 'logout',
+            onTap: () {
+              // TODO
+              //AccountManager().logout();
+              //Navigator.pushNamedAndRemoveUntil(context, '/signin', (route) => false);
+            },
+          ),
+          const SizedBox(height: Measures.vMarginBig * 3),
+        ],
+      ),
+    );
   }
 
-  // Popup for changing password
   void _showChangePasswordPopup(BuildContext context) {
+    final currentPasswordController = TextEditingController();
     final newPasswordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
-
-    List<String> unmetRequirements = [];
-    bool passwordsMatch = true;
-    bool bothPasswordsEntered = false;
-
-    // Function to check the password complexity dynamically
-    void checkPasswordComplexity(String password) {
-      final rules = {
-        r'(?=.*[A-Z])': 'Almeno una lettera maiuscola',
-        r'(?=.*[a-z])': 'Almeno una lettera minuscola',
-        r'(?=.*\d)': 'Almeno un numero',
-        r'(?=.*[@$!%*?&])': 'Almeno un simbolo speciale (@\$!%*?)',
-        r'.{8,}': 'Almeno 8 caratteri',
-      };
-
-      unmetRequirements = rules.entries
-          .where((entry) => !RegExp(entry.key).hasMatch(password))
-          .map((entry) => entry.value)
-          .toList();
-    }
 
     context.popup(
       'Cambia Password',
       positiveText: 'Conferma',
       negativeText: 'Annulla',
       positiveCallback: () async {
-        // Only proceed if both passwords are entered and meet complexity requirements
-        if (newPasswordController.text.isNotEmpty &&
-            confirmPasswordController.text.isNotEmpty) {
-          if (newPasswordController.text == confirmPasswordController.text) {
-            if (unmetRequirements.isEmpty) {
-              // Password changed successfully
-              bool success = true; // TODO, Placeholder for actual db logic
-              if (success) {
-                context.snackbar('Password cambiata con successo!',
-                    backgroundColor: Palette.backgroundBlue);
-              } else {
-                context.snackbar('Errore durante il cambio della password',
-                    backgroundColor: Palette.primaryRed);
-              }
+        // Check if the passwords match
+        if (newPasswordController.text == confirmPasswordController.text) {
+          // Check if the password meets all constraints
+          if (_isPasswordValid(newPasswordController.text)) {
+            final status = await AccountManager().resetPasswordWithConstraints(
+                currentPasswordController.text, newPasswordController.text);
+            if (status == ResetPasswordStatus.success) {
+              context.snackbar('Password cambiata con successo!', backgroundColor: Palette.backgroundBlue);
             } else {
-              context.snackbar('La password non soddisfa i requisiti di complessità',
-                  backgroundColor: Palette.primaryRed);
+              context.snackbar('Errore durante il cambio della password', backgroundColor: Palette.primaryRed);
             }
           } else {
-            context.snackbar('Le due password non corrispondono', backgroundColor: Palette.primaryRed);
+            context.snackbar('La password non soddisfa i requisiti', backgroundColor: Palette.primaryRed);
           }
         } else {
-          context.snackbar('Non lasciare campi vuoti', backgroundColor: Palette.primaryRed);
+          context.snackbar('Le due password non corrispondono', backgroundColor: Palette.primaryRed);
         }
       },
-      child: StatefulBuilder(
-        builder: (BuildContext context, setState) {
-          return Column(
-            children: [
-              // New Password Field
-              TextField(
-                controller: newPasswordController,
-                obscureText: true,
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'Nuova Password',
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    checkPasswordComplexity(value); // Dynamically check complexity
-                    passwordsMatch = value == confirmPasswordController.text;
-                    bothPasswordsEntered = value.isNotEmpty && confirmPasswordController.text.isNotEmpty;
-                  });
-                },
-              ),
-              const SizedBox(height: Measures.vMarginSmall),
-
-              // Confirm Password Field
-              TextField(
-                controller: confirmPasswordController,
-                obscureText: true,
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'Conferma Password',
-                ),
-                onChanged: (value) {
-                  setState(() {
-                    passwordsMatch = value == newPasswordController.text;
-                    bothPasswordsEntered = newPasswordController.text.isNotEmpty && value.isNotEmpty;
-                  });
-                },
-              ),
-              const SizedBox(height: Measures.vMarginSmall),
-
-              // Complexity Feedback (Updated dynamically)
-              if (unmetRequirements.isNotEmpty)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: unmetRequirements.map((requirement) {
-                    return Text(
-                      '• $requirement',
-                      style: Fonts.light(color: Colors.red),
-                    );
-                  }).toList(),
-                ),
-
-              // Password Match Feedback
-              if (!passwordsMatch && bothPasswordsEntered)
-                Text(
-                  'Le due password non corrispondono',
-                  style: Fonts.light(color: Colors.red),
-                ),
-            ],
-          );
-        },
+      child: PasswordChangeForm(
+        currentPasswordController: currentPasswordController,
+        newPasswordController: newPasswordController,
+        confirmPasswordController: confirmPasswordController,
       ),
     );
   }
 
-  // Popup for changing username
+  // Check if password meets all the constraints
+  bool _isPasswordValid(String password) {
+    return password.length >= 8 &&
+        RegExp(r'[A-Z]').hasMatch(password) &&
+        RegExp(r'[a-z]').hasMatch(password) &&
+        RegExp(r'\d').hasMatch(password) &&
+        RegExp(r'[!@#\$&*~]').hasMatch(password);
+  }
+
   void _showChangeUsernamePopup(BuildContext context) {
-    final usernameController = TextEditingController();
-    bool isUsernameUnique = true; // TODO, Default to true, will check uniqueness later
-    String usernameFeedback = '';
+    // Placeholder for username logic
+  }
+}
 
-    Future<void> checkUsernameUniqueness(String username) async {
-      await Future.delayed(const Duration(seconds: 1));
+class PasswordChangeForm extends StatefulWidget {
+  final TextEditingController currentPasswordController;
+  final TextEditingController newPasswordController;
+  final TextEditingController confirmPasswordController;
 
-      setState(() {
-        if (username == "existingUsername") {
-          isUsernameUnique = false;
-          usernameFeedback = 'Username già in uso';
-        } else {
-          isUsernameUnique = true;
-          usernameFeedback = '';
-        }
-      });
-    }
+  const PasswordChangeForm({
+    required this.currentPasswordController,
+    required this.newPasswordController,
+    required this.confirmPasswordController,
+    super.key,
+  });
 
-    context.popup(
-      'Cambia Username',
-      positiveText: 'Conferma',
-      negativeText: 'Annulla',
-      positiveCallback: () async {
-        if (isUsernameUnique && usernameController.text.isNotEmpty) {
-          bool success = true; // TODO, Placeholder for actual logic
-          if (success) {
-            context.snackbar('Username cambiato con successo!',
-                backgroundColor: Palette.backgroundBlue);
-          } else {
-            context.snackbar('Errore durante il cambio dello username',
-                backgroundColor: Palette.primaryRed);
-          }
-        } else {
-          context.snackbar('Username non valido o già in uso',
-              backgroundColor: Palette.primaryRed);
-        }
-      },
-      child: Column(
-        children: [
-          // Username Field
-          TextField(
-            controller: usernameController,
-            style: TextStyle(color: Colors.white),
-            decoration: InputDecoration(
-              labelText: 'Nuovo Username',
+  @override
+  _PasswordChangeFormState createState() => _PasswordChangeFormState();
+}
+
+class _PasswordChangeFormState extends State<PasswordChangeForm> {
+  final Map<String, bool> passwordConstraints = {
+    'Tra 8 e 30 caratteri': false,
+    'Una lettera maiuscola': false,
+    'Una lettera minuscola': false,
+    'Un numero': false,
+    'Un carattere speciale (@\$!%*?&)': false,
+  };
+
+  late final TextEditingController currentPasswordController;
+  late final TextEditingController newPasswordController;
+  late final TextEditingController confirmPasswordController;
+
+  @override
+  void initState() {
+    super.initState();
+    currentPasswordController = widget.currentPasswordController;
+    newPasswordController = widget.newPasswordController;
+    confirmPasswordController = widget.confirmPasswordController;
+
+    // Add listener for text changes in the new password field
+    newPasswordController.addListener(_updateConstraints);
+  }
+
+  @override
+  void dispose() {
+    newPasswordController.removeListener(_updateConstraints); // Remove listener when the widget is disposed
+    super.dispose();
+  }
+
+  void _updateConstraints() {
+    final password = newPasswordController.text;
+    setState(() {
+      passwordConstraints['Tra 8 e 30 caratteri'] = password.length >= 8 && password.length <= 30;
+      passwordConstraints['Una lettera maiuscola'] = RegExp(r'[A-Z]').hasMatch(password);
+      passwordConstraints['Una lettera minuscola'] = RegExp(r'[a-z]').hasMatch(password);
+      passwordConstraints['Un numero'] = RegExp(r'\d').hasMatch(password);
+      passwordConstraints['Un carattere speciale (@\$!%*?&)'] = RegExp(r'[!@#\\$&*~]').hasMatch(password);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Current password text field
+        GlassTextField(
+          textController: currentPasswordController,
+          obscureText: true,
+          hintText: 'Password Attuale',
+        ),
+        const SizedBox(height: Measures.vMarginSmall),
+
+        // New password text field
+        GlassTextField(
+          textController: newPasswordController,
+          obscureText: true,
+          hintText: 'Nuova Password',
+        ),
+        const SizedBox(height: Measures.vMarginSmall),
+
+        // Confirm password text field
+        GlassTextField(
+          textController: confirmPasswordController,
+          obscureText: true,
+          hintText: 'Conferma Password',
+        ),
+        const SizedBox(height: Measures.vMarginSmall),
+
+        // Display password constraints with color change based on match
+        ...passwordConstraints.entries.map((entry) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Text(
+            entry.key,
+            style: Fonts.regular(
+              color: entry.value ? Palette.primaryGreen : Palette.primaryRed, // Color based on constraint match
             ),
-            onChanged: (value) {
-              checkUsernameUniqueness(value);
-            },
           ),
-          const SizedBox(height: Measures.vMarginSmall),
-
-          // Username Feedback
-          if (!isUsernameUnique)
-            Text(
-              usernameFeedback,
-              style: Fonts.light(color: Colors.red),
-            ),
-        ],
-      ),
+        )),
+      ],
     );
   }
 }

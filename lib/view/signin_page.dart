@@ -80,7 +80,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
     }
 
     _emailController = TextEditingController(text: 'valeriomorelli50@gmail.com'); // TODO here
-    _passwordController = TextEditingController(text: 'aaaaaa');
+    _passwordController = TextEditingController(text: 'aA1!4444');
     super.initState();
   }
 

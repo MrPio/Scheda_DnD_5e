@@ -1,6 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
-import 'package:flutter/material.dart';
-import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
 import 'data_manager.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -152,4 +150,45 @@ class AccountManager {
     // Note: I intentionally avoid reassigning the new instance
     // in order to preserve any listener to the `ValueListener` fields
   }
+
+  Future<ResetPasswordStatus> resetPasswordWithConstraints(
+      String currentPassword, String newPassword) async {
+    // Check if a user is currently logged in
+    if (_auth.currentUser == null) {
+      print('🚨 No user is logged in.');
+      return ResetPasswordStatus.error;
+    }
+
+    // Validate the new password constraints
+    final passwordPattern = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$');
+    if (!passwordPattern.hasMatch(newPassword)) {
+      print('🚨 Password does not meet the constraints.');
+      return ResetPasswordStatus.error;
+    }
+
+    try {
+      // Reauthenticate the user with the current password
+      final email = _auth.currentUser!.email!;
+      final credential = fb.EmailAuthProvider.credential(email: email, password: currentPassword);
+      await _auth.currentUser!.reauthenticateWithCredential(credential);
+
+      // Update the password
+      await _auth.currentUser!.updatePassword(newPassword);
+      print('✅ Password successfully updated.');
+      return ResetPasswordStatus.success;
+    } on fb.FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        print('🚨 The current password is incorrect.');
+      } else if (e.code == 'requires-recent-login') {
+        print('🚨 User needs to reauthenticate.');
+      } else {
+        print('🚨 Firebase error: ${e.message}');
+      }
+      return ResetPasswordStatus.error;
+    } catch (e) {
+      print('🚨 An unexpected error occurred: $e');
+      return ResetPasswordStatus.error;
+    }
+  }
+
 }
