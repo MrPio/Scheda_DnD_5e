@@ -11,6 +11,7 @@ import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/user_page.dart';
 
 import '../../constant/palette.dart';
+import '../../manager/data_manager.dart';
 
 class UserScreen extends StatefulWidget {
   final UserArgs? args;
@@ -83,7 +84,7 @@ class _UserScreenState extends State<UserScreen> {
             description: 'Modifica il tuo nome visibile pubblicamente',
             icon: 'person',
             onTap: () {
-              _showChangeUsernamePopup(context);
+              showChangeNicknamePopup();
             },
           ),
           const SizedBox(height: Measures.vMarginThin),
@@ -94,7 +95,7 @@ class _UserScreenState extends State<UserScreen> {
             description: 'Modifica le credenziali di accesso al tuo account',
             icon: 'password',
             onTap: () {
-              _showChangePasswordPopup(context);
+              showChangePasswordPopup();
             },
           ),
           const SizedBox(height: Measures.vMarginThin),
@@ -126,7 +127,7 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-  void _showChangePasswordPopup(BuildContext context) {
+  showChangePasswordPopup() async {
     final currentPasswordController = TextEditingController();
     final newPasswordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
@@ -135,12 +136,12 @@ class _UserScreenState extends State<UserScreen> {
       'Cambia Password',
       positiveText: 'Conferma',
       negativeText: 'Annulla',
-      positiveCallback: () async {
+      positiveCallback: () {
         // Check if the passwords match
         if (newPasswordController.text == confirmPasswordController.text) {
           // Check if the password meets all constraints
-          if (_isPasswordValid(newPasswordController.text)) {
-            final status = await AccountManager().resetPasswordWithConstraints(
+          if (isPasswordValid(newPasswordController.text)) {
+            final status = AccountManager().resetPasswordWithConstraints(
                 currentPasswordController.text, newPasswordController.text);
             if (status == ResetPasswordStatus.success) {
               context.snackbar('Password cambiata con successo!', backgroundColor: Palette.backgroundBlue);
@@ -163,16 +164,49 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   // Check if password meets all the constraints
-  bool _isPasswordValid(String password) {
+  bool isPasswordValid(String password) {
     return password.length >= 8 &&
         RegExp(r'[A-Z]').hasMatch(password) &&
         RegExp(r'[a-z]').hasMatch(password) &&
         RegExp(r'\d').hasMatch(password) &&
-        RegExp(r'[!@#\$&*~]').hasMatch(password);
+        RegExp(r'[!@#$&*~]').hasMatch(password);
   }
 
-  void _showChangeUsernamePopup(BuildContext context) {
-    // Placeholder for username logic
+  void showChangeNicknamePopup() async {
+    final newNicknameController = TextEditingController();
+
+    context.popup(
+      'Cambia Username',
+      positiveText: 'Conferma',
+      negativeText: 'Annulla',
+      positiveCallback: () async {
+        final newNickname = newNicknameController.text.trim();
+        if (newNickname.isEmpty) {
+          context.snackbar('Inserisci un nuovo username', backgroundColor: Palette.primaryRed);
+          return;
+        }
+
+        try {
+          await DataManager().checkNickname(newNickname);
+          // Update user object with new nickname (optional)
+          user!.username = newNickname;
+          // Update UI with the new nickname
+          setState(() {});
+          context.snackbar('Username aggiornato con successo!', backgroundColor: Palette.backgroundBlue);
+        } catch (e) {
+          context.snackbar('Username non disponibile!', backgroundColor: Palette.primaryRed);
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GlassTextField(
+            textController: newNicknameController,
+            hintText: 'Nuovo Username',
+          )
+        ],
+      ),
+    );
   }
 }
 
@@ -189,10 +223,10 @@ class PasswordChangeForm extends StatefulWidget {
   });
 
   @override
-  _PasswordChangeFormState createState() => _PasswordChangeFormState();
+  PasswordChangeFormState createState() => PasswordChangeFormState();
 }
 
-class _PasswordChangeFormState extends State<PasswordChangeForm> {
+class PasswordChangeFormState extends State<PasswordChangeForm> {
   final Map<String, bool> passwordConstraints = {
     'Tra 8 e 30 caratteri': false,
     'Una lettera maiuscola': false,

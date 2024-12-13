@@ -12,7 +12,8 @@ part 'part/user.g.dart';
 
 @JsonSerializable()
 class User implements WithUID {
-  final String username, email;
+  final String email;
+  String username;
   String? picture;
   int pictureColor;
   final int regDateTimestamp;

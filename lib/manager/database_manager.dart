@@ -96,5 +96,15 @@ class DatabaseManager {
   // TODO
   // countWhere()async{
   //   AggregateQuerySnapshot countSnapshot =
-  //       await users.where('username', isEqualTo: username).count().get();  }
+  //       await users.where('nickname', isEqualTo: nickname).count().get();  }
+
+  /// Check if a nickname exists in the 'users' collection
+  Future<bool> isNicknameTaken(String nickname) async {
+    final countSnapshot = await _database
+        .collection(collections[dnd_user.User]!)
+        .where('username', isEqualTo: nickname)
+        .count()
+        .get();
+    return countSnapshot.count! > 0;
+  }
 }

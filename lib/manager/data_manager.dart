@@ -12,8 +12,6 @@ import 'package:scheda_dnd_5e/model/character.dart';
 import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
-
-import '../interface/json_serializable.dart';
 import '../model/campaign.dart';
 
 enum SaveMode { post, put }
@@ -264,8 +262,25 @@ class DataManager {
     return newUID;
   }
 
-  /// Check that the given username does not belong to any user
-  checkUsername(){
-    // TODO
+  Future<void> checkNickname(String newNickname) async {
+    try {
+      // Check if the nickname is already taken
+      final isTaken = await DatabaseManager().isNicknameTaken(newNickname);
+      if (isTaken) {
+        throw Exception("Nickname already taken.");
+      }
+
+      // Fetch the current user object
+      final currentUser = await DataManager().load<User>(AccountManager().user.uid!);
+
+      // Update username and save
+      currentUser.username = newNickname;
+      await DataManager().save(currentUser);
+
+      print("Nickname updated successfully.");
+    } catch (e) {
+      print("Error updating nickname: ${e.toString()}");
+      rethrow; // Optionally rethrow to propagate the error
+    }
   }
 }
