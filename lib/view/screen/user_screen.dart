@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
 import 'package:scheda_dnd_5e/view/partial/card/button_card.dart';
@@ -12,6 +13,7 @@ import 'package:scheda_dnd_5e/view/user_page.dart';
 
 import '../../constant/palette.dart';
 import '../../manager/data_manager.dart';
+import '../partial/clickable.dart';
 
 class UserScreen extends StatefulWidget {
   final UserArgs? args;
@@ -92,11 +94,9 @@ class _UserScreenState extends State<UserScreen> {
           // Change password
           ButtonCard(
             title: "Cambia Password",
-            description: 'Modifica le credenziali di accesso al tuo account',
+            description: 'Modifica o reimposta le credenziali di accesso',
             icon: 'password',
-            onTap: () {
-              showChangePasswordPopup();
-            },
+            onTap: () => showPasswordOptions(context),
           ),
           const SizedBox(height: Measures.vMarginThin),
 
@@ -112,19 +112,87 @@ class _UserScreenState extends State<UserScreen> {
           const SizedBox(height: Measures.vMarginThin),
 
           // Logout
+          // Inside the UserScreen widget's build method:
           ButtonCard(
             title: "Esci",
             icon: 'logout',
             onTap: () {
-              // TODO
-              //AccountManager().logout();
-              //Navigator.pushNamedAndRemoveUntil(context, '/signin', (route) => false);
+              // Show a confirmation popup before logging out
+              showLogoutConfirmationPopup();
             },
           ),
           const SizedBox(height: Measures.vMarginBig * 3),
         ],
       ),
     );
+  }
+
+  showPasswordOptions(BuildContext context) {
+    context.bottomSheet(
+      BottomSheetArgs(
+        header: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Opzioni Password',
+                  style: Fonts.bold(size: 18),
+                ),
+              ],
+            ),
+            const SizedBox(width: Measures.hMarginBig),
+          ],
+        ),
+        items: [
+          BottomSheetItem(
+            'email',
+            'Reimposta tramite email',
+            resetPassword,
+          ),
+          BottomSheetItem(
+            'png/edit',
+            'Modifica password',
+                () => showChangePasswordPopup(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  resetPassword() async {
+    // Assuming the email is already available in the user object
+    final String email = user?.email ?? '';
+
+    if (email.isNotEmpty && email.isEmail) {
+      context.popup(
+        'Reset della password',
+        message: 'Un link per reimpostare la tua password sarà inviato a:\n$email',
+        positiveText: 'Invia email',
+        negativeText: 'Annulla',
+        positiveCallback: () async {
+          ResetPasswordStatus status = await AccountManager().resetPassword(email);
+          if (status == ResetPasswordStatus.success) {
+            context.snackbar(
+              'Controlla il tuo indirizzo email per reimpostare la password',
+              backgroundColor: Palette.backgroundBlue,
+            );
+          } else {
+            context.snackbar(
+              'Errore generico durante l\'invio dell\'email di reset!',
+              backgroundColor: Palette.primaryRed,
+            );
+          }
+        },
+        child: const SizedBox.shrink(), // No additional input fields needed
+      );
+    } else {
+      context.snackbar(
+        'Errore: l\'email associata non è valida!',
+        backgroundColor: Palette.primaryRed,
+      );
+    }
   }
 
   showChangePasswordPopup() async {
@@ -206,6 +274,27 @@ class _UserScreenState extends State<UserScreen> {
           )
         ],
       ),
+    );
+  }
+
+  showLogoutConfirmationPopup() {
+    context.popup(
+      'Conferma Logout',
+      message: 'Sei sicuro di voler uscire?',
+      positiveText: 'Esci',
+      negativeText: 'Annulla',
+      positiveCallback: () async {
+        // Perform logout operation
+        await AccountManager().signOut();
+        // Navigate to the sign-in screen
+        Navigator.pushNamedAndRemoveUntil(context, '/signin', (route) => false);
+        // Show confirmation message
+        context.snackbar(
+          'Sei uscito con successo!',
+          backgroundColor: Palette.backgroundBlue,
+        );
+      },
+      child: const SizedBox.shrink(), // No additional input fields needed
     );
   }
 }

@@ -10,13 +10,16 @@
   - Make sell in a separate page. Too many coins.
   - In inventory, non satisfied strength requirement should be handled graphically
 - `Account`:
-  - Add bottom sheet for "password dimenticata" in change password button
-  - Add logout logic
+  - Add friends logic
+- `App Settings`:
+  - Add settings menu logic
 - `Maintainability`:
   - Password requirements and error logics need to be centralized. Right now, it is both in SignIn, SignUp and UserScreen
 
 # DONE
 X Account 
+  X Add bottom sheet for "password dimenticata" in change password button
+  X Add logout logic
   X write change password method in AccountManager (requires current password).
   X Uniform the popup widget
   X Add change username popup
