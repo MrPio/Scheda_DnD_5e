@@ -80,7 +80,7 @@ class _UserScreenState extends State<UserScreen> {
 
           // Change username
           ButtonCard(
-            title: "Cambia username",
+            title: "Cambia Username",
             description: 'Modifica il tuo nome visibile pubblicamente',
             icon: 'person',
             onTap: () {
@@ -172,7 +172,7 @@ class _UserScreenState extends State<UserScreen> {
         RegExp(r'[!@#$&*~]').hasMatch(password);
   }
 
-  void showChangeNicknamePopup() async {
+  showChangeNicknamePopup() async {
     final newNicknameController = TextEditingController();
 
     context.popup(
@@ -247,16 +247,17 @@ class PasswordChangeFormState extends State<PasswordChangeForm> {
     confirmPasswordController = widget.confirmPasswordController;
 
     // Add listener for text changes in the new password field
-    newPasswordController.addListener(_updateConstraints);
+    newPasswordController.addListener(updateConstraints);
   }
 
   @override
   void dispose() {
-    newPasswordController.removeListener(_updateConstraints); // Remove listener when the widget is disposed
+    // Remove listener when the widget is disposed
+    newPasswordController.removeListener(updateConstraints);
     super.dispose();
   }
 
-  void _updateConstraints() {
+  updateConstraints() {
     final password = newPasswordController.text;
     setState(() {
       passwordConstraints['Tra 8 e 30 caratteri'] = password.length >= 8 && password.length <= 30;
