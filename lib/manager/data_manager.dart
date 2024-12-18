@@ -271,7 +271,7 @@ class DataManager {
     final oldUsername = AccountManager().user.username;
     AccountManager().user.username = newUsername;
     // Check if the username is already taken
-    if (await DatabaseManager().isNicknameTaken(newUsername)) {
+    if (await DatabaseManager().isUsernameTaken(newUsername)) {
       AccountManager().user.username = oldUsername;
       throw UsernameAlreadyTakenException();
     }

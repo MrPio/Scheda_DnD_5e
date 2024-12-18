@@ -26,6 +26,7 @@ class DatabaseManager {
     Item: 'items/',
     Coin: 'coins/',
     Equipment: 'equipments/',
+    // Friendship: 'friendships/'
   };
   static const collectionsPOST = {
     Weapon: 'users_weapons/',
@@ -99,7 +100,7 @@ class DatabaseManager {
   //       await users.where('nickname', isEqualTo: nickname).count().get();  }
 
   /// Check if a nickname exists in the 'users' collection
-  Future<bool> isNicknameTaken(String nickname) async {
+  Future<bool> isUsernameTaken(String nickname) async {
     final countSnapshot = await _database
         .collection(collections[dnd_user.User]!)
         .where('username', isEqualTo: nickname)

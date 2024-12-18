@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
+import 'package:tuple/tuple.dart';
 
 import 'data_manager.dart';
 
@@ -37,6 +38,13 @@ class AccountManager {
   final fb.FirebaseAuth _auth = fb.FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   late User user;
+  static final List<Tuple2<String,RegExp>> passwordConstraints = [
+    Tuple2('Tra 8 e 30 caratteri', RegExp(r'^.{8,30}$')),
+    Tuple2('Una lettera maiuscola', RegExp(r'[A-Z]')),
+    Tuple2('Una lettera minuscola', RegExp(r'[a-z]')),
+    Tuple2('Un numero', RegExp(r'\d')),
+    Tuple2('Un carattere speciale (@\$!%*?&)', RegExp(r'[!@#$&*~]')),
+  ];
 
   /// Check if a user auth exists, and if so, load the object from the db
   Future<bool> cacheSignIn() async {

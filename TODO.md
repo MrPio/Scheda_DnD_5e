@@ -11,10 +11,19 @@
   - In inventory, non satisfied strength requirement should be handled graphically
 - `Account`:
   - Add friends logic
+  - Uniformare doppi camel case
+  - popup di password: uniformare i textfield e prova hrule
+- `Friendship`:
+  - Metodi per accettare/rifiutare in datamanager (non servono! Usa il metodo save())
+  - Ricordati di runnare `dart run build_runner build` quando hai modificato/ creato model
+  - crea la classe `Friendship`
+  - aggiungi gli oggetti di `Friendship` in cui lo user attuale è coinvolto nel suo oggetto, mettili una lista `friendships` **non serializzabile**
+  - Creare Realtime Manager
 - `App Settings`:
   - Add settings menu logic
 - `Maintainability`:
   - Password requirements and error logics need to be centralized. Right now, it is both in SignIn, SignUp and UserScreen
+  - The width of the popups should not depend on the message
 - `User Experience`:
   - After log-in, cache populating should be done with the loading view active. At this very moment the users stares at the signin screen for 5 seconds.
 

@@ -85,9 +85,7 @@ class _UserScreenState extends State<UserScreen> {
             title: "Cambia Username",
             description: 'Modifica il tuo nome visibile pubblicamente',
             icon: 'person',
-            onTap: () {
-              showChangeNicknamePopup();
-            },
+            onTap: showChangeUsernamePopup,
           ),
           const SizedBox(height: Measures.vMarginThin),
 
@@ -174,7 +172,6 @@ class _UserScreenState extends State<UserScreen> {
           }
         },
         backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
-        child: const SizedBox.shrink(), // No additional input fields needed
       );
     } else {
       context.snackbar(
@@ -189,58 +186,91 @@ class _UserScreenState extends State<UserScreen> {
     final newPasswordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
-    context.popup(
-      'Cambia Password',
-      positiveText: 'Conferma',
-      negativeText: 'Annulla',
-      positiveCallback: () {
-        // Check if the passwords match
-        if (newPasswordController.text == confirmPasswordController.text) {
-          // Check if the password meets all constraints
-          if (isPasswordValid(newPasswordController.text)) {
-            final status = AccountManager()
-                .resetPasswordWithConstraints(currentPasswordController.text, newPasswordController.text);
-            if (status == ResetPasswordStatus.success) {
-              context.snackbar('Password cambiata con successo!',
-                  backgroundColor: Palette.backgroundBlue);
+    context.popup('Cambia Password',
+        positiveText: 'Conferma',
+        negativeText: 'Annulla',
+        positiveCallback: () async {
+          // Check if the passwords match
+          if (newPasswordController.text == confirmPasswordController.text) {
+            // Check if the password meets all constraints
+            if (AccountManager.passwordConstraints
+                .any((constraint) => !constraint.item2.hasMatch(newPasswordController.text))) {
+              context.snackbar('La password non soddisfa i requisiti',
+                  backgroundColor: Palette.primaryRed, bottomMargin: Measures.bottomBarHeight);
             } else {
-              context.snackbar('Errore durante il cambio della password',
-                  backgroundColor: Palette.primaryRed);
+              final status = await AccountManager().resetPasswordWithConstraints(
+                  currentPasswordController.text, newPasswordController.text);
+              if (status == ResetPasswordStatus.success) {
+                context.snackbar('Password cambiata con successo!',
+                    backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
+              } else {
+                context.snackbar('Errore durante il cambio della password',
+                    backgroundColor: Palette.primaryRed, bottomMargin: Measures.bottomBarHeight);
+              }
             }
           } else {
-            context.snackbar('La password non soddisfa i requisiti', backgroundColor: Palette.primaryRed);
+            context.snackbar('Le due password non corrispondono', backgroundColor: Palette.primaryRed);
           }
-        } else {
-          context.snackbar('Le due password non corrispondono', backgroundColor: Palette.primaryRed);
-        }
-      },
-      backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
-      child: PasswordChangeForm(
-        currentPasswordController: currentPasswordController,
-        newPasswordController: newPasswordController,
-        confirmPasswordController: confirmPasswordController,
-      ),
-    );
+        },
+        backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
+        child: StatefulBuilder(builder: (context, setState) {
+          newPasswordController.addListener(() => setState(() {}));
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Current password text field
+              GlassTextField(
+                maxLength:30,
+                textController: currentPasswordController,
+                obscureText: true,
+                hintText: 'Password Attuale',
+              ),
+              const SizedBox(height: Measures.vMarginSmall),
+
+              // New password text field
+              GlassTextField(
+                maxLength:30,
+                textController: newPasswordController,
+                obscureText: true,
+                hintText: 'Nuova Password',
+              ),
+              const SizedBox(height: Measures.vMarginSmall),
+
+              // Confirm password text field
+              GlassTextField(
+                maxLength:30,
+                textController: confirmPasswordController,
+                obscureText: true,
+                hintText: 'Conferma Password',
+              ),
+              const SizedBox(height: Measures.vMarginSmall),
+
+              // Display password constraints with color change based on match
+              ...AccountManager.passwordConstraints.map((constraint) => Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2),
+                    child: Text(
+                      constraint.item1,
+                      style: Fonts.regular(
+                        color: constraint.item2.hasMatch(newPasswordController.text)
+                            ? Palette.primaryGreen
+                            : Palette.primaryRed, // Color based on constraint match
+                      ),
+                    ),
+                  )),
+            ],
+          );
+        }));
   }
 
-  // Check if password meets all the constraints
-  bool isPasswordValid(String password) {
-    return password.length >= 8 &&
-        RegExp(r'[A-Z]').hasMatch(password) &&
-        RegExp(r'[a-z]').hasMatch(password) &&
-        RegExp(r'\d').hasMatch(password) &&
-        RegExp(r'[!@#$&*~]').hasMatch(password);
-  }
-
-  showChangeNicknamePopup() async {
-    final newNicknameController = TextEditingController(text: AccountManager().user.username);
+  showChangeUsernamePopup() async {
+    final newUsernameController = TextEditingController(text: AccountManager().user.username);
 
     context.popup(
       'Cambia Username',
       positiveText: 'Conferma',
       negativeText: 'Annulla',
       positiveCallback: () async {
-        final newUsername = newNicknameController.text.trim();
+        final newUsername = newUsernameController.text.trim();
         try {
           await DataManager().changeUsername(newUsername);
           setState(() {});
@@ -254,15 +284,13 @@ class _UserScreenState extends State<UserScreen> {
               backgroundColor: Palette.primaryRed, bottomMargin: Measures.bottomBarHeight);
         }
       },
+      message: 'Inserisci il tuo nuovo username',
       backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GlassTextField(
-            textController: newNicknameController,
-            hintText: 'Nuovo username',
-          )
-        ],
+      child: GlassTextField(
+        iconPath: 'person',
+        clearable: false,
+        textController: newUsernameController,
+        hintText: 'Nuovo username',
       ),
     );
   }
@@ -282,108 +310,4 @@ class _UserScreenState extends State<UserScreen> {
         },
         backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
       );
-}
-
-class PasswordChangeForm extends StatefulWidget {
-  final TextEditingController currentPasswordController;
-  final TextEditingController newPasswordController;
-  final TextEditingController confirmPasswordController;
-
-  const PasswordChangeForm({
-    required this.currentPasswordController,
-    required this.newPasswordController,
-    required this.confirmPasswordController,
-    super.key,
-  });
-
-  @override
-  PasswordChangeFormState createState() => PasswordChangeFormState();
-}
-
-class PasswordChangeFormState extends State<PasswordChangeForm> {
-  final Map<String, bool> passwordConstraints = {
-    'Tra 8 e 30 caratteri': false,
-    'Una lettera maiuscola': false,
-    'Una lettera minuscola': false,
-    'Un numero': false,
-    'Un carattere speciale (@\$!%*?&)': false,
-  };
-
-  late final TextEditingController currentPasswordController;
-  late final TextEditingController newPasswordController;
-  late final TextEditingController confirmPasswordController;
-
-  @override
-  void initState() {
-    super.initState();
-    currentPasswordController = widget.currentPasswordController;
-    newPasswordController = widget.newPasswordController;
-    confirmPasswordController = widget.confirmPasswordController;
-
-    // Add listener for text changes in the new password field
-    newPasswordController.addListener(updateConstraints);
-  }
-
-  @override
-  void dispose() {
-    // Remove listener when the widget is disposed
-    newPasswordController.removeListener(updateConstraints);
-    super.dispose();
-  }
-
-  updateConstraints() {
-    final password = newPasswordController.text;
-    setState(() {
-      passwordConstraints['Tra 8 e 30 caratteri'] = password.length >= 8 && password.length <= 30;
-      passwordConstraints['Una lettera maiuscola'] = RegExp(r'[A-Z]').hasMatch(password);
-      passwordConstraints['Una lettera minuscola'] = RegExp(r'[a-z]').hasMatch(password);
-      passwordConstraints['Un numero'] = RegExp(r'\d').hasMatch(password);
-      passwordConstraints['Un carattere speciale (@\$!%*?&)'] = RegExp(r'[!@#\\$&*~]').hasMatch(password);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Current password text field
-        GlassTextField(
-          textController: currentPasswordController,
-          obscureText: true,
-          hintText: 'Password Attuale',
-        ),
-        const SizedBox(height: Measures.vMarginSmall),
-
-        // New password text field
-        GlassTextField(
-          textController: newPasswordController,
-          obscureText: true,
-          hintText: 'Nuova Password',
-        ),
-        const SizedBox(height: Measures.vMarginSmall),
-
-        // Confirm password text field
-        GlassTextField(
-          textController: confirmPasswordController,
-          obscureText: true,
-          hintText: 'Conferma Password',
-        ),
-        const SizedBox(height: Measures.vMarginSmall),
-
-        // Display password constraints with color change based on match
-        ...passwordConstraints.entries.map((entry) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Text(
-                entry.key,
-                style: Fonts.regular(
-                  color: entry.value
-                      ? Palette.primaryGreen
-                      : Palette.primaryRed, // Color based on constraint match
-                ),
-              ),
-            )),
-      ],
-    );
-  }
 }
