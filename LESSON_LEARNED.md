@@ -13,7 +13,7 @@
 ## Undo Github commits
 
 ### Problem
-Sometimes you need to remove the latest commits from Github. This happens, for example, in the case of a large `merge' operation caused by a forgotten `fetch' before committed changes.
+Sometimes you need to remove the latest commits from Github. This happens, for example, in the case of a large `merge` operation caused by a forgotten `fetch' before committed changes.
 
 ### Solution
 From the terminal, launch the following commands:

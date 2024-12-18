@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -25,23 +26,23 @@ extension ContextExtensions on BuildContext {
   ///
   /// The popup requires a [title] and has a leading optional [message].
   /// A blur effect is used on the background. This is visible when the [backgroundColor] is not fully opaque.
-  /// Two buttons are displayed if their texts, [positiveText] and [negativeText], are specified. If that's the case, the [positiveCallback] and [negativeCallback] are invoked on tap. However, the success of the positive action depends on the [canPopPositiveCallback] check.
+  /// Two buttons are displayed if their texts, [positiveText] and [negativeText], are specified. If that's the case, the [positiveCallback] and [negativeCallback] are invoked on tap. However, the success of the positive action depends on the returned boolean, with true as default.
   /// Further customization is delegated to the [child] widget, which can ignore the default horizontal padding if [noContentHPadding] is true.
   Future<void> popup(String title,
       {String? message,
       Widget? child,
       Color backgroundColor = Palette.background,
       String? positiveText,
-      Function()? positiveCallback,
-      bool Function()? canPopPositiveCallback,
+      FutureOr<bool?> Function()? positiveCallback,
       String? negativeText,
       Function()? negativeCallback,
-      bool noContentHPadding = false,
+      noContentHPadding = false,
+      expanded = false,
       dismissible = true}) async {
     await showDialog(
       barrierDismissible: dismissible,
       context: this,
-      builder: (_) {
+      builder: (context) {
         return PopScope(
           canPop: dismissible,
           child: AlertDialog(
@@ -64,12 +65,20 @@ extension ContextExtensions on BuildContext {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if (expanded) SizedBox(width: 999),
+                      // Title
                       Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: noContentHPadding ? Measures.hPadding : 0),
-                        child: Text(title, style: Fonts.bold()),
+                        child: Text(
+                          title,
+                          style: Fonts.bold(),
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                       const SizedBox(height: Measures.vMarginSmall),
+
+                      // Message in markdown
                       if (message != null)
                         Flexible(
                           child: SingleChildScrollView(
@@ -89,8 +98,12 @@ extension ContextExtensions on BuildContext {
                             ),
                           ),
                         ),
+
+                      // Child
                       if (child != null) Flexible(flex: 5, child: SingleChildScrollView(child: child)),
                       const SizedBox(height: Measures.vMarginThin),
+
+                      // Positive and Negative actions
                       Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: noContentHPadding ? Measures.hPadding : 0),
@@ -98,22 +111,27 @@ extension ContextExtensions on BuildContext {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             if (positiveText != null)
-                              TextButton(
-                                onPressed: () {
-                                  positiveCallback?.call();
-                                  if (canPopPositiveCallback?.call() ?? true) {
-                                    Navigator.pop(this);
-                                  }
-                                },
-                                child: Text(positiveText.toUpperCase(), style: Fonts.bold(size: 15)),
+                              Flexible(
+                                child: TextButton(
+                                  onPressed: () async {
+                                    if ((await positiveCallback?.call()) ?? true) {
+                                      Navigator.pop(this);
+                                    }
+                                  },
+                                  child: Text(positiveText.toUpperCase(),
+                                      style: Fonts.bold(size: 15), overflow: TextOverflow.ellipsis),
+                                ),
                               ),
                             if (negativeText != null)
-                              TextButton(
-                                onPressed: () {
-                                  negativeCallback?.call();
-                                  Navigator.pop(this);
-                                },
-                                child: Text(negativeText.toUpperCase(), style: Fonts.bold(size: 15)),
+                              Flexible(
+                                child: TextButton(
+                                  onPressed: () {
+                                    negativeCallback?.call();
+                                    Navigator.pop(this);
+                                  },
+                                  child: Text(negativeText.toUpperCase(),
+                                      style: Fonts.bold(size: 15), overflow: TextOverflow.ellipsis),
+                                ),
                               ),
                           ],
                         ),
@@ -156,7 +174,7 @@ extension ContextExtensions on BuildContext {
         noContentHPadding: true,
         backgroundColor: Palette.popup,
         positiveText: 'Ok',
-        canPopPositiveCallback: () =>
+        positiveCallback: () async =>
             selectionRequirement == null ||
             selectionRequirement == values.map((e) => (value?.call(e) ?? false) ? 1 : 0).toList().sum(),
         child: StatefulBuilder(

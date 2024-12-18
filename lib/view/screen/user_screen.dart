@@ -14,6 +14,7 @@ import 'package:scheda_dnd_5e/view/user_page.dart';
 import '../../constant/palette.dart';
 import '../../manager/data_manager.dart';
 import '../partial/clickable.dart';
+import '../partial/decoration/rule.dart';
 
 class UserScreen extends StatefulWidget {
   final UserArgs? args;
@@ -186,23 +187,29 @@ class _UserScreenState extends State<UserScreen> {
     final newPasswordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
 
-    context.popup('Cambia Password',
+    context.popup('Cambia la password',
+        message: 'Inserisci prima la tua password attuale poi la nuova password.',
+        expanded: true,
         positiveText: 'Conferma',
         negativeText: 'Annulla',
         positiveCallback: () async {
-          // Check if the passwords match
+          if (currentPasswordController.text.isEmpty ||
+              newPasswordController.text.isEmpty ||
+              confirmPasswordController.text.isEmpty) {
+            return false;
+          }
           if (newPasswordController.text == confirmPasswordController.text) {
             // Check if the password meets all constraints
             if (AccountManager.passwordConstraints
                 .any((constraint) => !constraint.item2.hasMatch(newPasswordController.text))) {
-              context.snackbar('La password non soddisfa i requisiti',
+              context.snackbar('La password non soddisfa tutti i requisiti',
                   backgroundColor: Palette.primaryRed, bottomMargin: Measures.bottomBarHeight);
             } else {
               final status = await AccountManager().resetPasswordWithConstraints(
                   currentPasswordController.text, newPasswordController.text);
               if (status == ResetPasswordStatus.success) {
                 context.snackbar('Password cambiata con successo!',
-                    backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
+                    backgroundColor: Palette.backgroundGrey, bottomMargin: Measures.bottomBarHeight);
               } else {
                 context.snackbar('Errore durante il cambio della password',
                     backgroundColor: Palette.primaryRed, bottomMargin: Measures.bottomBarHeight);
@@ -211,6 +218,7 @@ class _UserScreenState extends State<UserScreen> {
           } else {
             context.snackbar('Le due password non corrispondono', backgroundColor: Palette.primaryRed);
           }
+          return true;
         },
         backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
         child: StatefulBuilder(builder: (context, setState) {
@@ -220,43 +228,48 @@ class _UserScreenState extends State<UserScreen> {
             children: [
               // Current password text field
               GlassTextField(
-                maxLength:30,
+                clearable: false,
+                iconPath: 'password',
+                maxLength: 30,
                 textController: currentPasswordController,
                 obscureText: true,
-                hintText: 'Password Attuale',
+                hintText: 'Password attuale',
               ),
               const SizedBox(height: Measures.vMarginSmall),
+              Rule(),
+              const SizedBox(height: Measures.vMarginSmall),
 
-              // New password text field
+              // New password
               GlassTextField(
-                maxLength:30,
+                clearable: false,
+                iconPath: 'png/edit',
+                maxLength: 30,
                 textController: newPasswordController,
                 obscureText: true,
-                hintText: 'Nuova Password',
+                hintText: 'Nuova password',
               ),
-              const SizedBox(height: Measures.vMarginSmall),
 
-              // Confirm password text field
+              // Password constraints
+              if (newPasswordController.text.isNotEmpty) ...[
+                const SizedBox(height: Measures.vMarginThin),
+                ...AccountManager.passwordConstraints
+                    .where((constraint) => !constraint.item2.hasMatch(newPasswordController.text))
+                    .map((constraint) => Text(
+                          '• ${constraint.item1}',
+                          style: Fonts.regular(color: Palette.primaryRed),
+                        ))
+              ],
+
+              // Confirm password
+              const SizedBox(height: Measures.vMarginSmall),
               GlassTextField(
-                maxLength:30,
+                clearable: false,
+                iconPath: 'png/confirm',
+                maxLength: 30,
                 textController: confirmPasswordController,
                 obscureText: true,
-                hintText: 'Conferma Password',
+                hintText: 'Conferma password',
               ),
-              const SizedBox(height: Measures.vMarginSmall),
-
-              // Display password constraints with color change based on match
-              ...AccountManager.passwordConstraints.map((constraint) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    child: Text(
-                      constraint.item1,
-                      style: Fonts.regular(
-                        color: constraint.item2.hasMatch(newPasswordController.text)
-                            ? Palette.primaryGreen
-                            : Palette.primaryRed, // Color based on constraint match
-                      ),
-                    ),
-                  )),
             ],
           );
         }));
@@ -266,9 +279,11 @@ class _UserScreenState extends State<UserScreen> {
     final newUsernameController = TextEditingController(text: AccountManager().user.username);
 
     context.popup(
-      'Cambia Username',
+      'Inserisci il tuo nuovo username',
+      message: 'Controlleremo che il nome utente non sia già stato scelto da un altro utente.',
       positiveText: 'Conferma',
       negativeText: 'Annulla',
+      expanded: true,
       positiveCallback: () async {
         final newUsername = newUsernameController.text.trim();
         try {
@@ -284,7 +299,6 @@ class _UserScreenState extends State<UserScreen> {
               backgroundColor: Palette.primaryRed, bottomMargin: Measures.bottomBarHeight);
         }
       },
-      message: 'Inserisci il tuo nuovo username',
       backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
       child: GlassTextField(
         iconPath: 'person',

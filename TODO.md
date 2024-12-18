@@ -19,6 +19,7 @@
   - crea la classe `Friendship`
   - aggiungi gli oggetti di `Friendship` in cui lo user attuale è coinvolto nel suo oggetto, mettili una lista `friendships` **non serializzabile**
   - Creare Realtime Manager
+  - use `canPopPositiveCallback` to avoid popping the popup in case any error occurs when changing username/password
 - `App Settings`:
   - Add settings menu logic
 - `Maintainability`:

@@ -500,6 +500,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                       setState(() {
                                         character.masteries.remove(e);
                                       });
+                                      return true;
                                     },
                                         negativeCallback: () {},
                                         positiveText: 'Si',
@@ -1240,7 +1241,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                     'Inserisci la nuova quantità di ${item.title}',
                     message: 'Al momento ne hai $quantity.',
                     child: Align(alignment: Alignment.center, child: numericInput),
-                    positiveCallback: () => onSubmit(numericInput.value),
+                    positiveCallback: () async => onSubmit(numericInput.value),
                     negativeCallback: () {},
                     positiveText: 'Conferma',
                     negativeText: 'Annulla',
