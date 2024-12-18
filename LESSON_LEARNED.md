@@ -2,11 +2,26 @@
 
 <a name="index"></a>
 ## 📘 Table of Contents
+* [Undo Github commits](#ll6)
 * [Git mismatching line ending causes huge commits](#ll5)
 * [View components taxonomy](#ll4)
 * [Pass arguments to a page](#ll3)
 * [Java and Gradle Compatibility](#ll2)
 * [Use `[]` initialization when the list is involved in a generic usage](#ll1)
+
+<a name="ll6"></a>
+## Undo Github commits
+
+### Problem
+Sometimes you need to remove the latest commits from Github. This happens, for example, in the case of a large `merge' operation caused by a forgotten `fetch' before committed changes.
+
+### Solution
+From the terminal, launch the following commands:
+1. `git reset --soft <COMMIT_HASH>` where `COMMIT_HASH` is the SHA of the commit you can retrieve from Github or through the `git rev-list HEAD` command.
+   * `--soft` is used to move the `HEAD` position updating the *index*, but not the *working tree*, i.e. the local files.
+   * `--hard` is used to move the `HEAD` position updating the *index* and the *working tree*.
+2. `git add .` & `git commit -m <MSG>` to commit the *working tree*.
+3. `git push origin <BRANCH> --force` to overwrite all the commits happened after the `COMMIT_HASH`.
 
 <a name="ll5"></a>
 ## Git mismatching line ending causes huge commits
