@@ -54,6 +54,7 @@ enum Range {
   metri90('90 metri'),
   metri150('150 Metri'),
   km7_5('7,5 km'),
+  km8('8 km dall\'incantatore'),
   km750('750 km'),
   personale('personale'),
   vista('vista'),

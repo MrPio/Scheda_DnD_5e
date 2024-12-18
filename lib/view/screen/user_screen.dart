@@ -6,9 +6,9 @@ import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
 import 'package:scheda_dnd_5e/view/partial/card/button_card.dart';
+import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/page_header.dart';
 import 'package:scheda_dnd_5e/view/partial/profile_picture.dart';
-import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/user_page.dart';
 
 import '../../constant/palette.dart';
@@ -112,14 +112,10 @@ class _UserScreenState extends State<UserScreen> {
           const SizedBox(height: Measures.vMarginThin),
 
           // Logout
-          // Inside the UserScreen widget's build method:
           ButtonCard(
             title: "Esci",
             icon: 'logout',
-            onTap: () {
-              // Show a confirmation popup before logging out
-              showLogoutConfirmationPopup();
-            },
+            onTap: showLogoutPopup,
           ),
           const SizedBox(height: Measures.vMarginBig * 3),
         ],
@@ -154,7 +150,7 @@ class _UserScreenState extends State<UserScreen> {
           BottomSheetItem(
             'png/edit',
             'Modifica password',
-                () => showChangePasswordPopup(),
+            () => showChangePasswordPopup(),
           ),
         ],
       ),
@@ -209,12 +205,14 @@ class _UserScreenState extends State<UserScreen> {
         if (newPasswordController.text == confirmPasswordController.text) {
           // Check if the password meets all constraints
           if (isPasswordValid(newPasswordController.text)) {
-            final status = AccountManager().resetPasswordWithConstraints(
-                currentPasswordController.text, newPasswordController.text);
+            final status = AccountManager()
+                .resetPasswordWithConstraints(currentPasswordController.text, newPasswordController.text);
             if (status == ResetPasswordStatus.success) {
-              context.snackbar('Password cambiata con successo!', backgroundColor: Palette.backgroundBlue);
+              context.snackbar('Password cambiata con successo!',
+                  backgroundColor: Palette.backgroundBlue);
             } else {
-              context.snackbar('Errore durante il cambio della password', backgroundColor: Palette.primaryRed);
+              context.snackbar('Errore durante il cambio della password',
+                  backgroundColor: Palette.primaryRed);
             }
           } else {
             context.snackbar('La password non soddisfa i requisiti', backgroundColor: Palette.primaryRed);
@@ -270,33 +268,27 @@ class _UserScreenState extends State<UserScreen> {
         children: [
           GlassTextField(
             textController: newNicknameController,
-            hintText: 'Nuovo Username',
+            hintText: 'Nuovo username',
           )
         ],
       ),
     );
   }
 
-  showLogoutConfirmationPopup() {
-    context.popup(
-      'Conferma Logout',
-      message: 'Sei sicuro di voler uscire?',
-      positiveText: 'Esci',
-      negativeText: 'Annulla',
-      positiveCallback: () async {
-        // Perform logout operation
-        await AccountManager().signOut();
-        // Navigate to the sign-in screen
-        Navigator.pushNamedAndRemoveUntil(context, '/signin', (route) => false);
-        // Show confirmation message
-        context.snackbar(
-          'Sei uscito con successo!',
-          backgroundColor: Palette.backgroundBlue,
-        );
-      },
-      child: const SizedBox.shrink(), // No additional input fields needed
-    );
-  }
+  showLogoutPopup() => context.popup(
+        'Conferma di logout',
+        message: 'Sei sicuro di voler uscire?',
+        positiveText: 'Si',
+        negativeText: 'No',
+        positiveCallback: () async {
+          context.snackbar(
+            'Alla prossima, ${AccountManager().user.username}!',
+            backgroundColor: Palette.backgroundBlue,
+          );
+          await AccountManager().signOut();
+          Navigator.pushNamedAndRemoveUntil(context, '/signin', ModalRoute.withName('/'));
+        },
+      );
 }
 
 class PasswordChangeForm extends StatefulWidget {
@@ -388,14 +380,16 @@ class PasswordChangeFormState extends State<PasswordChangeForm> {
 
         // Display password constraints with color change based on match
         ...passwordConstraints.entries.map((entry) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: Text(
-            entry.key,
-            style: Fonts.regular(
-              color: entry.value ? Palette.primaryGreen : Palette.primaryRed, // Color based on constraint match
-            ),
-          ),
-        )),
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Text(
+                entry.key,
+                style: Fonts.regular(
+                  color: entry.value
+                      ? Palette.primaryGreen
+                      : Palette.primaryRed, // Color based on constraint match
+                ),
+              ),
+            )),
       ],
     );
   }

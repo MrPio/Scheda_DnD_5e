@@ -262,11 +262,11 @@ class DataManager {
     return newUID;
   }
 
+  ///
   Future<void> checkNickname(String newNickname) async {
     try {
       // Check if the nickname is already taken
-      final isTaken = await DatabaseManager().isNicknameTaken(newNickname);
-      if (isTaken) {
+      if (await DatabaseManager().isNicknameTaken(newNickname)) {
         throw Exception("Nickname already taken.");
       }
 

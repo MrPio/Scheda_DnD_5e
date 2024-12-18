@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
-import 'package:scheda_dnd_5e/model/user.dart';
-import 'data_manager.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:scheda_dnd_5e/model/user.dart';
+
+import 'data_manager.dart';
 
 enum SignInStatus {
   success,
@@ -27,7 +28,7 @@ enum ResetPasswordStatus {
 }
 
 class AccountManager {
-  static final AccountManager _instance = AccountManager._();
+  static AccountManager _instance = AccountManager._();
 
   factory AccountManager() => _instance;
 
@@ -80,8 +81,10 @@ class AccountManager {
     return SignUpStatus.success;
   }
 
+  /// Logout the current cached user and re-initialize this manager
   Future<void> signOut() async {
     await _auth.signOut();
+    _instance = AccountManager._();
   }
 
   Future<fb.UserCredential?> _askGoogleAccount() async {
@@ -160,7 +163,8 @@ class AccountManager {
     }
 
     // Validate the new password constraints
-    final passwordPattern = RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$');
+    final passwordPattern =
+        RegExp(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,30}$');
     if (!passwordPattern.hasMatch(newPassword)) {
       print('🚨 Password does not meet the constraints.');
       return ResetPasswordStatus.error;
@@ -190,5 +194,4 @@ class AccountManager {
       return ResetPasswordStatus.error;
     }
   }
-
 }
