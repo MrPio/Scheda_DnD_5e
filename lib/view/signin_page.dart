@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
@@ -37,10 +38,11 @@ class _SignInPageState extends State<SignInPage> with Loadable {
   void initState() {
     if (!isInitialized) {
       isInitialized = true;
+      WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+      FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
       Future.delayed(Duration.zero, () async {
         withLoading(() async {
           await dotenv.load(fileName: ".env");
-          WidgetsFlutterBinding.ensureInitialized();
           await Firebase.initializeApp(
             options: DefaultFirebaseOptions.currentPlatform,
           );
@@ -71,6 +73,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
               await DataManager().fetchUserItems();
               context.goto('/home', pop: true);
           }
+          FlutterNativeSplash.remove();
         });
       });
     }
