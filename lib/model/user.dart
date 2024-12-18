@@ -13,7 +13,7 @@ part 'part/user.g.dart';
 @JsonSerializable()
 class User implements WithUID {
   final String email;
-  String username;
+  String _username;
   String? picture;
   int pictureColor;
   final int regDateTimestamp;
@@ -45,7 +45,7 @@ class User implements WithUID {
   get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
 
   User({
-    this.username = 'Anonimo',
+    username = 'Anonimo',
     this.picture,
     this.email = '',
     int? pictureColor,
@@ -57,7 +57,8 @@ class User implements WithUID {
     List<String>? armorsUIDs,
     List<String>? itemsUIDs,
     List<String>? coinsUIDs,
-  })  : regDateTimestamp = regDateTimestamp ?? DateTime.now().millisecondsSinceEpoch,
+  })  : _username = username,
+        regDateTimestamp = regDateTimestamp ?? DateTime.now().millisecondsSinceEpoch,
         charactersUIDs = charactersUIDs ?? [],
         deletedCharactersUIDs = deletedCharactersUIDs ?? [],
         campaignsUIDs = campaignsUIDs ?? [],
@@ -65,18 +66,32 @@ class User implements WithUID {
         armorsUIDs = armorsUIDs ?? [],
         itemsUIDs = itemsUIDs ?? [],
         coinsUIDs = coinsUIDs ?? [],
-        pictureColor = pictureColor??[
-          Palette.background,
-          Palette.backgroundGreen,
-          Palette.backgroundMagenta,
-          Palette.backgroundGrey,
-          Palette.backgroundPurple,
-          Palette.backgroundBlue,
-          Palette.primaryGreen,
-          Palette.primaryRed,
-          Palette.primaryBlue,
-          Palette.primaryYellow,
-        ].random.value;
+        pictureColor = pictureColor ??
+            [
+              Palette.background,
+              Palette.backgroundGreen,
+              Palette.backgroundMagenta,
+              Palette.backgroundGrey,
+              Palette.backgroundPurple,
+              Palette.backgroundBlue,
+              Palette.primaryGreen,
+              Palette.primaryRed,
+              Palette.primaryBlue,
+              Palette.primaryYellow,
+            ].random.value;
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String get username => _username;
+
+  set username(String value) {
+    if (value.length < 5) {
+      throw const FormatException('Il nome utente deve avere almeno 5 caratteri');
+    }
+    if(value==_username){
+      throw const FormatException('Il nome utente è uguale a quello già in uso');
+    }
+    _username = value;
+  }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   List<String> get inventoryItemsUIDs => weaponsUIDs + armorsUIDs + itemsUIDs + coinsUIDs;

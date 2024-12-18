@@ -12,9 +12,12 @@ import 'package:scheda_dnd_5e/model/character.dart';
 import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
+
 import '../model/campaign.dart';
 
 enum SaveMode { post, put }
+
+class UsernameAlreadyTakenException implements Exception {}
 
 class DataManager {
   static final DataManager _instance = DataManager._();
@@ -262,25 +265,16 @@ class DataManager {
     return newUID;
   }
 
-  ///
-  Future<void> checkNickname(String newNickname) async {
-    try {
-      // Check if the nickname is already taken
-      if (await DatabaseManager().isNicknameTaken(newNickname)) {
-        throw Exception("Nickname already taken.");
-      }
-
-      // Fetch the current user object
-      final currentUser = await DataManager().load<User>(AccountManager().user.uid!);
-
-      // Update username and save
-      currentUser.username = newNickname;
-      await DataManager().save(currentUser);
-
-      print("Nickname updated successfully.");
-    } catch (e) {
-      print("Error updating nickname: ${e.toString()}");
-      rethrow; // Optionally rethrow to propagate the error
+  /// Change the current user's username after checking that the [newUsername] hasn't already been taken.
+  Future<void> changeUsername(String newUsername) async {
+    // Note: the assignment is done before the uniqueness check to throw a FormatException before querying the API.
+    final oldUsername = AccountManager().user.username;
+    AccountManager().user.username = newUsername;
+    // Check if the username is already taken
+    if (await DatabaseManager().isNicknameTaken(newUsername)) {
+      AccountManager().user.username = oldUsername;
+      throw UsernameAlreadyTakenException();
     }
+    await DataManager().save(AccountManager().user);
   }
 }

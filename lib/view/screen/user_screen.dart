@@ -96,7 +96,33 @@ class _UserScreenState extends State<UserScreen> {
             title: "Cambia Password",
             description: 'Modifica o reimposta le credenziali di accesso',
             icon: 'password',
-            onTap: () => showPasswordOptions(context),
+            bottomSheetArgs: BottomSheetArgs(
+              header: Row(
+                children: [
+                  'password'.toIcon(),
+                  const SizedBox(width: Measures.hMarginBig),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Modifica la password di accesso', style: Fonts.bold()),
+                      Text('Ricordi la password attuale?', style: Fonts.light()),
+                    ],
+                  )
+                ],
+              ),
+              items: [
+                BottomSheetItem(
+                  'png/edit',
+                  'Ricordo la password attuale',
+                  () => showChangePasswordPopup(),
+                ),
+                BottomSheetItem(
+                  'email',
+                  'Non ricordo la password attuale',
+                  resetPassword,
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: Measures.vMarginThin),
 
@@ -118,40 +144,6 @@ class _UserScreenState extends State<UserScreen> {
             onTap: showLogoutPopup,
           ),
           const SizedBox(height: Measures.vMarginBig * 3),
-        ],
-      ),
-    );
-  }
-
-  showPasswordOptions(BuildContext context) {
-    context.bottomSheet(
-      BottomSheetArgs(
-        header: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Opzioni Password',
-                  style: Fonts.bold(size: 18),
-                ),
-              ],
-            ),
-            const SizedBox(width: Measures.hMarginBig),
-          ],
-        ),
-        items: [
-          BottomSheetItem(
-            'email',
-            'Reimposta tramite email',
-            resetPassword,
-          ),
-          BottomSheetItem(
-            'png/edit',
-            'Modifica password',
-            () => showChangePasswordPopup(),
-          ),
         ],
       ),
     );
@@ -181,6 +173,7 @@ class _UserScreenState extends State<UserScreen> {
             );
           }
         },
+        backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
         child: const SizedBox.shrink(), // No additional input fields needed
       );
     } else {
@@ -221,6 +214,7 @@ class _UserScreenState extends State<UserScreen> {
           context.snackbar('Le due password non corrispondono', backgroundColor: Palette.primaryRed);
         }
       },
+      backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
       child: PasswordChangeForm(
         currentPasswordController: currentPasswordController,
         newPasswordController: newPasswordController,
@@ -239,30 +233,28 @@ class _UserScreenState extends State<UserScreen> {
   }
 
   showChangeNicknamePopup() async {
-    final newNicknameController = TextEditingController();
+    final newNicknameController = TextEditingController(text: AccountManager().user.username);
 
     context.popup(
       'Cambia Username',
       positiveText: 'Conferma',
       negativeText: 'Annulla',
       positiveCallback: () async {
-        final newNickname = newNicknameController.text.trim();
-        if (newNickname.isEmpty) {
-          context.snackbar('Inserisci un nuovo username', backgroundColor: Palette.primaryRed);
-          return;
-        }
-
+        final newUsername = newNicknameController.text.trim();
         try {
-          await DataManager().checkNickname(newNickname);
-          // Update user object with new nickname (optional)
-          user!.username = newNickname;
-          // Update UI with the new nickname
+          await DataManager().changeUsername(newUsername);
           setState(() {});
-          context.snackbar('Username aggiornato con successo!', backgroundColor: Palette.backgroundBlue);
-        } catch (e) {
-          context.snackbar('Username non disponibile!', backgroundColor: Palette.primaryRed);
+          context.snackbar('Username aggiornato con successo!',
+              backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
+        } on UsernameAlreadyTakenException {
+          context.snackbar('Username non disponibile!',
+              backgroundColor: Palette.primaryRed, bottomMargin: Measures.bottomBarHeight);
+        } on FormatException catch (e) {
+          context.snackbar(e.message,
+              backgroundColor: Palette.primaryRed, bottomMargin: Measures.bottomBarHeight);
         }
       },
+      backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -288,6 +280,7 @@ class _UserScreenState extends State<UserScreen> {
           await AccountManager().signOut();
           Navigator.pushNamedAndRemoveUntil(context, '/signin', ModalRoute.withName('/'));
         },
+        backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
       );
 }
 

@@ -15,6 +15,8 @@
   - Add settings menu logic
 - `Maintainability`:
   - Password requirements and error logics need to be centralized. Right now, it is both in SignIn, SignUp and UserScreen
+- `User Experience`:
+  - After log-in, cache populating should be done with the loading view active. At this very moment the users stares at the signin screen for 5 seconds.
 
 # DONE
 X Account 
