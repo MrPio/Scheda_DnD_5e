@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:scheda_dnd_5e/manager/database_manager.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
 import 'package:tuple/tuple.dart';
 
@@ -15,12 +16,17 @@ enum SignInStatus {
 }
 
 enum SignUpStatus {
-  success,
-  weakPassword,
-  emailInUse,
-  genericError,
-  googleProviderError,
-  canceled;
+  success(),
+  weakPassword('La password è troppo corta!'),
+  passwordConstraintsNotMet('La password non soddisfa tutti i vincoli!'),
+  usernameInUse('L\'username è già in uso!'),
+  emailInUse('L\'email è già in uso!'),
+  genericError('Errore generico!'),
+  googleProviderError('Impossibile registrarsi con Google'),
+  canceled();
+
+  final String? errorMessage;
+  const SignUpStatus([this.errorMessage]);
 }
 
 enum ResetPasswordStatus {
@@ -38,7 +44,7 @@ class AccountManager {
   final fb.FirebaseAuth _auth = fb.FirebaseAuth.instance;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   late User user;
-  static final List<Tuple2<String,RegExp>> passwordConstraints = [
+  static final List<Tuple2<String, RegExp>> passwordConstraints = [
     Tuple2('Tra 8 e 30 caratteri', RegExp(r'^.{8,30}$')),
     Tuple2('Una lettera maiuscola', RegExp(r'[A-Z]')),
     Tuple2('Una lettera minuscola', RegExp(r'[a-z]')),
@@ -69,6 +75,12 @@ class AccountManager {
   }
 
   Future<SignUpStatus> signUp(email, password, User newUser) async {
+    if (passwordConstraints.any((constraint) => !constraint.item2.hasMatch(password))) {
+      return SignUpStatus.passwordConstraintsNotMet;
+    }
+    if (await DatabaseManager().isUsernameTaken(newUser.username)) {
+      return SignUpStatus.usernameInUse;
+    };
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,

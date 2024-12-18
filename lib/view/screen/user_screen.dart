@@ -186,6 +186,7 @@ class _UserScreenState extends State<UserScreen> {
     final currentPasswordController = TextEditingController();
     final newPasswordController = TextEditingController();
     final confirmPasswordController = TextEditingController();
+    bool currentPasswordVisible = false, newPasswordVisible = false, confirmPasswordVisible = false;
 
     context.popup('Cambia la password',
         message: 'Inserisci prima la tua password attuale poi la nuova password.',
@@ -223,6 +224,7 @@ class _UserScreenState extends State<UserScreen> {
         backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
         child: StatefulBuilder(builder: (context, setState) {
           newPasswordController.addListener(() => setState(() {}));
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -232,7 +234,10 @@ class _UserScreenState extends State<UserScreen> {
                 iconPath: 'password',
                 maxLength: 30,
                 textController: currentPasswordController,
-                obscureText: true,
+                secondaryIconPath: currentPasswordVisible ? 'visibility_on' : 'visibility_off',
+                onSecondaryIconTap: () =>
+                    setState(() => currentPasswordVisible = !currentPasswordVisible),
+                obscureText: !currentPasswordVisible,
                 hintText: 'Password attuale',
               ),
               const SizedBox(height: Measures.vMarginSmall),
@@ -245,7 +250,9 @@ class _UserScreenState extends State<UserScreen> {
                 iconPath: 'png/edit',
                 maxLength: 30,
                 textController: newPasswordController,
-                obscureText: true,
+                secondaryIconPath: newPasswordVisible ? 'visibility_on' : 'visibility_off',
+                onSecondaryIconTap: () => setState(() => newPasswordVisible = !newPasswordVisible),
+                obscureText: !newPasswordVisible,
                 hintText: 'Nuova password',
               ),
 
@@ -267,7 +274,10 @@ class _UserScreenState extends State<UserScreen> {
                 iconPath: 'png/confirm',
                 maxLength: 30,
                 textController: confirmPasswordController,
-                obscureText: true,
+                secondaryIconPath: confirmPasswordVisible ? 'visibility_on' : 'visibility_off',
+                onSecondaryIconTap: () =>
+                    setState(() => confirmPasswordVisible = !confirmPasswordVisible),
+                obscureText: !confirmPasswordVisible,
                 hintText: 'Conferma password',
               ),
             ],
@@ -320,7 +330,8 @@ class _UserScreenState extends State<UserScreen> {
             backgroundColor: Palette.backgroundBlue,
           );
           await AccountManager().signOut();
-          Navigator.pushNamedAndRemoveUntil(context, '/signin', ModalRoute.withName('/'));
+          Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+          return false;
         },
         backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
       );

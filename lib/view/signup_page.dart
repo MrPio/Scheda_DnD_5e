@@ -3,16 +3,17 @@ import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
-import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
-import 'package:scheda_dnd_5e/mixin/loadable.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
+import 'package:scheda_dnd_5e/mixin/loadable.dart';
+import 'package:scheda_dnd_5e/mixin/validable.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
 
-import 'partial/glass_button.dart';
-import 'partial/glass_text_field.dart';
+import '../manager/data_manager.dart';
 import 'partial/decoration/gradient_background.dart';
 import 'partial/decoration/loading_view.dart';
+import 'partial/glass_button.dart';
+import 'partial/glass_text_field.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -21,20 +22,21 @@ class SignUpPage extends StatefulWidget {
   State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> with Loadable {
-  late final TextEditingController _usernameController,
-      _emailController,
-      _passwordController;
-  bool _passwordVisible = false;
+class _SignUpPageState extends State<SignUpPage> with Loadable, Validable {
+  late final TextEditingController usernameController, emailController, passwordController;
+  bool passwordVisible = false;
 
   @override
   void initState() {
-    _usernameController = TextEditingController();
-    _emailController = TextEditingController(text: 'valeriomorelli50@gmail.com')
+    usernameController = TextEditingController(text: 'pippoPad');
+    emailController = TextEditingController(text: 'valeriomorelli500@gmail.com')
       ..addListener(() {
         setState(() {});
       });
-    _passwordController = TextEditingController(text: 'aaaaaa');
+    passwordController = TextEditingController(text: 'aaaaa@A3a');
+    passwordController.addListener(() {
+      setState(() {});
+    });
     super.initState();
   }
 
@@ -49,107 +51,125 @@ class _SignUpPageState extends State<SignUpPage> with Loadable {
           // Header + Body
           Center(
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Title
-                  SizedBox(
-                      width: double.infinity,
-                      child: Text('Benvenuto!', style: Fonts.black())),
-                  const SizedBox(
-                    height: Measures.vMarginThin,
-                  ),
-                  // Subtitle
-                  Text(
-                      'Crea un account per creare i tuoi personaggi, partecipare a campagne e molto altro!',
-                      style: Fonts.light()),
-                  const SizedBox(
-                    height: Measures.vMarginMed,
-                  ),
-                  // Username TextField
-                  GlassTextField(
-                      iconPath: 'person',
-                      hintText: 'Inserisci il tuo username',
-                      textController: _usernameController,
-                      clearable: true,
-                      keyboardType: TextInputType.name),
-                  const SizedBox(height: Measures.vMarginSmall),
-                  // Email TextField
-                  GlassTextField(
-                      iconPath: 'email',
-                      hintText: 'Inserisci la tua email',
-                      textController: _emailController,
-                      clearable: true,
-                      keyboardType: TextInputType.emailAddress),
-                  const SizedBox(height: Measures.vMarginSmall),
-                  // Password TextField
-                  GlassTextField(
-                    iconPath: 'password',
-                    secondaryIconPath:
-                        _passwordVisible ? 'visibility_on' : 'visibility_off',
-                    obscureText: !_passwordVisible,
-                    hintText: 'Inserisci la tua password',
-                    textController: _passwordController,
-                    clearable: false,
-                    onSecondaryIconTap: () {
-                      setState(() => _passwordVisible = !_passwordVisible);
-                    },
-                  ),
-                  const SizedBox(height: Measures.vMarginMed),
-                  // SignIn button
-                  GlassButton(
-                    'REGISTRATI',
-                    color: Palette.primaryGreen,
-                    onTap: signUp,
-                  ),
-                  const SizedBox(height: Measures.vMarginSmall),
-                  // Or line
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          color: Palette.card2,
-                          height: 1,
-                        ),
-                      ),
-                      const SizedBox(width: Measures.hMarginMed),
-                      Text('Oppure', style: Fonts.light()),
-                      const SizedBox(width: Measures.hMarginMed),
-                      Expanded(
-                        child: Container(
-                          color: Palette.card2,
-                          height: 1,
-                        ),
-                      ),
+              padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title
+                    SizedBox(width: double.infinity, child: Text('Benvenuto!', style: Fonts.black())),
+                    const SizedBox(
+                      height: Measures.vMarginThin,
+                    ),
+
+                    // Subtitle
+                    Text(
+                        'Crea un account per creare i tuoi personaggi, partecipare a campagne e molto altro!',
+                        style: Fonts.light()),
+                    const SizedBox(
+                      height: Measures.vMarginMed,
+                    ),
+
+                    // Username TextField
+                    GlassTextField(
+                        iconPath: 'person',
+                        hintText: 'Inserisci il tuo username',
+                        textController: usernameController,
+                        clearable: true,
+                        keyboardType: TextInputType.name),
+                    const SizedBox(height: Measures.vMarginSmall),
+
+                    // Email TextField
+                    GlassTextField(
+                        iconPath: 'email',
+                        hintText: 'Inserisci la tua email',
+                        textController: emailController,
+                        clearable: true,
+                        keyboardType: TextInputType.emailAddress),
+                    const SizedBox(height: Measures.vMarginSmall),
+
+                    // Password TextField
+                    GlassTextField(
+                      iconPath: 'password',
+                      secondaryIconPath: passwordVisible ? 'visibility_on' : 'visibility_off',
+                      obscureText: !passwordVisible,
+                      hintText: 'Inserisci la tua password',
+                      maxLength: 30,
+                      textController: passwordController,
+                      clearable: false,
+                      onSecondaryIconTap: () {
+                        setState(() => passwordVisible = !passwordVisible);
+                      },
+                    ),
+
+                    // Password constraints
+                    if (passwordController.text.isNotEmpty) ...[
+                      const SizedBox(height: Measures.vMarginThin),
+                      ...AccountManager.passwordConstraints
+                          .where((constraint) => !constraint.item2.hasMatch(passwordController.text))
+                          .map((constraint) => Text(
+                                '• ${constraint.item1}',
+                                style: Fonts.regular(color: Palette.primaryRed),
+                              ))
                     ],
-                  ),
-                  const SizedBox(height: Measures.vMarginSmall),
-                  // Google button
-                  GlassButton(
-                    'Registrati con Google',
-                    color: Palette.primaryGreen,
-                    outlined: true,
-                    iconPath: 'google',
-                    onTap: signInWithGoogle,
-                  ),
-                  const SizedBox(height: Measures.vMarginMed),
-                  // SignIn line
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text('Hai già un account?', style: Fonts.light()),
-                      const SizedBox(width: 6),
-                      GestureDetector(
-                          onTap: () =>
-                              Navigator.of(context).pushNamed('/signin'),
-                          child: Text('Accedi al tuo account',
-                              style: Fonts.regular(
-                                  size: 14, color: Palette.primaryBlue))),
-                    ],
-                  ),
-                ],
+
+                    const SizedBox(height: Measures.vMarginMed),
+
+                    // SignIn button
+                    GlassButton(
+                      'REGISTRATI',
+                      color: Palette.primaryGreen,
+                      onTap: signUp,
+                    ),
+                    const SizedBox(height: Measures.vMarginSmall),
+
+                    // Or line
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            color: Palette.card2,
+                            height: 1,
+                          ),
+                        ),
+                        const SizedBox(width: Measures.hMarginMed),
+                        Text('Oppure', style: Fonts.light()),
+                        const SizedBox(width: Measures.hMarginMed),
+                        Expanded(
+                          child: Container(
+                            color: Palette.card2,
+                            height: 1,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: Measures.vMarginSmall),
+
+                    // Google button
+                    GlassButton(
+                      'Registrati con Google',
+                      color: Palette.primaryGreen,
+                      outlined: true,
+                      iconPath: 'google',
+                      onTap: signInWithGoogle,
+                    ),
+                    const SizedBox(height: Measures.vMarginMed),
+
+                    // SignIn line
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('Hai già un account?', style: Fonts.light()),
+                        const SizedBox(width: 6),
+                        GestureDetector(
+                            onTap: () => Navigator.of(context).pushNamed('/signin'),
+                            child: Text('Accedi al tuo account',
+                                style: Fonts.regular(size: 14, color: Palette.primaryBlue))),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -160,38 +180,25 @@ class _SignUpPageState extends State<SignUpPage> with Loadable {
     );
   }
 
-  signUp() => withLoading(() async{
+  signUp() => withLoading(() async {
         if (!await IOManager().hasInternetConnection(context)) {
           return;
         }
-        if (!_usernameController.text.isUsername) {
-          context.snackbar('Per favore inserisci un nome utente valido',
-              backgroundColor: Palette.backgroundGreen);
-        } else if (!_emailController.text.isEmail) {
-          context.snackbar('Per favore inserisci una email valida',
-              backgroundColor: Palette.backgroundGreen);
-        } else {
-          SignUpStatus status = await AccountManager().signUp(
-              _emailController.text,
-              _passwordController.text,
-              User(
-                  username: _usernameController.text,
-                  email: _emailController.text));
-          if (status == SignUpStatus.weakPassword) {
-            context.snackbar('La password è troppo corta!',
-                backgroundColor: Palette.primaryRed);
-          } else if (status == SignUpStatus.emailInUse) {
-            context.snackbar('L\'email è già in uso!',
-                backgroundColor: Palette.primaryRed);
-          } else if (status == SignUpStatus.genericError) {
-            context.snackbar('Errore generico!',
-                backgroundColor: Palette.primaryRed);
-          } else if (status == SignUpStatus.success) {
+        await validateAsync(() async {
+          final user = User(username: usernameController.text, email: emailController.text);
+          SignUpStatus status =
+              await AccountManager().signUp(emailController.text, passwordController.text, user);
+          if (status.errorMessage != null) {
+            context.snackbar(status.errorMessage!, backgroundColor: Palette.primaryRed);
+          }
+          if (status == SignUpStatus.success) {
             context.snackbar('Benvenuto ${AccountManager().user.username}!',
                 backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);
-            Navigator.of(context).popAndPushNamed('/home');
+            await DataManager().fetchData();
+            await DataManager().fetchUserItems();
+            context.goto('/home', pop: true);
           }
-        }
+        });
       });
 
   signInWithGoogle() => withLoading(() async {
@@ -200,11 +207,9 @@ class _SignUpPageState extends State<SignUpPage> with Loadable {
         }
         SignInStatus status = await AccountManager().signInWithGoogle();
         if (status == SignInStatus.googleProviderError) {
-          context.snackbar('Errore nell\'accesso a Google',
-              backgroundColor: Palette.primaryRed);
+          context.snackbar('Errore nell\'accesso a Google', backgroundColor: Palette.primaryRed);
         } else if (status == SignInStatus.userNotInDatabase) {
-          context.snackbar('L\'account non è più esistente!',
-              backgroundColor: Palette.primaryRed);
+          context.snackbar('L\'account non è più esistente!', backgroundColor: Palette.primaryRed);
         } else if (status == SignInStatus.success) {
           context.snackbar('Bentornato ${AccountManager().user.username}!',
               backgroundColor: Palette.backgroundBlue, bottomMargin: Measures.bottomBarHeight);

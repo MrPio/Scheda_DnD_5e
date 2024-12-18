@@ -269,6 +269,9 @@ class DataManager {
   Future<void> changeUsername(String newUsername) async {
     // Note: the assignment is done before the uniqueness check to throw a FormatException before querying the API.
     final oldUsername = AccountManager().user.username;
+    if (oldUsername == newUsername) {
+      throw const FormatException('Il nome utente è uguale a quello già in uso');
+    }
     AccountManager().user.username = newUsername;
     // Check if the username is already taken
     if (await DatabaseManager().isUsernameTaken(newUsername)) {

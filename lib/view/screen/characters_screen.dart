@@ -132,7 +132,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
           if (isDataReady && characters.isEmpty)
             Padding(
               padding: const EdgeInsets.only(top: Measures.vMarginSmall),
-              child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2)),
+              child: Text('Crea il tuo primo personaggio!', style: Fonts.black(color: Palette.card2)),
             ),
         ],
       ),

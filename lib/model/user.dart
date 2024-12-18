@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:scheda_dnd_5e/extension_function/iterable_extensions.dart';
+import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/model/campaign.dart';
 import 'package:scheda_dnd_5e/model/character.dart';
@@ -12,8 +13,8 @@ part 'part/user.g.dart';
 
 @JsonSerializable()
 class User implements WithUID {
-  final String email;
-  String _username;
+  late final String _email;
+  late String _username;
   String? picture;
   int pictureColor;
   final int regDateTimestamp;
@@ -46,8 +47,8 @@ class User implements WithUID {
 
   User({
     username = 'Anonimo',
+    email = 'email@example.com',
     this.picture,
-    this.email = '',
     int? pictureColor,
     int? regDateTimestamp,
     List<String>? charactersUIDs,
@@ -57,8 +58,7 @@ class User implements WithUID {
     List<String>? armorsUIDs,
     List<String>? itemsUIDs,
     List<String>? coinsUIDs,
-  })  : _username = username,
-        regDateTimestamp = regDateTimestamp ?? DateTime.now().millisecondsSinceEpoch,
+  })  : regDateTimestamp = regDateTimestamp ?? DateTime.now().millisecondsSinceEpoch,
         charactersUIDs = charactersUIDs ?? [],
         deletedCharactersUIDs = deletedCharactersUIDs ?? [],
         campaignsUIDs = campaignsUIDs ?? [],
@@ -78,7 +78,10 @@ class User implements WithUID {
               Palette.primaryRed,
               Palette.primaryBlue,
               Palette.primaryYellow,
-            ].random.value;
+            ].random.value {
+    this.username = username;
+    this.email = email;
+  }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   String get username => _username;
@@ -87,10 +90,21 @@ class User implements WithUID {
     if (value.length < 5) {
       throw const FormatException('Il nome utente deve avere almeno 5 caratteri');
     }
-    if(value==_username){
-      throw const FormatException('Il nome utente è uguale a quello già in uso');
+    if (!RegExp(r'^[a-zA-Z0-9_]+$').hasMatch(value)) {
+      throw const FormatException(
+          'Il nome utente può contenere solo caratteri alfanumerici e underscore');
     }
     _username = value;
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  String get email => _email;
+
+  set email(String value) {
+    if (!value.isEmail) {
+      throw const FormatException("L'email non è valida");
+    }
+    _email = value;
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)

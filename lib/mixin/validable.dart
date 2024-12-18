@@ -15,4 +15,14 @@ mixin Validable<T extends StatefulWidget> on State<T> {
       return false;
     }
   }
+
+  Future<bool> validateAsync(Future<void> Function() task) async {
+    try {
+      await task();
+      return true;
+    } on FormatException catch (e) {
+      context.snackbar(e.message, backgroundColor: Palette.primaryRed);
+      return false;
+    }
+  }
 }
