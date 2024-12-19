@@ -2,12 +2,25 @@
 
 <a name="index"></a>
 ## 📘 Table of Contents
+* [Emulator is unbearably glitchy](#ll7)
 * [Undo Github commits](#ll6)
 * [Git mismatching line ending causes huge commits](#ll5)
 * [View components taxonomy](#ll4)
 * [Pass arguments to a page](#ll3)
 * [Java and Gradle Compatibility](#ll2)
 * [Use `[]` initialization when the list is involved in a generic usage](#ll1)
+
+<a name="ll7"></a>
+## Emulator is unbearably glitchy
+
+### Problem
+When GPU is in use (`host` mode) the emulator is faster, but more glitchy, the app crashes often and screen sometimes freezes, preventing alert dialogs from showing.
+
+### Solution
+`Device Manager` --> `3 dots` --> `Show on Disk` --> open `config.ini` --> edit `hw.gpu.mode` from `host` to `guest` to disable GPU optimization --> `Stop` and run device with `Cold boot`.
+
+As it's always the case, CPU is slower but safer when it comes to emulation.
+
 
 <a name="ll6"></a>
 ## Undo Github commits
