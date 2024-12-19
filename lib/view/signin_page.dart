@@ -138,12 +138,12 @@ class _SignInPageState extends State<SignInPage> with Loadable {
                     // Remember me & forgot password
                     Row(
                       children: [
-                        GlassCheckbox(
-                          value: rememberMe,
-                          onChanged: () => setState(() => rememberMe = !rememberMe),
-                          color: Palette.primaryBlue,
-                        ),
-                        Text('Ricordami', style: Fonts.light()),
+                        // GlassCheckbox(
+                        //   value: rememberMe,
+                        //   onChanged: () => setState(() => rememberMe = !rememberMe),
+                        //   color: Palette.primaryBlue,
+                        // ),
+                        // Text('Ricordami', style: Fonts.light()),
                         Expanded(child: Container()),
                         GestureDetector(
                             onTap: forgotPassword,

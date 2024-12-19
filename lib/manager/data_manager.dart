@@ -175,7 +175,17 @@ class DataManager {
     }
 
     // Ask the database for the object and caching it
-    T obj = await DatabaseManager().get<T>(DatabaseManager.collections[T]!, uid);
+    late T obj;
+    try {
+      obj = await DatabaseManager().get<T>(DatabaseManager.collections[T]!, uid);
+    } catch (e) {
+      if (DatabaseManager.collectionsPOST.containsKey(T)) {
+        obj = await DatabaseManager().get<T>(DatabaseManager.collectionsPOST[T]!, uid);
+      }
+      else{
+        rethrow;
+      }
+    }
     caches[T]?.removeWhere((e) => e.uid == uid);
     caches[T]!.add(obj);
     // Write cache to disk

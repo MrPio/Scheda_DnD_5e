@@ -92,53 +92,55 @@ class _CharactersScreenState extends State<CharactersScreen> {
   @override
   Widget build(BuildContext context) {
     final characters = _characters;
-    return RecyclerView(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-      header: Column(
-        children: [
-          // Page Title
-          PageHeader(title: 'I tuoi personaggi',isPage: false),
-          GlassTextField(
-            iconPath: 'search_alt',
-            hintText: 'Cerca un personaggio',
-            textController: _searchController,
-          ),
-          // Filters
-          if (AccountManager().user.charactersUIDs.length > 5)
-            GridView.count(
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 3,
-                childAspectRatio: 2.5,
-                shrinkWrap: true,
-                crossAxisSpacing: 10,
-                children: List.generate(
-                    _filters.length,
-                    (i) => RadioButton(
-                        selected: _filters[i].selectedValues.isNotEmpty,
-                        text: _filters[i].title,
-                        color: _filters[i].color,
-                        onPressed: () => _filters[i].selectedValues.isNotEmpty
-                            ? setState(() => _filters[i].selectedValues.clear())
-                            : context.checkList(
-                                'Filtro su ${_filters[i].title.toLowerCase()}',
-                                values: _filters[i].values,
-                                color: _filters[i].color,
-                                onChanged: (value) =>
-                                    setState(() => _filters[i].selectedValues.toggle(value)),
-                                value: (value) => _filters[i].selectedValues.contains(value),
-                              )))),
-          const SizedBox(height: Measures.vMarginSmall),
-          // Nothing to show
-          if (isDataReady && characters.isEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: Measures.vMarginSmall),
-              child: Text('Crea il tuo primo personaggio!', style: Fonts.black(color: Palette.card2)),
+      child: RecyclerView(
+        header: Column(
+          children: [
+            // Page Title
+            PageHeader(title: 'I tuoi personaggi',isPage: false),
+            GlassTextField(
+              iconPath: 'search_alt',
+              hintText: 'Cerca un personaggio',
+              textController: _searchController,
             ),
-        ],
+            // Filters
+            if (AccountManager().user.charactersUIDs.length > 5)
+              GridView.count(
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 3,
+                  childAspectRatio: 2.5,
+                  shrinkWrap: true,
+                  crossAxisSpacing: 10,
+                  children: List.generate(
+                      _filters.length,
+                      (i) => RadioButton(
+                          selected: _filters[i].selectedValues.isNotEmpty,
+                          text: _filters[i].title,
+                          color: _filters[i].color,
+                          onPressed: () => _filters[i].selectedValues.isNotEmpty
+                              ? setState(() => _filters[i].selectedValues.clear())
+                              : context.checkList(
+                                  'Filtro su ${_filters[i].title.toLowerCase()}',
+                                  values: _filters[i].values,
+                                  color: _filters[i].color,
+                                  onChanged: (value) =>
+                                      setState(() => _filters[i].selectedValues.toggle(value)),
+                                  value: (value) => _filters[i].selectedValues.contains(value),
+                                )))),
+            const SizedBox(height: Measures.vMarginSmall),
+            // Nothing to show
+            if (isDataReady && characters.isEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: Measures.vMarginSmall),
+                child: Text('Crea il tuo primo personaggio!', style: Fonts.black(color: Palette.card2)),
+              ),
+          ],
+        ),
+        children: isDataReady
+            ? characters.map<Widget>(characterCard).toList()
+            : List.filled(10, const GlassCard(isShimmer: true, shimmerHeight: 75)),
       ),
-      children: isDataReady
-          ? characters.map<Widget>(characterCard).toList()
-          : List.filled(10, const GlassCard(isShimmer: true, shimmerHeight: 75)),
     );
   }
 
