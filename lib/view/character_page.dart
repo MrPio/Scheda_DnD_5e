@@ -121,8 +121,6 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
         .forEach((key, value) => _character!.totalSlots[key] = int.tryParse(value.text) ?? 0);
     _character!.descriptions = _backgroundControllers.map((key, value) => MapEntry(key, value.text));
 
-    // TODO here: set available slots
-
     // If the character is any different from `initState`, save it.
     if (hasChanges) {
       Future.delayed(Duration.zero, () async {
@@ -165,7 +163,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
     List<Widget> sheetAttributes = [];
     List<Widget> sheetSkills = [];
     if ((_tabController?.index ?? 0) == 0) {
-      final hpBottomSheetArgs = BottomSheetArgs(
+      hpBottomSheetArgs = BottomSheetArgs(
         items: [
           BottomSheetItem('png/hp', 'Modifica HP', () {
             setState(() {
