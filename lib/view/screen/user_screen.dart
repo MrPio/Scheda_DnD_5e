@@ -172,7 +172,7 @@ class _UserScreenState extends State<UserScreen> {
             );
           }
         },
-        backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
+        backgroundColor: Palette.backgroundGrey.withOpacity(0.2),
       );
     } else {
       context.snackbar(
@@ -221,7 +221,7 @@ class _UserScreenState extends State<UserScreen> {
           }
           return true;
         },
-        backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
+        backgroundColor: Palette.backgroundGrey.withOpacity(0.2),
         child: StatefulBuilder(builder: (context, setState) {
           newPasswordController.addListener(() => setState(() {}));
 
@@ -309,7 +309,7 @@ class _UserScreenState extends State<UserScreen> {
               backgroundColor: Palette.primaryRed, bottomMargin: Measures.bottomBarHeight);
         }
       },
-      backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
+      backgroundColor: Palette.backgroundGrey.withOpacity(0.2),
       child: GlassTextField(
         iconPath: 'person',
         clearable: false,
@@ -333,6 +333,6 @@ class _UserScreenState extends State<UserScreen> {
           Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
           return false;
         },
-        backgroundColor: Palette.backgroundGrey.withOpacity(0.5),
+        backgroundColor: Palette.backgroundGrey.withOpacity(0.2),
       );
 }

@@ -50,6 +50,7 @@ bool isShimmer=false;
     // Future.delayed(Durations.short4,()=>setState(()=>isShimmer=false));
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final newBottomSheetArgs = widget.bottomSheetArgs != null

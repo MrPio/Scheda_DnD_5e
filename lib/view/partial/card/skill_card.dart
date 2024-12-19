@@ -71,7 +71,7 @@ class SkillCard extends StatelessWidget {
                       context.popup(skill.title,
                           message: skill.description,
                           positiveText: 'Ok',
-                          backgroundColor: Palette.background.withOpacity(0.5));
+                          backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
                     },
                     padding: const EdgeInsets.all(8)),
                 'png/dice_on'.toIcon(

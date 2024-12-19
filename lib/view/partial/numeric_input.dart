@@ -149,7 +149,9 @@ class _NumericInputState extends State<NumericInput> {
       }
     });
     // Initialize the text
-    widget.args.controller!.text = widget.args.initialValue ?? widget.args.min.toString();
+    if(widget.args.initialValue!=null) {
+      widget.args.controller!.text = widget.args.initialValue!;
+    }
     super.initState();
   }
 

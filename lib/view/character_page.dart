@@ -505,7 +505,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                         negativeCallback: () {},
                                         positiveText: 'Si',
                                         negativeText: 'No',
-                                        backgroundColor: Palette.background.withOpacity(0.5));
+                                        backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
                                   },
                                 ))
                             .toList()
@@ -583,7 +583,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                         negativeCallback: () {},
                                         positiveText: 'Si',
                                         negativeText: 'No',
-                                        backgroundColor: Palette.background.withOpacity(0.5));
+                                        backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
                                   },
                                 ))
                             .toList()
@@ -1296,7 +1296,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                         negativeCallback: () {},
                         positiveText: 'Si',
                         negativeText: 'No',
-                        backgroundColor: Palette.background.withOpacity(0.9),
+                        backgroundColor: Palette.backgroundGrey.withOpacity(0.9),
                         child: StatefulBuilder(
                           builder: (context, setState) {
                             for (var numericInput in coinNumericInputs) {
@@ -1476,7 +1476,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       negativeCallback: () {},
                       positiveText: 'Conferma',
                       negativeText: 'Annulla',
-                      backgroundColor: Palette.background.withOpacity(0.5));
+                      backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
                 }),
                 // Read full description
                 if (item.description != null && item.description!.length > 30)
@@ -1484,7 +1484,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                     context.popup(item.title,
                         message: item.description,
                         positiveText: 'Ok',
-                        backgroundColor: Palette.background.withOpacity(0.5));
+                        backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
                   }),
               ]),
           isFlat: true,
