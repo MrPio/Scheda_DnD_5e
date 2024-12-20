@@ -13,13 +13,11 @@
   - Add friends logic
   - Uniformare doppi camel case
   - popup di password: uniformare i textfield e prova hrule
+  - use `canPopPositiveCallback` to avoid popping the popup in case any error occurs when changing username/password
 - `Friendship`:
   - Metodi per accettare/rifiutare in datamanager (non servono! Usa il metodo save())
   - Ricordati di runnare `dart run build_runner build` quando hai modificato/ creato model
-  - crea la classe `Friendship`
-  - aggiungi gli oggetti di `Friendship` in cui lo user attuale è coinvolto nel suo oggetto, mettili una lista `friendships` **non serializzabile**
   - Creare Realtime Manager
-  - use `canPopPositiveCallback` to avoid popping the popup in case any error occurs when changing username/password
 - `App Settings`:
   - Add settings menu logic
 - `Maintainability`:
@@ -29,6 +27,9 @@
   - After log-in, cache populating should be done with the loading view active. At this very moment the users stares at the signin screen for 5 seconds.
 
 # DONE
+X `Friendship`:
+  X crea la classe `Friendship`
+  X aggiungi gli oggetti di `Friendship` in cui lo user attuale è coinvolto nel suo oggetto, mettili una lista `friendships` **non serializzabile**
 X Account 
   X Add bottom sheet for "password dimenticata" in change password button
   X Add logout logic

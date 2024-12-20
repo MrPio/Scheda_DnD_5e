@@ -9,6 +9,8 @@ import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/model/user.dart' as dnd_user;
 
+import '../model/friendship.dart';
+
 class DatabaseManager {
   static final DatabaseManager _instance = DatabaseManager._();
 
@@ -26,7 +28,7 @@ class DatabaseManager {
     Item: 'items/',
     Coin: 'coins/',
     Equipment: 'equipments/',
-    // Friendship: 'friendships/'
+    Friendship: 'friendships/'
   };
   static const collectionsPOST = {
     Weapon: 'users_weapons/',

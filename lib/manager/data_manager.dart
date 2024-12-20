@@ -14,6 +14,7 @@ import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/model/user.dart';
 
 import '../model/campaign.dart';
+import '../model/friendship.dart';
 
 enum SaveMode { post, put }
 
@@ -38,6 +39,7 @@ class DataManager {
   List<Coin> cachedCoins = [];
   List<Equipment> cachedEquipments = [];
   List<Enchantment> cachedEnchantments = [];
+  List<Friendship> cachedFriendships = [];
 
   List<InventoryItem> get cachedInventoryItems =>
       (cachedWeapons.cast<InventoryItem>()) +
@@ -72,6 +74,7 @@ class DataManager {
         Item: 7 * 24 * 60 * 60,
         Coin: 7 * 24 * 60 * 60,
         Equipment: 7 * 24 * 60 * 60,
+        Friendship: 60,
       };
 
   /// The functions used to deserialize cache from disk
@@ -88,6 +91,8 @@ class DataManager {
         Coin: () => IOManager().deserializeObjects<Coin>(DatabaseManager.collections[Coin]!),
         Equipment: () =>
             IOManager().deserializeObjects<Equipment>(DatabaseManager.collections[Equipment]!),
+      Friendship: () =>
+        IOManager().deserializeObjects<Friendship>(DatabaseManager.collections[Friendship]!),
       };
 
   /// The functions used to fetch cache data from db
@@ -113,6 +118,8 @@ class DataManager {
             await DatabaseManager()
                 .getList<Equipment>(DatabaseManager.collections[Equipment]!, pageSize: 9999) ??
             [],
+        Friendship: () async =>
+            await DatabaseManager().getList<Friendship>(DatabaseManager.collections[Friendship]!, pageSize: 9999) ?? [],
       };
 
   invalidateCache<T>() async {
@@ -227,6 +234,9 @@ class DataManager {
 
   /// Load the characters of a given user
   loadUserCharacters(User user) async => user.characters.value = await loadList(user.charactersUIDs);
+
+  /// Load the friendships of a given user
+  loadUserFriendships(User user) async => user.friendships.value = await loadList(user.friendshipsUIDs);
 
   /// Load the weapon, armor, item and coin objects of a given character
   loadCharacterInventory(Character character) async => character.inventory.value = {

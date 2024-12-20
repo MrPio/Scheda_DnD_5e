@@ -71,6 +71,7 @@ class MyApp extends StatelessWidget {
         '/character':(context) => const CharacterPage(),
         '/settings':(context) => const SettingsPage(),
         '/user':(context) => const UserPage(),
+        //'/friends':(context) => const FriendsPage(),
       },
     );
   }

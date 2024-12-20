@@ -5,6 +5,7 @@ import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/model/campaign.dart';
 import 'package:scheda_dnd_5e/model/character.dart';
+import 'package:scheda_dnd_5e/model/friendship.dart';
 
 import '../constant/palette.dart';
 import 'loot.dart';
@@ -23,14 +24,14 @@ class User implements WithUID {
   List<String> weaponsUIDs = [], armorsUIDs = [], itemsUIDs = [], coinsUIDs = [];
 
   // Note: There's no need to distinguish between created and joined campaigns
-  List<String> charactersUIDs, deletedCharactersUIDs, campaignsUIDs;
+  List<String> charactersUIDs, deletedCharactersUIDs, campaignsUIDs, friendshipsUIDs;
 
   Map<Type, List<String>> get inventoryItems => {
-        Weapon: weaponsUIDs,
-        Armor: armorsUIDs,
-        Item: itemsUIDs,
-        Coin: coinsUIDs,
-      };
+    Weapon: weaponsUIDs,
+    Armor: armorsUIDs,
+    Item: itemsUIDs,
+    Coin: coinsUIDs,
+  };
 
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -42,6 +43,10 @@ class User implements WithUID {
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   ValueNotifier<List<Campaign>?> campaigns = ValueNotifier(null);
+
+  /// List of friendships the user is involved in (non-serializable)
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  ValueNotifier<List<Friendship>?> friendships = ValueNotifier(null);
 
   get dateReg => DateTime.fromMillisecondsSinceEpoch(regDateTimestamp);
 
@@ -58,6 +63,7 @@ class User implements WithUID {
     List<String>? armorsUIDs,
     List<String>? itemsUIDs,
     List<String>? coinsUIDs,
+    List<String>? friendshipsUIDs,
   })  : regDateTimestamp = regDateTimestamp ?? DateTime.now().millisecondsSinceEpoch,
         charactersUIDs = charactersUIDs ?? [],
         deletedCharactersUIDs = deletedCharactersUIDs ?? [],
@@ -66,6 +72,7 @@ class User implements WithUID {
         armorsUIDs = armorsUIDs ?? [],
         itemsUIDs = itemsUIDs ?? [],
         coinsUIDs = coinsUIDs ?? [],
+        friendshipsUIDs = friendshipsUIDs ?? [],
         pictureColor = pictureColor ??
             [
               Palette.background,
