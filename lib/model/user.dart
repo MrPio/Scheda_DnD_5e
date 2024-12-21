@@ -24,7 +24,7 @@ class User implements WithUID {
   List<String> weaponsUIDs = [], armorsUIDs = [], itemsUIDs = [], coinsUIDs = [];
 
   // Note: There's no need to distinguish between created and joined campaigns
-  List<String> charactersUIDs, deletedCharactersUIDs, campaignsUIDs, friendshipsUIDs;
+  List<String> charactersUIDs, deletedCharactersUIDs, campaignsUIDs;
 
   Map<Type, List<String>> get inventoryItems => {
     Weapon: weaponsUIDs,
@@ -63,7 +63,6 @@ class User implements WithUID {
     List<String>? armorsUIDs,
     List<String>? itemsUIDs,
     List<String>? coinsUIDs,
-    List<String>? friendshipsUIDs,
   })  : regDateTimestamp = regDateTimestamp ?? DateTime.now().millisecondsSinceEpoch,
         charactersUIDs = charactersUIDs ?? [],
         deletedCharactersUIDs = deletedCharactersUIDs ?? [],
@@ -72,7 +71,6 @@ class User implements WithUID {
         armorsUIDs = armorsUIDs ?? [],
         itemsUIDs = itemsUIDs ?? [],
         coinsUIDs = coinsUIDs ?? [],
-        friendshipsUIDs = friendshipsUIDs ?? [],
         pictureColor = pictureColor ??
             [
               Palette.background,

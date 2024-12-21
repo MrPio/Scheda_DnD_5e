@@ -118,8 +118,6 @@ class DataManager {
             await DatabaseManager()
                 .getList<Equipment>(DatabaseManager.collections[Equipment]!, pageSize: 9999) ??
             [],
-        Friendship: () async =>
-            await DatabaseManager().getList<Friendship>(DatabaseManager.collections[Friendship]!, pageSize: 9999) ?? [],
       };
 
   invalidateCache<T>() async {
@@ -236,7 +234,20 @@ class DataManager {
   loadUserCharacters(User user) async => user.characters.value = await loadList(user.charactersUIDs);
 
   /// Load the friendships of a given user
-  loadUserFriendships(User user) async => user.friendships.value = await loadList(user.friendshipsUIDs);
+  loadUserFriendships(User user) async {
+    final friendshipsCollection = DatabaseManager.collections[Friendship]!;
+
+    // Fetch the list of friendships
+    final friendships = await DatabaseManager().getList<Friendship>(friendshipsCollection) ?? [];
+
+    // Filter friendships where the user is either the sender or receiver
+    final userFriendships = friendships
+        .where((friendship) => friendship.senderUID == user.uid || friendship.receiverUID == user.uid)
+        .toList();
+
+    // Assign the filtered list to user.friendships.value
+    user.friendships.value = userFriendships;
+  }
 
   /// Load the weapon, armor, item and coin objects of a given character
   loadCharacterInventory(Character character) async => character.inventory.value = {

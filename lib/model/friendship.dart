@@ -7,9 +7,9 @@ part 'part/friendship.g.dart';
 
 /// Represents the state of a friendship relationship.
 enum FriendshipState {
-  PENDING,
-  ACCEPTED,
-  REFUSED,
+  pending,
+  accepted,
+  refused,
 }
 
 @JsonSerializable()
@@ -23,7 +23,7 @@ class Friendship implements JSONSerializable, WithUID{
   Friendship({
     required this.senderUID,
     required this.receiverUID,
-    this.state = FriendshipState.PENDING,
+    this.state = FriendshipState.pending,
     int? createdAt,
     int? updatedAt,
   })  : createdAt = createdAt ?? DateTime.now().millisecondsSinceEpoch,
