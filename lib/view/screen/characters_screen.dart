@@ -201,7 +201,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                       negativeCallback: () {},
                       positiveText: 'Si',
                       negativeText: 'No',
-                      backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
+                      backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                 })
               ]),
           child: Padding(

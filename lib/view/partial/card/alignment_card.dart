@@ -46,7 +46,7 @@ class AlignmentCard extends StatelessWidget {
                   context.popup(alignment.title,
                       message: alignment.description,
                       positiveText: 'Ok',
-                      backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
+                      backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                 },
                 padding: const EdgeInsets.all(10)),
           )

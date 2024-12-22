@@ -11,7 +11,7 @@ class BottomSheetArgs {
 
 class Clickable extends StatefulWidget {
   final bool active;
-  final Function()? onTap;
+  final Function()? onTap,onLongTap;
   final Function(bool)? onDownChange;
   final Widget? child;
   final BottomSheetArgs? bottomSheetArgs;
@@ -20,9 +20,9 @@ class Clickable extends StatefulWidget {
   ///
   /// When [active], displays a bottom sheet on long press if [bottomSheetArgs] is provided,
   /// calls [onDownChange] when the child's pressed state changes,
-  /// and invokes [onTap] callback on tap if provided or shows a bottom sheet if [bottomSheetArgs] is specified.
+  /// and invokes [onTap] and [onLongTap] callback on tap if provided or shows a bottom sheet if [bottomSheetArgs] is specified.
   const Clickable(
-      {super.key, this.child, this.onTap, this.onDownChange, this.bottomSheetArgs, this.active = true});
+      {super.key, this.child, this.onTap, this.onLongTap, this.onDownChange, this.bottomSheetArgs, this.active = true});
 
   @override
   State<Clickable> createState() => _GlassButtonState();
@@ -50,7 +50,9 @@ class _GlassButtonState extends State<Clickable> {
             onTapUp: (_) => setDown(false),
             onLongPress: () {
               HapticFeedback.mediumImpact();
-              if (widget.bottomSheetArgs != null) {
+              if (widget.onLongTap != null) {
+                widget.onLongTap!();
+              } else if (widget.bottomSheetArgs != null) {
                 context.bottomSheet(widget.bottomSheetArgs!);
               }
             },

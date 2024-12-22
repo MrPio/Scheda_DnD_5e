@@ -11,7 +11,7 @@ class LoadingView extends StatelessWidget {
     return Visibility(
         visible: visible,
         child: Container(
-          color: Palette.backgroundGrey.withOpacity(0.2),
+          color: Palette.backgroundGrey.withValues(alpha: 0.2),
           child: const Center(
             child: CircularProgressIndicator(
               color: Palette.onBackground,

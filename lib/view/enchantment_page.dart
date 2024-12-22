@@ -105,7 +105,7 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                                                     positiveText: 'Ok',
                                                     backgroundColor: Palette
                                                         .background
-                                                        .withOpacity(0.5));
+                                                        .withValues(alpha: 0.5));
                                               },
                                               color: Palette.primaryBlue,
                                               text:

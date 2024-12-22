@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -11,8 +12,10 @@ import 'package:scheda_dnd_5e/extension_function/date_time_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/int_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
+import 'package:scheda_dnd_5e/manager/chatbot_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
+import 'package:scheda_dnd_5e/mixin/loadable.dart';
 import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/view/create_item_page.dart';
@@ -23,6 +26,7 @@ import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
 import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/loading_view.dart';
 import 'package:scheda_dnd_5e/view/partial/decoration/rule.dart';
 import 'package:scheda_dnd_5e/view/partial/fab.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
@@ -46,7 +50,7 @@ class CharacterPage extends StatefulWidget {
   State<CharacterPage> createState() => _CharacterPageState();
 }
 
-class _CharacterPageState extends State<CharacterPage> with TickerProviderStateMixin {
+class _CharacterPageState extends State<CharacterPage> with TickerProviderStateMixin, Loadable {
   List<Widget>? _screens;
   TabController? _tabController;
   late ScrollController _bodyController;
@@ -503,7 +507,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                         negativeCallback: () {},
                                         positiveText: 'Si',
                                         negativeText: 'No',
-                                        backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
+                                        backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                                   },
                                 ))
                             .toList()
@@ -577,11 +581,12 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                       setState(() {
                                         character.languages.remove(e);
                                       });
+                                      return true;
                                     },
                                         negativeCallback: () {},
                                         positiveText: 'Si',
                                         negativeText: 'No',
-                                        backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
+                                        backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                                   },
                                 ))
                             .toList()
@@ -785,56 +790,61 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       Padding(
                         padding: const EdgeInsets.symmetric(
                             horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
-                        child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                          Clickable(
-                            active: !isEmpty,
-                            onTap: () => setState(() => _setIsEnchantmentLevelExpanded(
-                                level, !_getIsEnchantmentLevelExpanded(level))),
-                            child: Row(children: [
-                              Text(level.title, style: Fonts.black(size: 18)),
-                              const SizedBox(width: Measures.hMarginMed),
-                              if (!isEmpty)
-                                'chevron_left'.toIcon(
-                                    height: 16,
-                                    rotation: _getIsEnchantmentLevelExpanded(level) ? pi / 2 : -pi / 2),
-                              const SizedBox(width: Measures.hMarginBig)
-                            ]),
-                          ),
-                          Expanded(
-                            child: StatefulBuilder(
-                              builder: (context, setState) => Clickable(
-                                onTap: () => setState(() => character.availableSlots[level] =
-                                    ((character.availableSlots[level] ?? 0) + 1) %
-                                        ((character.totalSlots[level] ?? 0) + 1)),
-                                child: SingleChildScrollView(
-                                  reverse: true,
-                                  scrollDirection: Axis.horizontal,
-                                  child: Row(
-                                      children: List.generate(
-                                          character.totalSlots[level] ?? 0,
-                                          (i) => Padding(
-                                                padding:
-                                                    const EdgeInsets.only(left: Measures.hMarginMoreThin),
-                                                child: Container(
-                                                  width: slotSizeCircle,
-                                                  height: slotSizeCircle,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(999),
-                                                      border: Border.all(
-                                                          color: Palette.onBackground, width: 0.75),
-                                                      color: i >=
-                                                              (character.totalSlots[level] ?? 0) -
-                                                                  (character.availableSlots[level] ?? 0)
-                                                          ? Palette.onBackground
-                                                          : Colors.transparent),
-                                                ),
-                                              ))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Clickable(
+                              active: !isEmpty,
+                              onTap: () => setState(() => _setIsEnchantmentLevelExpanded(
+                                  level, !_getIsEnchantmentLevelExpanded(level))),
+                              child: Row(children: [
+                                Text(level.title, style: Fonts.black(size: 18)),
+                                const SizedBox(width: Measures.hMarginMed),
+                                if (!isEmpty)
+                                  'chevron_left'.toIcon(
+                                      height: 16,
+                                      rotation: _getIsEnchantmentLevelExpanded(level) ? pi / 2 : -pi / 2),
+                                const SizedBox(width: Measures.hMarginBig)
+                              ]),
+                            ),
+                            Expanded(
+                              child: StatefulBuilder(
+                                builder: (context, setState) => Clickable(
+                                  onTap: () => setState(() => character.availableSlots[level] =
+                                      ((character.availableSlots[level] ?? 0) + 1) %
+                                          ((character.totalSlots[level] ?? 0) + 1)),
+                                  onLongTap: () => setState(() => character.availableSlots[level] = 0),
+                                  child: SingleChildScrollView(
+                                    reverse: true,
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                        children: List.generate(
+                                            character.totalSlots[level] ?? 0,
+                                            (i) => Padding(
+                                                  padding: const EdgeInsets.only(
+                                                      left: Measures.hMarginMoreThin),
+                                                  child: Container(
+                                                    width: slotSizeCircle,
+                                                    height: slotSizeCircle,
+                                                    decoration: BoxDecoration(
+                                                        borderRadius: BorderRadius.circular(999),
+                                                        border: Border.all(
+                                                            color: Palette.onBackground, width: 0.75),
+                                                        color: i >=
+                                                                (character.totalSlots[level] ?? 0) -
+                                                                    (character.availableSlots[level] ?? 0)
+                                                            ? Palette.onBackground
+                                                            : Colors.transparent),
+                                                  ),
+                                                ))),
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                        ]),
+                            )
+                          ],
+                        ),
                       ),
+
                       // List of enchantments
                       if (character.enchantments.value == null)
                         ...List.filled(
@@ -855,6 +865,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                         character.enchantmentUIDs.remove(e.uid);
                                         character.enchantments.value = null;
                                         DataManager().loadCharacterEnchantments(character);
+                                        return true;
                                       });
                                     })
                                   ],
@@ -913,12 +924,26 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       if (_getIsBackgroundExpanded(description.key))
                         GlassTextField(
                           isFlat: true,
-                          lines: 5,
+                          lines: description.key.maxLength,
                           iconPath: description.key.iconPath,
                           textInputAction: TextInputAction.done,
                           hintText: description.key.hint,
-                          // secondaryIconPath: 'png/random',
-                          // onSecondaryIconTap: (){},
+                          secondaryIconPath: 'png/random',
+                          onSecondaryIconTap: () async {
+                            withLoading(() async {
+                              try {
+                                final answer = await ChatbotManager().ask(
+                                    HuggingModel.llama3b, character.backgroundQuery(description.key));
+                                print(answer);
+                                if (answer != null) {
+                                  _backgroundControllers[description.key]!.text = answer;
+                                }
+                              } on HttpException catch (e) {
+                                print('⛔ [HttpException] ${e.message}');
+                                context.snackbar(e.message,backgroundColor: Palette.primaryRed);
+                              }
+                            });
+                          },
                           clearable: true,
                           textController: _backgroundControllers[description.key],
                         ),
@@ -1040,7 +1065,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                 () async {
                                   await context.goto('/create_item',
                                       args: CreateItemArgs(type, character: character));
-                                  ScaffoldMessenger.of(context).clearSnackBars();
+                                  if (mounted) ScaffoldMessenger.of(context).clearSnackBars();
                                   character.inventory.value = null;
                                   await DataManager().loadCharacterInventory(character);
                                 },
@@ -1172,6 +1197,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           const BottomVignette(height: 0, spread: 50),
           // FAB
           if (fabs[_tabController!.index] != null) FAB(fabs[_tabController!.index]!),
+          // LoadingView
+          LoadingView(visible: isLoading)
         ],
       ),
     );
@@ -1290,11 +1317,12 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                             print('⬆️ Ho salvato la vendita dell\'item ${item.title}');
                             DataManager().save(_character!);
                           }
+                          return true;
                         },
                         negativeCallback: () {},
                         positiveText: 'Si',
                         negativeText: 'No',
-                        backgroundColor: Palette.backgroundGrey.withOpacity(0.9),
+                        backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.9),
                         child: StatefulBuilder(
                           builder: (context, setState) {
                             for (var numericInput in coinNumericInputs) {
@@ -1470,11 +1498,12 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       print('⬆️ Ho salvato la rimozione dell\'item ${item.title}');
                       DataManager().save(_character!);
                     }
+                    return true;
                   },
                       negativeCallback: () {},
                       positiveText: 'Conferma',
                       negativeText: 'Annulla',
-                      backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
+                      backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                 }),
                 // Read full description
                 if (item.description != null && item.description!.length > 30)
@@ -1482,7 +1511,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                     context.popup(item.title,
                         message: item.description,
                         positiveText: 'Ok',
-                        backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
+                        backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                   }),
               ]),
           isFlat: true,

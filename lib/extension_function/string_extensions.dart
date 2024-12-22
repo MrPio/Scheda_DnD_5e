@@ -1,11 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:scheda_dnd_5e/constant/fonts.dart';
-import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
+import 'package:scheda_dnd_5e/enum/localization.dart';
+
+import '../constant/strings.dart';
+import '../model/setting.dart';
 
 extension StringExtensions on String {
   bool match(String other, {bool contains = false}) =>
@@ -19,7 +19,7 @@ extension StringExtensions on String {
   /// 'png/home' ==> 'assets/images/icons/png/home.png'
   Widget toIcon(
       {double? height = 24,
-        double? width,
+      double? width,
       Function()? onTap,
       padding = const EdgeInsets.all(8.0),
       margin = EdgeInsets.zero,
@@ -47,4 +47,11 @@ extension StringExtensions on String {
       );
     }
   }
+
+  /// Translates a string starting with '%'.
+  /// Assumes that every string starting with '%' has at least the italian version in the [strings] map in the Strings class.
+  String translate(Localization? loc) => startsWith('%')
+      ? Strings.strings[replaceFirst('%', '')]![loc ?? Setting.language.value] ??
+          Strings.strings[replaceFirst('%', '')]![Localization.itIT]!
+      : this;
 }

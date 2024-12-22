@@ -51,7 +51,7 @@ class HpBar extends StatelessWidget {
                       height: Measures.hpBarHeight,
                       decoration: BoxDecoration(boxShadow: [
                         BoxShadow(
-                            color: color.withOpacity(0.25), offset: const Offset(0, 0), blurRadius: 14)
+                            color: color.withValues(alpha: 0.25), offset: const Offset(0, 0), blurRadius: 14)
                       ], borderRadius: BorderRadius.circular(999), color: color),
                     ),
                   ),

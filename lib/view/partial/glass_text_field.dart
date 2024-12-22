@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
@@ -76,7 +78,7 @@ class _GlassTextFieldState extends State<GlassTextField> {
                               .viewInsets
                               .bottom + Measures.vMarginBig * 3),
                       maxLength: maxLength,
-                      maxLines: widget.lines,
+                      maxLines: min(10,widget.lines),
                       textInputAction: widget.textInputAction,
                       onSubmitted: widget.onSubmitted,
                       cursorColor: Palette.onBackground,

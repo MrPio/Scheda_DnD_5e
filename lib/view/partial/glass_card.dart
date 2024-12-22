@@ -40,7 +40,7 @@ class _GlassCardState extends State<GlassCard> {
   get _opacity => _down ? 0.55 : 1.0;
 
   get _backgroundColor=>Palette.card
-      .withOpacity(Palette.card.opacity * _opacity * (widget.isLight ? 0.35 : 1));
+      .withValues(alpha: Palette.card.opacity * _opacity * (widget.isLight ? 0.35 : 1));
 
   bool _down = false;
 
@@ -64,7 +64,7 @@ class _GlassCardState extends State<GlassCard> {
                       end: const Alignment(-1, -1),
                       colors: [
                         Palette.card,
-                        Palette.card.withOpacity(Palette.card.opacity * 2),
+                        Palette.card.withValues(alpha: Palette.card.opacity * 2),
                         Palette.card
                       ],
                       stops: const [0.43, 0.5, 0.57],

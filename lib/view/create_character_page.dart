@@ -347,7 +347,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                           context.popup(e.title,
                                               message: e.description,
                                               positiveText: 'Ok',
-                                              backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
+                                              backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                                         },
                                         padding: const EdgeInsets.all(12)),
                                   ),
@@ -542,7 +542,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                               context.popup(e.title,
                                                   message: e.description,
                                                   positiveText: 'Ok',
-                                                  backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
+                                                  backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                                             },
                                             padding: const EdgeInsets.all(12)),
                                       ),
@@ -786,7 +786,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                           context.popup(e.title,
                                               message: e.description,
                                               positiveText: 'Ok',
-                                              backgroundColor: Palette.backgroundGrey.withOpacity(0.2));
+                                              backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                                         },
                                         padding: const EdgeInsets.all(12)),
                                   ),

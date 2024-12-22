@@ -14,7 +14,9 @@ class SettingMenu {
 enum SettingType { bool, int, yesNo, action, radio }
 
 enum Setting {
-  test('Test 1', SettingType.bool, subtitle: 'Subtitle test 1', defaultValue: false);
+  test('Test 1', SettingType.bool, subtitle: 'Subtitle test 1', defaultValue: false),
+  language('%Setting.language.title', SettingType.radio,
+      subtitle: '%Setting.language.subtitle', defaultValue: 'itIT');
 
   final String title;
   final String? subtitle;
@@ -25,7 +27,7 @@ enum Setting {
 
   String get id => name;
 
-  Future<Object?> get value async => await IOManager().get(id);
+  Object? get value => IOManager().get(id) ?? defaultValue;
 
   set value(newValue) => IOManager().set(id, newValue);
 }
