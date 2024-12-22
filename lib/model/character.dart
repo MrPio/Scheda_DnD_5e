@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/widgets.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:scheda_dnd_5e/enum/character_background.localized.g.part';
 import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
@@ -12,8 +13,8 @@ import 'package:scheda_dnd_5e/mixin/comparable.dart';
 import 'package:scheda_dnd_5e/model/enchantment.dart' hide Type;
 import 'package:tuple/tuple.dart';
 
+import '../enum/character_background.dart';
 import '../enum/dice.dart';
-import '../enum/localization.dart';
 import 'loot.dart';
 
 part 'part/character.g.dart';
@@ -2551,22 +2552,6 @@ enum Alignment implements EnumWithTitle {
       };
 }
 
-enum Background implements EnumWithTitle {
-  physical('Descrizione fisica', 'png/physical', '%Background.physical.hint', 8),
-  history('Storia', 'png/history', '%Background.history.hint', 20),
-  traits('Tratti caratteriali', 'png/traits','%Background.traits.hint', 10),
-  defects('Difetti', 'png/defects', '%Background.defects.hint', 5),
-  ideals('Ideali', 'png/ideals','%Background.ideals.hint', 5),
-  bonds('Legami', 'png/bonds', '%Background.bonds.hint', 6);
-
-  @override
-  final String title;
-  final String iconPath, hint;
-  final int maxLength;
-
-  const Background(this.title, this.iconPath, this.hint, this.maxLength);
-}
-
 @JsonSerializable(constructor: 'jsonConstructor')
 class Character with Comparable<Character> implements WithUID {
   int regDateTimestamp;
@@ -2756,22 +2741,22 @@ class Character with Comparable<Character> implements WithUID {
   ValueNotifier<Set<Enchantment>?> enchantments = ValueNotifier(null);
 
   @JsonKey(includeFromJson: false, includeToJson: false)
-  Map<Background, String?> get descriptions => {
-        Background.physical: physical,
-        Background.history: history,
-        Background.traits: traits,
-        Background.defects: defects,
-        Background.ideals: ideals,
-        Background.bonds: bonds,
+  Map<CharacterBackground, String?> get descriptions => {
+        CharacterBackground.physical: physical,
+        CharacterBackground.history: history,
+        CharacterBackground.traits: traits,
+        CharacterBackground.defects: defects,
+        CharacterBackground.ideals: ideals,
+        CharacterBackground.bonds: bonds,
       };
 
-  set descriptions(Map<Background, String?> value) {
-    physical = value[Background.physical];
-    history = value[Background.history];
-    traits = value[Background.traits];
-    defects = value[Background.defects];
-    ideals = value[Background.ideals];
-    bonds = value[Background.bonds];
+  set descriptions(Map<CharacterBackground, String?> value) {
+    physical = value[CharacterBackground.physical];
+    history = value[CharacterBackground.history];
+    traits = value[CharacterBackground.traits];
+    defects = value[CharacterBackground.defects];
+    ideals = value[CharacterBackground.ideals];
+    bonds = value[CharacterBackground.bonds];
   }
 
   // il max è 20
@@ -2845,5 +2830,6 @@ class Character with Comparable<Character> implements WithUID {
   // Compare by creation date in descending order
   int compareTo(Character other) => regDateTimestamp.compareTo(other.regDateTimestamp) * -1;
 
-  String backgroundQuery(Background background) => "I am playing Dungeon and Dragons. Generate a creative description of my character. ${background.hint.translate(Localization.enUS)} of my character based on these characteristics: his name is $name, his class is ${class_.title}, his race is ${race.title}, his alignment is ${alignment.title} and at the moment is level is $level.";
+  String backgroundQuery(CharacterBackground background, BuildContext context) =>
+      "I am playing Dungeon and Dragons. Generate a creative description of my character. ${background.hint(context)} of my character based on these characteristics: his name is $name, his class is ${class_.title}, his race is ${race.title}, his alignment is ${alignment.title} and at the moment is level is $level.";
 }

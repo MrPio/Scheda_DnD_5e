@@ -13,7 +13,7 @@ import 'package:scheda_dnd_5e/view/partial/decoration/rule.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 
 import '../view/partial/clickable.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class BottomSheetItem {
   final String iconPath, text;
   final Function() onTap;
@@ -376,4 +376,6 @@ extension ContextExtensions on BuildContext {
 
   /// Pop the current route, returning the [arguments] to the caller one.
   pop([Object? arguments]) => Navigator.of(this).pop(arguments);
+
+  AppLocalizations get loc => AppLocalizations.of(this)!;
 }

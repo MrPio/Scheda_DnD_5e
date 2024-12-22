@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
+import 'package:scheda_dnd_5e/enum/character_background.localized.g.part';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/date_time_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/int_extensions.dart';
@@ -38,6 +39,7 @@ import 'package:scheda_dnd_5e/view/partial/level.dart';
 import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/screen/characters_screen.dart';
 
+import '../enum/character_background.dart';
 import '../model/character.dart' hide Alignment;
 import '../model/enchantment.dart' as en;
 import 'enchantments_page.dart';
@@ -74,10 +76,10 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
   _setIsEnchantmentLevelExpanded(en.Level level, bool value) =>
       IOManager().set('character_page_isEnchantmentLevelExpanded_${level.num}', value);
 
-  bool _getIsBackgroundExpanded(Background background) =>
+  bool _getIsBackgroundExpanded(CharacterBackground background) =>
       IOManager().get<bool>('character_page_IsBackgroundExpanded_${background.name}') ?? true;
 
-  _setIsBackgroundExpanded(Background background, bool value) =>
+  _setIsBackgroundExpanded(CharacterBackground background, bool value) =>
       IOManager().set('character_page_IsBackgroundExpanded_${background.name}', value);
 
   List<en.Enchantment>? enchantments(en.Level level) =>
@@ -100,7 +102,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
     for (var level in en.Level.values) level: TextEditingController()
   };
   final double slotSizeSquare = 38, slotSizeCircle = 24;
-  late final Map<Background, TextEditingController> _backgroundControllers;
+  late final Map<CharacterBackground, TextEditingController> _backgroundControllers;
 
   bool get hasChanges => jsonEncode(_oldCharacter!.toJSON()) != jsonEncode(_character!.toJSON());
 
@@ -158,7 +160,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       _character!.inventory.addListener(() => mounted ? setState(() {}) : null);
       _character!.enchantments.addListener(() => mounted ? setState(() {}) : null);
       _backgroundControllers = {
-        for (var b in Background.values) b: TextEditingController(text: _character?.descriptions[b] ?? '')
+        for (var b in CharacterBackground.values) b: TextEditingController(text: _character?.descriptions[b] ?? '')
       };
     }
     final character = _character!;
@@ -912,7 +914,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                           padding: const EdgeInsets.symmetric(
                               horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
                           child: Row(children: [
-                            Text(description.key.title, style: Fonts.black(size: 18)),
+                            Text(description.key.title(context), style: Fonts.black(size: 18)),
                             const SizedBox(width: Measures.hMarginMed),
                             'chevron_left'.toIcon(
                                 height: 16,
@@ -927,20 +929,20 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                           lines: description.key.maxLength,
                           iconPath: description.key.iconPath,
                           textInputAction: TextInputAction.done,
-                          hintText: description.key.hint,
+                          hintText: description.key.hint(context),
                           secondaryIconPath: 'png/random',
                           onSecondaryIconTap: () async {
                             withLoading(() async {
                               try {
-                                final answer = await ChatbotManager().ask(
-                                    HuggingModel.llama3b, character.backgroundQuery(description.key));
+                                final answer = await ChatbotManager().ask(HuggingModel.llama3b,
+                                    character.backgroundQuery(description.key, context));
                                 print(answer);
                                 if (answer != null) {
                                   _backgroundControllers[description.key]!.text = answer;
                                 }
                               } on HttpException catch (e) {
                                 print('⛔ [HttpException] ${e.message}');
-                                context.snackbar(e.message,backgroundColor: Palette.primaryRed);
+                                context.snackbar(e.message, backgroundColor: Palette.primaryRed);
                               }
                             });
                           },

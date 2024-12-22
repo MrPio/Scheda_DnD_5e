@@ -1,0 +1,23 @@
+{
+  "helloWorld": "Ciao Mondo!",
+  "hello": "Ciao {userName}",
+
+  "characterBackgroundPhysicalTitle": "Descrizione fisica",
+  "characterBackgroundHistoryTitle": "Storia",
+  "characterBackgroundTraitsTitle": "Tratti caratteriali",
+  "characterBackgroundDefectsTitle": "Difetti",
+  "characterBackgroundIdealsTitle": "Ideali",
+  "characterBackgroundBondsTitle": "Legami",
+
+  "characterBackgroundPhysicalHint": "Descrivi l'aspetto fisico del personaggio.",
+  "characterBackgroundHistoryHint": "Riassumi le esperienze principali del personaggio.",
+  "characterBackgroundTraitsHint": "Elenca i tratti distintivi della personalità.",
+  "characterBackgroundDefectsHint": "Descrivi i punti deboli e i difetti.",
+  "characterBackgroundIdealsHint": "Indica i valori e le aspirazioni.",
+  "characterBackgroundBondsHint": "Scrivi le relazioni e i legami principali.",
+
+
+
+
+  "default": ""
+}

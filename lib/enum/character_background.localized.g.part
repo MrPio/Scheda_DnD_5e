@@ -1,0 +1,41 @@
+// **************************************************************************
+// LocalizedGenerator
+// **************************************************************************
+
+// GENERATED CODE (by MrPio) - DO NOT MODIFY BY HAND
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'character_background.dart';
+
+extension CharacterBackgroundLocalizedExtension on CharacterBackground {
+  String title(BuildContext context) => {
+        CharacterBackground.physical:
+            AppLocalizations.of(context)!.characterBackgroundPhysicalTitle,
+        CharacterBackground.history:
+            AppLocalizations.of(context)!.characterBackgroundHistoryTitle,
+        CharacterBackground.traits:
+            AppLocalizations.of(context)!.characterBackgroundTraitsTitle,
+        CharacterBackground.defects:
+            AppLocalizations.of(context)!.characterBackgroundDefectsTitle,
+        CharacterBackground.ideals:
+            AppLocalizations.of(context)!.characterBackgroundIdealsTitle,
+        CharacterBackground.bonds:
+            AppLocalizations.of(context)!.characterBackgroundBondsTitle,
+      }[this]!;
+
+  String hint(BuildContext context) => {
+        CharacterBackground.physical:
+            AppLocalizations.of(context)!.characterBackgroundPhysicalHint,
+        CharacterBackground.history:
+            AppLocalizations.of(context)!.characterBackgroundHistoryHint,
+        CharacterBackground.traits:
+            AppLocalizations.of(context)!.characterBackgroundTraitsHint,
+        CharacterBackground.defects:
+            AppLocalizations.of(context)!.characterBackgroundDefectsHint,
+        CharacterBackground.ideals:
+            AppLocalizations.of(context)!.characterBackgroundIdealsHint,
+        CharacterBackground.bonds:
+            AppLocalizations.of(context)!.characterBackgroundBondsHint,
+      }[this]!;
+}

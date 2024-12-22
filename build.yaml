@@ -1,0 +1,14 @@
+builders:
+  scheda_dnd_5e|localized:
+    import: "package:scheda_dnd_5e/annotation/generator/localized_generator.dart"
+    builder_factories: [ "localizedGenerator" ]
+    build_extensions: { ".dart": [ ".g.dart" ] }
+    auto_apply: dependents
+    build_to: source
+
+targets:
+  $default:
+    builders:
+      scheda_dnd_5e|localized:
+        generate_for:
+          - lib/**/*.dart

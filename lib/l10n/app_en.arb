@@ -1,0 +1,22 @@
+{
+  "helloWorld": "Hello World!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+
+  "characterBackgroundPhysicalTitle": "Physical",
+  "characterBackgroundHistoryTitle": "History",
+  "characterBackgroundTraitsTitle": "Traits",
+  "characterBackgroundDefectsTitle": "Defects",
+  "characterBackgroundIdealsTitle": "Ideals",
+  "characterBackgroundBondsTitle": "Bonds",
+
+  "characterBackgroundPhysicalHint": "Describe the character's physical appearance.",
+  "characterBackgroundHistoryHint": "Summarize the character's main experiences.",
+  "characterBackgroundTraitsHint": "List the distinctive personality traits.",
+  "characterBackgroundDefectsHint": "Describe the weaknesses and shortcomings.",
+  "characterBackgroundIdealsHint": "Indicates values and aspirations.",
+  "characterBackgroundBondsHint": "Write down the main relationships and links.",
+
+  "default": ""
+}

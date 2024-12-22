@@ -2,10 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
-import 'package:scheda_dnd_5e/enum/localization.dart';
-
-import '../constant/strings.dart';
-import '../model/setting.dart';
 
 extension StringExtensions on String {
   bool match(String other, {bool contains = false}) =>
@@ -48,10 +44,13 @@ extension StringExtensions on String {
     }
   }
 
-  /// Translates a string starting with '%'.
-  /// Assumes that every string starting with '%' has at least the italian version in the [strings] map in the Strings class.
-  String translate(Localization? loc) => startsWith('%')
-      ? Strings.strings[replaceFirst('%', '')]![loc ?? Setting.language.value] ??
-          Strings.strings[replaceFirst('%', '')]![Localization.itIT]!
-      : this;
+  String toUpperCamelCase() {
+    if (isEmpty) return this;
+    List<String> words = split(RegExp(r'[\s_]+'));
+    return words.map((word) {
+      return word.isNotEmpty
+          ? word[0].toUpperCase() + word.substring(1).toLowerCase()
+          : '';
+    }).join();
+  }
 }

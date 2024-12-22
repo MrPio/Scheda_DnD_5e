@@ -98,7 +98,8 @@ class _CharactersScreenState extends State<CharactersScreen> {
         header: Column(
           children: [
             // Page Title
-            PageHeader(title: 'I tuoi personaggi',isPage: false),
+            // PageHeader(title: 'I tuoi personaggi',isPage: false),
+            PageHeader(title: context.loc.helloWorld,isPage: false),
             GlassTextField(
               iconPath: 'search_alt',
               hintText: 'Cerca un personaggio',

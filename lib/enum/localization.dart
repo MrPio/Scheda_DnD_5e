@@ -1,4 +1,0 @@
-enum Localization {
-  itIT,
-  enUS;
-}

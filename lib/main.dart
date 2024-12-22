@@ -12,6 +12,8 @@ import 'package:scheda_dnd_5e/view/signin_page.dart';
 import 'package:scheda_dnd_5e/view/signup_page.dart';
 import 'package:scheda_dnd_5e/view/user_page.dart';
 import 'package:tuple/tuple.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'constant/palette.dart';
 
@@ -27,6 +29,16 @@ class MyApp extends StatelessWidget {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
         .copyWith(systemNavigationBarColor: Palette.background,statusBarColor: Colors.transparent));
     return MaterialApp(
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('it'),
+        Locale('en'),
+      ],
       debugShowCheckedModeBanner: false,
       title: 'Scheda DnD 5e',
       theme: ThemeData(
