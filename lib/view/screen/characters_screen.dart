@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
+import 'package:scheda_dnd_5e/enum/race.localized.g.part';
+import 'package:scheda_dnd_5e/enum/subrace.localized.g.part';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
-import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
-import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
-
+import 'package:scheda_dnd_5e/model/character.dart';
 // import 'package:scheda_dnd_5e/model/enchantment.dart';
 import 'package:scheda_dnd_5e/model/filter.dart';
 import 'package:scheda_dnd_5e/view/partial/clickable.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/hp_bar.dart';
-import 'package:scheda_dnd_5e/view/partial/level.dart';
-import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/partial/layout/recycler_view.dart';
+import 'package:scheda_dnd_5e/view/partial/level.dart';
 import 'package:scheda_dnd_5e/view/partial/page_header.dart';
 
 import '../../constant/fonts.dart';
 import '../../constant/measures.dart';
+import '../../enum/character_alignment.dart';
+import '../../enum/class.dart';
+import '../../enum/race.dart';
+import '../../interface/enum_with_title.dart';
 import '../home_page.dart';
 import '../partial/radio_button.dart';
 
@@ -63,8 +66,8 @@ class _CharactersScreenState extends State<CharactersScreen> {
           (character, values) => values.contains(character.class_)),
       Filter<Character, Race>('Razza', Palette.primaryRed, Race.values,
           (character, values) => values.contains(character.race)),
-      Filter<Character, ch.Alignment>('Allineamento', Palette.primaryBlue, ch.Alignment.values,
-          (character, values) => values.contains(character.alignment)),
+      Filter<Character, CharacterAlignment>('Allineamento', Palette.primaryBlue,
+          CharacterAlignment.values, (character, values) => values.contains(character.alignment)),
     ];
 
     // Refresh UI when the search string changes
@@ -99,7 +102,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
           children: [
             // Page Title
             // PageHeader(title: 'I tuoi personaggi',isPage: false),
-            PageHeader(title: context.loc.helloWorld,isPage: false),
+            PageHeader(title: context.loc.helloWorld, isPage: false),
             GlassTextField(
               iconPath: 'search_alt',
               hintText: 'Cerca un personaggio',
@@ -123,7 +126,8 @@ class _CharactersScreenState extends State<CharactersScreen> {
                               ? setState(() => _filters[i].selectedValues.clear())
                               : context.checkList(
                                   'Filtro su ${_filters[i].title.toLowerCase()}',
-                                  values: _filters[i].values,
+                            name: (e) => EnumWithTitle.titles[[Class, Race, CharacterAlignment][i]]!(e, context),
+                            values: _filters[i].values,
                                   color: _filters[i].color,
                                   onChanged: (value) =>
                                       setState(() => _filters[i].selectedValues.toggle(value)),
@@ -165,7 +169,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(character.name, style: Fonts.bold()),
-                              Text(character.subRace?.title ?? character.race.title,
+                              Text(character.subRace?.title(context) ?? character.race.title(context),
                                   style: Fonts.light()),
                             ],
                           )
@@ -226,7 +230,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(character.name, style: Fonts.bold()),
-                                  Text(character.subRace?.title ?? character.race.title,
+                                  Text(character.subRace?.title(context) ?? character.race.title(context),
                                       style: Fonts.light()),
                                 ],
                               )

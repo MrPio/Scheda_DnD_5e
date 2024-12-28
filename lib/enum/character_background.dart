@@ -1,7 +1,9 @@
+import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
+
 import '../annotation/localized_annotation.dart';
 
 @Localized(['title', 'hint'])
-enum CharacterBackground {
+enum CharacterBackground implements EnumWithTitle {
   physical('png/physical', 8),
   history('png/history', 20),
   traits('png/traits', 10),

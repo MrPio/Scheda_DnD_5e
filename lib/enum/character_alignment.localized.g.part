@@ -1,0 +1,57 @@
+// **************************************************************************
+// LocalizedGenerator
+// **************************************************************************
+
+// GENERATED CODE (by MrPio) - DO NOT MODIFY BY HAND
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'character_alignment.dart';
+
+extension CharacterAlignmentLocalizedExtension on CharacterAlignment {
+  String title(BuildContext context) => {
+        CharacterAlignment.legaleBuono:
+            AppLocalizations.of(context)!.characterAlignmentLegaleBuonoTitle,
+        CharacterAlignment.neutraleBuono:
+            AppLocalizations.of(context)!.characterAlignmentNeutraleBuonoTitle,
+        CharacterAlignment.caoticoBuono:
+            AppLocalizations.of(context)!.characterAlignmentCaoticoBuonoTitle,
+        CharacterAlignment.legaleNeutrale:
+            AppLocalizations.of(context)!.characterAlignmentLegaleNeutraleTitle,
+        CharacterAlignment.neutralePuro:
+            AppLocalizations.of(context)!.characterAlignmentNeutralePuroTitle,
+        CharacterAlignment.caoticoNeutrale: AppLocalizations.of(context)!
+            .characterAlignmentCaoticoNeutraleTitle,
+        CharacterAlignment.legaleMalvagio:
+            AppLocalizations.of(context)!.characterAlignmentLegaleMalvagioTitle,
+        CharacterAlignment.neutraleMalvagio: AppLocalizations.of(context)!
+            .characterAlignmentNeutraleMalvagioTitle,
+        CharacterAlignment.caoticoMalvagio: AppLocalizations.of(context)!
+            .characterAlignmentCaoticoMalvagioTitle,
+        CharacterAlignment.nessuno:
+            AppLocalizations.of(context)!.characterAlignmentNessunoTitle,
+      }[this]!;
+
+  String description(BuildContext context) => {
+        CharacterAlignment.legaleBuono: AppLocalizations.of(context)!
+            .characterAlignmentLegaleBuonoDescription,
+        CharacterAlignment.neutraleBuono: AppLocalizations.of(context)!
+            .characterAlignmentNeutraleBuonoDescription,
+        CharacterAlignment.caoticoBuono: AppLocalizations.of(context)!
+            .characterAlignmentCaoticoBuonoDescription,
+        CharacterAlignment.legaleNeutrale: AppLocalizations.of(context)!
+            .characterAlignmentLegaleNeutraleDescription,
+        CharacterAlignment.neutralePuro: AppLocalizations.of(context)!
+            .characterAlignmentNeutralePuroDescription,
+        CharacterAlignment.caoticoNeutrale: AppLocalizations.of(context)!
+            .characterAlignmentCaoticoNeutraleDescription,
+        CharacterAlignment.legaleMalvagio: AppLocalizations.of(context)!
+            .characterAlignmentLegaleMalvagioDescription,
+        CharacterAlignment.neutraleMalvagio: AppLocalizations.of(context)!
+            .characterAlignmentNeutraleMalvagioDescription,
+        CharacterAlignment.caoticoMalvagio: AppLocalizations.of(context)!
+            .characterAlignmentCaoticoMalvagioDescription,
+        CharacterAlignment.nessuno:
+            AppLocalizations.of(context)!.characterAlignmentNessunoDescription,
+      }[this]!;
+}

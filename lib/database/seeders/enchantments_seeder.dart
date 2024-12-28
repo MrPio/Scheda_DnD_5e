@@ -1,4 +1,4 @@
-import '../../model/character.dart';
+import '../../enum/class.dart';
 import '../../model/enchantment.dart';
 import '../database_seeder.dart';
 

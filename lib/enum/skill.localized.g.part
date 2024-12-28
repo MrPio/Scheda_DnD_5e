@@ -1,0 +1,34 @@
+// **************************************************************************
+// LocalizedGenerator
+// **************************************************************************
+
+// GENERATED CODE (by MrPio) - DO NOT MODIFY BY HAND
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'skill.dart';
+
+extension SkillLocalizedExtension on Skill {
+  String title(BuildContext context) => {
+        Skill.forza: AppLocalizations.of(context)!.skillForzaTitle,
+        Skill.destrezza: AppLocalizations.of(context)!.skillDestrezzaTitle,
+        Skill.costituzione:
+            AppLocalizations.of(context)!.skillCostituzioneTitle,
+        Skill.intelligenza:
+            AppLocalizations.of(context)!.skillIntelligenzaTitle,
+        Skill.saggezza: AppLocalizations.of(context)!.skillSaggezzaTitle,
+        Skill.carisma: AppLocalizations.of(context)!.skillCarismaTitle,
+      }[this]!;
+
+  String description(BuildContext context) => {
+        Skill.forza: AppLocalizations.of(context)!.skillForzaDescription,
+        Skill.destrezza:
+            AppLocalizations.of(context)!.skillDestrezzaDescription,
+        Skill.costituzione:
+            AppLocalizations.of(context)!.skillCostituzioneDescription,
+        Skill.intelligenza:
+            AppLocalizations.of(context)!.skillIntelligenzaDescription,
+        Skill.saggezza: AppLocalizations.of(context)!.skillSaggezzaDescription,
+        Skill.carisma: AppLocalizations.of(context)!.skillCarismaDescription,
+      }[this]!;
+}

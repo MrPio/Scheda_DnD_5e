@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
@@ -13,7 +14,7 @@ import 'package:scheda_dnd_5e/view/partial/decoration/rule.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 
 import '../view/partial/clickable.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class BottomSheetItem {
   final String iconPath, text;
   final Function() onTap;
@@ -161,10 +162,12 @@ extension ContextExtensions on BuildContext {
   ///
   /// If [isRadio], the selection is limited to a single element and the checkboxes are rendered as circles. However, the number of selected items is constrained to [selectionRequirement], which means that the success of the positive action depends on it.
   /// The state of each value is given by the function [value], and each time the selection state of an item changes, [onChanged] is invoked.
-  Future<void> checkList<T extends WithTitle>(String title,
+  /// [T] must be a concrete of WithTitle or EnumWithTitle.
+  Future<void> checkList<T>(String title,
       {required List<T> values,
       Function(T)? onChanged,
       bool Function(T)? value,
+      String Function(T)? name,
       Color color = Palette.primaryBlue,
       bool isRadio = false,
       dismissible = true,
@@ -197,7 +200,11 @@ extension ContextExtensions on BuildContext {
                               ),
                               Flexible(
                                   child: Text(
-                                values[j].title,
+                                name == null
+                                    ? T is WithTitle
+                                        ? (values[j] as WithTitle).title
+                                        : EnumWithTitle.titles[T]!(values[j] as Enum, context)
+                                    : name(values[j]),
                                 style: Fonts.regular(),
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 2,

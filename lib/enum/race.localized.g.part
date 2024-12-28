@@ -1,0 +1,35 @@
+// **************************************************************************
+// LocalizedGenerator
+// **************************************************************************
+
+// GENERATED CODE (by MrPio) - DO NOT MODIFY BY HAND
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'race.dart';
+
+extension RaceLocalizedExtension on Race {
+  String title(BuildContext context) => {
+        Race.umano: AppLocalizations.of(context)!.raceUmanoTitle,
+        Race.nano: AppLocalizations.of(context)!.raceNanoTitle,
+        Race.elfo: AppLocalizations.of(context)!.raceElfoTitle,
+        Race.dragonide: AppLocalizations.of(context)!.raceDragonideTitle,
+        Race.gnomo: AppLocalizations.of(context)!.raceGnomoTitle,
+        Race.halfling: AppLocalizations.of(context)!.raceHalflingTitle,
+        Race.mezzelfo: AppLocalizations.of(context)!.raceMezzelfoTitle,
+        Race.mezzorco: AppLocalizations.of(context)!.raceMezzorcoTitle,
+        Race.tiefling: AppLocalizations.of(context)!.raceTieflingTitle,
+      }[this]!;
+
+  String description(BuildContext context) => {
+        Race.umano: AppLocalizations.of(context)!.raceUmanoDescription,
+        Race.nano: AppLocalizations.of(context)!.raceNanoDescription,
+        Race.elfo: AppLocalizations.of(context)!.raceElfoDescription,
+        Race.dragonide: AppLocalizations.of(context)!.raceDragonideDescription,
+        Race.gnomo: AppLocalizations.of(context)!.raceGnomoDescription,
+        Race.halfling: AppLocalizations.of(context)!.raceHalflingDescription,
+        Race.mezzelfo: AppLocalizations.of(context)!.raceMezzelfoDescription,
+        Race.mezzorco: AppLocalizations.of(context)!.raceMezzorcoDescription,
+        Race.tiefling: AppLocalizations.of(context)!.raceTieflingDescription,
+      }[this]!;
+}

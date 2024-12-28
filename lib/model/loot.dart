@@ -1,6 +1,8 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:scheda_dnd_5e/enum/skill.localized.g.part';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
@@ -9,6 +11,7 @@ import 'package:scheda_dnd_5e/mixin/comparable.dart';
 import 'package:tuple/tuple.dart';
 
 import '../enum/dice.dart';
+import '../enum/skill.dart';
 import '../interface/enum_with_title.dart';
 import 'character.dart';
 
@@ -153,10 +156,10 @@ class Armor extends InventoryItem {
       : uid = title,
         super(title: title);
 
-  Tuple2<String, String> get caString => Tuple2(
+  Tuple2<String, String> caString(BuildContext context)=> Tuple2(
       "${isPartial ? '+' : ''}$ca",
       skillModifiers.entries
-          .map((e) => '${e.key.title}${e.value > 0 ? ' (max ${e.value})' : ''}')
+          .map((e) => '${e.key.title(context)}${e.value > 0 ? ' (max ${e.value})' : ''}')
           .join(', '));
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)

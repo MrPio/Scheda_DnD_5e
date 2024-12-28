@@ -3,6 +3,7 @@ import 'package:scheda_dnd_5e/view/partial/decoration/gradient_background.dart';
 import 'package:scheda_dnd_5e/view/screen/enchantments_screen.dart';
 
 import '../constant/palette.dart';
+import '../enum/class.dart';
 import '../model/character.dart';
 
 class EnchantmentsArgs {

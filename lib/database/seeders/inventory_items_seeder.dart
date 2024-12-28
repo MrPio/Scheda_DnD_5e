@@ -1,6 +1,7 @@
 import 'package:scheda_dnd_5e/model/loot.dart';
 
 import '../../enum/dice.dart';
+import '../../enum/skill.dart';
 import '../../model/character.dart';
 import '../database_seeder.dart';
 

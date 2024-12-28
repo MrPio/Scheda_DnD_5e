@@ -7,7 +7,15 @@ import 'package:flutter_svg/svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
+import 'package:scheda_dnd_5e/enum/character_alignment.dart';
 import 'package:scheda_dnd_5e/enum/character_background.localized.g.part';
+import 'package:scheda_dnd_5e/enum/language.localized.g.part';
+import 'package:scheda_dnd_5e/enum/mastery.localized.g.part';
+import 'package:scheda_dnd_5e/enum/mastery_type.localized.g.part';
+import 'package:scheda_dnd_5e/enum/race.localized.g.part';
+import 'package:scheda_dnd_5e/enum/skill.localized.g.part';
+import 'package:scheda_dnd_5e/enum/subrace.localized.g.part';
+import 'package:scheda_dnd_5e/enum/subskill.localized.g.part';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/date_time_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/int_extensions.dart';
@@ -17,7 +25,7 @@ import 'package:scheda_dnd_5e/manager/chatbot_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/manager/io_manager.dart';
 import 'package:scheda_dnd_5e/mixin/loadable.dart';
-import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
+import 'package:scheda_dnd_5e/model/character.dart';
 import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/view/create_item_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
@@ -40,7 +48,10 @@ import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/screen/characters_screen.dart';
 
 import '../enum/character_background.dart';
-import '../model/character.dart' hide Alignment;
+import '../enum/language.dart';
+import '../enum/mastery_type.dart';
+import '../enum/skill.dart';
+import '../enum/subskill.dart';
 import '../model/enchantment.dart' as en;
 import 'enchantments_page.dart';
 import 'partial/decoration/gradient_background.dart';
@@ -160,7 +171,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       _character!.inventory.addListener(() => mounted ? setState(() {}) : null);
       _character!.enchantments.addListener(() => mounted ? setState(() {}) : null);
       _backgroundControllers = {
-        for (var b in CharacterBackground.values) b: TextEditingController(text: _character?.descriptions[b] ?? '')
+        for (var b in CharacterBackground.values)
+          b: TextEditingController(text: _character?.descriptions[b] ?? '')
       };
     }
     final character = _character!;
@@ -251,7 +263,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           bottomSheetArgs: BottomSheetArgs(
             header: GridRow(
                 columnsCount: 3,
-                children: ch.Alignment.values
+                children: CharacterAlignment.values
                     .map((e) => AlignmentCard(
                           e,
                           onTap: (alignment) {
@@ -261,7 +273,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
                             Navigator.of(context).pop();
                           },
-                          isSmall: e == ch.Alignment.nessuno,
+                          isSmall: e == CharacterAlignment.nessuno,
                         ))
                     .toList()),
           ),
@@ -287,7 +299,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       ]
           .map((skill) => SheetItemCard(
                 iconPath: skill.iconPath,
-                text: skill.title,
+                text: skill.title(context),
                 iconColor: skill.color,
                 value: _selectedSkill == skill
                     ? character.skillValue(skill).toString()
@@ -375,7 +387,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                               Flexible(
                                                 fit: FlexFit.tight,
                                                 child: Text(
-                                                  subSkill.title,
+                                                  subSkill.title(context),
                                                   style: Fonts.regular(size: 13),
                                                   maxLines: 1,
                                                   overflow: TextOverflow.ellipsis,
@@ -423,213 +435,214 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
     _screens = [
       // Sheet
-      (_tabController?.index ?? 0) != 0
-          ? Column(
-              children: [
-                const SizedBox(height: Measures.vMarginMed),
-                GlassCard(isShimmer: true, shimmerHeight: 40),
-                const SizedBox(height: Measures.vMarginMed),
-                GridRow(
-                  columnsCount: 3,
-                  mainAxisSpacing: 0,
-                  children: List.filled(6, GlassCard(isShimmer: true, shimmerHeight: 70)),
-                ),
-                const SizedBox(height: Measures.vMarginMed),
-                GridRow(
-                  columnsCount: 3,
-                  mainAxisSpacing: 0,
-                  children: List.filled(6, GlassCard(isShimmer: true, shimmerHeight: 70)),
-                ),
-                const SizedBox(height: Measures.vMarginMed),
-                GridRow(
-                  columnsCount: 3,
-                  mainAxisSpacing: 0,
-                  children: List.filled(9, GlassCard(isShimmer: true, shimmerHeight: 70)),
-                ),
-              ],
-            )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: Measures.vMarginMed),
-                // TODO here: class and multiclass +
-                // TODO: info race,
-                // HP bar
-                HpBar(character.hp, character.maxHp, bottomSheetArgs: hpBottomSheetArgs),
-                const SizedBox(height: Measures.vMarginSmall),
-                // Attributes
-                Text('Attributi', style: Fonts.black(size: 18)),
-                const SizedBox(height: Measures.vMarginThin),
-                GridRow(
-                  columnsCount: 3,
-                  children: sheetAttributes,
-                ),
-                const SizedBox(height: Measures.vMarginThin),
-                // Skills and subSkills
-                Clickable(
-                  onTap: () => setState(() => _isSkillsExpanded = !_isSkillsExpanded),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: Measures.vMarginThin),
-                    child: Row(children: [
-                      Text('Caratteristiche', style: Fonts.black(size: 18)),
-                      const SizedBox(width: Measures.hMarginMed),
-                      'chevron_left'.toIcon(height: 16, rotation: _isSkillsExpanded ? pi / 2 : -pi / 2)
-                    ]),
+      if ((_tabController?.index ?? 0) != 0)
+        Column(
+          children: [
+            const SizedBox(height: Measures.vMarginMed),
+            GlassCard(isShimmer: true, shimmerHeight: 40),
+            const SizedBox(height: Measures.vMarginMed),
+            GridRow(
+              columnsCount: 3,
+              mainAxisSpacing: 0,
+              children: List.filled(6, GlassCard(isShimmer: true, shimmerHeight: 70)),
+            ),
+            const SizedBox(height: Measures.vMarginMed),
+            GridRow(
+              columnsCount: 3,
+              mainAxisSpacing: 0,
+              children: List.filled(6, GlassCard(isShimmer: true, shimmerHeight: 70)),
+            ),
+            const SizedBox(height: Measures.vMarginMed),
+            GridRow(
+              columnsCount: 3,
+              mainAxisSpacing: 0,
+              children: List.filled(9, GlassCard(isShimmer: true, shimmerHeight: 70)),
+            ),
+          ],
+        )
+      else
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: Measures.vMarginMed),
+            // TODO here: class and multiclass +
+            // TODO: info race,
+            // HP bar
+            HpBar(character.hp, character.maxHp, bottomSheetArgs: hpBottomSheetArgs),
+            const SizedBox(height: Measures.vMarginSmall),
+            // Attributes
+            Text('Attributi', style: Fonts.black(size: 18)),
+            const SizedBox(height: Measures.vMarginThin),
+            GridRow(
+              columnsCount: 3,
+              children: sheetAttributes,
+            ),
+            const SizedBox(height: Measures.vMarginThin),
+            // Skills and subSkills
+            Clickable(
+              onTap: () => setState(() => _isSkillsExpanded = !_isSkillsExpanded),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: Measures.vMarginThin),
+                child: Row(children: [
+                  Text('Caratteristiche', style: Fonts.black(size: 18)),
+                  const SizedBox(width: Measures.hMarginMed),
+                  'chevron_left'.toIcon(height: 16, rotation: _isSkillsExpanded ? pi / 2 : -pi / 2)
+                ]),
+              ),
+            ),
+            _isSkillsExpanded
+                ? GridColumn(
+                    columnsCount: 2,
+                    children: sheetSkills,
+                  )
+                : GridRow(
+                    columnsCount: 3,
+                    children: sheetSkills,
                   ),
-                ),
-                _isSkillsExpanded
-                    ? GridColumn(
-                        columnsCount: 2,
-                        children: sheetSkills,
-                      )
-                    : GridRow(
-                        columnsCount: 3,
-                        children: sheetSkills,
-                      ),
-                const SizedBox(height: Measures.vMarginSmall),
-                // Masteries
-                Text('Competenze', style: Fonts.black(size: 18)),
-                const SizedBox(height: Measures.vMarginThin),
-                GridRow(
-                    fill: true,
-                    columnsCount: 3,
-                    children: character.masteries
-                            .map((e) => SheetItemCard(
-                                  text: e.title,
-                                  iconPath: e.masteryType.iconPath,
-                                  onTap: () {
-                                    context.popup('Stai per rimuovere una competenza',
-                                        message: 'Sei sicuro di voler rimuovere **${e.title}**?',
-                                        positiveCallback: () {
-                                      setState(() {
-                                        character.masteries.remove(e);
-                                      });
-                                      return true;
-                                    },
-                                        negativeCallback: () {},
-                                        positiveText: 'Si',
-                                        negativeText: 'No',
-                                        backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
-                                  },
-                                ))
-                            .toList()
-                            .cast<Widget>() +
-                        [
-                          GlassCard(
-                              height: Measures.sheetCardSmallHeight,
-                              isLight: true,
-                              clickable: true,
+            const SizedBox(height: Measures.vMarginSmall),
+            // Masteries
+            Text('Competenze', style: Fonts.black(size: 18)),
+            const SizedBox(height: Measures.vMarginThin),
+            GridRow(
+                fill: true,
+                columnsCount: 3,
+                children: character.masteries
+                        .map((e) => SheetItemCard(
+                              text: e.title(context),
+                              iconPath: e.masteryType.iconPath,
                               onTap: () {
-                                context.draggableBottomSheet(
-                                  body: Column(
-                                    children: [
-                                      const SizedBox(height: Measures.vMarginThin),
-                                      Text('Aggiungi una competenza', style: Fonts.bold(size: 18)),
-                                      const SizedBox(height: Measures.vMarginThin),
-                                      Column(
-                                          children: MasteryType.values
-                                              .map((masteryType) => Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      const Padding(
-                                                        padding: EdgeInsets.symmetric(
-                                                            vertical: Measures.vMarginSmall),
-                                                        child: Rule(),
-                                                      ),
-                                                      Text(masteryType.title, style: Fonts.regular()),
-                                                      const SizedBox(height: Measures.vMarginSmall),
-                                                      GridRow(
-                                                          columnsCount: 3,
-                                                          fill: true,
-                                                          children: masteryType.masteries
-                                                              .where(
-                                                                  (e) => !character.masteries.contains(e))
-                                                              .map((mastery) => SheetItemCard(
-                                                                    text: mastery.title,
-                                                                    iconPath: masteryType.iconPath,
-                                                                    onTap: () {
-                                                                      setState(() {
-                                                                        character.masteries.add(mastery);
-                                                                      });
-                                                                      Navigator.of(context).pop();
-                                                                    },
-                                                                  ))
-                                                              .toList()),
-                                                    ],
-                                                  ))
-                                              .toList()),
-                                      const SizedBox(height: Measures.vMarginMed),
-                                    ],
-                                  ),
-                                );
+                                context.popup('Stai per rimuovere una competenza',
+                                    message: 'Sei sicuro di voler rimuovere **${e.title}**?',
+                                    positiveCallback: () {
+                                  setState(() {
+                                    character.masteries.remove(e);
+                                  });
+                                  return true;
+                                },
+                                    negativeCallback: () {},
+                                    positiveText: 'Si',
+                                    negativeText: 'No',
+                                    backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                               },
-                              child: Center(child: 'add'.toIcon(height: 16)))
-                        ]),
-                const SizedBox(height: Measures.vMarginSmall),
-                // Languages
-                Text('Linguaggi', style: Fonts.black(size: 18)),
-                const SizedBox(height: Measures.vMarginThin),
-                GridRow(
-                    fill: true,
-                    columnsCount: 3,
-                    children: character.languages
-                            .map((e) => SheetItemCard(
-                                  text: e.title,
-                                  iconPath: 'png/language',
-                                  onTap: () {
-                                    context.popup('Stai per rimuovere un linguaggio',
-                                        message: 'Sei sicuro di voler rimuovere **${e.title}**?',
-                                        positiveCallback: () {
-                                      setState(() {
-                                        character.languages.remove(e);
-                                      });
-                                      return true;
-                                    },
-                                        negativeCallback: () {},
-                                        positiveText: 'Si',
-                                        negativeText: 'No',
-                                        backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
-                                  },
-                                ))
-                            .toList()
-                            .cast<Widget>() +
-                        [
-                          GlassCard(
-                              height: Measures.sheetCardSmallHeight,
-                              isLight: true,
-                              clickable: true,
-                              bottomSheetArgs: BottomSheetArgs(
-                                  header: Column(
+                            ))
+                        .toList()
+                        .cast<Widget>() +
+                    [
+                      GlassCard(
+                          height: Measures.sheetCardSmallHeight,
+                          isLight: true,
+                          clickable: true,
+                          onTap: () {
+                            context.draggableBottomSheet(
+                              body: Column(
                                 children: [
                                   const SizedBox(height: Measures.vMarginThin),
-                                  Text('Aggiungi un linguaggio', style: Fonts.bold(size: 18)),
-                                  const SizedBox(height: Measures.vMarginMed),
-                                  GridRow(
-                                      columnsCount: 3,
-                                      fill: true,
-                                      children: Language.values
-                                          .where((e) => !character.languages.contains(e))
-                                          .map((e) => SheetItemCard(
-                                                text: e.title,
-                                                iconPath: 'png/language',
-                                                onTap: () {
-                                                  setState(() {
-                                                    character.languages.add(e);
-                                                  });
-                                                  Navigator.of(context).pop();
-                                                },
+                                  Text('Aggiungi una competenza', style: Fonts.bold(size: 18)),
+                                  const SizedBox(height: Measures.vMarginThin),
+                                  Column(
+                                      children: MasteryType.values
+                                          .map((masteryType) => Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  const Padding(
+                                                    padding: EdgeInsets.symmetric(
+                                                        vertical: Measures.vMarginSmall),
+                                                    child: Rule(),
+                                                  ),
+                                                  Text(masteryType.title(context),
+                                                      style: Fonts.regular()),
+                                                  const SizedBox(height: Measures.vMarginSmall),
+                                                  GridRow(
+                                                      columnsCount: 3,
+                                                      fill: true,
+                                                      children: masteryType.masteries
+                                                          .where((e) => !character.masteries.contains(e))
+                                                          .map((mastery) => SheetItemCard(
+                                                                text: mastery.title(context),
+                                                                iconPath: masteryType.iconPath,
+                                                                onTap: () {
+                                                                  setState(() {
+                                                                    character.masteries.add(mastery);
+                                                                  });
+                                                                  Navigator.of(context).pop();
+                                                                },
+                                                              ))
+                                                          .toList()),
+                                                ],
                                               ))
                                           .toList()),
                                   const SizedBox(height: Measures.vMarginMed),
                                 ],
-                              )),
-                              child: Center(child: 'add'.toIcon(height: 16)))
-                        ]),
-                // const SizedBox(height: Measures.vMarginSmall),
-                // const GlassButton('Salva',color: Palette.primaryBlue,iconPath: 'png/save',),
-                const SizedBox(height: Measures.vMarginBig),
-              ],
-            ),
+                              ),
+                            );
+                          },
+                          child: Center(child: 'add'.toIcon(height: 16)))
+                    ]),
+            const SizedBox(height: Measures.vMarginSmall),
+            // Languages
+            Text('Linguaggi', style: Fonts.black(size: 18)),
+            const SizedBox(height: Measures.vMarginThin),
+            GridRow(
+                fill: true,
+                columnsCount: 3,
+                children: character.languages
+                        .map((e) => SheetItemCard(
+                              text: e.title(context),
+                              iconPath: 'png/language',
+                              onTap: () {
+                                context.popup('Stai per rimuovere un linguaggio',
+                                    message: 'Sei sicuro di voler rimuovere **${e.title}**?',
+                                    positiveCallback: () {
+                                  setState(() {
+                                    character.languages.remove(e);
+                                  });
+                                  return true;
+                                },
+                                    negativeCallback: () {},
+                                    positiveText: 'Si',
+                                    negativeText: 'No',
+                                    backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
+                              },
+                            ))
+                        .toList()
+                        .cast<Widget>() +
+                    [
+                      GlassCard(
+                          height: Measures.sheetCardSmallHeight,
+                          isLight: true,
+                          clickable: true,
+                          bottomSheetArgs: BottomSheetArgs(
+                              header: Column(
+                            children: [
+                              const SizedBox(height: Measures.vMarginThin),
+                              Text('Aggiungi un linguaggio', style: Fonts.bold(size: 18)),
+                              const SizedBox(height: Measures.vMarginMed),
+                              GridRow(
+                                  columnsCount: 3,
+                                  fill: true,
+                                  children: Language.values
+                                      .where((e) => !character.languages.contains(e))
+                                      .map((e) => SheetItemCard(
+                                            text: e.title(context),
+                                            iconPath: 'png/language',
+                                            onTap: () {
+                                              setState(() {
+                                                character.languages.add(e);
+                                              });
+                                              Navigator.of(context).pop();
+                                            },
+                                          ))
+                                      .toList()),
+                              const SizedBox(height: Measures.vMarginMed),
+                            ],
+                          )),
+                          child: Center(child: 'add'.toIcon(height: 16)))
+                    ]),
+            // const SizedBox(height: Measures.vMarginSmall),
+            // const GlassButton('Salva',color: Palette.primaryBlue,iconPath: 'png/save',),
+            const SizedBox(height: Measures.vMarginBig),
+          ],
+        ),
       // Inventory
       (_tabController?.index ?? 0) != 1
           ? Column(children: [
@@ -1120,8 +1133,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                             Text(character.name, style: Fonts.black(size: 18)),
                             Text(
                                 character.subRace == null
-                                    ? character.race.title
-                                    : '${character.subRace!.title} (${character.race.title})',
+                                    ? character.race.title(context)
+                                    : '${character.subRace!.title(context)} (${character.race.title})',
                                 style: Fonts.light(size: 16))
                           ]),
                           Padding(
@@ -1590,8 +1603,11 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                               RichText(
                                   text: TextSpan(
                                 children: [
-                                  TextSpan(text: '${item.caString.item1} ', style: Fonts.black(size: 18)),
-                                  TextSpan(text: '+ ${item.caString.item2}', style: Fonts.light()),
+                                  TextSpan(
+                                      text: '${item.caString(context).item1} ',
+                                      style: Fonts.black(size: 18)),
+                                  TextSpan(
+                                      text: '+ ${item.caString(context).item2}', style: Fonts.light()),
                                 ],
                               )),
                             ],

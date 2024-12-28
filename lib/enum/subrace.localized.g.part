@@ -1,0 +1,89 @@
+// **************************************************************************
+// LocalizedGenerator
+// **************************************************************************
+
+// GENERATED CODE (by MrPio) - DO NOT MODIFY BY HAND
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'subrace.dart';
+
+extension SubRaceLocalizedExtension on SubRace {
+  String title(BuildContext context) => {
+        SubRace.elfoAlto: AppLocalizations.of(context)!.subRaceElfoAltoTitle,
+        SubRace.elfoDeiBoschi:
+            AppLocalizations.of(context)!.subRaceElfoDeiBoschiTitle,
+        SubRace.elfoOscuro:
+            AppLocalizations.of(context)!.subRaceElfoOscuroTitle,
+        SubRace.gnomoDelleForeste:
+            AppLocalizations.of(context)!.subRaceGnomoDelleForesteTitle,
+        SubRace.gnomoDelleRocce:
+            AppLocalizations.of(context)!.subRaceGnomoDelleRocceTitle,
+        SubRace.halflingPiedelesto:
+            AppLocalizations.of(context)!.subRaceHalflingPiedelestoTitle,
+        SubRace.halflingTozzo:
+            AppLocalizations.of(context)!.subRaceHalflingTozzoTitle,
+        SubRace.nanoDelleColline:
+            AppLocalizations.of(context)!.subRaceNanoDelleCollineTitle,
+        SubRace.nanoDelleMontagne:
+            AppLocalizations.of(context)!.subRaceNanoDelleMontagneTitle,
+        SubRace.dragoDArgento:
+            AppLocalizations.of(context)!.subRaceDragoDArgentoTitle,
+        SubRace.dragoBianco:
+            AppLocalizations.of(context)!.subRaceDragoBiancoTitle,
+        SubRace.dragoBlu: AppLocalizations.of(context)!.subRaceDragoBluTitle,
+        SubRace.dragoDiBronzo:
+            AppLocalizations.of(context)!.subRaceDragoDiBronzoTitle,
+        SubRace.dragoNero: AppLocalizations.of(context)!.subRaceDragoNeroTitle,
+        SubRace.dragoDOro: AppLocalizations.of(context)!.subRaceDragoDOroTitle,
+        SubRace.dragoDOttone:
+            AppLocalizations.of(context)!.subRaceDragoDOttoneTitle,
+        SubRace.dragoDiRame:
+            AppLocalizations.of(context)!.subRaceDragoDiRameTitle,
+        SubRace.dragoRosso:
+            AppLocalizations.of(context)!.subRaceDragoRossoTitle,
+        SubRace.dragoVerde:
+            AppLocalizations.of(context)!.subRaceDragoVerdeTitle,
+      }[this]!;
+
+  String description(BuildContext context) => {
+        SubRace.elfoAlto:
+            AppLocalizations.of(context)!.subRaceElfoAltoDescription,
+        SubRace.elfoDeiBoschi:
+            AppLocalizations.of(context)!.subRaceElfoDeiBoschiDescription,
+        SubRace.elfoOscuro:
+            AppLocalizations.of(context)!.subRaceElfoOscuroDescription,
+        SubRace.gnomoDelleForeste:
+            AppLocalizations.of(context)!.subRaceGnomoDelleForesteDescription,
+        SubRace.gnomoDelleRocce:
+            AppLocalizations.of(context)!.subRaceGnomoDelleRocceDescription,
+        SubRace.halflingPiedelesto:
+            AppLocalizations.of(context)!.subRaceHalflingPiedelestoDescription,
+        SubRace.halflingTozzo:
+            AppLocalizations.of(context)!.subRaceHalflingTozzoDescription,
+        SubRace.nanoDelleColline:
+            AppLocalizations.of(context)!.subRaceNanoDelleCollineDescription,
+        SubRace.nanoDelleMontagne:
+            AppLocalizations.of(context)!.subRaceNanoDelleMontagneDescription,
+        SubRace.dragoDArgento:
+            AppLocalizations.of(context)!.subRaceDragoDArgentoDescription,
+        SubRace.dragoBianco:
+            AppLocalizations.of(context)!.subRaceDragoBiancoDescription,
+        SubRace.dragoBlu:
+            AppLocalizations.of(context)!.subRaceDragoBluDescription,
+        SubRace.dragoDiBronzo:
+            AppLocalizations.of(context)!.subRaceDragoDiBronzoDescription,
+        SubRace.dragoNero:
+            AppLocalizations.of(context)!.subRaceDragoNeroDescription,
+        SubRace.dragoDOro:
+            AppLocalizations.of(context)!.subRaceDragoDOroDescription,
+        SubRace.dragoDOttone:
+            AppLocalizations.of(context)!.subRaceDragoDOttoneDescription,
+        SubRace.dragoDiRame:
+            AppLocalizations.of(context)!.subRaceDragoDiRameDescription,
+        SubRace.dragoRosso:
+            AppLocalizations.of(context)!.subRaceDragoRossoDescription,
+        SubRace.dragoVerde:
+            AppLocalizations.of(context)!.subRaceDragoVerdeDescription,
+      }[this]!;
+}

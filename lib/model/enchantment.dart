@@ -2,12 +2,13 @@ import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/mixin/comparable.dart';
 import 'package:scheda_dnd_5e/interface/json_serializable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import '../enum/class.dart';
 import '../interface/enum_with_title.dart';
 import 'character.dart';
 
 part 'part/enchantment.g.dart';
 
-enum Level implements EnumWithTitle {
+enum Level  {
   level0('Trucchetto'),
   level1('Livello 1'),
   level2('Livello 2'),
@@ -26,7 +27,7 @@ enum Level implements EnumWithTitle {
   const Level(this.title);
 }
 
-enum Type implements EnumWithTitle {
+enum Type  {
   evocazione('Evocazione'),
   divinazione('Divinazione'),
   invocazione('Invocazione'),

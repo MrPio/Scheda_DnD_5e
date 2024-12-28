@@ -1,0 +1,32 @@
+// **************************************************************************
+// LocalizedGenerator
+// **************************************************************************
+
+// GENERATED CODE (by MrPio) - DO NOT MODIFY BY HAND
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'status.dart';
+
+extension StatusLocalizedExtension on Status {
+  String title(BuildContext context) => {
+        Status.accecato: AppLocalizations.of(context)!.statusAccecatoTitle,
+        Status.affascinato:
+            AppLocalizations.of(context)!.statusAffascinatoTitle,
+        Status.afferrato: AppLocalizations.of(context)!.statusAfferratoTitle,
+        Status.assordato: AppLocalizations.of(context)!.statusAssordatoTitle,
+        Status.avvelenato: AppLocalizations.of(context)!.statusAvvelenatoTitle,
+        Status.incapacitato:
+            AppLocalizations.of(context)!.statusIncapacitatoTitle,
+        Status.invisibile: AppLocalizations.of(context)!.statusInvisibileTitle,
+        Status.paralizzato:
+            AppLocalizations.of(context)!.statusParalizzatoTitle,
+        Status.pietrificato:
+            AppLocalizations.of(context)!.statusPietrificatoTitle,
+        Status.privo: AppLocalizations.of(context)!.statusPrivoTitle,
+        Status.prono: AppLocalizations.of(context)!.statusPronoTitle,
+        Status.spaventato: AppLocalizations.of(context)!.statusSpaventatoTitle,
+        Status.stordito: AppLocalizations.of(context)!.statusStorditoTitle,
+        Status.trattenuto: AppLocalizations.of(context)!.statusTrattenutoTitle,
+      }[this]!;
+}

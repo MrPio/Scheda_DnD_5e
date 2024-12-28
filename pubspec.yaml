@@ -45,9 +45,9 @@ dev_dependencies:
   build_runner: ^2.4.7
   json_serializable: ^6.7.1
   build: ^2.4.2
-  analyzer: ^7.1.0
-  flutter_test:
-    sdk: flutter
+#  analyzer: ^7.1.0
+#  flutter_test:
+#    sdk: flutter
 
   flutter_lints: ^5.0.0
 

@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/constant/dictionary.dart';
+import 'package:scheda_dnd_5e/enum/class.localized.g.part';
+import 'package:scheda_dnd_5e/enum/language.localized.g.part';
+import 'package:scheda_dnd_5e/enum/mastery.localized.g.part';
+import 'package:scheda_dnd_5e/enum/race.localized.g.part';
+import 'package:scheda_dnd_5e/enum/skill.localized.g.part';
+import 'package:scheda_dnd_5e/enum/subrace.localized.g.part';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/iterable_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
@@ -9,26 +15,32 @@ import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/mixin/loadable.dart';
-import 'package:scheda_dnd_5e/model/character.dart' as ch show Alignment;
 import 'package:scheda_dnd_5e/model/loot.dart';
-import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/skill_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/gradient_background.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/loading_view.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
-import 'package:scheda_dnd_5e/view/partial/decoration/gradient_background.dart';
 import 'package:scheda_dnd_5e/view/partial/layout/grid_row.dart';
 import 'package:scheda_dnd_5e/view/partial/legend.dart';
-import 'package:scheda_dnd_5e/view/partial/decoration/loading_view.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
 
 import '../constant/fonts.dart';
 import '../constant/measures.dart';
 import '../constant/palette.dart';
+import '../enum/character_alignment.dart';
+import '../enum/class.dart';
+import '../enum/language.dart';
+import '../enum/mastery.dart';
+import '../enum/race.dart';
+import '../enum/skill.dart';
+import '../enum/subskill.dart';
 import '../mixin/validable.dart';
-import '../model/character.dart' hide Alignment;
+import '../model/character.dart';
 
 class CreateCharacterPage extends StatefulWidget {
   const CreateCharacterPage({super.key});
@@ -141,7 +153,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                 final languages = Language.values
                                     .where((language) => !e.defaultLanguages.contains(language))
                                     .toList()
-                                  ..sort((a, b) => a.title.compareTo(b.title));
+                                  ..sort((a, b) => a.title(context).compareTo(b.title(context)));
                                 character.languages.add(languages[0]);
                                 await context.checkList<Language>(
                                   'Scegli un linguaggio',
@@ -241,7 +253,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(e.title, style: Fonts.bold()),
+                                                  Text(e.title(context), style: Fonts.bold()),
                                                   SingleChildScrollView(
                                                     scrollDirection: Axis.horizontal,
                                                     child: Text(e.subRacesInfo,
@@ -277,7 +289,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                                         .map((e) => Padding(
                                                               padding: const EdgeInsets.only(right: 6.0),
                                                               child: RadioButton(
-                                                                text: e.title,
+                                                                text: e.title(context),
                                                                 color: Palette.primaryGreen,
                                                                 isSmall: true,
                                                                 width: 100,
@@ -323,7 +335,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                                         .map((e) => Padding(
                                                               padding: const EdgeInsets.only(right: 6.0),
                                                               child: RadioButton(
-                                                                text: '${e.key.title} +${e.value}',
+                                                                text: '${e.key.title(context)} +${e.value}',
                                                                 color: Palette.primaryYellow,
                                                                 isSmall: true,
                                                                 width: 100,
@@ -344,8 +356,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                         top: Measures.hMarginSmall, right: Measures.hMarginSmall),
                                     child: 'info'.toIcon(
                                         onTap: () {
-                                          context.popup(e.title,
-                                              message: e.description,
+                                          context.popup(e.title(context),
+                                              message: e.description(context),
                                               positiveText: 'Ok',
                                               backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                                         },
@@ -402,7 +414,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                     final languages = Language.values
                                         .where((language) => !character.languages.contains(language))
                                         .toList()
-                                      ..sort((a, b) => a.title.compareTo(b.title));
+                                      ..sort((a, b) => a.title(context).compareTo(b.title(context)));
                                     character.languages
                                         .addAll(languages.sublist(0, e.numChoiceableLanguages));
                                     await context.checkList<Language>(
@@ -447,10 +459,10 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                                   child: Column(
                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                     children: [
-                                                      Text(e.title, style: Fonts.bold(size: 16)),
+                                                      Text(e.title(context), style: Fonts.bold(size: 16)),
                                                       SingleChildScrollView(
                                                         scrollDirection: Axis.horizontal,
-                                                        child: Text(e.race.title,
+                                                        child: Text(e.race.title(context),
                                                             style: Fonts.light(size: 14)),
                                                       ),
                                                     ],
@@ -518,7 +530,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                                                   padding:
                                                                       const EdgeInsets.only(right: 6.0),
                                                                   child: RadioButton(
-                                                                    text: e.title,
+                                                                    text: e.title(context),
                                                                     color: Palette.primaryBlue,
                                                                     isSmall: true,
                                                                     width: 100,
@@ -539,8 +551,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                             top: Measures.hMarginSmall, right: Measures.hMarginSmall),
                                         child: 'info'.toIcon(
                                             onTap: () {
-                                              context.popup(e.title,
-                                                  message: e.description,
+                                              context.popup(e.title(context),
+                                                  message: e.description(context),
                                                   positiveText: 'Ok',
                                                   backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                                             },
@@ -693,7 +705,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(e.title, style: Fonts.bold()),
+                                                  Text(e.title(context), style: Fonts.bold()),
                                                   SingleChildScrollView(
                                                     scrollDirection: Axis.horizontal,
                                                     child: Text(e.subClassesInfo,
@@ -729,7 +741,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                                         .map((e) => Padding(
                                                               padding: const EdgeInsets.only(right: 6.0),
                                                               child: RadioButton(
-                                                                text: e.title,
+                                                                text: e.title(context),
                                                                 color: Palette.primaryYellow,
                                                                 isSmall: true,
                                                                 width: 100,
@@ -762,7 +774,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                                         .map((e) => Padding(
                                                               padding: const EdgeInsets.only(right: 6.0),
                                                               child: RadioButton(
-                                                                text: e.title,
+                                                                text: e.title(context),
                                                                 color: Palette.primaryBlue,
                                                                 isSmall: true,
                                                                 width: 100,
@@ -783,8 +795,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                         top: Measures.hMarginSmall, right: Measures.hMarginSmall),
                                     child: 'info'.toIcon(
                                         onTap: () {
-                                          context.popup(e.title,
-                                              message: e.description,
+                                          context.popup(e.title(context),
+                                              message: e.description(context),
                                               positiveText: 'Ok',
                                               backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
                                         },
@@ -813,11 +825,11 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
         // Alignments =============================
         GridRow(
             columnsCount: 3,
-            children: ch.Alignment.values
+            children: CharacterAlignment.values
                 .map((e) => AlignmentCard(
                       e,
                       onTap: selectAlignment,
-                      isSmall: e == ch.Alignment.nessuno,
+                      isSmall: e == CharacterAlignment.nessuno,
                     ))
                 .toList()),
       ]),
@@ -935,7 +947,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
     );
   }
 
-  selectAlignment(ch.Alignment alignment) {
+  selectAlignment(CharacterAlignment alignment) {
     character.alignment = alignment;
     next();
   }

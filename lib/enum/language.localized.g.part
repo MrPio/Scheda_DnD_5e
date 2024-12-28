@@ -1,0 +1,36 @@
+// **************************************************************************
+// LocalizedGenerator
+// **************************************************************************
+
+// GENERATED CODE (by MrPio) - DO NOT MODIFY BY HAND
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'language.dart';
+
+extension LanguageLocalizedExtension on Language {
+  String title(BuildContext context) => {
+        Language.gigante: AppLocalizations.of(context)!.languageGiganteTitle,
+        Language.gnomesco: AppLocalizations.of(context)!.languageGnomescoTitle,
+        Language.goblin: AppLocalizations.of(context)!.languageGoblinTitle,
+        Language.halfling: AppLocalizations.of(context)!.languageHalflingTitle,
+        Language.nanico: AppLocalizations.of(context)!.languageNanicoTitle,
+        Language.orchesco: AppLocalizations.of(context)!.languageOrchescoTitle,
+        Language.abissale: AppLocalizations.of(context)!.languageAbissaleTitle,
+        Language.celestiale:
+            AppLocalizations.of(context)!.languageCelestialeTitle,
+        Language.draconico:
+            AppLocalizations.of(context)!.languageDraconicoTitle,
+        Language.gergoDelleProfondita:
+            AppLocalizations.of(context)!.languageGergoDelleProfonditaTitle,
+        Language.infernale:
+            AppLocalizations.of(context)!.languageInfernaleTitle,
+        Language.primordiale:
+            AppLocalizations.of(context)!.languagePrimordialeTitle,
+        Language.silvano: AppLocalizations.of(context)!.languageSilvanoTitle,
+        Language.sottocomune:
+            AppLocalizations.of(context)!.languageSottocomuneTitle,
+        Language.elfico: AppLocalizations.of(context)!.languageElficoTitle,
+        Language.comune: AppLocalizations.of(context)!.languageComuneTitle,
+      }[this]!;
+}

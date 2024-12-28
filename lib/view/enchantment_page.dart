@@ -3,6 +3,7 @@ import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
+import 'package:scheda_dnd_5e/enum/class.localized.g.part';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
@@ -100,8 +101,8 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                                                 right: 10),
                                             child: RadioButton(
                                               onPressed: (){
-                                                context.popup(enchantment.classes[i].title,
-                                                    message: enchantment.classes[i].description,
+                                                context.popup(enchantment.classes[i].title(context),
+                                                    message: enchantment.classes[i].description(context),
                                                     positiveText: 'Ok',
                                                     backgroundColor: Palette
                                                         .background
@@ -109,7 +110,7 @@ class _EnchantmentPageState extends State<EnchantmentPage> {
                                               },
                                               color: Palette.primaryBlue,
                                               text:
-                                                  enchantment.classes[i].title,
+                                                  enchantment.classes[i].title(context),
                                             ),
                                           )) +
                                   [

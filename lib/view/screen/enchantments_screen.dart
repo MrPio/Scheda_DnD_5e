@@ -10,32 +10,31 @@ import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/list_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
-import 'package:scheda_dnd_5e/model/character.dart' hide Alignment;
 import 'package:scheda_dnd_5e/model/enchantment.dart' as enc show Level;
 import 'package:scheda_dnd_5e/model/enchantment.dart' hide Level;
 import 'package:scheda_dnd_5e/model/filter.dart';
 import 'package:scheda_dnd_5e/view/partial/card/enchantment_card.dart';
-import 'package:scheda_dnd_5e/view/partial/decoration/gradient_background.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:scheda_dnd_5e/view/partial/layout/recycler_view.dart';
 import 'package:scheda_dnd_5e/view/partial/page_header.dart';
 import 'package:scheda_dnd_5e/view/partial/radio_button.dart';
 
+import '../../enum/class.dart';
+import '../../interface/enum_with_title.dart';
 import '../enchantments_page.dart';
-
-
 
 class EnchantmentsScreen extends StatefulWidget {
   final EnchantmentsArgs? args;
-  const EnchantmentsScreen({this.args,super.key});
+
+  const EnchantmentsScreen({this.args, super.key});
 
   @override
   State<EnchantmentsScreen> createState() => _EnchantmentsScreenState();
 }
 
 class _EnchantmentsScreenState extends State<EnchantmentsScreen> {
-  EnchantmentsArgs? get args=>widget.args;
+  EnchantmentsArgs? get args => widget.args;
   late final TextEditingController _searchController;
   late final List<Filter> _filters;
 
@@ -68,18 +67,18 @@ class _EnchantmentsScreenState extends State<EnchantmentsScreen> {
     ];
     // Getting any args
     // args.addListener(() {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        print(args?.filterClasses);
-        if (args?.filterClasses != null) {
-          if (args!.filterClasses!.any((c) => _filters[0].values.contains(c))) {
-            _filters[0].selectedValues.addAll(args!.filterClasses!);
-          } else {
-            context.snackbar('Le classi attuali non consentono gli incantesimi',
-                backgroundColor: Palette.backgroundPurple);
-            args?.filterClasses = null;
-          }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      print(args?.filterClasses);
+      if (args?.filterClasses != null) {
+        if (args!.filterClasses!.any((c) => _filters[0].values.contains(c))) {
+          _filters[0].selectedValues.addAll(args!.filterClasses!);
+        } else {
+          context.snackbar('Le classi attuali non consentono gli incantesimi',
+              backgroundColor: Palette.backgroundPurple);
+          args?.filterClasses = null;
         }
-      });
+      }
+    });
     // });
     // Forcing shimmer effect
     final tmpEnchantments = DataManager().cachedEnchantments;
@@ -132,18 +131,19 @@ class _EnchantmentsScreenState extends State<EnchantmentsScreen> {
                       selected: e.selectedValues.isNotEmpty,
                       text: e.title,
                       color: e.color,
-                      onPressed: () =>
-                          e.selectedValues.isNotEmpty && !(args?.filterClasses != null && i == 0)
-                              ? setState(() => e.selectedValues.clear())
-                              : context.checkList(
-                                  'Filtro su ${e.title.toLowerCase()}',
-                                  values: e.values,
-                                  color: e.color,
-                                  onChanged: args?.filterClasses != null && i == 0
-                                      ? null
-                                      : (value) => setState(() => e.selectedValues.toggle(value)),
-                                  value: (value) => e.selectedValues.contains(value),
-                                ));
+                      onPressed: () => e.selectedValues.isNotEmpty &&
+                              !(args?.filterClasses != null && i == 0)
+                          ? setState(() => e.selectedValues.clear())
+                          : context.checkList(
+                              'Filtro su ${e.title.toLowerCase()}',
+                              name: (e) => EnumWithTitle.titles[[Class, enc.Level, Type][i]]!(e, context),
+                              values: e.values,
+                              color: e.color,
+                              onChanged: args?.filterClasses != null && i == 0
+                                  ? null
+                                  : (value) => setState(() => e.selectedValues.toggle(value)),
+                              value: (value) => e.selectedValues.contains(value),
+                            ));
                 },
               ),
             ),
@@ -160,8 +160,7 @@ class _EnchantmentsScreenState extends State<EnchantmentsScreen> {
             ? enchantments
                 .map<Widget>((e) => Padding(
                       padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
-                      child:
-                          EnchantmentCard(e, onTap: args != null ? () => context.pop(e.uid) : null),
+                      child: EnchantmentCard(e, onTap: args != null ? () => context.pop(e.uid) : null),
                     ))
                 .toList()
             : List.filled(

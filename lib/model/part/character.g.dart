@@ -351,14 +351,14 @@ const _$StatusEnumMap = {
 };
 
 const _$AlignmentEnumMap = {
-  Alignment.legaleBuono: 'legaleBuono',
-  Alignment.neutraleBuono: 'neutraleBuono',
-  Alignment.caoticoBuono: 'caoticoBuono',
-  Alignment.legaleNeutrale: 'legaleNeutrale',
-  Alignment.neutralePuro: 'neutralePuro',
-  Alignment.caoticoNeutrale: 'caoticoNeutrale',
-  Alignment.legaleMalvagio: 'legaleMalvagio',
-  Alignment.neutraleMalvagio: 'neutraleMalvagio',
-  Alignment.caoticoMalvagio: 'caoticoMalvagio',
-  Alignment.nessuno: 'nessuno',
+  CharacterAlignment.legaleBuono: 'legaleBuono',
+  CharacterAlignment.neutraleBuono: 'neutraleBuono',
+  CharacterAlignment.caoticoBuono: 'caoticoBuono',
+  CharacterAlignment.legaleNeutrale: 'legaleNeutrale',
+  CharacterAlignment.neutralePuro: 'neutralePuro',
+  CharacterAlignment.caoticoNeutrale: 'caoticoNeutrale',
+  CharacterAlignment.legaleMalvagio: 'legaleMalvagio',
+  CharacterAlignment.neutraleMalvagio: 'neutraleMalvagio',
+  CharacterAlignment.caoticoMalvagio: 'caoticoMalvagio',
+  CharacterAlignment.nessuno: 'nessuno',
 };

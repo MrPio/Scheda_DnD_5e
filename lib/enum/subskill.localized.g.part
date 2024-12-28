@@ -1,0 +1,43 @@
+// **************************************************************************
+// LocalizedGenerator
+// **************************************************************************
+
+// GENERATED CODE (by MrPio) - DO NOT MODIFY BY HAND
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'subskill.dart';
+
+extension SubSkillLocalizedExtension on SubSkill {
+  String title(BuildContext context) => {
+        SubSkill.atletica: AppLocalizations.of(context)!.subSkillAtleticaTitle,
+        SubSkill.acrobazia:
+            AppLocalizations.of(context)!.subSkillAcrobaziaTitle,
+        SubSkill.furtivita:
+            AppLocalizations.of(context)!.subSkillFurtivitaTitle,
+        SubSkill.rapiditaDiMano:
+            AppLocalizations.of(context)!.subSkillRapiditaDiManoTitle,
+        SubSkill.arcano: AppLocalizations.of(context)!.subSkillArcanoTitle,
+        SubSkill.storia: AppLocalizations.of(context)!.subSkillStoriaTitle,
+        SubSkill.indagare: AppLocalizations.of(context)!.subSkillIndagareTitle,
+        SubSkill.natura: AppLocalizations.of(context)!.subSkillNaturaTitle,
+        SubSkill.religione:
+            AppLocalizations.of(context)!.subSkillReligioneTitle,
+        SubSkill.addestrareAnimali:
+            AppLocalizations.of(context)!.subSkillAddestrareAnimaliTitle,
+        SubSkill.intuizione:
+            AppLocalizations.of(context)!.subSkillIntuizioneTitle,
+        SubSkill.medicina: AppLocalizations.of(context)!.subSkillMedicinaTitle,
+        SubSkill.percezione:
+            AppLocalizations.of(context)!.subSkillPercezioneTitle,
+        SubSkill.sopravvivenza:
+            AppLocalizations.of(context)!.subSkillSopravvivenzaTitle,
+        SubSkill.inganno: AppLocalizations.of(context)!.subSkillIngannoTitle,
+        SubSkill.intimidire:
+            AppLocalizations.of(context)!.subSkillIntimidireTitle,
+        SubSkill.intrattenere:
+            AppLocalizations.of(context)!.subSkillIntrattenereTitle,
+        SubSkill.persuasione:
+            AppLocalizations.of(context)!.subSkillPersuasioneTitle,
+      }[this]!;
+}

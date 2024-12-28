@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:scheda_dnd_5e/enum/skill.localized.g.part';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/iterable_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
@@ -9,35 +10,36 @@ import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/mixin/loadable.dart';
 import 'package:scheda_dnd_5e/model/loot.dart';
-import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
 import 'package:scheda_dnd_5e/view/partial/card/dice_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/gradient_background.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/loading_view.dart';
+import 'package:scheda_dnd_5e/view/partial/decoration/rule.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_card.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
-import 'package:scheda_dnd_5e/view/partial/decoration/gradient_background.dart';
 import 'package:scheda_dnd_5e/view/partial/layout/grid_column.dart';
 import 'package:scheda_dnd_5e/view/partial/layout/grid_row.dart';
-import 'package:scheda_dnd_5e/view/partial/decoration/loading_view.dart';
 import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
-import 'package:scheda_dnd_5e/view/partial/decoration/rule.dart';
 
 import '../constant/dictionary.dart';
 import '../constant/fonts.dart';
 import '../constant/measures.dart';
 import '../constant/palette.dart';
 import '../enum/dice.dart';
+import '../enum/skill.dart';
 import '../interface/json_serializable.dart';
 import '../manager/database_manager.dart';
 import '../manager/io_manager.dart';
 import '../mixin/validable.dart';
-import '../model/character.dart' as ch;
+import '../model/character.dart';
 
 class CreateItemArgs {
   final Type type;
-  final ch.Character? character;
+  final Character? character;
 
   CreateItemArgs(this.type, {this.character});
 }
@@ -61,9 +63,9 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
   final TextEditingController _caController = TextEditingController(text: '0');
   final int caMin = 0, caMax = 99;
   bool isPartialArmor = false, isHeavyArmor = false;
-  Map<ch.Skill, int> armorSkillModifiers = {};
-  Map<ch.Skill, TextEditingController> armorSkillModifiersControllers = Map.fromIterables(
-      ch.Skill.values, List.generate(ch.Skill.values.length, (_) => TextEditingController(text: '0')));
+  Map<Skill, int> armorSkillModifiers = {};
+  Map<Skill, TextEditingController> armorSkillModifiersControllers = Map.fromIterables(
+      Skill.values, List.generate(Skill.values.length, (_) => TextEditingController(text: '0')));
   final TextEditingController _armorStrengthController = TextEditingController(text: '0');
   final int armorStrengthMin = 0, armorStrengthMax = 99;
   final TextEditingController _coinValueController = TextEditingController(text: '1');
@@ -396,8 +398,8 @@ class _CreateItemPageState extends State<CreateItemPage> with Validable, Loadabl
             // fill: true,
             columnsCount: 3,
             children: [
-              ...ch.Skill.values.map((skill) => SheetItemCard(
-                    text: skill.title,
+              ...Skill.values.map((skill) => SheetItemCard(
+                    text: skill.title(context),
                     iconPath: skill.iconPath,
                     iconColor: skill.color,
                     isLight: !armorSkillModifiers.containsKey(skill),

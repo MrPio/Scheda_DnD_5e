@@ -1,0 +1,174 @@
+// **************************************************************************
+// LocalizedGenerator
+// **************************************************************************
+
+// GENERATED CODE (by MrPio) - DO NOT MODIFY BY HAND
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'subclass.dart';
+
+extension SubClassLocalizedExtension on SubClass {
+  String title(BuildContext context) => {
+        SubClass.collegioSapienza:
+            AppLocalizations.of(context)!.subClassCollegioSapienzaTitle,
+        SubClass.collegioValore:
+            AppLocalizations.of(context)!.subClassCollegioValoreTitle,
+        SubClass.campione: AppLocalizations.of(context)!.subClassCampioneTitle,
+        SubClass.cavaliereMistico:
+            AppLocalizations.of(context)!.subClassCavaliereMisticoTitle,
+        SubClass.maestroDiBattaglia:
+            AppLocalizations.of(context)!.subClassMaestroDiBattagliaTitle,
+        SubClass.assassino:
+            AppLocalizations.of(context)!.subClassAssassinoTitle,
+        SubClass.furfante: AppLocalizations.of(context)!.subClassFurfanteTitle,
+        SubClass.mistificatoreArcano:
+            AppLocalizations.of(context)!.subClassMistificatoreArcanoTitle,
+        SubClass.abiurazione:
+            AppLocalizations.of(context)!.subClassAbiurazioneTitle,
+        SubClass.ammaliamento:
+            AppLocalizations.of(context)!.subClassAmmaliamentoTitle,
+        SubClass.divinazione:
+            AppLocalizations.of(context)!.subClassDivinazioneTitle,
+        SubClass.evocazione:
+            AppLocalizations.of(context)!.subClassEvocazioneTitle,
+        SubClass.illusione:
+            AppLocalizations.of(context)!.subClassIllusioneTitle,
+        SubClass.invocazione:
+            AppLocalizations.of(context)!.subClassInvocazioneTitle,
+        SubClass.necromanzia:
+            AppLocalizations.of(context)!.subClassNecromanziaTitle,
+        SubClass.trasmutazione:
+            AppLocalizations.of(context)!.subClassTrasmutazioneTitle,
+        SubClass.camminoDelBerserker:
+            AppLocalizations.of(context)!.subClassCamminoDelBerserkerTitle,
+        SubClass.camminoDelCombattenteTotemico: AppLocalizations.of(context)!
+            .subClassCamminoDelCombattenteTotemicoTitle,
+        SubClass.dominioDellaConoscenza:
+            AppLocalizations.of(context)!.subClassDominioDellaConoscenzaTitle,
+        SubClass.dominioDellaGuerra:
+            AppLocalizations.of(context)!.subClassDominioDellaGuerraTitle,
+        SubClass.dominioDellaLuce:
+            AppLocalizations.of(context)!.subClassDominioDellaLuceTitle,
+        SubClass.dominioDellaNatura:
+            AppLocalizations.of(context)!.subClassDominioDellaNaturaTitle,
+        SubClass.dominioDellaTempesta:
+            AppLocalizations.of(context)!.subClassDominioDellaTempestaTitle,
+        SubClass.dominioDellaVita:
+            AppLocalizations.of(context)!.subClassDominioDellaVitaTitle,
+        SubClass.dominioDellInganno:
+            AppLocalizations.of(context)!.subClassDominioDellIngannoTitle,
+        SubClass.circoloDellaLuna:
+            AppLocalizations.of(context)!.subClassCircoloDellaLunaTitle,
+        SubClass.circoloDellaTerra:
+            AppLocalizations.of(context)!.subClassCircoloDellaTerraTitle,
+        SubClass.viaDeiQuattroElementi:
+            AppLocalizations.of(context)!.subClassViaDeiQuattroElementiTitle,
+        SubClass.viaDellaManoAperta:
+            AppLocalizations.of(context)!.subClassViaDellaManoApertaTitle,
+        SubClass.viaDellOmbra:
+            AppLocalizations.of(context)!.subClassViaDellOmbraTitle,
+        SubClass.giuramentoDegliAntichi:
+            AppLocalizations.of(context)!.subClassGiuramentoDegliAntichiTitle,
+        SubClass.giuramentoDiDevozione:
+            AppLocalizations.of(context)!.subClassGiuramentoDiDevozioneTitle,
+        SubClass.giuramentoDellaVendetta:
+            AppLocalizations.of(context)!.subClassGiuramentoDellaVendettaTitle,
+        SubClass.cacciatore:
+            AppLocalizations.of(context)!.subClassCacciatoreTitle,
+        SubClass.signoreDelleBestie:
+            AppLocalizations.of(context)!.subClassSignoreDelleBestieTitle,
+        SubClass.discendenzaDraconica:
+            AppLocalizations.of(context)!.subClassDiscendenzaDraconicaTitle,
+        SubClass.magiaSelvaggia:
+            AppLocalizations.of(context)!.subClassMagiaSelvaggiaTitle,
+        SubClass.ilGrandeAntico:
+            AppLocalizations.of(context)!.subClassIlGrandeAnticoTitle,
+        SubClass.ilSignoreFatato:
+            AppLocalizations.of(context)!.subClassIlSignoreFatatoTitle,
+        SubClass.lImmondo: AppLocalizations.of(context)!.subClassLImmondoTitle,
+      }[this]!;
+
+  String description(BuildContext context) => {
+        SubClass.collegioSapienza:
+            AppLocalizations.of(context)!.subClassCollegioSapienzaDescription,
+        SubClass.collegioValore:
+            AppLocalizations.of(context)!.subClassCollegioValoreDescription,
+        SubClass.campione:
+            AppLocalizations.of(context)!.subClassCampioneDescription,
+        SubClass.cavaliereMistico:
+            AppLocalizations.of(context)!.subClassCavaliereMisticoDescription,
+        SubClass.maestroDiBattaglia:
+            AppLocalizations.of(context)!.subClassMaestroDiBattagliaDescription,
+        SubClass.assassino:
+            AppLocalizations.of(context)!.subClassAssassinoDescription,
+        SubClass.furfante:
+            AppLocalizations.of(context)!.subClassFurfanteDescription,
+        SubClass.mistificatoreArcano: AppLocalizations.of(context)!
+            .subClassMistificatoreArcanoDescription,
+        SubClass.abiurazione:
+            AppLocalizations.of(context)!.subClassAbiurazioneDescription,
+        SubClass.ammaliamento:
+            AppLocalizations.of(context)!.subClassAmmaliamentoDescription,
+        SubClass.divinazione:
+            AppLocalizations.of(context)!.subClassDivinazioneDescription,
+        SubClass.evocazione:
+            AppLocalizations.of(context)!.subClassEvocazioneDescription,
+        SubClass.illusione:
+            AppLocalizations.of(context)!.subClassIllusioneDescription,
+        SubClass.invocazione:
+            AppLocalizations.of(context)!.subClassInvocazioneDescription,
+        SubClass.necromanzia:
+            AppLocalizations.of(context)!.subClassNecromanziaDescription,
+        SubClass.trasmutazione:
+            AppLocalizations.of(context)!.subClassTrasmutazioneDescription,
+        SubClass.camminoDelBerserker: AppLocalizations.of(context)!
+            .subClassCamminoDelBerserkerDescription,
+        SubClass.camminoDelCombattenteTotemico: AppLocalizations.of(context)!
+            .subClassCamminoDelCombattenteTotemicoDescription,
+        SubClass.dominioDellaConoscenza: AppLocalizations.of(context)!
+            .subClassDominioDellaConoscenzaDescription,
+        SubClass.dominioDellaGuerra:
+            AppLocalizations.of(context)!.subClassDominioDellaGuerraDescription,
+        SubClass.dominioDellaLuce:
+            AppLocalizations.of(context)!.subClassDominioDellaLuceDescription,
+        SubClass.dominioDellaNatura:
+            AppLocalizations.of(context)!.subClassDominioDellaNaturaDescription,
+        SubClass.dominioDellaTempesta: AppLocalizations.of(context)!
+            .subClassDominioDellaTempestaDescription,
+        SubClass.dominioDellaVita:
+            AppLocalizations.of(context)!.subClassDominioDellaVitaDescription,
+        SubClass.dominioDellInganno:
+            AppLocalizations.of(context)!.subClassDominioDellIngannoDescription,
+        SubClass.circoloDellaLuna:
+            AppLocalizations.of(context)!.subClassCircoloDellaLunaDescription,
+        SubClass.circoloDellaTerra:
+            AppLocalizations.of(context)!.subClassCircoloDellaTerraDescription,
+        SubClass.viaDeiQuattroElementi: AppLocalizations.of(context)!
+            .subClassViaDeiQuattroElementiDescription,
+        SubClass.viaDellaManoAperta:
+            AppLocalizations.of(context)!.subClassViaDellaManoApertaDescription,
+        SubClass.viaDellOmbra:
+            AppLocalizations.of(context)!.subClassViaDellOmbraDescription,
+        SubClass.giuramentoDegliAntichi: AppLocalizations.of(context)!
+            .subClassGiuramentoDegliAntichiDescription,
+        SubClass.giuramentoDiDevozione: AppLocalizations.of(context)!
+            .subClassGiuramentoDiDevozioneDescription,
+        SubClass.giuramentoDellaVendetta: AppLocalizations.of(context)!
+            .subClassGiuramentoDellaVendettaDescription,
+        SubClass.cacciatore:
+            AppLocalizations.of(context)!.subClassCacciatoreDescription,
+        SubClass.signoreDelleBestie:
+            AppLocalizations.of(context)!.subClassSignoreDelleBestieDescription,
+        SubClass.discendenzaDraconica: AppLocalizations.of(context)!
+            .subClassDiscendenzaDraconicaDescription,
+        SubClass.magiaSelvaggia:
+            AppLocalizations.of(context)!.subClassMagiaSelvaggiaDescription,
+        SubClass.ilGrandeAntico:
+            AppLocalizations.of(context)!.subClassIlGrandeAnticoDescription,
+        SubClass.ilSignoreFatato:
+            AppLocalizations.of(context)!.subClassIlSignoreFatatoDescription,
+        SubClass.lImmondo:
+            AppLocalizations.of(context)!.subClassLImmondoDescription,
+      }[this]!;
+}

@@ -1,0 +1,108 @@
+// **************************************************************************
+// LocalizedGenerator
+// **************************************************************************
+
+// GENERATED CODE (by MrPio) - DO NOT MODIFY BY HAND
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'mastery.dart';
+
+extension MasteryLocalizedExtension on Mastery {
+  String title(BuildContext context) => {
+        Mastery.ciaramella:
+            AppLocalizations.of(context)!.masteryCiaramellaTitle,
+        Mastery.cornamusa: AppLocalizations.of(context)!.masteryCornamusaTitle,
+        Mastery.corno: AppLocalizations.of(context)!.masteryCornoTitle,
+        Mastery.dulcimer: AppLocalizations.of(context)!.masteryDulcimerTitle,
+        Mastery.flauto: AppLocalizations.of(context)!.masteryFlautoTitle,
+        Mastery.flautoDiPan:
+            AppLocalizations.of(context)!.masteryFlautoDiPanTitle,
+        Mastery.lira: AppLocalizations.of(context)!.masteryLiraTitle,
+        Mastery.liuto: AppLocalizations.of(context)!.masteryLiutoTitle,
+        Mastery.tamburo: AppLocalizations.of(context)!.masteryTamburoTitle,
+        Mastery.viola: AppLocalizations.of(context)!.masteryViolaTitle,
+        Mastery.scorteDaAlchimista:
+            AppLocalizations.of(context)!.masteryScorteDaAlchimistaTitle,
+        Mastery.scorteDaCalligrafo:
+            AppLocalizations.of(context)!.masteryScorteDaCalligrafoTitle,
+        Mastery.scorteDaMescitore:
+            AppLocalizations.of(context)!.masteryScorteDaMescitoreTitle,
+        Mastery.strumentiDaCalzolaio:
+            AppLocalizations.of(context)!.masteryStrumentiDaCalzolaioTitle,
+        Mastery.strumentiDaCartografo:
+            AppLocalizations.of(context)!.masteryStrumentiDaCartografoTitle,
+        Mastery.strumentiDaConciatore:
+            AppLocalizations.of(context)!.masteryStrumentiDaConciatoreTitle,
+        Mastery.strumentiDaFabbro:
+            AppLocalizations.of(context)!.masteryStrumentiDaFabbroTitle,
+        Mastery.strumentiDaCostruttore:
+            AppLocalizations.of(context)!.masteryStrumentiDaCostruttoreTitle,
+        Mastery.strumentiDaFalegname:
+            AppLocalizations.of(context)!.masteryStrumentiDaFalegnameTitle,
+        Mastery.strumentiDaGioielliere:
+            AppLocalizations.of(context)!.masteryStrumentiDaGioielliereTitle,
+        Mastery.strumentiDaIntagliatore:
+            AppLocalizations.of(context)!.masteryStrumentiDaIntagliatoreTitle,
+        Mastery.strumentiDaInventore:
+            AppLocalizations.of(context)!.masteryStrumentiDaInventoreTitle,
+        Mastery.strumentiDaPittore:
+            AppLocalizations.of(context)!.masteryStrumentiDaPittoreTitle,
+        Mastery.strumentiDaSoffiatore:
+            AppLocalizations.of(context)!.masteryStrumentiDaSoffiatoreTitle,
+        Mastery.strumentiDaTessitore:
+            AppLocalizations.of(context)!.masteryStrumentiDaTessitoreTitle,
+        Mastery.strumentiDaVasaio:
+            AppLocalizations.of(context)!.masteryStrumentiDaVasaioTitle,
+        Mastery.utensiliDaCuoco:
+            AppLocalizations.of(context)!.masteryUtensiliDaCuocoTitle,
+        Mastery.spadeCorte:
+            AppLocalizations.of(context)!.masterySpadeCorteTitle,
+        Mastery.spadeLunghe:
+            AppLocalizations.of(context)!.masterySpadeLungheTitle,
+        Mastery.archiCorti:
+            AppLocalizations.of(context)!.masteryArchiCortiTitle,
+        Mastery.archiLunghi:
+            AppLocalizations.of(context)!.masteryArchiLunghiTitle,
+        Mastery.ascieDaBattaglia:
+            AppLocalizations.of(context)!.masteryAscieDaBattagliaTitle,
+        Mastery.martelliDaGuerra:
+            AppLocalizations.of(context)!.masteryMartelliDaGuerraTitle,
+        Mastery.martelliLeggeri:
+            AppLocalizations.of(context)!.masteryMartelliLeggeriTitle,
+        Mastery.armatureLeggere:
+            AppLocalizations.of(context)!.masteryArmatureLeggereTitle,
+        Mastery.armatureMedie:
+            AppLocalizations.of(context)!.masteryArmatureMedieTitle,
+        Mastery.scudi: AppLocalizations.of(context)!.masteryScudiTitle,
+        Mastery.armiSemplici:
+            AppLocalizations.of(context)!.masteryArmiSempliciTitle,
+        Mastery.armiDaGuerra:
+            AppLocalizations.of(context)!.masteryArmiDaGuerraTitle,
+        Mastery.balestreAMano:
+            AppLocalizations.of(context)!.masteryBalestreAManoTitle,
+        Mastery.balestreLeggere:
+            AppLocalizations.of(context)!.masteryBalestreLeggereTitle,
+        Mastery.stocchi: AppLocalizations.of(context)!.masteryStocchiTitle,
+        Mastery.arnesiDaScasso:
+            AppLocalizations.of(context)!.masteryArnesiDaScassoTitle,
+        Mastery.ascie: AppLocalizations.of(context)!.masteryAscieTitle,
+        Mastery.tutteLeArmature:
+            AppLocalizations.of(context)!.masteryTutteLeArmatureTitle,
+        Mastery.bastoniFerrati:
+            AppLocalizations.of(context)!.masteryBastoniFerratiTitle,
+        Mastery.dardi: AppLocalizations.of(context)!.masteryDardiTitle,
+        Mastery.fionde: AppLocalizations.of(context)!.masteryFiondeTitle,
+        Mastery.pugnali: AppLocalizations.of(context)!.masteryPugnaliTitle,
+        Mastery.falcetti: AppLocalizations.of(context)!.masteryFalcettiTitle,
+        Mastery.giavellotti:
+            AppLocalizations.of(context)!.masteryGiavellottiTitle,
+        Mastery.lance: AppLocalizations.of(context)!.masteryLanceTitle,
+        Mastery.mazze: AppLocalizations.of(context)!.masteryMazzeTitle,
+        Mastery.randelli: AppLocalizations.of(context)!.masteryRandelliTitle,
+        Mastery.scimitarre:
+            AppLocalizations.of(context)!.masteryScimitarreTitle,
+        Mastery.strumentiDaErborista:
+            AppLocalizations.of(context)!.masteryStrumentiDaErboristaTitle,
+      }[this]!;
+}

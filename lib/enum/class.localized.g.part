@@ -1,0 +1,42 @@
+// **************************************************************************
+// LocalizedGenerator
+// **************************************************************************
+
+// GENERATED CODE (by MrPio) - DO NOT MODIFY BY HAND
+
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'class.dart';
+
+extension ClassLocalizedExtension on Class {
+  String title(BuildContext context) => {
+        Class.barbaro: AppLocalizations.of(context)!.classBarbaroTitle,
+        Class.bardo: AppLocalizations.of(context)!.classBardoTitle,
+        Class.chierico: AppLocalizations.of(context)!.classChiericoTitle,
+        Class.druido: AppLocalizations.of(context)!.classDruidoTitle,
+        Class.guerriero: AppLocalizations.of(context)!.classGuerrieroTitle,
+        Class.ladro: AppLocalizations.of(context)!.classLadroTitle,
+        Class.mago: AppLocalizations.of(context)!.classMagoTitle,
+        Class.monaco: AppLocalizations.of(context)!.classMonacoTitle,
+        Class.paladino: AppLocalizations.of(context)!.classPaladinoTitle,
+        Class.ranger: AppLocalizations.of(context)!.classRangerTitle,
+        Class.stregone: AppLocalizations.of(context)!.classStregoneTitle,
+        Class.warlock: AppLocalizations.of(context)!.classWarlockTitle,
+      }[this]!;
+
+  String description(BuildContext context) => {
+        Class.barbaro: AppLocalizations.of(context)!.classBarbaroDescription,
+        Class.bardo: AppLocalizations.of(context)!.classBardoDescription,
+        Class.chierico: AppLocalizations.of(context)!.classChiericoDescription,
+        Class.druido: AppLocalizations.of(context)!.classDruidoDescription,
+        Class.guerriero:
+            AppLocalizations.of(context)!.classGuerrieroDescription,
+        Class.ladro: AppLocalizations.of(context)!.classLadroDescription,
+        Class.mago: AppLocalizations.of(context)!.classMagoDescription,
+        Class.monaco: AppLocalizations.of(context)!.classMonacoDescription,
+        Class.paladino: AppLocalizations.of(context)!.classPaladinoDescription,
+        Class.ranger: AppLocalizations.of(context)!.classRangerDescription,
+        Class.stregone: AppLocalizations.of(context)!.classStregoneDescription,
+        Class.warlock: AppLocalizations.of(context)!.classWarlockDescription,
+      }[this]!;
+}
