@@ -4,8 +4,8 @@
 
 ## 📘 Table of Contents
 
-* [How to add a custom annotation with code generation](#ll8)
 * [How to add support to localization](#ll9)
+* [How to add a custom annotation with code generation](#ll8)
 * [Emulator is unbearably glitchy](#ll7)
 * [Undo Github commits](#ll6)
 * [Git mismatching line ending causes huge commits](#ll5)
