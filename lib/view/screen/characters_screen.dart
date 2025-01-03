@@ -63,7 +63,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
 
     _filters = [
       Filter<Character, Class>('Classe', Palette.primaryGreen, Class.values,
-          (character, values) => values.contains(character.class_)),
+          (character, values) => character.classes.keys.any((c) => values.contains(c))),
       Filter<Character, Race>('Razza', Palette.primaryRed, Race.values,
           (character, values) => values.contains(character.race)),
       Filter<Character, CharacterAlignment>('Allineamento', Palette.primaryBlue,
@@ -101,8 +101,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
         header: Column(
           children: [
             // Page Title
-            // PageHeader(title: 'I tuoi personaggi',isPage: false),
-            PageHeader(title: context.loc.helloWorld, isPage: false),
+            PageHeader(title: 'I tuoi personaggi', isPage: false),
             GlassTextField(
               iconPath: 'search_alt',
               hintText: 'Cerca un personaggio',
@@ -126,8 +125,9 @@ class _CharactersScreenState extends State<CharactersScreen> {
                               ? setState(() => _filters[i].selectedValues.clear())
                               : context.checkList(
                                   'Filtro su ${_filters[i].title.toLowerCase()}',
-                            name: (e) => EnumWithTitle.titles[[Class, Race, CharacterAlignment][i]]!(e, context),
-                            values: _filters[i].values,
+                                  name: (e) => EnumWithTitle
+                                      .titles[[Class, Race, CharacterAlignment][i]]!(e, context),
+                                  values: _filters[i].values,
                                   color: _filters[i].color,
                                   onChanged: (value) =>
                                       setState(() => _filters[i].selectedValues.toggle(value)),
@@ -163,7 +163,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                     children: [
                       Row(
                         children: [
-                          character.class_.iconPath.toIcon(),
+                          character.classes.entries.reduce((a, b) => a.value > b.value ? a : b).key.iconPath.toIcon(),
                           const SizedBox(width: Measures.hMarginBig),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,7 +224,7 @@ class _CharactersScreenState extends State<CharactersScreen> {
                         children: [
                           Row(
                             children: [
-                              character.class_.iconPath.toIcon(),
+                              character.classes.entries.reduce((a, b) => a.value > b.value ? a : b).key.iconPath.toIcon(),
                               const SizedBox(width: Measures.hMarginBig),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

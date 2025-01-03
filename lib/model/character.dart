@@ -9,17 +9,14 @@ import 'package:scheda_dnd_5e/enum/class.localized.g.part';
 import 'package:scheda_dnd_5e/enum/race.localized.g.part';
 import 'package:scheda_dnd_5e/extension_function/map_extensions.dart';
 import 'package:scheda_dnd_5e/extension_function/string_extensions.dart';
-import 'package:scheda_dnd_5e/interface/enum_with_title.dart';
 import 'package:scheda_dnd_5e/interface/with_uid.dart';
 import 'package:scheda_dnd_5e/manager/account_manager.dart';
 import 'package:scheda_dnd_5e/mixin/comparable.dart';
 import 'package:scheda_dnd_5e/model/enchantment.dart' hide Type;
-import 'package:tuple/tuple.dart';
 
 import '../enum/character_alignment.dart';
 import '../enum/character_background.dart';
 import '../enum/class.dart';
-import '../enum/dice.dart';
 import '../enum/language.dart';
 import '../enum/mastery.dart';
 import '../enum/race.dart';
@@ -32,14 +29,6 @@ import 'loot.dart';
 
 part 'part/character.g.dart';
 
-
-
-
-
-
-
-
-
 @JsonSerializable(constructor: 'jsonConstructor')
 class Character with Comparable<Character> implements WithUID {
   int regDateTimestamp;
@@ -49,14 +38,22 @@ class Character with Comparable<Character> implements WithUID {
   String _name;
   @JsonKey(includeFromJson: true, includeToJson: true)
   int _hp, _maxHp;
-  Class class_;
-  SubClass subClass;
+  Map<Class, int> classes;
+
+  // Each class can have one or no subclasses
+  Map<Class, SubClass> subClasses;
   Race race;
   SubRace? subRace;
+
+  /// The sum of any choice dictated by the race and subRace selections
   @JsonKey(includeFromJson: true, includeToJson: true)
-  Map<Skill, int> _chosenSkills = {}; // The sum of any choice dictated by the race and subRace selections
-  Map<Skill, int> rollSkills = {}; // The results of the dice thrown at the end of the character creation
-  Map<Skill, int> customSkills = {}; // The custom skills values manually assigned by the user
+  Map<Skill, int> _chosenSkills = {};
+
+  /// The results of the dice thrown at the end of the character creation
+  Map<Skill, int> rollSkills = {};
+
+  /// The custom skills values manually assigned by the user
+  Map<Skill, int> customSkills = {};
   Map<SubSkill, int> subSkills = {};
   Map<Level, int> totalSlots = {};
   Map<Level, int> availableSlots = {};
@@ -128,8 +125,8 @@ class Character with Comparable<Character> implements WithUID {
       Map<String, int>? armorsUIDs,
       Map<String, int>? itemsUIDs,
       Map<String, int>? coinsUIDs,
-      this.class_,
-      this.subClass,
+      Map<Class, int>? classes,
+      Map<Class, SubClass>? subClasses,
       this.race,
       this.subRace,
       Map<Skill, int>? _chosenSkills,
@@ -157,6 +154,8 @@ class Character with Comparable<Character> implements WithUID {
         armorsUIDs = armorsUIDs ?? {},
         itemsUIDs = itemsUIDs ?? {},
         coinsUIDs = coinsUIDs ?? {},
+        classes = classes ?? {},
+        subClasses = subClasses ?? {},
         _chosenSkills = _chosenSkills ?? {},
         rollSkills = rollSkills ?? {},
         customSkills = customSkills ?? {},
@@ -185,9 +184,9 @@ class Character with Comparable<Character> implements WithUID {
         authorUID = AccountManager().user.uid!,
         level = 1,
         armorClass = 0,
-        subClass = Class.barbaro.subClasses[0],
+        subClasses = {},
         regDateTimestamp = DateTime.now().millisecondsSinceEpoch,
-        class_ = Class.barbaro,
+        classes = {},
         race = Race.umano,
         speed = Race.umano.defaultSpeed,
         alignment = CharacterAlignment.nessuno,
@@ -261,7 +260,8 @@ class Character with Comparable<Character> implements WithUID {
       skillModifier(subSkill.skill) + (subSkills[subSkill] ?? 0) * competenceBonus;
 
   int savingThrowValue(Skill skill) =>
-      skillModifier(skill) + (class_.savingThrows.contains(skill) ? 1 : 0) * competenceBonus;
+      skillModifier(skill) +
+      (classes.keys.any((c) => c.savingThrows.contains(skill)) ? 1 : 0) * competenceBonus;
 
   addLoot(Loot loot) {
     loot.content.forEach((item, qta) {
@@ -315,9 +315,10 @@ class Character with Comparable<Character> implements WithUID {
   }
 
   @override
-  // Compare by creation date in descending order
+
+  /// Compare by creation date in descending order
   int compareTo(Character other) => regDateTimestamp.compareTo(other.regDateTimestamp) * -1;
 
   String backgroundQuery(CharacterBackground background, BuildContext context) =>
-      "I am playing Dungeon and Dragons. Generate a creative description of my character. ${background.hint(context)} of my character based on these characteristics: his name is $name, his class is ${class_.title(context)}, his race is ${race.title(context)}, his alignment is ${alignment.title(context)} and at the moment is level is $level.";
+      "I am playing Dungeon and Dragons. Generate a creative description of my character. ${background.hint(context)} of my character based on these characteristics: his name is $name, his class is ${classes.keys.first.title(context)}, his race is ${race.title(context)}, his alignment is ${alignment.title(context)} and at the moment is level is $level.";
 }

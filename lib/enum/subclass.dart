@@ -5,7 +5,6 @@ import '../interface/enum_with_title.dart';
 
 @Localized(['title', 'description'])
 enum SubClass implements EnumWithTitle {
-  // Servono solo per lettura info
   collegioSapienza([
     Tuple3(3, 'Competenze bonus',
         'COMPETENZE BONUS\nQuando un bardo si unisce al Collegio della Sapienza al 3° livello, ottiene competenza in tre abilità a sua scelta.'),
@@ -509,7 +508,8 @@ enum SubClass implements EnumWithTitle {
         'SCAGLIARE ALL\'INFERNO\nA partire dal 14° livello, quando il warlock colpisce una creatura con un attacco, può utilizzare questo privilegio per trascinare istantaneamente il bersaglio sui piani inferiori.\nLa creatura scompare e sfreccia attraverso un territorio da incubo.\nAlla fine del turno successivo del warlock, il bersaglio torna nello spazio che occupava in precedenza, o nello spazio libero più vicino.\nSe il bersaglio non è un immondo, subisce 10d10 psichici in quanto resta sconvolto da questa esperienza terrificante.\nUna volta utilizzato questo privilegio, il warlock non può più utilizzarlo finché non completa un riposo lungo.')
   ]);
 
-  final List<Tuple3<int, String, String>> abilities; //level, name, pop-up
+  ///level, name, pop-up
+  final List<Tuple3<int, String, String>> abilities;
 
   const SubClass(this.abilities);
 }

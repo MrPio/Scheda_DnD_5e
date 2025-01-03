@@ -17,6 +17,7 @@ import 'package:scheda_dnd_5e/view/partial/glass_button.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_checkbox.dart';
 import 'package:scheda_dnd_5e/view/partial/glass_text_field.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:scheda_dnd_5e/model/user.dart' as dnd_user;
 
 import '../constant/palette.dart';
 import '../model/character.dart';
@@ -64,6 +65,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           // await DataManager().invalidateCache<Item>();
           // await DataManager().invalidateCache<Coin>();
           // await DataManager().invalidateCache<Equipment>();
+          // await DataManager().invalidateCache<dnd_user.User>();
           // await DataManager().invalidateCache<Character>();
           // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 

@@ -1120,8 +1120,12 @@ enum Class implements EnumWithTitle {
   final bool choiceableSubSkillsMultiClass;
   final List<Skill> savingThrows;
   final List<Map<String, int>> choiceableItems;
-  final List<Tuple3<int, String, String>> abilities; // Level, name, info pop-up
-  final Map<Skill, int> requirements; // Necessario in fase di livellamento
+
+  /// Level, name, info pop-up
+  final List<Tuple3<int, String, String>> abilities;
+
+  /// Requirements for multiclassing
+  final Map<Skill, int> requirements;
   final Dice maxHpDice;
 
   const Class(
@@ -1138,7 +1142,7 @@ enum Class implements EnumWithTitle {
       required this.savingThrows,
       required this.choiceableItems, // Oggetti selezionabili durante la fase di creazione del personaggio
       required this.maxHpDice, // Dado che bisogna tirare durante il livellamento
-      required this.requirements, // Requisiti necessari per multiclassare
+      required this.requirements,
       required this.abilities});
 
   String get subClassesInfo =>

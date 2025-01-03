@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/constant/dictionary.dart';
 import 'package:scheda_dnd_5e/enum/class.localized.g.part';
@@ -335,7 +337,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                                         .map((e) => Padding(
                                                               padding: const EdgeInsets.only(right: 6.0),
                                                               child: RadioButton(
-                                                                text: '${e.key.title(context)} +${e.value}',
+                                                                text:
+                                                                    '${e.key.title(context)} +${e.value}',
                                                                 color: Palette.primaryYellow,
                                                                 isSmall: true,
                                                                 width: 100,
@@ -359,7 +362,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                           context.popup(e.title(context),
                                               message: e.description(context),
                                               positiveText: 'Ok',
-                                              backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
+                                              backgroundColor:
+                                                  Palette.backgroundGrey.withValues(alpha: 0.2));
                                         },
                                         padding: const EdgeInsets.all(12)),
                                   ),
@@ -554,7 +558,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                               context.popup(e.title(context),
                                                   message: e.description(context),
                                                   positiveText: 'Ok',
-                                                  backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
+                                                  backgroundColor:
+                                                      Palette.backgroundGrey.withValues(alpha: 0.2));
                                             },
                                             padding: const EdgeInsets.all(12)),
                                       ),
@@ -591,11 +596,14 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                           child: GlassCard(
                             onTap: () async {
                               // Set class fields
-                              character.class_ = e;
+                              character.classes = {e: 1};
                               character.masteries.addAll(e.defaultMasteries);
                               Map<SubSkill, int> backupSubSkills = Map.from(character.subSkills);
                               Set<Mastery> backupMasteries = Set.from(character.masteries);
                               // Ask the possible choices before continuing
+                              if(e.subClasses[0].abilities.map((e) => e.item1).toList().reduce(min)<=1){
+                                // TODO ask for subclass
+                              }
                               if (e.numChoiceableSubSkills > 0) {
                                 character.subSkills += e.choiceableSubSkills
                                     .sublist(0, e.numChoiceableSubSkills)
@@ -654,7 +662,7 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                               }
                               if (e.choiceableItems.isNotEmpty) {
                                 List<Map<String, int>> selected =
-                                    List.generate(e.choiceableItems.length,(_) => {});
+                                    List.generate(e.choiceableItems.length, (_) => {});
                                 var count = 0;
                                 for (var itemsUIDs in e.choiceableItems) {
                                   var items = {
@@ -798,7 +806,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                                           context.popup(e.title(context),
                                               message: e.description(context),
                                               positiveText: 'Ok',
-                                              backgroundColor: Palette.backgroundGrey.withValues(alpha: 0.2));
+                                              backgroundColor:
+                                                  Palette.backgroundGrey.withValues(alpha: 0.2));
                                         },
                                         padding: const EdgeInsets.all(12)),
                                   ),
@@ -959,7 +968,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
       withLoading(() async {
         character.initiative = character.skillModifier(Skill.destrezza);
         character.speed = character.defaultSpeed;
-        character.maxHp = character.class_.maxHpDice.size + character.skillModifier(Skill.costituzione);
+        character.maxHp =
+            character.classes.keys.first.maxHpDice.size + character.skillModifier(Skill.costituzione);
         character.hp = character.maxHp;
         character.uid = await DataManager().save(character, SaveMode.post);
         AccountManager().user.charactersUIDs.add(character.uid!);

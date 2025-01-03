@@ -26,8 +26,13 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
       (json['coinsUIDs'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, (e as num).toInt()),
       ),
-      $enumDecode(_$ClassEnumMap, json['class_']),
-      $enumDecode(_$SubClassEnumMap, json['subClass']),
+      (json['classes'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry($enumDecode(_$ClassEnumMap, k), (e as num).toInt()),
+      ),
+      (json['subClasses'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(
+            $enumDecode(_$ClassEnumMap, k), $enumDecode(_$SubClassEnumMap, e)),
+      ),
       $enumDecode(_$RaceEnumMap, json['race']),
       $enumDecodeNullable(_$SubRaceEnumMap, json['subRace']),
       (json['_chosenSkills'] as Map<String, dynamic>?)?.map(
@@ -56,7 +61,7 @@ Character _$CharacterFromJson(Map<String, dynamic> json) =>
           ?.map((e) => $enumDecode(_$LanguageEnumMap, e))
           .toSet(),
       $enumDecodeNullable(_$StatusEnumMap, json['status']),
-      $enumDecode(_$AlignmentEnumMap, json['alignment']),
+      $enumDecode(_$CharacterAlignmentEnumMap, json['alignment']),
       (json['level'] as num).toInt(),
       (json['armorClass'] as num).toInt(),
       (json['initiative'] as num).toInt(),
@@ -79,8 +84,10 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
       '_name': instance._name,
       '_hp': instance._hp,
       '_maxHp': instance._maxHp,
-      'class_': _$ClassEnumMap[instance.class_]!,
-      'subClass': _$SubClassEnumMap[instance.subClass]!,
+      'classes':
+          instance.classes.map((k, e) => MapEntry(_$ClassEnumMap[k]!, e)),
+      'subClasses': instance.subClasses
+          .map((k, e) => MapEntry(_$ClassEnumMap[k]!, _$SubClassEnumMap[e]!)),
       'race': _$RaceEnumMap[instance.race]!,
       'subRace': _$SubRaceEnumMap[instance.subRace],
       '_chosenSkills':
@@ -100,7 +107,7 @@ Map<String, dynamic> _$CharacterToJson(Character instance) => <String, dynamic>{
           instance.languages.map((e) => _$LanguageEnumMap[e]!).toList(),
       'enchantmentUIDs': instance.enchantmentUIDs.toList(),
       'status': _$StatusEnumMap[instance.status],
-      'alignment': _$AlignmentEnumMap[instance.alignment]!,
+      'alignment': _$CharacterAlignmentEnumMap[instance.alignment]!,
       'level': instance.level,
       'armorClass': instance.armorClass,
       'initiative': instance.initiative,
@@ -350,7 +357,7 @@ const _$StatusEnumMap = {
   Status.trattenuto: 'trattenuto',
 };
 
-const _$AlignmentEnumMap = {
+const _$CharacterAlignmentEnumMap = {
   CharacterAlignment.legaleBuono: 'legaleBuono',
   CharacterAlignment.neutraleBuono: 'neutraleBuono',
   CharacterAlignment.caoticoBuono: 'caoticoBuono',

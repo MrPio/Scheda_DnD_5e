@@ -355,7 +355,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                         width: 12,
                                         height: 12,
                                         decoration: BoxDecoration(
-                                            color: character.class_.savingThrows.contains(skill)
+                                            color: character.classes.keys.any((c) => c.savingThrows.contains(skill))
                                                 ? Palette.onBackground
                                                 : Colors.transparent,
                                             border: Border.all(color: Palette.onBackground, width: 0.75),
@@ -1095,7 +1095,7 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           onPress: () async {
             var uid = await context.goto('/enchantments',
                 args: EnchantmentsArgs(
-                    title: 'Seleziona l\'incantesimo da aggiungere', filterClasses: [character.class_]));
+                    title: 'Seleziona l\'incantesimo da aggiungere', filterClasses: character.classes.keys.toList()));
             if (uid is String) {
               character.enchantmentUIDs.add(uid);
               character.enchantments.value = null;
