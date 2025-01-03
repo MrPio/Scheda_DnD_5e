@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/enum/skill.dart';
 import 'package:scheda_dnd_5e/enum/subclass.dart';
 import 'package:scheda_dnd_5e/enum/subskill.dart';
@@ -1145,6 +1146,6 @@ enum Class implements EnumWithTitle {
       required this.requirements,
       required this.abilities});
 
-  String get subClassesInfo =>
-      subClasses.isEmpty ? 'Nessuna sottoclasse' : subClasses.map((e) => e.title).join(', ');
+  String subClassesInfo(BuildContext context) =>
+      subClasses.isEmpty ? 'Nessuna sottoclasse' : subClasses.map((e) => e.title(context)).join(', ');
 }

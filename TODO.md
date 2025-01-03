@@ -3,7 +3,7 @@
 # TODO
 - 📌 `Character`:
   - ✅ Set MaxHP right after the character's creation
-  - Edit the charater model to handle levels and classes
+  - Edit the character model to handle levels and classes
   - Update MaxHP after the new level
   - Nella scheda Abilità mostrare le tuple delle classi in ordine decrescente, anche delle sottoclassi e delle razze e sottorazze
   - Quando scegli una nuova classe per livellare devi aggiungere le def masteries e far scegliere le masttypes

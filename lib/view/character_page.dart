@@ -30,6 +30,7 @@ import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/view/create_item_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
+import 'package:scheda_dnd_5e/view/partial/card/class_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/enchantment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
@@ -48,6 +49,7 @@ import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/screen/characters_screen.dart';
 
 import '../enum/character_background.dart';
+import '../enum/class.dart';
 import '../enum/language.dart';
 import '../enum/mastery_type.dart';
 import '../enum/skill.dart';

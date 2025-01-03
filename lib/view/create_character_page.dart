@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:scheda_dnd_5e/constant/dictionary.dart';
-import 'package:scheda_dnd_5e/enum/class.localized.g.part';
 import 'package:scheda_dnd_5e/enum/language.localized.g.part';
 import 'package:scheda_dnd_5e/enum/mastery.localized.g.part';
 import 'package:scheda_dnd_5e/enum/race.localized.g.part';
@@ -19,6 +18,7 @@ import 'package:scheda_dnd_5e/manager/data_manager.dart';
 import 'package:scheda_dnd_5e/mixin/loadable.dart';
 import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
+import 'package:scheda_dnd_5e/view/partial/card/class_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/skill_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
 import 'package:scheda_dnd_5e/view/partial/decoration/bottom_vignette.dart';
@@ -593,7 +593,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
             children: Class.values
                     .map((e) => Padding(
                           padding: const EdgeInsets.only(bottom: Measures.vMarginThin),
-                          child: GlassCard(
+                          child: ClassCard(
+                            e,
                             onTap: () async {
                               // Set class fields
                               character.classes = {e: 1};
@@ -601,7 +602,8 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                               Map<SubSkill, int> backupSubSkills = Map.from(character.subSkills);
                               Set<Mastery> backupMasteries = Set.from(character.masteries);
                               // Ask the possible choices before continuing
-                              if(e.subClasses[0].abilities.map((e) => e.item1).toList().reduce(min)<=1){
+                              if (e.subClasses[0].abilities.map((e) => e.item1).toList().reduce(min) <=
+                                  1) {
                                 // TODO ask for subclass
                               }
                               if (e.numChoiceableSubSkills > 0) {
@@ -694,126 +696,6 @@ class _CreateCharacterPageState extends State<CreateCharacterPage> with Validabl
                               }
                               next();
                             },
-                            child: Stack(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: Measures.hMarginMed),
-                                  child: Column(
-                                    children: [
-                                      // Title, description and info button
-                                      Padding(
-                                        padding:
-                                            const EdgeInsets.symmetric(horizontal: Measures.hMarginBig),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            e.iconPath.toIcon(height: 24),
-                                            const SizedBox(width: Measures.hMarginMed),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(e.title(context), style: Fonts.bold()),
-                                                  SingleChildScrollView(
-                                                    scrollDirection: Axis.horizontal,
-                                                    child: Text(e.subClassesInfo,
-                                                        style: Fonts.light(size: 14)),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(width: Measures.hMarginBig),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: Measures.vMarginThin),
-                                      // Saving throws
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [const SizedBox(width: Measures.hMarginBig)]
-                                                    .cast<Widget>() +
-                                                (e.savingThrows.isEmpty
-                                                    ? [
-                                                        const RadioButton(
-                                                          text: 'Nessuna',
-                                                          color: Palette.primaryBlue,
-                                                          isSmall: true,
-                                                          width: 100,
-                                                        )
-                                                      ]
-                                                    : e.savingThrows
-                                                        .map((e) => Padding(
-                                                              padding: const EdgeInsets.only(right: 6.0),
-                                                              child: RadioButton(
-                                                                text: e.title(context),
-                                                                color: Palette.primaryYellow,
-                                                                isSmall: true,
-                                                                width: 100,
-                                                              ),
-                                                            ))
-                                                        .toList()),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(height: Measures.vMarginThin),
-                                      // Masteries
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: SingleChildScrollView(
-                                          scrollDirection: Axis.horizontal,
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [const SizedBox(width: Measures.hMarginBig)]
-                                                    .cast<Widget>() +
-                                                (e.defaultMasteries.isEmpty
-                                                    ? [
-                                                        const RadioButton(
-                                                          text: 'Nessuna',
-                                                          color: Palette.primaryBlue,
-                                                          isSmall: true,
-                                                          width: 100,
-                                                        )
-                                                      ]
-                                                    : e.defaultMasteries
-                                                        .map((e) => Padding(
-                                                              padding: const EdgeInsets.only(right: 6.0),
-                                                              child: RadioButton(
-                                                                text: e.title(context),
-                                                                color: Palette.primaryBlue,
-                                                                isSmall: true,
-                                                                width: 100,
-                                                              ),
-                                                            ))
-                                                        .toList()),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                // Info button
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: Measures.hMarginSmall, right: Measures.hMarginSmall),
-                                    child: 'info'.toIcon(
-                                        onTap: () {
-                                          context.popup(e.title(context),
-                                              message: e.description(context),
-                                              positiveText: 'Ok',
-                                              backgroundColor:
-                                                  Palette.backgroundGrey.withValues(alpha: 0.2));
-                                        },
-                                        padding: const EdgeInsets.all(12)),
-                                  ),
-                                )
-                              ],
-                            ),
                           ),
                         ))
                     .toList()
