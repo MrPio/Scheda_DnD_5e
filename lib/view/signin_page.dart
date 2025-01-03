@@ -66,7 +66,7 @@ class _SignInPageState extends State<SignInPage> with Loadable {
           // await DataManager().invalidateCache<Coin>();
           // await DataManager().invalidateCache<Equipment>();
           // await DataManager().invalidateCache<dnd_user.User>();
-          // await DataManager().invalidateCache<Character>();
+          await DataManager().invalidateCache<Character>();
           // ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
           // 👤👤👤 FIREBASE AUTH 👤👤👤

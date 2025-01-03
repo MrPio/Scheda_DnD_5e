@@ -3,17 +3,21 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:scheda_dnd_5e/constant/fonts.dart';
 import 'package:scheda_dnd_5e/constant/measures.dart';
 import 'package:scheda_dnd_5e/constant/palette.dart';
 import 'package:scheda_dnd_5e/enum/character_alignment.dart';
 import 'package:scheda_dnd_5e/enum/character_background.localized.g.part';
+import 'package:scheda_dnd_5e/enum/class.dart';
+import 'package:scheda_dnd_5e/enum/class.localized.g.part';
 import 'package:scheda_dnd_5e/enum/language.localized.g.part';
 import 'package:scheda_dnd_5e/enum/mastery.localized.g.part';
 import 'package:scheda_dnd_5e/enum/mastery_type.localized.g.part';
 import 'package:scheda_dnd_5e/enum/race.localized.g.part';
 import 'package:scheda_dnd_5e/enum/skill.localized.g.part';
+import 'package:scheda_dnd_5e/enum/subclass.localized.g.part';
 import 'package:scheda_dnd_5e/enum/subrace.localized.g.part';
 import 'package:scheda_dnd_5e/enum/subskill.localized.g.part';
 import 'package:scheda_dnd_5e/extension_function/context_extensions.dart';
@@ -30,7 +34,6 @@ import 'package:scheda_dnd_5e/model/loot.dart';
 import 'package:scheda_dnd_5e/view/create_item_page.dart';
 import 'package:scheda_dnd_5e/view/dice_page.dart';
 import 'package:scheda_dnd_5e/view/partial/card/alignment_card.dart';
-import 'package:scheda_dnd_5e/view/partial/card/class_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/enchantment_card.dart';
 import 'package:scheda_dnd_5e/view/partial/card/sheet_item_card.dart';
 import 'package:scheda_dnd_5e/view/partial/chevron.dart';
@@ -49,7 +52,6 @@ import 'package:scheda_dnd_5e/view/partial/numeric_input.dart';
 import 'package:scheda_dnd_5e/view/screen/characters_screen.dart';
 
 import '../enum/character_background.dart';
-import '../enum/class.dart';
 import '../enum/language.dart';
 import '../enum/mastery_type.dart';
 import '../enum/skill.dart';
@@ -94,6 +96,9 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
 
   _setIsBackgroundExpanded(CharacterBackground background, bool value) =>
       IOManager().set('character_page_IsBackgroundExpanded_${background.name}', value);
+
+  String? expandedAbilitySection;
+  dynamic expandedAbility;
 
   List<en.Enchantment>? enchantments(en.Level level) =>
       _character?.enchantments.value?.where((e) => e.level == level).toList()?..sort();
@@ -178,6 +183,10 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
       };
     }
     final character = _character!;
+
+    //TODO: remove =====================================
+    character.subClasses[Class.ladro] = Class.ladro.subClasses[0];
+    character.classes[Class.ladro] = 9;
 
     BottomSheetArgs? hpBottomSheetArgs;
     List<Widget> sheetAttributes = [];
@@ -357,7 +366,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                                         width: 12,
                                         height: 12,
                                         decoration: BoxDecoration(
-                                            color: character.classes.keys.any((c) => c.savingThrows.contains(skill))
+                                            color: character.classes.keys
+                                                    .any((c) => c.savingThrows.contains(skill))
                                                 ? Palette.onBackground
                                                 : Colors.transparent,
                                             border: Border.all(color: Palette.onBackground, width: 0.75),
@@ -916,8 +926,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           : Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Inventory sections
                 const SizedBox(height: Measures.vMarginMoreThin),
+                // Background sections
                 ...character.descriptions.entries.map((description) {
                   return Column(
                     children: [
@@ -977,7 +987,419 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
               ],
             ),
       // Ability
-      const Placeholder(),
+      (_tabController?.index ?? 0) != 4
+          ? Column(children: [
+              const SizedBox(height: Measures.vMarginMed),
+              ...List.filled(10, GlassCard(isShimmer: true, isFlat: true, shimmerHeight: 74))
+            ])
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: Measures.vMarginMoreThin),
+                // Classes
+                ...[
+                  // Header
+                  Clickable(
+                    onTap: () => setState(() =>
+                        expandedAbilitySection = (expandedAbilitySection == 'class' ? null : 'class')),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(children: [
+                                Text('Classi - ', style: Fonts.black(size: 18)),
+                                Text(character.classes.keys.map((e) => e.title(context)).join(', '),
+                                    style: Fonts.light(size: 18)),
+                              ])),
+                        ),
+                        const SizedBox(width: Measures.hMarginMed),
+                        'chevron_left'.toIcon(
+                            height: 16, rotation: expandedAbilitySection == 'class' ? pi / 2 : -pi / 2)
+                      ]),
+                    ),
+                  ),
+
+                  // Ability sheet
+                  if (expandedAbilitySection == 'class')
+                    ...character.classes.entries.map((classEntry) {
+                      final abilities = classEntry.key.abilities
+                          // .where((ability) => ability.item1 <= classEntry.value)
+                          .toList()
+                        ..sort((a, b) => a.item1.compareTo(b.item1));
+                      return Column(children: [
+                        SizedBox(height: Measures.vMarginThinnest),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                          child: Row(children: [
+                            classEntry.key.iconPath.toIcon(),
+                            SizedBox(width: Measures.hMarginBig),
+                            Text(classEntry.key.title(context), style: Fonts.regular()),
+                            SizedBox(width: Measures.hMarginBig),
+                            Expanded(child: Rule())
+                          ]),
+                        ),
+                        SizedBox(height: Measures.vMarginThin),
+                        ...abilities.map((ability) => Padding(
+                              padding: const EdgeInsets.only(bottom: Measures.vMarginThinnest),
+                              child: Opacity(
+                                opacity: ability.item1 > classEntry.value ? 0.7 : 1,
+                                child: GlassCard(
+                                  isLight: ability.item1 > classEntry.value,
+                                  isFlat: true,
+                                  onTap: ability.item1 > classEntry.value
+                                      ? null
+                                      : () => setState(() => expandedAbility =
+                                          (expandedAbility == ability) ? null : ability),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(height: Measures.vMarginMoreThin),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Row(children: [
+                                                Level(level: ability.item1, maxLevel: 20),
+                                                const SizedBox(width: Measures.hMarginBig),
+                                                Expanded(
+                                                    child: Text(
+                                                  ability.item2,
+                                                  style: Fonts.bold(),
+                                                  overflow: TextOverflow.ellipsis,
+                                                )),
+                                                const SizedBox(width: Measures.hMarginMed),
+                                              ]),
+                                            ),
+                                            if (ability.item1 <= classEntry.value)
+                                              'chevron_left'.toIcon(
+                                                  height: 16,
+                                                  rotation: expandedAbility == ability ? pi / 2 : -pi / 2)
+                                          ],
+                                        ),
+                                        const SizedBox(height: Measures.vMarginMoreThin),
+                                        if (expandedAbility == ability) ...[
+                                          MarkdownBody(
+                                            data: ability.item3,
+                                            styleSheet: MarkdownStyleSheet(
+                                              textAlign: WrapAlignment.spaceEvenly,
+                                              p: Fonts.light(size: 15),
+                                              tableBody: Fonts.light(size: 12),
+                                              listBullet: Fonts.light(size: 15),
+                                              tableCellsPadding: const EdgeInsets.all(4),
+                                            ),
+                                          ),
+                                          const SizedBox(height: Measures.vMarginSmall)
+                                        ],
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )),
+                        SizedBox(height: Measures.vMarginSmall),
+                      ]);
+                    }),
+
+                  if (expandedAbilitySection != 'class')
+                    const Padding(
+                      padding: EdgeInsets.only(top: Measures.vMarginThin),
+                      child: Rule(),
+                    ),
+                  const SizedBox(height: Measures.vMarginSmall),
+                ],
+
+                // SubClasses
+                ...[
+                  // Header
+                  Clickable(
+                    onTap: () => setState(() => expandedAbilitySection =
+                        (expandedAbilitySection == 'subclass' ? null : 'subclass')),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(children: [
+                                Text('Sottoclassi - ', style: Fonts.black(size: 18)),
+                                Text(character.subClasses.values.map((e) => e.title(context)).join(', '),
+                                    style: Fonts.light(size: 18)),
+                              ])),
+                        ),
+                        const SizedBox(width: Measures.hMarginMed),
+                        'chevron_left'.toIcon(
+                            height: 16, rotation: expandedAbilitySection == 'subclass' ? pi / 2 : -pi / 2)
+                      ]),
+                    ),
+                  ),
+
+                  // Ability sheet
+                  if (expandedAbilitySection == 'subclass')
+                    ...character.subClasses.entries.map((classEntry) {
+                      final abilities = classEntry.value.abilities
+                          // .where((ability) => ability.item1 <= (character.classes[classEntry.key]??0))
+                          .toList()
+                        ..sort((a, b) => a.item1.compareTo(b.item1));
+                      return Column(children: [
+                        SizedBox(height: Measures.vMarginThinnest),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                          child: Row(children: [
+                            classEntry.key.iconPath.toIcon(),
+                            SizedBox(width: Measures.hMarginBig),
+                            Text(classEntry.value.title(context), style: Fonts.regular()),
+                            SizedBox(width: Measures.hMarginBig),
+                            Expanded(child: Rule())
+                          ]),
+                        ),
+                        SizedBox(height: Measures.vMarginThin),
+                        ...abilities.map((ability) => Padding(
+                              padding: const EdgeInsets.only(bottom: Measures.vMarginThinnest),
+                              child: Opacity(
+                                opacity:
+                                    ability.item1 > (character.classes[classEntry.key] ?? 0) ? 0.7 : 1,
+                                child: GlassCard(
+                                  isLight: ability.item1 > (character.classes[classEntry.key] ?? 0),
+                                  isFlat: true,
+                                  onTap: ability.item1 > (character.classes[classEntry.key] ?? 0)
+                                      ? null
+                                      : () => setState(() => expandedAbility =
+                                          (expandedAbility == ability) ? null : ability),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: Measures.hPadding),
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(height: Measures.vMarginMoreThin),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Expanded(
+                                              child: Row(children: [
+                                                Level(level: ability.item1, maxLevel: 20),
+                                                const SizedBox(width: Measures.hMarginBig),
+                                                Expanded(
+                                                    child: Text(ability.item2,
+                                                        style: Fonts.bold(),
+                                                        overflow: TextOverflow.ellipsis)),
+                                              ]),
+                                            ),
+                                            if (ability.item1 <= (character.classes[classEntry.key] ?? 0))
+                                              'chevron_left'.toIcon(
+                                                  height: 16,
+                                                  rotation: expandedAbility == ability ? pi / 2 : -pi / 2)
+                                          ],
+                                        ),
+                                        const SizedBox(height: Measures.vMarginMoreThin),
+                                        if (expandedAbility == ability) ...[
+                                          MarkdownBody(
+                                            data: ability.item3,
+                                            styleSheet: MarkdownStyleSheet(
+                                              textAlign: WrapAlignment.spaceEvenly,
+                                              p: Fonts.light(size: 15),
+                                              tableBody: Fonts.light(size: 12),
+                                              listBullet: Fonts.light(size: 15),
+                                              tableCellsPadding: const EdgeInsets.all(4),
+                                            ),
+                                          ),
+                                          const SizedBox(height: Measures.vMarginSmall)
+                                        ],
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )),
+                        SizedBox(height: Measures.vMarginSmall),
+                      ]);
+                    }),
+
+                  if (expandedAbilitySection != 'subclass')
+                    const Padding(
+                      padding: EdgeInsets.only(top: Measures.vMarginThin),
+                      child: Rule(),
+                    ),
+                  const SizedBox(height: Measures.vMarginSmall),
+                ],
+
+                // Race
+                ...[
+                  // Header
+                  Clickable(
+                    onTap: () => setState(() =>
+                        expandedAbilitySection = (expandedAbilitySection == 'race' ? null : 'race')),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(children: [
+                                Text('Razza - ', style: Fonts.black(size: 18)),
+                                Text(character.race.title(context), style: Fonts.light(size: 18)),
+                              ])),
+                        ),
+                        const SizedBox(width: Measures.hMarginMed),
+                        'chevron_left'.toIcon(
+                            height: 16, rotation: expandedAbilitySection == 'race' ? pi / 2 : -pi / 2)
+                      ]),
+                    ),
+                  ),
+
+                  // Ability sheet
+                  if (expandedAbilitySection == 'race')
+                    ...character.race.abilities.map((ability) => Padding(
+                          padding: const EdgeInsets.only(bottom: Measures.vMarginThinnest),
+                          child: GlassCard(
+                            isFlat: true,
+                            onTap: () => setState(
+                                () => expandedAbility = (expandedAbility == ability) ? null : ability),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: Measures.hPadding, vertical: Measures.vMarginMoreThin),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: Measures.vMarginMoreThin),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Row(children: [
+                                          Expanded(
+                                              child: Text(ability.item1,
+                                                  style: Fonts.bold(), overflow: TextOverflow.ellipsis)),
+                                        ]),
+                                      ),
+                                      'chevron_left'.toIcon(
+                                          height: 16,
+                                          rotation: expandedAbility == ability ? pi / 2 : -pi / 2)
+                                    ],
+                                  ),
+                                  const SizedBox(height: Measures.vMarginMoreThin),
+                                  if (expandedAbility == ability) ...[
+                                    MarkdownBody(
+                                      data: ability.item2,
+                                      styleSheet: MarkdownStyleSheet(
+                                        textAlign: WrapAlignment.spaceEvenly,
+                                        p: Fonts.light(size: 15),
+                                        tableBody: Fonts.light(size: 12),
+                                        listBullet: Fonts.light(size: 15),
+                                        tableCellsPadding: const EdgeInsets.all(4),
+                                      ),
+                                    ),
+                                    const SizedBox(height: Measures.vMarginSmall)
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        )),
+                  if (expandedAbilitySection == 'race' && character.race.abilities.isEmpty)
+                    Center(child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2))),
+
+
+                  if (expandedAbilitySection != 'race')
+                    const Padding(
+                      padding: EdgeInsets.only(top: Measures.vMarginThin),
+                      child: Rule(),
+                    ),
+                  const SizedBox(height: Measures.vMarginSmall),
+                ],
+
+                // SubRace
+                if (character.subRace != null) ...[
+                  // Header
+                  Clickable(
+                    onTap: () => setState(() => expandedAbilitySection =
+                        (expandedAbilitySection == 'subrace' ? null : 'subrace')),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: Measures.hPadding, vertical: Measures.vMarginThin),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                        Expanded(
+                          child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(children: [
+                                Text('Sottorazza - ', style: Fonts.black(size: 18)),
+                                Text(character.subRace!.title(context), style: Fonts.light(size: 18)),
+                              ])),
+                        ),
+                        const SizedBox(width: Measures.hMarginMed),
+                        'chevron_left'.toIcon(
+                            height: 16, rotation: expandedAbilitySection == 'subrace' ? pi / 2 : -pi / 2)
+                      ]),
+                    ),
+                  ),
+
+                  // Ability sheet
+                  if (expandedAbilitySection == 'subrace')
+                    ...character.subRace!.abilities.map((ability) => Padding(
+                          padding: const EdgeInsets.only(bottom: Measures.vMarginThinnest),
+                          child: GlassCard(
+                            isFlat: true,
+                            onTap: () => setState(
+                                () => expandedAbility = (expandedAbility == ability) ? null : ability),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: Measures.hPadding, vertical: Measures.vMarginMoreThin),
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: Measures.vMarginMoreThin),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Row(children: [
+                                          Expanded(
+                                              child: Text(ability.item1,
+                                                  style: Fonts.bold(), overflow: TextOverflow.ellipsis)),
+                                        ]),
+                                      ),
+                                      'chevron_left'.toIcon(
+                                          height: 16,
+                                          rotation: expandedAbility == ability ? pi / 2 : -pi / 2)
+                                    ],
+                                  ),
+                                  const SizedBox(height: Measures.vMarginMoreThin),
+                                  if (expandedAbility == ability) ...[
+                                    MarkdownBody(
+                                      data: ability.item2,
+                                      styleSheet: MarkdownStyleSheet(
+                                        textAlign: WrapAlignment.spaceEvenly,
+                                        p: Fonts.light(size: 15),
+                                        tableBody: Fonts.light(size: 12),
+                                        listBullet: Fonts.light(size: 15),
+                                        tableCellsPadding: const EdgeInsets.all(4),
+                                      ),
+                                    ),
+                                    const SizedBox(height: Measures.vMarginSmall)
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        )),
+                  if (expandedAbilitySection == 'subrace' && character.subRace!.abilities.isEmpty)
+                    Center(child: Text('Niente da mostrare', style: Fonts.black(color: Palette.card2))),
+
+                  if (expandedAbilitySection != 'subrace')
+                    const Padding(
+                      padding: EdgeInsets.only(top: Measures.vMarginThin),
+                      child: Rule(),
+                    ),
+                  const SizedBox(height: Measures.vMarginSmall),
+                ],
+
+                const SizedBox(height: Measures.vMarginSmall),
+
+                const SizedBox(height: Measures.vMarginBig * 2),
+              ],
+            ),
     ];
     _tabController ??= TabController(length: _screens!.length, vsync: this)
       ..addListener(() {
@@ -1097,7 +1519,8 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
           onPress: () async {
             var uid = await context.goto('/enchantments',
                 args: EnchantmentsArgs(
-                    title: 'Seleziona l\'incantesimo da aggiungere', filterClasses: character.classes.keys.toList()));
+                    title: 'Seleziona l\'incantesimo da aggiungere',
+                    filterClasses: character.classes.keys.toList()));
             if (uid is String) {
               character.enchantmentUIDs.add(uid);
               character.enchantments.value = null;
@@ -1131,17 +1554,49 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                             inAppBar: true,
                             popArgs: CharacterPageToCharactersPageArgs(noChanges: hasChanges),
                           ),
-                          Column(children: [
-                            Text(character.name, style: Fonts.black(size: 18)),
-                            Text(
-                                character.subRace == null
-                                    ? character.race.title(context)
-                                    : '${character.subRace!.title(context)} (${character.race.title})',
-                                style: Fonts.light(size: 16))
-                          ]),
+                          Expanded(
+                            child: Column(children: [
+                              Text(character.name, style: Fonts.black(size: 18)),
+                              SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: Text(
+                                    character.subRace == null
+                                        ? character.race.title(context)
+                                        : '${character.subRace!.title(context)} (${character.race.title(context)})',
+                                    style: Fonts.light(size: 16)),
+                              )
+                            ]),
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(right: Measures.hPadding),
-                            child: Level(level: character.level, maxLevel: 20),
+                            child: Level(
+                              level: character.level,
+                              maxLevel: 20,
+                              bottomSheetArgs: BottomSheetArgs(
+                                header: Row(
+                                  children: [
+                                    'png/level'.toIcon(),
+                                    const SizedBox(width: Measures.hMarginBig),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text('Gestisci il livello', style: Fonts.bold()),
+                                        Text('Come vuoi modificare il tuo livello?',
+                                            style: Fonts.light()),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                items: [
+                                  BottomSheetItem('png/level_up', 'Salire di livello', () {
+                                    // TODO
+                                  }),
+                                  BottomSheetItem('png/level_down', 'Scendere di livello', () {
+                                    // TODO
+                                  }),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -1199,8 +1654,9 @@ class _CharacterPageState extends State<CharacterPage> with TickerProviderStateM
                       children: _screens!
                           .map((e) => SingleChildScrollView(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        [1, 2, 3].contains(_screens!.indexOf(e)) ? 0 : Measures.hPadding),
+                                    horizontal: [1, 2, 3, 4].contains(_screens!.indexOf(e))
+                                        ? 0
+                                        : Measures.hPadding),
                                 child: e,
                               ))
                           .toList(),
